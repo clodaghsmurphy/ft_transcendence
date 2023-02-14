@@ -1,4 +1,4 @@
-#ft_transendence
+# ft_transendence
 
 ## Project overview
 
