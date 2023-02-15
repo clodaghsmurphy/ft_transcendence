@@ -1,10 +1,47 @@
+
+@font-face {
+    font-family: 'arcade_normalregular';
+    src: url('./fonts/arcade_n-webfont.woff2') format('woff2'),
+         url('./fonts/arcade_n-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
 body {
     margin: 0;
     padding: 0;
   }
   
+
+.paddle{
+  position: absolute;
+  height: 10vh;
+  width: 5vh;
+}
+
+#paddle2
+{
+  right:0px;
+  top: 40vh;
+}
+
+#paddle1
+{
+  top:1vh;
+}
+
+.ball{
+  position: absolute;
+  left:10vh;
+  width: 5vh;
+  height: 5vh;
+}
+
   main {
-    position: absolute;
+    position: relative;
     left: 0;
     width: 100%;
     height: 100%;
@@ -16,8 +53,49 @@ body {
   
   .horizon {
     display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
     height: 50vh;
     justify-content: center;
+  }
+
+  .img-wrapper {
+    display: flex;
+    position: relative;
+    left: 3rem;
+    margin: 0 auto;
+    float: left;
+    justify-items: center;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  img {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+
+  }
+
+  .start-text 
+  {
+    color: white;
+    margin: 0 auto;
+    font-size: 1.5rem;
+    font-family: 'arcade_normalregular', cursive;
+    justify-content: center;
+    text-shadow: -2px 0 0 #fdff2a,
+    -4px 0 0 #df4a42,
+    2px 0 0 #91fcfe,
+    4px 0 0 #4405fc;
+    animation: blink 1s steps(4, start) infinite;
+  }
+
+  @keyframes blink 
+  {
+    from { visibility: visible;}
+    to { visibility: hidden;}
   }
 
   .horizon-divide {
