@@ -1,0 +1,371 @@
+@font-face {
+  font-family: 'arcade_normalregular';
+  src: url('./fonts/arcade_n-webfont.woff2') format('woff2'),
+    url('./fonts/arcade_n-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+* {
+  box-sizing: border-box;
+  overflow: hidden;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+
+.paddle {
+  position: absolute;
+  z-index: -1;
+  height: 12vh;
+  width: 6vh;
+}
+
+#paddle2 {
+  right: 0%;
+  top: 70%;
+  z-index: 1;
+  animation: pong 6s infinite linear;
+}
+
+#paddle1 {
+  position: absolute;
+  z-index: 1;
+  left: 0%;
+  top: 0%;
+  animation: ping 6s infinite linear;
+}
+
+.ball {
+  position: absolute;
+  z-index: 1;
+  left: 10%;
+  top: 10%;
+  width: 5vh;
+  height: 5vh;
+  animation: ball 6s infinite linear;
+}
+
+
+@keyframes ball {
+  100% {
+    top: 34%;
+    left: 52%;
+  }
+
+  8.3% {
+    top: 52%;
+    left: 90%;
+  }
+
+  24.9% {
+    top: 85%;
+    left: 27%;
+  }
+
+  41.5% {
+    top: 70%;
+    left: 90%;
+  }
+
+  58.1% {
+    top: 55%;
+    left: 8%;
+  }
+
+  74.7% {
+    top: 13%;
+    left: 90%;
+  }
+
+  79% {
+    top: 1%;
+    left: 70%;
+  }
+
+  91.3% {
+    top: 22%;
+    left: 8%;
+  }
+
+  100% {
+    top: 34%;
+    left: 52%;
+  }
+}
+
+@keyframes ping {
+  0% {
+    top: 10%;
+  }
+
+  5% {
+    top: 10%;
+  }
+
+  9% {
+    top: 24%;
+  }
+
+  13% {
+    top: 17%;
+  }
+
+  24.9% {
+    top: 82%;
+  }
+
+  47% {
+    top: 37%;
+  }
+
+  52% {
+    top: 41%;
+  }
+
+  56% {
+    top: 64%;
+  }
+
+  58.1% {
+    top: 54%;
+  }
+
+  70% {
+    top: 74%;
+  }
+
+  84% {
+    top: 12%;
+  }
+
+  91.3% {
+    top: 18%;
+  }
+
+  100% {
+    top: 10%;
+  }
+}
+
+@keyframes pong {
+  0% {
+    top: 90%;
+  }
+
+  8.3% {
+    top: 51%;
+  }
+
+  20% {
+    top: 60%;
+  }
+
+  25% {
+    top: 34%;
+  }
+
+  41.5% {
+    top: 68%;
+  }
+
+  46% {
+    top: 36%;
+  }
+
+  52% {
+    top: 18%;
+  }
+
+  58.1% {
+    top: 53%;
+  }
+
+  66% {
+    top: 14%;
+  }
+
+  70% {
+    top: 20%;
+  }
+
+  74.7% {
+    top: 10%;
+  }
+
+  91.3% {
+    top: 10%;
+  }
+
+  100% {
+    top: 90%;
+  }
+}
+
+main {
+  left: 0;
+  overflow: visible;
+  width: 100vw;
+  height: 100%;
+  background: #000;
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.horizon {
+  display: flex;
+  margin: 0 auto;
+  z-index: 1;
+  position: relative;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  height: 50vh;
+  justify-content: center;
+}
+
+.start-screen {
+  z-index: 2;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  flex-direction: column ;
+}
+
+.img-wrapper {
+  height: 150vh;
+  width: 100vw;
+  position: relative;
+  left: 3rem;
+  margin: 0 auto;
+}
+
+img {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+
+}
+
+.start-text {
+  color: white;
+  display: flex;
+  padding: 2vh;
+  align-self: center;
+  justify-self: center;
+  margin: 1vh auto;
+  font-size: 1.5em;
+  font-family: 'arcade_normalregular', cursive;
+  justify-content: center;
+  text-shadow: -2px 0 0 #fdff2a,
+    -4px 0 0 #df4a42,
+    2px 0 0 #91fcfe,
+    4px 0 0 #4405fc;
+  animation: blink 1s steps(4, start) infinite;
+}
+
+@keyframes blink {
+  from {
+    visibility: visible;
+  }
+
+  to {
+    visibility: hidden;
+  }
+}
+
+.horizon-divide {
+  height: 10px;
+  z-index: 1;
+  justify-content: end;
+  background: #db0eec;
+  box-shadow:
+    0 0 1rem #fff,
+    inset 0 0 1rem #fff,
+    9rem 2rem 2rem #db0eec,
+    18rem 8rem 18rem #db0eec,
+    8rem 8rem 18rem #db0eec,
+    8rem 8rem 18rem #db0eec;
+}
+
+.floor {
+  z-index: -1;
+  overflow: hidden;
+  background-color: #000;
+  box-sizing: border-box;
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: 5vh 5vh;
+  background-image:
+    linear-gradient(to right, #7DFDFE 1px, transparent 1px),
+    linear-gradient(to bottom, #7DFDFE 1px, transparent 1px);
+  transform: perspective(80vh) rotateX(60deg) scale(1, 1);
+  transform-origin: top center;
+  mask-image: gradient(linear, left top, left bottom,
+      from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 1)));
+
+  animation: walking 20s infinite linear forwards;
+}
+
+.login-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  flex-direction: row;
+  align-self: center;
+  justify-self: flex-end;
+  overflow: visible;
+  align-items: baseline;
+  position: relative;
+  z-index: 1;
+  top: 20%;
+  width: 80%;
+  height: 60vh;
+}
+
+@keyframes walking {
+  from {
+    background-position: 0 100%;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+}
+
+.login-box button {
+  display: flex;
+  text-transform: uppercase;
+  font-size: 1em;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  justify-items: center;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  height: 5vh;
+  width: 20vh;
+  border-color: #db0eec;
+  box-shadow:
+    0 0 1rem #fff,
+    0 0 1rem #fff,
+    0 0 1rem #db0eec,
+    0 0 8rem #db0eec,
+    0 0 1rem #db0eec,
+    0 0 1rem #db0eec;
+  color: white;
+  background-color: transparent;
+  border-radius: 10px;
+
+}
