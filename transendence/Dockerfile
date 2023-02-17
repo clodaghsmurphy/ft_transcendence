@@ -7,6 +7,8 @@ COPY package-lock.json .
 COPY . .
 
 RUN npm install
+RUN npm install tsc -g
+RUN tsc
 RUN npm install react-scripts@3.4.1 -g 
 
 

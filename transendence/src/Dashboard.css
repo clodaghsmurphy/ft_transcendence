@@ -1,0 +1,28 @@
+    .dahsboard {
+        display: flex;
+        height: 100%;
+        width: 100%;
+    }
+
+    .nav-bar {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        height: 10vh;
+        width:100%;
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        list-style: none;
+    }
+
+    .user-pfp {
+        flex:1;
+        height: 5vh;
+        justify-self: flex-end;
+        border-radius: 25px;;
+    }
