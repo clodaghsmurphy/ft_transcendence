@@ -1,0 +1,45 @@
+body {
+	display: flex;
+	background: #000000;
+	align-items: center;
+	justify-content: center;
+}
+
+.center-box {
+	display: flex;
+	flex-direction: column;
+	background-color: #000070;
+	border: solid 1px red;
+	border-radius: 10px;
+	padding: 10px;
+	width: 50%;
+	height: 50%;
+}
+
+.center-box h1 {
+	flex: 1;
+	flex-direction: column;
+	font: 500% Arial;
+	color: blue;
+	border: solid 1px green;
+	text-align: center;
+	aspect-ratio: 1 / 2;
+}
+
+.button-box {
+	display: flex;
+	flex-direction: row;
+	padding: 0px;
+	gap: 10px;
+}
+
+.button {
+	flex: 1;
+	background-color: #500050;
+	text-align: center;
+	border: 1px solid green;
+	padding: 30px;
+	border-radius: 10px;
+	aspect-ratio: 1 / 1;
+	color: lime;
+}

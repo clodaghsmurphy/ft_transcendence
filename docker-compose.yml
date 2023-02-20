@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  front:
+    container_name: front_react
+    image: docker-react_i
+    volumes:
+      - './pong_react_app:/app'
+      - '/app/node_modules'
+    build:
+      context: ${PWD}/pong_react_app
+      dockerfile: Dockerfile
+    stdin_open: true
+    ports: 
+      - 3001:3000
+
+volumes:
+  front-volume:
+    driver: local
+    driver_opts: 
+      type: none
+      o: bind
+      device: ${PWD}/pong_react_app
