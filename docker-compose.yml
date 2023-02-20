@@ -13,6 +13,8 @@ services:
     stdin_open: true
     ports: 
       - 3001:3000
+    environment:
+      - CHOKIDAR_USEPOLLIN=true
 
 volumes:
   front-volume:

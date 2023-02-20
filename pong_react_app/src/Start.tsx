@@ -9,7 +9,7 @@ function Start()
 				<img src={logo} className="pong-logo" />
 			</div>
 			<div className="start-text">
-				Press any key to begin
+				Press any key to begin salue
 			</div>
 		</div>
 	);

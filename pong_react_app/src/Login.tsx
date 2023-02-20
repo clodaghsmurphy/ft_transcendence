@@ -5,7 +5,7 @@ function Login ()
 	return (
 		<div className="login-box">
 			<button id="42-login">
-				Login via 42
+				Login via 42 yayyya
 			</button>
 			<button id="guest-login">
 				Login as guest
