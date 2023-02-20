@@ -1,38 +1,21 @@
-import React from 'react';
-import Start  from './Start';
-import  Login from './Login'
-import ball from './media/Ball.svg';
-import paddle from './media/Paddle.svg'
-import { useState} from 'react'
+import React, { Component } from 'react';
+import { render } from "react-dom";
+
+import Home from './Home';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+
 import './App.css';
+import Dashboard from './Dashboard';
 
 function App() {
-  const [isShown, setIsShown] = useState(true);
 
-  const handleClick = () => {
-    setIsShown(false);
-  }
   return (
-    <body>
-      <main onClick={handleClick}>
-        <div className="horizon">
-          <div className="paddle" id="paddle1">
-            <img src={paddle} />
-          </div>
-          <div className="paddle" id="paddle2">
-            <img src={paddle} />
-          </div>
-          <div className="ball">
-            <img src={ball} />;
-          </div>
-          {isShown ? <Start /> : <Login />}
-        </div>
-        <div className="horizon-divide"></div>
-        <div className="floor"></div>
-
-      </main>
-
-    </body>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />}/>
+        <Route path="/dashboard" element={< Dashboard />} />
+      </Routes>
+    </Router>
   );
 }
 

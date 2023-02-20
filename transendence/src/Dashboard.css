@@ -6,10 +6,14 @@
 
     .nav-bar {
         display: flex;
+        background-color: black;
+        color: white;
         justify-content: space-between;
+        align-items: center;
         flex-direction: row;
         flex-wrap: nowrap;
-        height: 10vh;
+        max-height: 6vh;
+        height: 10%;
         width:100%;
     }
 
@@ -21,8 +25,25 @@
     }
 
     .user-pfp {
-        flex:1;
-        height: 5vh;
+        height: 85%;
+        float: right;
+        width: 6vw;
         justify-self: flex-end;
-        border-radius: 25px;;
+        border-radius: 25px;
+    }
+
+    .user-pfp p {
+        font-size: 1em;
+    }
+
+    .nav-user {
+        display: inline-block;   
+        height: 3vh;
+    }
+    .nav-logo {
+        margin-top: 2vh;
+        display: inherit;
+        float: left;
+        height: 85%;
+
     }

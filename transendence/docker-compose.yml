@@ -19,4 +19,5 @@ volumes:
     driver_opts: 
       type: none
       o: bind
-      device: /mnt/nfs/homes/clmurphy/Projects/Ft_transendence/transendence
+      device: .
+
