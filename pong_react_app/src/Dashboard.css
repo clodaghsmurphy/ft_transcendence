@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+    
+    
+    
     .dahsboard {
         display: flex;
         height: 100%;
@@ -5,6 +9,8 @@
     }
 
     .nav-bar {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2em;
         display: flex;
         background-color: black;
         color: white;
@@ -19,31 +25,75 @@
 
     .nav-list {
         display: flex;
+        padding: 0 auto;
+        margin: 2em;
         flex-direction: row;
         justify-content: space-between;
         list-style: none;
     }
 
     .user-pfp {
-        height: 85%;
+        flex: 1;
+        object-fit:contain;
         float: right;
-        width: 6vw;
+        height: 4rem;
+        width: 4rem;
         justify-self: flex-end;
-        border-radius: 25px;
+        border-radius: 50%;
     }
 
-    .user-pfp p {
-        font-size: 1em;
+    .userName {
+        margin: .5em;
+        padding: .5em;
+        flex:1;
+        align-self: baseline;
+        font-size: .5em;
+        color:white;
+        
     }
 
     .nav-user {
-        display: inline-block;   
-        height: 3vh;
+        display: flex;
+        cursor: pointer;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        flex-shrink: 2;
     }
     .nav-logo {
+        flex-shrink: 2;
         margin-top: 2vh;
-        display: inherit;
+        display: flex;
+        justify-content: flex-start;
         float: left;
-        height: 85%;
+        height: 5vh;
 
+    }
+
+    .page-wrapper
+    {
+        height: 100vh;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .messages 
+    {
+        height: 100%;
+        flex-shrink: 1;
+        display: flex;
+        background-color: red;
+    }
+
+    .chatbox{
+        display: flex;
+        flex-grow: 3;
+        background-color: blue;
+    }
+
+    .group-members
+    {
+        display: flex;
+        background-color: aquamarine;
     }

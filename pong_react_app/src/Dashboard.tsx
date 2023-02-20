@@ -18,9 +18,14 @@ function Dashboard()
             </ul>
             <div className="nav-user" id="nav-user">
                 <img src={user_pfp} className="user-pfp"/>
-                <p className='userName'> CLMURPHY</p>
+                <p className='userName'> Welcome clmurphy !</p>
             </div>
         </nav>
+        <main className="page-wrapper">
+            <div className="messages"></div>
+            <div className="chatbox"></div>
+            <div className="group-members"></div>
+        </main>
     </div>
     );
 }
