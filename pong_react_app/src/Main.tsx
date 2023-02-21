@@ -1,5 +1,6 @@
 import React from 'react'
 import NavBar from './NavBar'
+import MainChat from './MainChat'
 import './Dashboard.css'
 import  user_pfp from './media/user.png'
 
@@ -33,20 +34,7 @@ function Main()
                     </div>
                 </div>
             </div>
-            <div className="live-chat">
-                <div className="chat-title">
-                    <h1>Live Chat Room </h1>
-                </div>
-                <div className="chat-box">
-                    <div className="message">
-                        <div className="message-header">
-                            <span>clmurphy</span>
-                            <span>1m</span>
-                        </div>
-                    </div>
-                    <div className="message"></div>
-                </div>
-            </div>
+            <MainChat />
         </main>
         </div>
     );

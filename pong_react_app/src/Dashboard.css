@@ -75,6 +75,7 @@
 
     .page-wrapper
     {
+        font-family: 'Poppins', sans-serif;
         height: 100vh;
         width: 100%;
         box-sizing: border-box;
@@ -111,11 +112,7 @@
         background-color: grey;
     }
 
-    .live-chat
-    {
-        background-color: purple;
-        flex-shrink: 2;
-    }
+    
 
     @media only screen and (max-width: 1200px)
     {
@@ -126,6 +123,8 @@
 
     .avatar 
     {
+        margin-right: 1em;
+        
         border-radius: 50%;
         object-fit: scale-down;
         height: 10rem;
@@ -134,7 +133,10 @@
 
     .player 
     {
+        display: flex;
         margin: 2rem;
+        box-sizing: border-box;
+        
         display: flex;
         flex-direction: row;
     }
@@ -151,20 +153,204 @@
     .player-level
     {
         color: #db0eec;
+        font-size: 1.5rem;
+
     }
 
-    .player-vs
+    .player-name
     {
-        
+        font-size: 2rem;
+        text-transform: uppercase;
     }
 
     .VS
     {
         display: flex;
-        justify-content: center;
+        margin: 1em;
+        justify-content: flex;
         align-items: center;
         font-size: 3rem;
         color: white;
         font-family: 'Poppins', sans-serif;
     }
+
+
+    .live-chat
+    {
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        background-color: purple;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-shrink: 2;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .live-chat {
+          display: none;
+        }
+      }
+
+    .chat-title
+    {
+        height: 5vh;
+        padding-bottom: 1.5rem;
+        height: 5vh;
+        background-color: aquamarine;
+        text-align: center;
+        margin: .5rem;
+        align-self: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .chat-box
+    {
+        height:80vh;
+        background: rgba(0, 0, 0, .5);
+        box-shadow: 0 5px 30px rgba(0, 0, 0, .2);
+        overflow: hidden;
+        background-size: cover;
+        background-color: beige;
+        justify-content: space-between;
+        
+    }
+
+    .message-receiver
+    {
+        background-color: cadetblue;
+        max-width: 70%;
+        position: relative;
+        width:fit-content;
+        clear: both;
+        display: inline-block;
+        margin: .5em 1.5em 1.5em .5em;
+        padding: 16px 40px 16px 20px;
+        border-radius: 10px;
+
+    }
+
+    .message-wrapper
+    {
+        display: flex;
+        margin: 1rem;
+        flex-direction: row;
+    }
+
+    .message-wrapper-receiver
+    {
+        display: flex;
+        margin: 1rem;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .message
+    {
+        display: block;
+        float:right;
+        flex-direction:row;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: flex-end;
+    }
+
+    .message-wrapper-receiver .message-header
+    {
+        flex-direction: row-reverse;
+        align-self: flex-end;
+        width: 100%;
+        justify-self: flex-end;
+
+    }
+    .message-header
+    {
+        display: flex;
+       font-size: 1rem;
+
+    }
+
+    .sender .message-avatar{
+        border-radius: 50%;
+        justify-content: flex-end;
+        align-items: flex-end;
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .message-avatar
+    {
+        border-radius: 50%;
+        justify-content: flex-end;
+        align-items: flex-end;
+        margin: 2rem;
+        width: 4rem;
+        height: 4rem;
+    }
+    .message-body
+    {
+        max-width: 70%;
+        background-color: cadetblue;
+        width:fit-content;
+        position: relative;
+        clear: both;
+        display: inline-block;
+        margin: .5em 1.5em 1.5em .5em;
+        padding: 16px 40px 16px 20px;
+        border-radius: 10px;
+    }
+
+    .sender .message-body
+    {
+        background-color: #db0eec;
+    }
+
+    .message-box {
+        
+        width: 100%;
+        background-color: aqua!important;
+        display: flex;
+        flex-direction: row;
+        flex: 0 1 40px;
+        height: 10vh;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        position: relative;
+    }
+
+    .message-input {
+        height: 90%;
+        background: none;
+        border: none;
+        outline: none!important;
+        resize: none;
+        color: rgba(255, 255, 255, .7);
+        font-size: 11px;
+        height: 17px;
+        margin: 0;
+        padding-right: 20px;
+        width: 265px;
+      }
+
+    .button-submit{
+        flex: 10%;
+        z-index: 1;
+        top: 9px;
+        right: 10px;
+        color: #fff;
+        border: none;
+        background: #248A52;
+        font-size: 10px;
+        text-transform: uppercase;
+        line-height: 1;
+        padding: 6px 10px; 
+        border-radius: 10px;
+        outline: none!important;
+    }
+
+
+
 
