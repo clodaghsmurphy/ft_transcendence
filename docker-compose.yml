@@ -15,6 +15,9 @@ services:
       - 3001:3000
     environment:
       - CHOKIDAR_USEPOLLIN=true
+      - WATCHPACK_POLLING=true
+      # - FAST_REFRESH=false
+      - WDS_SOCKET_PORT=3001
 
 volumes:
   front-volume:
