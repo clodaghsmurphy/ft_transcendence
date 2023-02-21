@@ -1,7 +1,7 @@
 .channels
 {
 	display: flex;
-	flex-direction: co;
+	flex-direction: column;
 	flex-grow: 1;
 	flex-basis: 200px;
 	flex-shrink: 1;
@@ -10,45 +10,24 @@
 }
 
 .channels h1 {
+	font-family: 'Poppins';
+	font-weight: 900;
+	font-style: normal;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	/* align-items: center;
-	text-align: center;
+	align-items: center;
 	overflow: hidden;
 	object-fit: contain;
-	font-size: 35px; */
-	background-color: blueviolet;
+	font-size: 35px;
+	background-color: lightslategrey;
 	color: white;
-	/* padding-left: 5%;
-	padding-right: 5%;
-	padding-top: 5px;
-	padding-bottom: 5px; */
-	/* width: 90%; */
-}
-
-.delimiters {
-	background-color: bisque;
-}
-
-.channels h1 {
-	height: 50px;
-}
-
-.channels h1 .delimiters {
-	display: flex;
-	flex: 1;
-}
-
-.channels_title {
-	color: white;
-}
-
-.channels h1 .channels_title {
-	display: flex;
-	text-align: center;
-	border: solid 1px black;
-	flex: 8;
+	width: 90%;
+	border: 0px;
+	border-radius: 5px;
 }
 
 .chatbox {
