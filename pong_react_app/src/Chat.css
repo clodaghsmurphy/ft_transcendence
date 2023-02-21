@@ -1,12 +1,23 @@
 .channels
 {
 	display: flex;
+	gap: 5px;
 	flex-direction: column;
 	flex-grow: 1;
 	flex-basis: 200px;
 	flex-shrink: 1;
     height: 100%;
     background-color: #2E2E2E;
+	margin-bottom: 5%;
+}
+
+.channels * {
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 0;
+	margin-bottom: 0;
+	width: 90%;
+	font-family: 'Poppins';
 }
 
 .channels h1 {
@@ -15,19 +26,102 @@
 	font-style: normal;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
+	/* text-align: right; */
 
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: left;
 	align-items: center;
 	overflow: hidden;
 	object-fit: contain;
 	font-size: 35px;
-	background-color: lightslategrey;
+	/* background-color: lightslategrey; */
 	color: white;
-	width: 90%;
 	border: 0px;
 	border-radius: 5px;
+
+	margin-top: 5%;
+}
+
+.search_bar {
+	background-color: #A09F9F;
+	border: solid 0px black;
+	border-radius: 10px;
+	font-size: 20px;
+	font-family: 'Poppins';
+	padding-left: 0.5rem;
+}
+
+.bar {
+	border-top: 2px solid black;
+	height: 0;
+	margin: 0;
+	margin-top: 10px;
+	width: 100%;
+}
+
+.lists {
+	display: flex;
+	flex-direction: column;
+	/* margin-right: 0; */
+	gap: 5px;
+	flex: 1;
+}
+
+.lists * {
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	width: 100%;
+}
+
+.lists h1 {
+	font-size: 1.5rem;
+	color: white;
+	justify-content: left;
+	margin-left: 0;
+	margin-top: 0;
+	margin-right: 0;
+}
+
+.chat-button {
+	display: flex;
+	border: #A09F9F 1px solid;
+	margin-left: 0;
+	margin-right: 5%;
+	width: 100%;
+	height: 4.5rem;
+	overflow: hidden;
+	border-radius: 10px;
+}
+
+.chat-button-empty {
+	display: flex;
+	margin-left: 0;
+	margin-right: 5%;
+	width: 100%;
+	height: 4.5rem;
+}
+
+.chat-button img {
+	justify-content: left;
+	aspect-ratio: 1 / 1;
+	flex: none;
+	height: 3rem;
+	width: auto;
+	/* width: 20%; */
+	border-radius: 50%;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+.chat-button h2 {
+	color: #A09F9F;
+	overflow: hidden;
+	height: 2rem;
 }
 
 .chatbox {
