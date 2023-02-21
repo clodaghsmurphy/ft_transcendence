@@ -65,7 +65,7 @@
 	flex-direction: column;
 	/* margin-right: 0; */
 	gap: 5px;
-	flex: 1;
+	flex: 5;
 }
 
 .lists * {

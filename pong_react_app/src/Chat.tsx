@@ -89,6 +89,10 @@ function Chat()
 						</div>
 					</div>
 				</div>
+
+				{/* Cette div sert a "contenir" celles d'au dessus pour
+					eviter qu'elles depacent de la fenetre				*/}
+				<div style={{flex: 1}}></div>
 			</div>
             <div className="chatbox"></div>
             <div className="group-members"></div>
