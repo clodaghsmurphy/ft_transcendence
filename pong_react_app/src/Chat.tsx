@@ -9,7 +9,9 @@ function Chat()
         <div className="dashboard">
         <NavBar /> 
         <main className="page-wrapper">
-            <div className="messages"></div>
+            <div className="channels">
+				<h1>Messages</h1>
+			</div>
             <div className="chatbox"></div>
             <div className="group-members"></div>
         </main>
