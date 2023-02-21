@@ -82,3 +82,39 @@
         flex-direction: row;
     }
 
+    .game {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex-grow: 3;
+        height: 100%;
+    }
+
+    .game-screen
+    {
+        display: flex;
+        flex-direction: row;
+        height: 80%;
+        background-color: green;
+    }
+
+    .player-vs
+    {
+        display: flex;
+        flex-direction: row;
+        background-color: grey;
+    }
+
+    .live-chat
+    {
+        background-color: purple;
+        flex-shrink: 2;
+    }
+
+    @media only screen and (max-width: 1200px)
+    {
+        .live-chat {
+            display: none;
+        }
+    }
+
