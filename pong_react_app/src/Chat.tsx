@@ -30,28 +30,28 @@ function Chat()
 				<div className='lists'>
 					<h1>Group chats</h1>
 
-					<div className='chat-button'>
+					<button className='chat-button'>
 						<img src={group_img}></img>
 						<div>
 						{ /* mettre le dernier message du DM */ }
 							<h2>Transcendence</h2>
 							<div>Salut la team comment ca va?</div>
 						</div>
-					</div>
-					<div className='chat-button'>
+					</button>
+					<button className='chat-button'>
 						<img src={group_img}></img>
 						<div>
 							<h2>Groupe 2</h2>
 							<div>kljsadlkjsldkjaksjdasjdjk</div>
 						</div>
-					</div>
-					<div className='chat-button'>
+					</button>
+					<button className='chat-button'>
 						<img src={group_img}></img>
 						<div>
 							<h2>mec pas drole</h2>
 							<div>feur</div>
 						</div>
-					</div>
+					</button>
 					<div className='chat-button-empty'>
 					</div>
 				</div>
@@ -59,35 +59,35 @@ function Chat()
 				<div className='lists'>
 					<h1>User messages</h1>
 
-					<div className='chat-button'>
+					<button className='chat-button'>
 						<img src={clodagh}></img>
 						<div>
 							<h2>clmurphy</h2>
 							{ /* mettre le dernier message du DM */ }
 							<div>webserv &gt; irc</div>
 						</div>
-					</div>
-					<div className='chat-button'>
+					</button>
+					<button className='chat-button'>
 						<img src={pierre}></img>
 						<div>
 							<h2>ple-lez</h2>
 							<div>je speedrun le TC</div>
 						</div>
-					</div>
-					<div className='chat-button'>
+					</button>
+					<button className='chat-button'>
 						<img src={adam}></img>
 						<div>
 							<h2>adben-mc</h2>
 							<div>18h == matin</div>
 						</div>
-					</div>
-					<div className='chat-button'>
+					</button>
+					<button className='chat-button'>
 						<img src={nathan}></img>
 						<div>
 							<h2>nguiard</h2>
 							<div>jsp quoi dire</div>
 						</div>
-					</div>
+					</button>
 				</div>
 
 				{/* Cette div sert a "contenir" celles d'au dessus pour
@@ -95,7 +95,9 @@ function Chat()
 				<div style={{flex: 1}}></div>
 			</div>
             <div className="chatbox"></div>
-            <div className="group-members"></div>
+            <div className="group-members">
+
+			</div>
         </main>
         </div>
     );
