@@ -93,15 +93,21 @@
     .game-screen
     {
         display: flex;
+        flex: 80%;
         flex-direction: row;
-        height: 80%;
+        height: 100%;
         background-color: green;
     }
 
     .player-vs
     {
         display: flex;
+        flex: 15%;
+        height: 100%;
         flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        justify-content: flex-start;
         background-color: grey;
     }
 
@@ -116,5 +122,49 @@
         .live-chat {
             display: none;
         }
+    }
+
+    .avatar 
+    {
+        border-radius: 50%;
+        object-fit: scale-down;
+        height: 10rem;
+        width: 10rem;
+    }
+
+    .player 
+    {
+        margin: 2rem;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .player-info
+    {
+        display: flex;
+        color: white;
+        flex-direction: column;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1em;
+    }
+
+    .player-level
+    {
+        color: #db0eec;
+    }
+
+    .player-vs
+    {
+        
+    }
+
+    .VS
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+        color: white;
+        font-family: 'Poppins', sans-serif;
     }
 
