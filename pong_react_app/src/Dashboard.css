@@ -9,6 +9,12 @@
     }
 
     .nav-bar {
+        background: #232526;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #414345, #232526);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #414345, #232526);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         font-family: 'Poppins', sans-serif;
         font-size: 2em;
         display: flex;
@@ -76,9 +82,12 @@
     .page-wrapper
     {
         font-family: 'Poppins', sans-serif;
+        background-color: transparent;
         height: 100vh;
         width: 100%;
         box-sizing: border-box;
+        justify-content: flex-start;
+        align-items: flex-start;
         display: flex;
         flex-direction: row;
     }
@@ -103,12 +112,18 @@
     .player-vs
     {
         display: flex;
-        flex: 15%;
-        height: 100%;
+        border-radius: 1em;
+    background: #232526;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #414345, #232526);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #414345, #232526);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        margin: auto;
+        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.2);
+        height: 20vh;
         flex-direction: row;
         justify-content: space-between;
-        align-items: flex-start;
-        justify-content: flex-start;
         background-color: grey;
     }
 
@@ -123,20 +138,24 @@
 
     .avatar 
     {
-        margin-right: 1em;
-        
-        border-radius: 50%;
-        object-fit: scale-down;
-        height: 10rem;
-        width: 10rem;
+        position: absolute;
+        border: 6px solid rgba(255, 255, 255, 0.1);
+        box-shadow: #db0eec 0px 2px 8px 0px;
+        left: 10%;
+        height: 72px;
+        width: 72px;
+        margin: 0 18px 0 0 ;
+        border-radius: 30em;
+       
     }
 
     .player 
     {
-        display: flex;
+        position: relative;
         margin: 2rem;
         box-sizing: border-box;
-        
+        align-self: baseline;
+        height: 50%;
         display: flex;
         flex-direction: row;
     }
@@ -144,6 +163,8 @@
     .player-info
     {
         display: flex;
+        position: absolute;
+        left: 30%;
         color: white;
         flex-direction: column;
         font-family: 'Poppins', sans-serif;
@@ -165,11 +186,13 @@
 
     .VS
     {
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
         display: flex;
-        margin: 1em;
-        justify-content: flex;
-        align-items: center;
-        font-size: 3rem;
+        flex-shrink: 3;
+        z-index: 3;
+        font-size: 1rem;
         color: white;
         font-family: 'Poppins', sans-serif;
     }
