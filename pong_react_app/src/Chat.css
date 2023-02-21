@@ -1,21 +1,69 @@
-
-
-.messages 
+.channels
 {
+	display: flex;
+	flex-direction: co;
+	flex-grow: 1;
+	flex-basis: 200px;
+	flex-shrink: 1;
     height: 100%;
-    flex-shrink: 1;
-    display: flex;
-    background-color: red;
+    background-color: #2E2E2E;
 }
 
-.chatbox{
+.channels h1 {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	/* align-items: center;
+	text-align: center;
+	overflow: hidden;
+	object-fit: contain;
+	font-size: 35px; */
+	background-color: blueviolet;
+	color: white;
+	/* padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 5px;
+	padding-bottom: 5px; */
+	/* width: 90%; */
+}
+
+.delimiters {
+	background-color: bisque;
+}
+
+.channels h1 {
+	height: 50px;
+}
+
+.channels h1 .delimiters {
+	display: flex;
+	flex: 1;
+}
+
+.channels_title {
+	color: white;
+}
+
+.channels h1 .channels_title {
+	display: flex;
+	text-align: center;
+	border: solid 1px black;
+	flex: 8;
+}
+
+.chatbox {
     display: flex;
     flex-grow: 3;
+	flex-shrink: 1;
+	flex-basis: 500px;
     background-color: blue;
 }
 
 .group-members
 {
     display: flex;
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 200px;
     background-color: aquamarine;
 }
