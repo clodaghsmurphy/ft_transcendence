@@ -57,6 +57,7 @@
 	/* margin-right: 0; */
 	gap: 5px;
 	flex: 5;
+	overflow-y: scroll;
 }
 
 .lists * {
@@ -86,6 +87,10 @@
 	height: 4.5rem;
 	overflow: hidden;
 	border-radius: 10px;
+	flex-basis: 4.5em;
+	flex-shrink: 0;
+	flex-grow: 1;
+	max-height: 6em;
 }
 
 .chat-button-empty {
