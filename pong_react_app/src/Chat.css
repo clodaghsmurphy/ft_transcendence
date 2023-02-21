@@ -112,9 +112,9 @@
 	width: auto;
 	/* width: 20%; */
 	border-radius: 50%;
-	margin-top: 5%;
-	margin-bottom: 5%;
-	margin-left: 5%;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: 15px;
 	margin-right: 5%;
 }
 
