@@ -56,6 +56,7 @@ function Chat()
 					</div>
 				</div>
 
+				<div className='bar'></div>
 				<div className='lists'>
 					<h1>User messages</h1>
 
@@ -94,9 +95,19 @@ function Chat()
 					eviter qu'elles depacent de la fenetre				*/}
 				<div style={{flex: 1}}></div>
 			</div>
-            <div className="chatbox"></div>
-            <div className="group-members">
 
+            <div className="chatbox"></div>
+
+            <div className="group-members">
+				<h1>Group users</h1>
+				
+
+				<button
+					// style={{background-color: '#A09F9F'}} couleur conditionnelle (bloque/ami/autre)
+					className='users-box'>
+					<img src={adam}></img>
+					Hello world
+				</button>
 			</div>
         </main>
         </div>
