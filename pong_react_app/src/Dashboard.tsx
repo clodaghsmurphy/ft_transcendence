@@ -8,8 +8,7 @@ function Dashboard()
 {
     return (
         <div className="dashboard">
-        <NavBar />       
-        <Main />
+            <Main />
         </div>
     );
 }
