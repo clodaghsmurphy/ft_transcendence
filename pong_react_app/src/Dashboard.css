@@ -32,6 +32,10 @@
         list-style: none;
     }
 
+    .nav-list li {
+        cursor: pointer;
+    }
+
     .user-pfp {
         flex: 1;
         object-fit:contain;
@@ -78,22 +82,3 @@
         flex-direction: row;
     }
 
-    .messages 
-    {
-        height: 100%;
-        flex-shrink: 1;
-        display: flex;
-        background-color: red;
-    }
-
-    .chatbox{
-        display: flex;
-        flex-grow: 3;
-        background-color: blue;
-    }
-
-    .group-members
-    {
-        display: flex;
-        background-color: aquamarine;
-    }

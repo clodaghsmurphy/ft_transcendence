@@ -1,12 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 function Login ()
 {
 	return (
 		<div className="login-box">
-			<button id="42-login">
-				Login via 42 yayyya
-			</button>
+			<Link to ="/dashboard">
+				<button id="42-login">
+					Login via 42
+				</button>
+			</Link>
 			<button id="guest-login">
 				Login as guest
 			</button>
