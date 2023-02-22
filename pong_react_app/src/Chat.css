@@ -54,10 +54,13 @@
 .lists {
 	display: flex;
 	flex-direction: column;
-	/* margin-right: 0; */
 	gap: 5px;
 	flex: 5;
 	overflow-y: scroll;
+	flex-basis: 25rem;
+	flex-grow: 0;
+	max-height: 22.5rem;
+	flex-shrink: 4;
 }
 
 .lists * {
@@ -75,6 +78,19 @@
 	margin-left: 0;
 	margin-top: 0;
 	margin-right: 0;
+	flex-basis: 2rem;
+	flex-shrink: 0;
+}
+
+.lists-holder {
+	display: flex;
+	overflow-y: scroll;
+	flex-direction: column;
+	flex-basis: 20rem;
+	flex-grow: 0;
+	gap: 5px;
+	overflow-y: scroll;
+
 }
 
 .chat-button {
@@ -87,10 +103,10 @@
 	height: 4.5rem;
 	overflow: hidden;
 	border-radius: 10px;
-	flex-basis: 4.5em;
 	flex-shrink: 0;
-	flex-grow: 1;
+	flex-grow: 0;
 	max-height: 6em;
+	padding: 5px;
 }
 
 .chat-button-empty {
@@ -115,19 +131,29 @@
 	border-radius: 50%;
 	margin-top: auto;
 	margin-bottom: auto;
-	margin-left: 15px;
+	margin-left: 0px;
 	margin-right: 5%;
 }
 
 .chat-button h2 {
 	color: #A09F9F;
 	overflow: hidden;
-	height: 2rem;
+	font-size: 1.15rem;
+	height: 1.5rem;
 	text-align: left;
+	margin-top: 0px;
 }
 
 .chat-button div {
 	text-align: left;
+	text-transform: none;
+}
+
+.channels-holder {
+	flex-shrink: 0;
+	flex-basis: 5px;
+	flex-grow: 15;
+	max-height: 5px;
 }
 
 .chatbox {

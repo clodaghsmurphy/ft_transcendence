@@ -8,24 +8,22 @@ import pierre from './media/ple-lez.jpg'
 import clodagh from './media/clmurphy.jpg'
 import nathan from './media/nguiard.jpg'
 import group_img from './media/group.png'
+import search_icon from './media/search-icon.jpg'
+import Button from '@mui/material/Button'
 
 type User_message = {name: string, message: string, img: string}
 type Group_message = {name: string, message: string}
 
 function chat_button(name: string, message: string, img: string) {
 	return (
-		<button className='chat-button'>
+		<Button className='chat-button' variant='outlined'>
 			<img src={img}></img>
 			<div>
 				<h2>{name}</h2>
 				<div>{message}</div>
 			</div>
-		</button>
+		</Button>
 	);
-}
-
-function chat_button_empty() {
-	return (<div className='chat-button-empty'></div>);
 }
 
 function users_message(user_data: User_message[]) {
@@ -93,27 +91,34 @@ function Chat()
             <div className="channels">
 				<h1>Messages</h1>
 
-				<input placeholder='search'
-					className='search_bar'>
+				<div>
+				<input className='search_bar' placeholder='search'/>
+					{/* search
+				</input> */}
 					{/* <button type='submit'>
 						<img src="./media/search-icon.jpg"></img>
 					</button> */}
-				</input>
+				</div>
 
 				<div className='bar'></div>
 				<div className='lists'>
 					<h1>Group chats</h1>
-					{group_message(group_message_data)}
+					<div className='lists-holder'>
+						{group_message(group_message_data)}
+					</div>
 				</div>
 
 				<div className='bar'></div>
 				<div className='lists'>
 					<h1>User messages</h1>
-					{users_message(message_user_data)}
+					<div className='lists-holder'>
+						{users_message(message_user_data)}
+					</div>
+					<div className='channels-holder'></div>
 				</div>
 				{/* Cette div sert a "contenir" celles d'au dessus pour
 					eviter qu'elles depacent de la fenetre				*/}
-				<div style={{flex: 1}}></div>
+				<div className='channels-holder'></div>
 			</div>
 
             <div className="chatbox"></div>
@@ -128,6 +133,8 @@ function Chat()
 					<img src={adam}></img>
 					Hello world
 				</button>
+				<Button variant='contained'>
+				</Button>
 			</div>
         </main>
         </div>
