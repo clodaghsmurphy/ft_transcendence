@@ -42,9 +42,9 @@ function MainChat ()
                 </div>
             </div>
             <div className="message-box">
-                <input type="text" className="message-input"/>
+                <input type="text" className="message-input" placeholder="Type message..." />
                 <div className="button-submit">
-                    <button className="button-submit">Send</button>
+                    <button >Send</button>
                 </div>
             </div>
            

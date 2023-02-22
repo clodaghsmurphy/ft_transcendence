@@ -24,6 +24,7 @@ function Main()
                                 <span className="player-level">LVL 12</span>
                             </div>
                         </div>
+                        <div className="score">0 - 0</div>
                         <div className="player">
                             <div className="avatar">
                                 <img src={nathan} />

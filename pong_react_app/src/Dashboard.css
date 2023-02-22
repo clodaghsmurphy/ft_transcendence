@@ -152,45 +152,43 @@
 
     .game-screen
     {
+        background-color: #181d1b;
         align-self:flex-start;
         justify-self:flex-end;
         display: flex;
         height: 100%;
         flex-direction: row;
         object-fit: fill;
-        background-color: green;
     }
 
     .player-vs
     {
         display: flex;
         justify-self: flex-start;
-        background: #232526;
-        /* fallback for old browsers */
-        background: -webkit-linear-gradient(to right, #414345, #232526);
-        /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to right, #414345, #232526);
-        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        align-items: center;
+        background: none;
+        flex: 10%;
         margin: auto;
         box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.2);
-        height: 10vh;
         flex-direction: row;
         justify-content: space-between;
     }
 
-    
+    .score {
+        display: flex;
+        color: white;
+        align-items: center;
+        justify-content: center;
+    }
 
        
 
     .avatar 
     {
-        z-index: 1;
-        position: absolute;
         border: 6px solid rgba(255, 255, 255, 0.1);
         box-shadow: #db0eec 0px 2px 8px 0px;
-        left: 10%;
-        height: 72px;
-        width: 72px;
+        height: 6vh;
+        width: 6vh;
         margin: 0 18px 0 0 ;
         border-radius: 30em;
        
@@ -198,10 +196,11 @@
 
     .player 
     {
-        position: relative;
-        margin: 2rem;
-        box-sizing: border-box;
-        align-self: baseline;
+        display: flex;
+        flex: 50%;
+        margin: 1em;
+        justify-content: center;
+        align-items: center;
         height: 50%;
         display: flex;
         flex-direction: row;
@@ -209,9 +208,8 @@
 
     .player-info
     {
+        flex: 50%;
         display: flex;
-        position: absolute;
-        left: 25%;
         color: white;
         flex-direction: column;
         font-family: 'Poppins', sans-serif;
@@ -235,12 +233,8 @@
     .live-chat
     {
         z-index: 1;
+        flex: 50%;
         display: flex;
-        flex-basis: 100vw;
-        padding: .5em;
-        overflow: auto;
-        flex-shrink: 0;
-        height: 75vh;
         overflow-x: hidden;
         border-radius: 1rem;
         width: 20vw;
@@ -252,7 +246,6 @@
         background: linear-gradient(to right, #414345, #232526);
         flex-direction: column;
         justify-content: flex-start;
-        flex-shrink: 2;
         color: white;
         
     }
@@ -267,15 +260,15 @@
     {
         display: flex;
         align-items: center;
+        text-align: center;
         justify-content: center;
         background: #232526;
             /* fallback for old browsers */
             background: -webkit-linear-gradient(to right, #414345, #232526);
             /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to right, #414345, #232526);
-        height: 5vh;
+        flex-basis: 5vh;
         padding-bottom: 1.5rem;
-        height: 5vh;
         width: 100%;
         margin: 1rem;
         font-size: 1.5rem;
@@ -286,7 +279,7 @@
     {
         color: white;
         background: #232526;
-        height: 100%;
+        flex: 80%;
         /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #414345, #232526);
         /* Chrome 10-25, Safari 5.1-6 */
@@ -399,38 +392,42 @@
     .message-box {
         
         width: 100%;
+        justify-content: space-between;
+        flex: 1;
         background: #232526;
-            /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #414345, #232526);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #414345, #232526);
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #414345, #232526);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #414345, #232526);
         display: flex;
         border-radius: 1rem;
         flex-direction: row;
-        flex: 0 1 10vh;
-        height: 25vh;
+        align-items: center;
+        flex: 0 1 8vh;
         width: 100%;
         background: rgba(0, 0, 0, 0.3);
-        padding: 10px;
+        padding: 2vh;
         position: relative;
     }
 
     .message-input {
-        height: 90%;
-        background: none;
+        height: 4vh;
+        margin-right: 4em;
+        flex: 30%;
+        border-radius: 1em;
+        background-color: #181d1b;
         border: none;
         outline: none!important;
         resize: none;
         color: rgba(255, 255, 255, .7);
-        font-size: 5vh;
-        height: 5vh;
+        font-size: 1em;
         margin: 0;
         padding-right: 20px;
         width: 14vw;
       }
 
     .button-submit{
-        justify-self: center;
+        justify-self:flex-end;
         height: auto;
         width: auto;        
         align-self: center;
@@ -439,13 +436,38 @@
         right: 10px;
         color: #fff;
         border: none;
-        background: #248A52;
-        font-size: 10px;
-        text-transform: uppercase;
+        background: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+        font-size: 1rem;
         line-height: 1;
         padding: 6px 10px; 
-        border-radius: 10px;
+        border-radius: 1em;
         outline: none!important;
+    }
+
+    .button-submit:hover
+    {
+        background: transparent;
+        border: solid;
+        border-color: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+        color: #9b59b6;
+    }
+
+    .button-submit button:hover
+    {
+        background: transparent;
+        color: #9b59b6;
+    }
+
+    .button-submit button
+    {
+        background: inherit;
+        font-size: 1rem;
+        color: inherit;
+        outline: none!important;
+        border-radius: 1em;
+        border: none;
+        text-transform: uppercase;
+
     }
 
 
