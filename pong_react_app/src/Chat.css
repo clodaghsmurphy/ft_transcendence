@@ -75,6 +75,8 @@
 	margin-left: 0;
 	margin-top: 0;
 	margin-right: 0;
+	flex-basis: 2rem;
+	flex-shrink: 0;
 }
 
 .chat-button {
@@ -128,6 +130,11 @@
 
 .chat-button div {
 	text-align: left;
+}
+
+.channels-holder {
+	flex-shrink: 0;
+	flex-basis: 5px;
 }
 
 .chatbox {
