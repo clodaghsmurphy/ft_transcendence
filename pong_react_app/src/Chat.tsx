@@ -12,7 +12,6 @@ import group_img from './media/group.png'
 type User_message = {name: string, message: string, img: string}
 type Group_message = {name: string, message: string}
 
-
 function chat_button(name: string, message: string, img: string) {
 	return (
 		<button className='chat-button'>
@@ -86,8 +85,6 @@ function Chat()
 			"message": "On vas conquerir le monde",
 		},
 	];
-
-	// users_message(message_user_data);
 
 	return (	
 		<div className="dashboard">
