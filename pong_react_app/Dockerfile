@@ -10,13 +10,12 @@ COPY package-lock.json /app/package-lock.json
 #COPY . /app
 
 RUN pwd
-RUN ls -la /app
 
 RUN npm install
 RUN npm install react-scripts@3.4.1 -g 
 RUN npm install @types/reach__router --save-dev
 RUN npm install --save-dev @types/query-string
-RUN npm install @mui/material @emotion/react @emotion/styled
+RUN npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
 
 COPY . ./
 
