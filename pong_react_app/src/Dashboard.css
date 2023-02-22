@@ -33,12 +33,12 @@
         border-radius: 14px;
     }
     .nav-bar {
-        background: #232526;
-            /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #414345, #232526);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #414345, #232526);
-            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+         /* fallback for old browsers */
+         background: -webkit-linear-gradient(to right, #414345, #232526);
+         /* Chrome 10-25, Safari 5.1-6 */
+         background: linear-gradient(to right, #414345, #232526);
+        background: rgba(0, 0, 0, .5);
+        
         font-family: 'Poppins', sans-serif;
         font-size: 2em;
         border-radius: 0em 0em .2em .2em;
@@ -52,8 +52,7 @@
         align-items: center;
         flex-direction: row;
         flex-wrap: nowrap;
-        box-shadow: #f29afa 0px 2px 8px 0px;
-        max-height: 10vh;
+        max-height: 6vh;
         padding: 2rem 0;
         height: 10%;
         width:100%;
@@ -61,21 +60,52 @@
 
     .nav-list {
         display: flex;
-        flex-shrink: 1.5;
+        font-weight: 400;
+        flex: 30%;
         padding: 0 auto;
-        margin-left: 10rem;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
         list-style: none;
     }
 
+    .nav-list::before
+    {
+        content: "";
+    }
+
+    .nav-list::after
+    {
+        content: "";
+    }
+
     .navlink {
+        justify-self: center;
+        width: 100%;
         cursor: pointer;
+        list-style: none;
+        text-decoration: none;
         margin-top: 1.5rem;
-        font-size: 1rem;
-        font-weight: 500;
-        color: #BCBCBC;
+        font-size: .7em;
+        font-weight: 800;
+        border-radius: 1em;
+        color: white;
+    }
+
+    .navlink:hover
+    {
+        transform: scale(1.1);
+        text-decoration: underline;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .navlink {
+            display: none;
+        }
+    }
+    .navlink active 
+    {
+
     }
 
     .user-pfp {
@@ -104,6 +134,7 @@
     }
 
     .nav-user {
+        flex: 30%;
         display: flex;
         margin: 1em;
         cursor: pointer;
@@ -111,10 +142,9 @@
         align-items: center;
         justify-self: flex-end;
         flex-wrap: wrap;
-        flex-shrink: 2;
     }
     .nav-logo {
-        flex-shrink: 2;
+        flex:  30%;
         align-self: center;
         justify-self: flex-start;
         margin-top: 2vh;
@@ -122,7 +152,7 @@
         justify-content: flex-start;
         float: left;
         height: 10vh;
-        width: 40vw;
+        width: 50vh;
     }
     
 
@@ -152,6 +182,7 @@
 
     .game-screen
     {
+        position: relative;
         background-color: #181d1b;
         align-self:flex-start;
         justify-self:flex-end;
@@ -161,12 +192,39 @@
         object-fit: fill;
     }
 
+    .game-button 
+    {
+        position: absolute;
+        cursor: pointer;
+        top: 40%;
+        left:  40%;
+        align-self: center;
+        justify-self: center;
+        width: 10vw;
+        height: 7vh;
+        border-radius: 1em;
+        border: solid;
+        color: white;
+        font-family: 'arcade_normalregular', cursive;
+        background-color: transparent;
+        border: 5px solid ;
+        border-image: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+        border-image-slice: 1;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+
+    }
+
+    .game-button:hover
+    {
+        transform: scale(1.1);
+    }
+
     .player-vs
     {
         display: flex;
         justify-self: flex-start;
         align-items: center;
-        background: none;
+        background-color: #181d1b;
         flex: 10%;
         margin: auto;
         box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.2);
@@ -176,9 +234,12 @@
 
     .score {
         display: flex;
+        font-size: 2em;
         color: white;
         align-items: center;
         justify-content: center;
+        font-family: 'arcade_normalregular', cursive;
+
     }
 
        
@@ -186,10 +247,11 @@
     .avatar 
     {
         border: 6px solid rgba(255, 255, 255, 0.1);
+        box-sizing: content-box;
         box-shadow: #db0eec 0px 2px 8px 0px;
         height: 6vh;
         width: 6vh;
-        margin: 0 18px 0 0 ;
+        margin: 0 2rem 1em 1em ;
         border-radius: 30em;
        
     }
@@ -201,7 +263,8 @@
         margin: 1em;
         justify-content: center;
         align-items: center;
-        height: 50%;
+        height: 100%;
+        width: 100%;
         display: flex;
         flex-direction: row;
     }
@@ -267,7 +330,7 @@
             background: -webkit-linear-gradient(to right, #414345, #232526);
             /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to right, #414345, #232526);
-        flex-basis: 5vh;
+        flex-basis: 2vh;
         padding-bottom: 1.5rem;
         width: 100%;
         margin: 1rem;
@@ -278,13 +341,14 @@
     .chat-box
     {
         color: white;
-        background: #232526;
+        border-radius: 1em 1em 0 0;
         flex: 80%;
         /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #414345, #232526);
         /* Chrome 10-25, Safari 5.1-6 */
         background: linear-gradient(to right, #414345, #232526);
         height: 60vh;
+        width: 100%;
         background: rgba(0, 0, 0, .5);
         box-shadow: 0 5px 30px rgba(0, 0, 0, .2);
         overflow: hidden;
@@ -390,7 +454,7 @@
     }
 
     .message-box {
-        
+     
         width: 100%;
         justify-content: space-between;
         flex: 1;
@@ -400,7 +464,6 @@
         /* Chrome 10-25, Safari 5.1-6 */
         background: linear-gradient(to right, #414345, #232526);
         display: flex;
-        border-radius: 1rem;
         flex-direction: row;
         align-items: center;
         flex: 0 1 8vh;
