@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { NamedExoticComponent } from 'react'
 import NavBar from './NavBar'
 import './Dashboard.css'
 import './Chat.css'
@@ -9,9 +9,84 @@ import clodagh from './media/clmurphy.jpg'
 import nathan from './media/nguiard.jpg'
 import group_img from './media/group.png'
 
+type User_message = {name: string, message: string, img: string}
+type Group_message = {name: string, message: string}
+
+function chat_button(name: string, message: string, img: string) {
+	return (
+		<button className='chat-button'>
+			<img src={img}></img>
+			<div>
+				<h2>{name}</h2>
+				<div>{message}</div>
+			</div>
+		</button>
+	);
+}
+
+function chat_button_empty() {
+	return (<div className='chat-button-empty'></div>);
+}
+
+function users_message(user_data: User_message[]) {
+	let ret: JSX.Element[] = [];
+
+	for (const user of user_data) {
+		ret.push(chat_button(user.name, user.message, user.img));
+	}
+	return ret;
+}
+
+function group_message(group_data: Group_message[]) {
+	let ret: JSX.Element[] = [];
+
+	for (const group of group_data) {
+		ret.push(chat_button(group.name, group.message, group_img));
+	}
+	return ret;
+}
+
 function Chat()
 {
-	return (		
+	let message_user_data: User_message[] = [
+		{
+			"name": "nguiard",
+			"message": "jsp quoi dire",
+			"img": nathan,
+		},
+		{
+			"name": "clmurphy",
+			"message": "webserv > irc",
+			"img": clodagh,
+		},
+		{
+			"name": "adben-mc",
+			"message": "18h == matin",
+			"img": adam,
+		},
+		{
+			"name": "ple-lez",
+			"message": "je speedrun le TC",
+			"img": pierre,
+		}
+	];
+
+	let group_message_data: Group_message[] = [
+		{
+			"name": "Trascendence",
+			"message": "Salut tout le monde!",
+		},
+		{
+			"name": "Groupe 2",
+			"message": "bla bla bla bla bla bla bla bla bla",
+		},
+		{
+			"name": "Illuminatis",
+			"message": "On vas conquerir le monde",
+		},
+	];
+
+	return (	
 		<div className="dashboard">
         <NavBar /> 
         <main className="page-wrapper">
@@ -26,77 +101,33 @@ function Chat()
 				</input>
 
 				<div className='bar'></div>
-
 				<div className='lists'>
 					<h1>Group chats</h1>
-
-					<button className='chat-button'>
-						<img src={group_img}></img>
-						<div>
-						{ /* mettre le dernier message du DM */ }
-							<h2>Transcendence</h2>
-							<div>Salut la team comment ca va?</div>
-						</div>
-					</button>
-					<button className='chat-button'>
-						<img src={group_img}></img>
-						<div>
-							<h2>Groupe 2</h2>
-							<div>kljsadlkjsldkjaksjdasjdjk</div>
-						</div>
-					</button>
-					<button className='chat-button'>
-						<img src={group_img}></img>
-						<div>
-							<h2>mec pas drole</h2>
-							<div>feur</div>
-						</div>
-					</button>
-					<div className='chat-button-empty'>
-					</div>
+					{group_message(group_message_data)}
 				</div>
 
+				<div className='bar'></div>
 				<div className='lists'>
 					<h1>User messages</h1>
-
-					<button className='chat-button'>
-						<img src={clodagh}></img>
-						<div>
-							<h2>clmurphy</h2>
-							{ /* mettre le dernier message du DM */ }
-							<div>webserv &gt; irc</div>
-						</div>
-					</button>
-					<button className='chat-button'>
-						<img src={pierre}></img>
-						<div>
-							<h2>ple-lez</h2>
-							<div>je speedrun le TC</div>
-						</div>
-					</button>
-					<button className='chat-button'>
-						<img src={adam}></img>
-						<div>
-							<h2>adben-mc</h2>
-							<div>18h == matin</div>
-						</div>
-					</button>
-					<button className='chat-button'>
-						<img src={nathan}></img>
-						<div>
-							<h2>nguiard</h2>
-							<div>jsp quoi dire</div>
-						</div>
-					</button>
+					{users_message(message_user_data)}
 				</div>
-
 				{/* Cette div sert a "contenir" celles d'au dessus pour
 					eviter qu'elles depacent de la fenetre				*/}
 				<div style={{flex: 1}}></div>
 			</div>
-            <div className="chatbox"></div>
-            <div className="group-members">
 
+            <div className="chatbox"></div>
+
+            <div className="group-members">
+				<h1>Group users</h1>
+				
+
+				<button
+					// style={{background-color: '#A09F9F'}} couleur conditionnelle (bloque/ami/autre)
+					className='users-box'>
+					<img src={adam}></img>
+					Hello world
+				</button>
 			</div>
         </main>
         </div>

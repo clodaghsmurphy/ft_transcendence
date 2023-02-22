@@ -26,7 +26,6 @@
 	font-style: normal;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
-	/* text-align: right; */
 
 	display: flex;
 	flex-direction: row;
@@ -35,7 +34,6 @@
 	overflow: hidden;
 	object-fit: contain;
 	font-size: 35px;
-	/* background-color: lightslategrey; */
 	color: white;
 	border: 0px;
 	border-radius: 5px;
@@ -52,13 +50,6 @@
 	padding-left: 0.5rem;
 }
 
-.bar {
-	border-top: 2px solid black;
-	height: 0;
-	margin: 0;
-	margin-top: 10px;
-	width: 100%;
-}
 
 .lists {
 	display: flex;
@@ -66,6 +57,7 @@
 	/* margin-right: 0; */
 	gap: 5px;
 	flex: 5;
+	overflow-y: scroll;
 }
 
 .lists * {
@@ -95,6 +87,10 @@
 	height: 4.5rem;
 	overflow: hidden;
 	border-radius: 10px;
+	flex-basis: 4.5em;
+	flex-shrink: 0;
+	flex-grow: 1;
+	max-height: 6em;
 }
 
 .chat-button-empty {
@@ -107,6 +103,7 @@
 
 .chat-button:hover {
 	opacity: 0.7;
+	cursor: pointer;
 }
 
 .chat-button img {
@@ -115,7 +112,6 @@
 	flex: none;
 	height: 3rem;
 	width: auto;
-	/* width: 20%; */
 	border-radius: 50%;
 	margin-top: auto;
 	margin-bottom: auto;
@@ -135,7 +131,7 @@
 }
 
 .chatbox {
-    display: flex;
+	display: flex;
     flex-grow: 3;
 	flex-shrink: 1;
 	flex-basis: 500px;
@@ -144,7 +140,7 @@
 
 .group-members
 {
-    display: flex;
+	display: flex;
 	flex-grow: 1;
 	flex-shrink: 1;
 	flex-basis: 200px;
@@ -155,4 +151,67 @@
     height: 100%;
     background-color: #2E2E2E;
 	margin-bottom: 5%;
+}
+
+.group-members * {
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 0;
+	margin-bottom: 0;
+	width: 90%;
+	font-family: 'Poppins';
+}
+
+.group-members h1 {
+	font-family: 'Poppins';
+	font-weight: 900;
+	font-style: normal;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	align-items: center;
+	overflow: hidden;
+	object-fit: contain;
+	font-size: 35px;
+	color: white;
+	border: 0px;
+	border-radius: 5px;
+	
+	margin-top: 5%;
+}
+
+.users-box {
+	border: solid 1px black;
+	border-radius: 10px;
+	height: 6rem;
+}
+
+.users-box img {
+	justify-content: left;
+	aspect-ratio: 1 / 1;
+	flex: none;
+	height: 4.5rem;
+	width: auto;
+	border-radius: 50%;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: 15px;
+	margin-right: 5%;
+}
+
+.users-box:hover {
+	cursor: pointer;
+	opacity: 0.7;
+}
+
+.bar {
+	border-top: 2px solid black;
+	height: 0;
+	margin: 0;
+	margin-top: 10px;
+	width: 100%;
+	flex: 0;
 }
