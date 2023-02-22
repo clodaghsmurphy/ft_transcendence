@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import React, { NamedExoticComponent } from 'react'
-import { Avatar } from '@mui/material'
+import { Avatar, Box, ButtonGroup } from '@mui/material'
 import { ClassNames } from '@emotion/react';
 
 export function in_user_button_normal(name: string, img: string, is_op: boolean): JSX.Element {
@@ -17,13 +17,28 @@ export function in_user_button_normal(name: string, img: string, is_op: boolean)
 	}
 	
 	return (
-		<Button variant='contained' color='primary'
-			sx={{'textTransform': 'lowercase',
-				'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-			<Avatar src={img} alt={name}/>
+		<div className='group-members-button'>
+			<Avatar src={img} alt={name}
+				sx={{"marginBottom": "auto",
+					"marginTop": "auto"}}/>
 
-			{head}
-		</Button>
+			<div className='group-members-button-text'>
+				{head}
+
+				<ButtonGroup size='small'
+					sx={{"width": "90%", "overflow": "scroll"}}>
+					<Button variant="contained" color='success' sx={{'textTransform': 'none'}}>
+						Add
+					</Button>
+					<Button variant="contained" color='secondary' sx={{'textTransform': 'none'}}>
+						Stats
+					</Button>
+					<Button variant="contained" color='error' sx={{'textTransform': 'none'}}>
+						Block
+					</Button>
+				</ButtonGroup>
+			</div>
+		</div>
 	);
 }
 
@@ -39,15 +54,30 @@ export function in_user_button_blocked(name: string, img: string, is_op: boolean
 			{name}
 		</h2>);
 	}
-
+	
 	return (
-		<Button variant='contained' color='error'
-			sx={{'textTransform': 'lowercase',
-				'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-			<Avatar src={img} alt={name}/>
+		<div className='group-members-button'
+			style={{"borderColor": "red",
+					"backgroundColor": "rgb(211, 47, 47)",
+			}}>
+			<Avatar src={img} alt={name}
+				sx={{"marginBottom": "auto",
+					"marginTop": "auto"}}/>
 
-			{head}
-		</Button>
+			<div className='group-members-button-text'>
+				{head}
+
+				<ButtonGroup size='small'
+					sx={{"width": "90%", "overflow": "scroll"}}>
+					<Button variant="contained" color='secondary' sx={{'textTransform': 'none'}}>
+						Stats
+					</Button>
+					<Button variant="contained" color='warning' sx={{'textTransform': 'none'}}>
+						Unblock
+					</Button>
+				</ButtonGroup>
+			</div>
+		</div>
 	);
 }
 
@@ -63,14 +93,29 @@ export function in_user_button_friend(name: string, img: string, is_op: boolean)
 			{name}
 		</h2>);
 	}
-
+	
 	return (
-		<Button variant='contained' color='success'
-			sx={{'textTransform': 'lowercase',
-				'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-			<Avatar src={img} alt={name}/>
+		<div className='group-members-button'
+			style={{"borderColor": "green",
+					"backgroundColor": "#2e7d32",
+			}}>
+			<Avatar src={img} alt={name}
+				sx={{"marginBottom": "auto",
+					"marginTop": "auto"}}/>
 
-			{head}
-		</Button>
+			<div className='group-members-button-text'>
+				{head}
+
+				<ButtonGroup size='small'
+					sx={{"width": "90%", "overflow": "scroll"}}>
+					<Button variant="contained" color='secondary' sx={{'textTransform': 'none'}}>
+						Stats
+					</Button>
+					<Button variant="contained" color='warning' sx={{'textTransform': 'none'}}>
+						Remove
+					</Button>
+				</ButtonGroup>
+			</div>
+		</div>
 	);
 }
