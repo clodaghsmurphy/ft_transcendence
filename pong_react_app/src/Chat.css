@@ -214,7 +214,6 @@
 	flex-direction: column;
 	margin-left: 5%;
 	margin-right: 5%;
-	border: red 1px solid;
 	gap: 5px;
 	overflow-y: scroll;
 }
