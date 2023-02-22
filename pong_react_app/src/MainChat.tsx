@@ -9,7 +9,6 @@ function MainChat ()
     return (
         <div className="live-chat">
             <div className="chat-title">
-                <h1>Live Chat Room </h1>
             </div>
             <div className="chat-box">
                 <div className="message-wrapper sender">
@@ -42,9 +41,9 @@ function MainChat ()
                 </div>
             </div>
             <div className="message-box">
-                <input type="text" className="message-input"/>
+                <input type="text" className="message-input" placeholder="Type message..." />
                 <div className="button-submit">
-                    <button className="button-submit">Send</button>
+                    <button >Send</button>
                 </div>
             </div>
            
