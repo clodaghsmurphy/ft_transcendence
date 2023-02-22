@@ -5,12 +5,12 @@ function Login ()
 {
 	return (
 		<div className="login-box">
-			<Link to ="/dashboard">
+			<Link className="login-button" to ="/dashboard">
 				<button id="42-login">
 					Login via 42
 				</button>
 			</Link>
-			<button id="guest-login">
+			<button  className="login-button" id="guest-login">
 				Login as guest
 			</button>
 		</div>
