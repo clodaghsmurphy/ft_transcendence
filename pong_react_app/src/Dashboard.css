@@ -436,8 +436,8 @@
         justify-content: flex-end;
         align-items: flex-end;
         margin: 2rem;
-        width: 4rem;
-        height: 4rem;
+        width: 4em;
+        height: 4em;
     }
     .message-body
     {
