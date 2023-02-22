@@ -14,13 +14,15 @@ function NavBar()
             <img src={logo} />
         </div>
         <ul className="nav-list">
-            <Link to="/main">Home</Link>
-            <li>Stats</li>
-            <Link to="/chat">Chat</Link>
-            <li>Friends</li>
+            <Link to="/main" className='navlink'>Home</Link>
+            <li className='navlink' >Stats</li>
+            <Link to="/chat" className='navlink'>Chat</Link>
+            <li className='navlink'>Friends</li>
         </ul>
         <div className="nav-user" id="nav-user">
-            <img src={user_pfp} className="user-pfp"/>
+            <div className="user-pfp">
+                <img src={user_pfp} />
+            </div>
             <p className='userName'> Welcome clmurphy !</p>
         </div>
     </nav>

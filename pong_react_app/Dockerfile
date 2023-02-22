@@ -16,6 +16,7 @@ RUN npm install
 RUN npm install react-scripts@3.4.1 -g 
 RUN npm install @types/reach__router --save-dev
 RUN npm install --save-dev @types/query-string
+RUN npm install @mui/material @emotion/react @emotion/styled
 
 COPY . ./
 
