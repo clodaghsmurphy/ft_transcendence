@@ -8,11 +8,10 @@
     
     
     .body {
-        background-color: #222;
+        background-color: #181d1b;
         z-index: -1;
         inset: 0;
         place-content: center;
-        background-image: linear-gradient(#181d1b, #2b2a2b);
         display: flex;
         height: 100vh;
         width: 100%;
@@ -27,16 +26,12 @@
         display: flex;
         flex-direction: column;
 
-        border-color: (45deg, #45294d, #9b59b6, #224483);
         width: 100%;
         height: 100%;
         border-radius: 14px;
     }
     .nav-bar {
-         /* fallback for old browsers */
-         background: -webkit-linear-gradient(to right, #414345, #232526);
-         /* Chrome 10-25, Safari 5.1-6 */
-         background: linear-gradient(to right, #414345, #232526);
+
         background: rgba(0, 0, 0, .5);
         
         font-family: 'Poppins', sans-serif;
@@ -46,7 +41,7 @@
         flex-shrink: 0;
         white-space: nowrap;
         display: flex;
-        background-color: black;
+        background-color: #181d1b;
         color: white;
         justify-content: space-between;
         align-items: center;
@@ -61,7 +56,7 @@
     .nav-list {
         display: flex;
         font-weight: 400;
-        flex: 30%;
+        flex: 50%;
         padding: 0 auto;
         flex-direction: row;
         justify-content: space-evenly;
@@ -69,32 +64,28 @@
         list-style: none;
     }
 
-    .nav-list::before
-    {
-        content: "";
-    }
 
-    .nav-list::after
-    {
-        content: "";
-    }
 
     .navlink {
         justify-self: center;
+        letter-spacing: 0.2em;
         width: 100%;
         cursor: pointer;
         list-style: none;
         text-decoration: none;
+        background-clip: text;
+        background-image: linear-gradient(45deg, #cda5d8, #9b59b6, #224483);
         margin-top: 1.5rem;
-        font-size: .7em;
+        font-size: .55em;
         font-weight: 800;
         border-radius: 1em;
-        color: white;
+        color: transparent;
     }
 
     .navlink:hover
     {
-        transform: scale(1.1);
+        transform: scale(1.02);
+        color: white;
         text-decoration: underline;
     }
 
@@ -102,18 +93,19 @@
         .navlink {
             display: none;
         }
+        .nav-user 
+        {
+            display: none;
+        }
     }
-    .navlink active 
-    {
 
-    }
 
     .user-pfp {
        
         width: 3rem;
         object-fit: cover;
         border: 6px solid rgba(255, 255, 255, 0.1);
-        box-shadow: #db0eec 0px 2px 8px 0px;
+        box-shadow: #9b59b6 0px 2px 8px 0px;
         border: 2px solid rgba(255, 255, 255, 0.24);
         align-self: center;
         height: 3rem;
@@ -164,11 +156,7 @@
         padding : 0 !important;
         flex-grow: 1;
         overflow: hidden;
-        background: #232526;
-            /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #414345, #232526);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #414345, #232526);
+        background-color: #181d1b;
         font-family: 'Poppins', sans-serif;
         background-color: transparent;
         flex-direction: row;
@@ -246,14 +234,26 @@
 
     .avatar 
     {
+        position: relative;
         border: 6px solid rgba(255, 255, 255, 0.1);
         box-sizing: content-box;
-        box-shadow: #db0eec 0px 2px 8px 0px;
+        
+        box-shadow: #9b59b6 0px 2px 8px 0px;
+
         height: 6vh;
         width: 6vh;
         margin: 0 2rem 1em 1em ;
-        border-radius: 30em;
-       
+        border-radius: 30em;  
+    }
+
+    .avatar::before
+    {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #45294d, #9b59b6, #224483);
     }
 
     .player 
@@ -272,6 +272,7 @@
     .player-info
     {
         flex: 50%;
+        font-weight: 800;
         display: flex;
         color: white;
         flex-direction: column;
@@ -280,7 +281,9 @@
 
     .player-level
     {
-        color: #db0eec;
+        background-image: linear-gradient(45deg, #d7badf, #9b59b6, #224483);
+        background-clip: text;
+        color: transparent;
         font-size: 1rem;
 
     }
@@ -296,10 +299,12 @@
     .live-chat
     {
         z-index: 1;
+        align-self:flex-end;
         flex: 50%;
+        height: 90%;
         display: flex;
         overflow-x: hidden;
-        border-radius: 1rem;
+        border-radius: 2rem;
         width: 20vw;
         align-items: center;
         background: #232526;
@@ -310,6 +315,7 @@
         flex-direction: column;
         justify-content: flex-start;
         color: white;
+        margin-bottom: 2em;
         
     }
 
