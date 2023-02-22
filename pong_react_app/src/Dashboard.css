@@ -4,56 +4,29 @@
     
     .body {
         background-color: #222;
+        
         z-index: -1;
         inset: 0;
         place-content: center;
-        background-image: linear-gradient(#0a221a, #300b35);
+        background-image: linear-gradient(#181d1b, #2b2a2b);
         display: flex;
         height: 100vh;
+        width: 100%;
         justify-content: center;
         align-items: center;
        
     }
-    .background
-    {
-        z-index: 1;
-        position: fixed;
-        left: 0;
-        top: 0;
-        height: 100vh;
-        width: 100vw;
-        background-image:
-                linear-gradient(to right, #7DFDFE 1px, transparent 1px),
-                linear-gradient(to bottom, #7DFDFE 1px, transparent 1px);
-            transform: perspective(80vh) rotateX(60deg) scale(1, 1);
-            transform-origin: top center;
-            mask-image: gradient(linear, left top, left bottom,
-                    from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 1)));
-        
-            animation: walking 20s infinite linear forwards;
-    }
-
-        @keyframes walking {
-            from {
-                background-position: 0 100%;
-            }
-    
-            to {
-                background-position: 0 0;
-            }
-        }
-        
+  
     .app
     {
         position: relative;
         display: flex;
         flex-direction: column;
-        box-shadow: rgba(192, 181, 181, 0.25) 0px 54px 55px, rgba(224, 216, 216, 0.12) 0px -12px 30px, rgba(228, 222, 222, 0.12) 0px 4px 6px, rgba(219, 209, 209, 0.17) 0px 12px 13px, rgba(212, 167, 223, 0.731) 0px -3px 5px;
-        max-width: 90vw;
+
+        border-color: (45deg, #45294d, #9b59b6, #224483);
         width: 100%;
         height: 100%;
         border-radius: 14px;
-        max-height: 85vh;
     }
     .nav-bar {
         background: #232526;
@@ -151,6 +124,7 @@
     .page-wrapper
     {
         display: flex;
+        width: 100%;
         margin: 0 auto;
         padding : 0 auto;
         flex-grow: 1;
@@ -185,12 +159,7 @@
     .player-vs
     {
         display: flex;
-        position: absolute;
-        left: 0;
-        flex-basis: 10vw;
         justify-self: flex-start;
-        width: 90%;
-        bottom: 0;
         background: #232526;
         /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #414345, #232526);
@@ -206,11 +175,7 @@
 
     
 
-        @media only screen and (max-width: 1200px) {
-            .live-chat {
-                display: none;
-            }
-        }
+       
 
     .avatar 
     {
@@ -264,8 +229,7 @@
 
     .live-chat
     {
-        position: absolute;
-        right: 0;
+        z-index: 1;
         display: flex;
         flex-basis: 100vw;
         padding: .5em;
@@ -273,13 +237,14 @@
         flex-shrink: 0;
         height: 75vh;
         overflow-x: hidden;
+        border-radius: 1rem;
         width: 20vw;
         align-items: center;
         background: #232526;
-            /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #414345, #232526);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #414345, #232526);
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #414345, #232526);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #414345, #232526);
         flex-direction: column;
         justify-content: flex-start;
         flex-shrink: 2;
@@ -316,11 +281,11 @@
     {
         color: white;
         background: #232526;
-        height: 50vh;
-            /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #414345, #232526);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #414345, #232526);
+        height: 100%;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #414345, #232526);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #414345, #232526);
         height: 60vh;
         background: rgba(0, 0, 0, .5);
         box-shadow: 0 5px 30px rgba(0, 0, 0, .2);
@@ -332,7 +297,11 @@
 
     .message-receiver
     {
-        background-color: cadetblue;
+
+        background-color: transparent;
+        border: 5px solid transparent;
+        border-image: linear-gradient(45deg, #e74c3c, #9b59b6, #1abc9c);
+        border-image-slice: 1;
         max-width: 70%;
         position: relative;
         width:fit-content;
@@ -404,20 +373,22 @@
     }
     .message-body
     {
+        border: 5px solid transparent;
+        border-image: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+        border-image-slice: 1;
         max-width: 70%;
-        background-color: cadetblue;
         width:fit-content;
         position: relative;
         clear: both;
         display: inline-block;
         margin: .5em 1.5em 1.5em .5em;
         padding: 16px 40px 16px 20px;
-        border-radius: 10px;
+        border-radius: 2rem;
     }
 
     .sender .message-body
     {
-        background-color: #db0eec;
+        background-color: transparent;
     }
 
     .message-box {
@@ -429,6 +400,7 @@
             /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to right, #414345, #232526);
         display: flex;
+        border-radius: 1rem;
         flex-direction: row;
         flex: 0 1 10vh;
         height: 25vh;

@@ -1,6 +1,8 @@
 import React from 'react'
 import './Dashboard.css'
 import  user_pfp from './media/user.png'
+import  nathan from './media/nguiard.jpg'
+
 
 function MainChat ()
 {
@@ -27,7 +29,7 @@ function MainChat ()
                 </div>
                 <div className="message-wrapper-receiver">
                     <div className="message-avatar">
-                        <img src={user_pfp}/>
+                        <img src={nathan}/>
                     </div>
                     <div className="message">
                         <div className="message-header">
