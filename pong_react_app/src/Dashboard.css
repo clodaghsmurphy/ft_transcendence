@@ -1,10 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
     
+    .dashboard
+    {
+        height: 100vh;
+        width: 100%;
+    }
     
     
     .body {
         background-color: #222;
-        
         z-index: -1;
         inset: 0;
         place-content: center;
@@ -37,8 +41,8 @@
             /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         font-family: 'Poppins', sans-serif;
         font-size: 2em;
-        border-radius: 0em 0em 1em 1em;
-        z-index: 1;
+        border-radius: 0em 0em 0em 1em;
+        z-index: 2;
         flex-shrink: 0;
         white-space: nowrap;
         display: flex;
@@ -48,7 +52,7 @@
         align-items: center;
         flex-direction: row;
         flex-wrap: nowrap;
-        box-shadow: #db0eec 0px 2px 8px 0px;
+        box-shadow: #f29afa 0px 2px 8px 0px;
         max-height: 10vh;
         padding: 2rem 0;
         height: 10%;
