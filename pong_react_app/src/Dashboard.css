@@ -41,7 +41,7 @@
             /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         font-family: 'Poppins', sans-serif;
         font-size: 2em;
-        border-radius: 0em 0em 0em 1em;
+        border-radius: 0em 0em .2em .2em;
         z-index: 2;
         flex-shrink: 0;
         white-space: nowrap;
