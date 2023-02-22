@@ -181,7 +181,7 @@ function Chat()
 				</div>
 				{/* Cette div sert a "contenir" celles d'au dessus pour
 					eviter qu'elles depacent de la fenetre				*/}
-				<div className='channels-holder'></div>
+				{/* <div className='channels-holder'></div> */}
 			</div>
 
             <div className="chatbox"></div>
@@ -192,63 +192,6 @@ function Chat()
 				<div className='user-holder'>
 					
 					{user_in_group(user_in_group_data)}
-
-					{/* <Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button>
-					<Button variant='contained' color='success'
-						sx={{'margin': '0 5% 0 5%', 'minHeight': '5rem'}}>
-							<Avatar src={adam} alt="adben-mc"/>
-					</Button> */}
 				</div>
 			</div>
         </main>
