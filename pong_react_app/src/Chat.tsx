@@ -17,7 +17,6 @@ import {	in_user_button_friend,
 import { SearchBar } from './SearchBar'
 import User, { sample_data } from './User'
 
-
 const { v4: uuidv4 } = require('uuid');
 
 type User_message = {user: User, message: string}
@@ -58,17 +57,18 @@ function group_message(group_data: Group_message[]) {
 	return ret;
 }
  
-function user_in_group(group_user_data: Group_user_data[]) {
+function user_in_group(current_user: User, group_user_data: Group_user_data[]) {
 	let ret: JSX.Element[] = [];
 
 	for (const data of group_user_data) {
-		if (data.status === 1) {
-			ret.push(in_user_button_friend(data.user.name, data.user.avatar, data.is_op));
-		} else if (data.status === -1) {
-			ret.push(in_user_button_blocked(data.user.name, data.user.avatar, data.is_op));
-		} else {
-			ret.push(in_user_button_normal(data.user.name, data.user.avatar, data.is_op));
-		}
+		if (data.user.name == current_user.name)
+			continue
+		if (current_user.blocked_users.find(target => target == data.user.name))
+			ret.push(in_user_button_blocked(data.user, data.is_op));
+		else if (current_user.friend_users.find(target => target == data.user.name))
+			ret.push(in_user_button_friend(data.user, data.is_op));
+		else
+			ret.push(in_user_button_normal(data.user, data.is_op));
 	}
 	return ret;
 }
@@ -77,6 +77,8 @@ function Chat()
 {
 	// To change for an API call to get every users
 	let all_users: User[] = sample_data();
+	// To change for an API call to get currently connected user
+	let current_user: User = all_users[0]
 
 	let message_user_data: User_message[] = [
 		{
@@ -188,7 +190,7 @@ function Chat()
 				
 				<div className='user-holder'>
 					
-					{user_in_group(user_in_group_data)}
+					{user_in_group(current_user, user_in_group_data)}
 				</div>
 			</div>
         </main>
