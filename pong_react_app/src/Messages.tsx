@@ -1,59 +1,90 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import './Dashboard.css'
 import user_pfp from './media/user.png'
 import nathan from './media/nguiard.jpg'
 import { Avatar } from '@mui/material'
+import { useState } from 'react'
+import ChatMessage from './ChatMessage'
+
+
+
 
 function Messages()
 {
+	const [formValue, setFormValue] = useState("");
+	const [messages, setMessages] = useState(
+		[
+			{
+				createdAt: new Date(),
+				PhotoUrl: './media/user.png',
+				text: "Tu as fait tes attaques gdc ajd? ",
+				uid: 1,
+				name: "Clodagh"
+			},
+			{
+				createdAt: new Date(),
+				PhotoUrl: './media/user.png',
+				text: "Bah bien sur que oui je suis trop fort",
+				uid: 2,
+				name: "Nathan"
+			}
+		]
+	);
+
+	interface MessageData {
+		createdAt: Date;
+		PhotoUrl: string;
+		text: string;
+		uid: number;
+		name: string;
+
+	} 
+	
+	// var messages: MessageData[] = 
+	// [
+	// 	{
+	// 		createdAt: new Date(),
+	// 		PhotoUrl: './media/user.png',
+	// 		text: "Tu as fait tes attaques gdc ajd? ",
+	// 		uid: 1,
+	// 		name: "Clodagh"
+	// 	},
+	// 	{
+	// 		createdAt: new Date(),
+	// 		PhotoUrl: './media/user.png',
+	// 		text: "Bah bien sur que oui je suis trop fort",
+	// 		uid: 2,
+	// 		name: "Nathan"
+	// 	}
+	// ];
+
+
+	const sendMessage = (e: React.FormEvent<HTMLButtonElement>) =>
+	{
+		e.preventDefault();
+		var temp: MessageData[] = [
+			...messages,
+			{ 
+			createdAt: new Date(),
+			PhotoUrl: './media/user.png',
+			text: formValue,
+			uid:	Math.floor(Math.random()),
+			name: "Clodagh"
+		}
+	];
+		setMessages(temp);
+		console.log(messages);
+		setFormValue('');
+	}
 	return(
 		<div id="messages">
-			<div className="message-wrapper sender">
-				<div className="message-avatar">
-					<Avatar src={user_pfp} alt={"nathan"}
-						sx={{
-							'width': '3em', 'height': 'auto',
-							'aspectRatio': '1 / 1', 'paddingLeft': '0px',
-							'paddingRight': '5px'
-						}}>
-					</Avatar>
-				</div>
-				<div className="message">
-					<div className="message-header">
-						<span>clmurphy</span>
-
-					</div>
-					<div className="message-body">
-						Hey how are you
-
-					</div>
-				</div>
-			</div>
-			<div className="message-wrapper-receiver">
-				<div className="message-avatar">
-					<Avatar src={nathan} alt={"nathan"}
-						sx={{
-							'width': '3em', 'height': 'auto',
-							'aspectRatio': '1 / 1', 'paddingLeft': '0px',
-							'paddingRight': '5px'
-						}}>
-					</Avatar>
-				</div>
-				<div className="message">
-					<div className="message-header">
-						<span>nguiard</span>
-					</div>
-					<div className="message-body">
-						Im fine thanks and you
-					</div>
-				</div>
-			</div>
-			<div className="message-box">
-				<input type="text" className="message-input" placeholder="Type message..." />
+			{messages && messages.map(msg => <ChatMessage name={msg.name} text={msg.text} uid={msg.uid} PhotoUrl={msg.PhotoUrl} />)}			
+			<form className="message-box">
+				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)}/>
 				<div className="button-submit">
-					<button >Send</button>
+					<button type="submit" onClick={sendMessage}>Send</button>
 				</div>
-			</div>
+			</form>
 		</div>
 		
 		
