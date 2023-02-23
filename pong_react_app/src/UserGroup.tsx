@@ -2,6 +2,9 @@ import Button from '@mui/material/Button'
 import React from 'react'
 import { Avatar, ButtonGroup } from '@mui/material'
 
+const { v4: uuidv4 } = require('uuid');
+
+
 export function in_user_button_normal(name: string, img: string, is_op: boolean): JSX.Element {
 	let head: JSX.Element;
 
@@ -16,7 +19,7 @@ export function in_user_button_normal(name: string, img: string, is_op: boolean)
 	}
 	
 	return (
-		<div className='group-members-button'>
+		<div className='group-members-button' key={uuidv4()}>
 			<Avatar src={img} alt={name}
 				sx={{"marginBottom": "auto",
 					"marginTop": "auto"}}/>
@@ -55,7 +58,7 @@ export function in_user_button_blocked(name: string, img: string, is_op: boolean
 	}
 	
 	return (
-		<div className='group-members-button'
+		<div className='group-members-button' key={uuidv4()}
 			style={{"borderColor": "red",
 					"backgroundColor": "rgb(211, 47, 47)",
 			}}>
@@ -94,7 +97,7 @@ export function in_user_button_friend(name: string, img: string, is_op: boolean)
 	}
 	
 	return (
-		<div className='group-members-button'
+		<div className='group-members-button' key={uuidv4()}
 			style={{"borderColor": "green",
 					"backgroundColor": "#2e7d32",
 			}}>

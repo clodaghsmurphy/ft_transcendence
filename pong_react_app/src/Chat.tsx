@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -8,6 +8,7 @@ import pierre from './media/ple-lez.jpg'
 import clodagh from './media/clmurphy.jpg'
 import nathan from './media/nguiard.jpg'
 import group_img from './media/group.png'
+import test_img	from './media/test.jpg'
 import Button from '@mui/material/Button'
 import { Avatar } from '@mui/material'
 import {	in_user_button_friend,
@@ -15,13 +16,15 @@ import {	in_user_button_friend,
 			in_user_button_normal} from './UserGroup'
 import { SearchBar } from './SearchBar'
 
+const { v4: uuidv4 } = require('uuid');
+
 type User_message = {name: string, message: string, img: string, key: number}
 type Group_message = {name: string, message: string}
 type Group_user_data = {name: string, img: string, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string) {
 	return (
-		<Button className='chat-button' variant='outlined'>
+		<Button className='chat-button' variant='outlined' key={uuidv4()}>
 			<Avatar src={img} alt={name}
 				sx={{'width': '3em', 'height': 'auto',
 					'aspectRatio': '1 / 1', 'paddingLeft': '0px',
@@ -74,7 +77,7 @@ function Chat()
 		{
 			"name": "nguiard",
 			"message": "jsp quoi dire",
-			"img": nathan,
+			"img": test_img,
 			"key": 0,
 		},
 		{
@@ -146,7 +149,9 @@ function Chat()
 		"clmurphy"
 	];
 
-
+	useEffect(() => {
+		document.title = 'Chat';
+	}, []);
 
 	return (	
 		<div className="dashboard">
@@ -156,7 +161,7 @@ function Chat()
 				<h1>Messages</h1>
 
 				<div style={{ 'marginLeft': '5%', 'marginRight': '0',
-					'width': '100%'}}>
+					'width': '100%', 'overflow': 'visible'}}>
 				{SearchBar(every_user_name)}
 					{/* search
 				</input> */}
