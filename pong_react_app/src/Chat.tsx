@@ -1,24 +1,18 @@
-import React, { NamedExoticComponent } from 'react'
+import React from 'react'
 import NavBar from './NavBar'
 import './Dashboard.css'
 import './Chat.css'
-import {useState} from 'react'
 import adam from './media/adben-mc.jpg'
 import pierre from './media/ple-lez.jpg'
 import clodagh from './media/clmurphy.jpg'
 import nathan from './media/nguiard.jpg'
 import group_img from './media/group.png'
-import search_icon from './media/search-icon.jpg'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import { Avatar } from '@mui/material'
-import stringAvatar from '@mui/material/Avatar'
 import {	in_user_button_friend,
 			in_user_button_blocked,
 			in_user_button_normal} from './UserGroup'
-
-// import Group from '@mui/icons-material/'
-// import
+import { SearchBar } from './SearchBar'
 
 type User_message = {name: string, message: string, img: string, key: number}
 type Group_message = {name: string, message: string}
@@ -57,14 +51,14 @@ function group_message(group_data: Group_message[]) {
 	}
 	return ret;
 }
-
+ 
 function user_in_group(users: Group_user_data[]) {
 	let ret: JSX.Element[] = [];
 
 	for (const user of users) {
-		if (user.status == 1) {
+		if (user.status === 1) {
 			ret.push(in_user_button_friend(user.name, user.img, user.is_op));
-		} else if (user.status == -1) {
+		} else if (user.status === -1) {
 			ret.push(in_user_button_blocked(user.name, user.img, user.is_op));
 		} else {
 			ret.push(in_user_button_normal(user.name, user.img, user.is_op));
@@ -144,6 +138,15 @@ function Chat()
 		}
 	]
 
+	let every_user_name: string[] = [
+		"nguiard",
+		"adben-mc",
+		"ple-lez",
+		"clmurphy"
+	];
+
+
+
 	return (	
 		<div className="dashboard">
         <NavBar /> 
@@ -153,9 +156,7 @@ function Chat()
 
 				<div style={{ 'marginLeft': '5%', 'marginRight': '0',
 					'width': '100%'}}>
-				<TextField variant='standard' size='small' label='Search'
-					sx={{'width': '90%', 'marginLeft': '0'
-					, 'marginRight': '0'}}/>
+				{SearchBar(every_user_name)}
 					{/* search
 				</input> */}
 					{/* <button type='submit'>
