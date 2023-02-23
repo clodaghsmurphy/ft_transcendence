@@ -3,6 +3,7 @@
     .dashboard
     {
         height: 100vh;
+        overflow: hidden;
         width: 100%;
     }
     
@@ -385,9 +386,10 @@
     {
         display: flex;
         margin: 1rem;
-        flex: 0 1 auto!important;
-        flex-basis: 5vh;
         flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
     }
 
     .message-wrapper-receiver
@@ -395,17 +397,18 @@
         display: flex;
         margin: 1rem;
         flex-direction: row-reverse;
+        flex-wrap: nowrap;
         align-items: center;
         justify-content: flex-start;
     }
 
     .message
     {
-        display: block;
-        float:right;
+        display: flex;
         flex-direction:row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         align-items: flex-end;
+        justify-content: space-around;
         justify-content: flex-end;
     }
 
@@ -448,11 +451,9 @@
         color: white;
         border-image: linear-gradient(45deg, #45294d, #9b59b6, #224483);
         border-image-slice: 1;
-        max-width: 100%;
+        width: 100%;
         width:fit-content;
         position: relative;
-        clear: both;
-        display: inline-block;
         margin: .5em 1.5em 1.5em .5em;
         padding: 16px 40px 16px 20px;
         border-radius: 2rem;
