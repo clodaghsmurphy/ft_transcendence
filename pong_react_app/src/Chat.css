@@ -152,12 +152,20 @@
 	margin-top: auto;
 }
 
+
+#messages
+{
+	display: flex;
+	flex-direction: column;
+	margin: 1em;
+
+}
 .chatbox {
 	display: flex;
     flex-grow: 3;
 	flex-shrink: 1;
 	flex-basis: 500px;
-    background-color: blue;
+	background-color: #181d1b;
 }
 
 .group-members
