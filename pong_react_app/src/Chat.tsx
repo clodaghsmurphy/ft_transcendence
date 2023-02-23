@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -8,6 +8,7 @@ import pierre from './media/ple-lez.jpg'
 import clodagh from './media/clmurphy.jpg'
 import nathan from './media/nguiard.jpg'
 import group_img from './media/group.png'
+import test_img	from './media/test.jpg'
 import Button from '@mui/material/Button'
 import { Avatar } from '@mui/material'
 import {	in_user_button_friend,
@@ -74,7 +75,7 @@ function Chat()
 		{
 			"name": "nguiard",
 			"message": "jsp quoi dire",
-			"img": nathan,
+			"img": test_img,
 			"key": 0,
 		},
 		{
@@ -146,7 +147,9 @@ function Chat()
 		"clmurphy"
 	];
 
-
+	useEffect(() => {
+		document.title = 'Chat';
+	}, []);
 
 	return (	
 		<div className="dashboard">
