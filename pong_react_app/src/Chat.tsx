@@ -15,12 +15,13 @@ import {	in_user_button_friend,
 			in_user_button_blocked,
 			in_user_button_normal} from './UserGroup'
 import { SearchBar } from './SearchBar'
+import User, { sample_data } from './User'
 
 const { v4: uuidv4 } = require('uuid');
 
-type User_message = {name: string, message: string, img: string, key: number}
+type User_message = {user: User, message: string}
 type Group_message = {name: string, message: string}
-type Group_user_data = {name: string, img: string, status: number, is_op: boolean}
+type Group_user_data = {user: User, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string) {
 	return (
@@ -38,11 +39,11 @@ function chat_button(name: string, message: string, img: string) {
 	);
 }
 
-function users_message(user_data: User_message[]) {
+function users_message(message_data: User_message[]) {
 	let ret: JSX.Element[] = [];
 
-	for (const user of user_data) {
-		ret.push(chat_button(user.name, user.message, user.img));
+	for (const data of message_data) {
+		ret.push(chat_button(data.user.name, data.message, data.user.avatar));
 	}
 	return ret;
 }
@@ -56,47 +57,45 @@ function group_message(group_data: Group_message[]) {
 	return ret;
 }
  
-function user_in_group(users: Group_user_data[]) {
+function user_in_group(current_user: User, group_user_data: Group_user_data[]) {
 	let ret: JSX.Element[] = [];
 
-	for (const user of users) {
-		if (user.status === 1) {
-			ret.push(in_user_button_friend(user.name, user.img, user.is_op));
-		} else if (user.status === -1) {
-			ret.push(in_user_button_blocked(user.name, user.img, user.is_op));
-		} else {
-			ret.push(in_user_button_normal(user.name, user.img, user.is_op));
-		}
+	for (const data of group_user_data) {
+		if (data.user.name == current_user.name)
+			continue
+		if (current_user.blocked_users.find(target => target == data.user.name))
+			ret.push(in_user_button_blocked(data.user, data.is_op));
+		else if (current_user.friend_users.find(target => target == data.user.name))
+			ret.push(in_user_button_friend(data.user, data.is_op));
+		else
+			ret.push(in_user_button_normal(data.user, data.is_op));
 	}
 	return ret;
 }
 
 function Chat()
 {
+	// To change for an API call to get every users
+	let all_users: User[] = sample_data();
+	// To change for an API call to get currently connected user
+	let current_user: User = all_users[0]
+
 	let message_user_data: User_message[] = [
 		{
-			"name": "nguiard",
-			"message": "jsp quoi dire",
-			"img": test_img,
-			"key": 0,
-		},
-		{
-			"name": "clmurphy",
-			"message": "webserv > irc",
-			"img": clodagh,
-			"key": 1,
-		},
-		{
-			"name": "adben-mc",
+			user: all_users[0],
 			"message": "18h == matin",
-			"img": adam,
-			"key": 2,
 		},
 		{
-			"name": "ple-lez",
+			user: all_users[1],
+			"message": "webserv > irc",
+		},
+		{
+			user: all_users[2],
+			"message": "jsp quoi dire",
+		},
+		{
+			user: all_users[3],
 			"message": "je speedrun le TC",
-			"img": pierre,
-			"key": 3,
 		}
 	];
 
@@ -117,37 +116,28 @@ function Chat()
 
 	let user_in_group_data: Group_user_data[] = [
 		{
-			"name": "adben-mc",
+			user: all_users[0],
 			"is_op": true,
 			"status": 1,
-			"img": adam
 		},
 		{
-			"name": "ple-lez",
+			user: all_users[1],
 			"is_op": false,
 			"status": 0,
-			"img": pierre
 		},
 		{
-			"name": "clmurphy",
+			user: all_users[2],
 			"is_op": false,
 			"status": 0,
-			"img": clodagh
 		},
 		{
-			"name": "nguiard",
+			user: all_users[3],
 			"is_op": false,
 			"status": -1,
-			"img": nathan
 		}
 	]
 
-	let every_user_name: string[] = [
-		"nguiard",
-		"adben-mc",
-		"ple-lez",
-		"clmurphy"
-	];
+	let every_user_name: string[] = all_users.map(user => user.name);
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -200,7 +190,7 @@ function Chat()
 				
 				<div className='user-holder'>
 					
-					{user_in_group(user_in_group_data)}
+					{user_in_group(current_user, user_in_group_data)}
 				</div>
 			</div>
         </main>
