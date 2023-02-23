@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { MouseEventHandler, useEffect } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -143,6 +143,12 @@ function Chat()
 		document.title = 'Chat';
 	}, []);
 
+	function doesNothing(str: string): MouseEventHandler<HTMLButtonElement> | undefined {
+		console.log("Tried to open a chat between " + current_user.name +
+			" and " + str)
+		return ;
+	}
+
 	return (	
 		<div className="dashboard">
         <NavBar /> 
@@ -152,7 +158,7 @@ function Chat()
 
 				<div style={{ 'marginLeft': '5%', 'marginRight': '0',
 					'width': '100%', 'overflow': 'visible'}}>
-				{SearchBar(every_user_name)}
+				{SearchBar(every_user_name, doesNothing)}
 					{/* search
 				</input> */}
 					{/* <button type='submit'>

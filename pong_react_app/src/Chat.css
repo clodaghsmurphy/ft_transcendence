@@ -62,7 +62,6 @@
 .list-container button:hover {
 	font-size: 100%;
 	cursor: pointer;
-	border: transparent;
 }
 
 .channels h1 {

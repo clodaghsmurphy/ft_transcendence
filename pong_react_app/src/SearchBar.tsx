@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { MouseEventHandler, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import { List, ListItemButton, ListItemText } from '@mui/material';
 
 const { v4: uuidv4 } = require('uuid');
 
-export function SearchBar(every_user_name: string[]): JSX.Element {
+export function SearchBar(every_user_name: string[], on_click_function:
+		(str: string) => MouseEventHandler<HTMLButtonElement> | undefined): JSX.Element {
 	let res:JSX.Element[] = [];
 	let [list_users, setList_user] = useState([<></>]);
 
@@ -20,7 +21,7 @@ export function SearchBar(every_user_name: string[]): JSX.Element {
 		} else {
 			res = every_user_name.filter(str => str.includes(event.target.value)).map(
 				filtered => 
-					<button key={uuidv4()}>
+					<button key={uuidv4()} onClick={() => on_click_function(filtered)}>
 						{filtered}
 					</button>
 			)
