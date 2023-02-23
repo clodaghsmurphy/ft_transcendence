@@ -1,5 +1,6 @@
 import React, { NamedExoticComponent } from 'react'
 import NavBar from './NavBar'
+import Messages from './Messages'
 import './Dashboard.css'
 import './Chat.css'
 import {useState} from 'react'
@@ -184,7 +185,9 @@ function Chat()
 				{/* <div className='channels-holder'></div> */}
 			</div>
 
-            <div className="chatbox"></div>
+            <div className="chatbox">
+				<Messages />
+			</div>
 
             <div className="group-members">
 				<h1>Group users</h1>
