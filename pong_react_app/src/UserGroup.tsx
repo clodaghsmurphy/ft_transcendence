@@ -1,9 +1,9 @@
 import Button from '@mui/material/Button'
 import React from 'react'
 import { Avatar, ButtonGroup } from '@mui/material'
+import User from './User'
 
 const { v4: uuidv4 } = require('uuid');
-
 
 export function in_user_button_normal(name: string, img: string, is_op: boolean): JSX.Element {
 	let head: JSX.Element;
