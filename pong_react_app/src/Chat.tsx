@@ -156,7 +156,7 @@ function Chat()
 				<h1>Messages</h1>
 
 				<div style={{ 'marginLeft': '5%', 'marginRight': '0',
-					'width': '100%'}}>
+					'width': '100%', 'overflow': 'visible'}}>
 				{SearchBar(every_user_name)}
 					{/* search
 				</input> */}
