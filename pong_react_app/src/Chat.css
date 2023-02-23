@@ -199,7 +199,11 @@
 #messages
 {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
+	flex-wrap: nowrap;
+	min-height: 100%;
+	overflow: scroll!important;
 	margin: 1em;
 
 }

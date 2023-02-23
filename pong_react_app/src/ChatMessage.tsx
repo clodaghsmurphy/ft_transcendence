@@ -29,17 +29,14 @@ function ChatMessage(props: { name: string; text: string; uid: number; PhotoUrl:
 						'paddingRight': '5px'
 					}}>
 				</Avatar>
-			</div>
-			<div className={messageClass}>
 				<div className="message-header">
 					<span>{props.name}</span>
-
 				</div>
+			</div>
 				<div className="message-body">
 					{props.text}
 
 				</div>
-			</div>
 		</div>	
 		</>
 	)
