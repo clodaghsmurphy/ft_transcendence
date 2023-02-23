@@ -275,6 +275,8 @@
 	aspect-ratio: 1/1;
 	min-width: 3.5rem;
 	min-height: 3.5rem;
+	max-width: 3.5rem;
+	max-height: 3.5rem;
 	margin-top: auto;
 	margin-bottom: auto;
 	margin-left: 5%;
