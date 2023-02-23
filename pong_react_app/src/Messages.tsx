@@ -68,7 +68,7 @@ function Messages()
 			createdAt: new Date(),
 			PhotoUrl: './media/user.png',
 			text: formValue,
-			uid: 1,
+			uid:	Math.floor(Math.random()),
 			name: "Clodagh"
 		}
 	];
