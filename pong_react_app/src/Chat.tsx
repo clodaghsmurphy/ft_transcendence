@@ -16,13 +16,15 @@ import {	in_user_button_friend,
 			in_user_button_normal} from './UserGroup'
 import { SearchBar } from './SearchBar'
 
+const { v4: uuidv4 } = require('uuid');
+
 type User_message = {name: string, message: string, img: string, key: number}
 type Group_message = {name: string, message: string}
 type Group_user_data = {name: string, img: string, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string) {
 	return (
-		<Button className='chat-button' variant='outlined'>
+		<Button className='chat-button' variant='outlined' key={uuidv4()}>
 			<Avatar src={img} alt={name}
 				sx={{'width': '3em', 'height': 'auto',
 					'aspectRatio': '1 / 1', 'paddingLeft': '0px',
