@@ -26,11 +26,11 @@ type Group_user_data = {user: User, status: number, is_op: boolean}
 function chat_button(name: string, message: string, img: string) {
 	return (
 		<Button className='chat-button' variant='outlined' key={uuidv4()}>
-			<Avatar src={img} alt={name}
-				sx={{'width': '3em', 'height': 'auto',
-					'aspectRatio': '1 / 1', 'paddingLeft': '0px',
+			<img src={img} alt={name}
+				style={{'width': '3.5em', 'height': 'auto',
+					'aspectRatio': '10 / 9', 'paddingLeft': '0px',
 					'paddingRight': '5px'}}>
-			</Avatar>
+			</img>
 			<div>
 				<h2>{name}</h2>
 				<div>{message}</div>

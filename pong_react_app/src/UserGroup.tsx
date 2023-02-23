@@ -20,9 +20,7 @@ export function in_user_button_normal(user: User, is_op: boolean): JSX.Element {
 	
 	return (
 		<div className='group-members-button' key={uuidv4()}>
-			<Avatar src={user.avatar} alt={user.name}
-				sx={{"marginBottom": "auto",
-					"marginTop": "auto"}}/>
+			<img src={user.avatar} alt={user.name} />
 
 			<div className='group-members-button-text'>
 				{head}
@@ -62,8 +60,8 @@ export function in_user_button_blocked(user: User, is_op: boolean): JSX.Element 
 			style={{"borderColor": "red",
 					"backgroundColor": "rgb(211, 47, 47)",
 			}}>
-			<Avatar src={user.avatar} alt={user.name}
-				sx={{"marginBottom": "auto",
+			<img src={user.avatar} alt={user.name}
+				style={{"marginBottom": "auto",
 					"marginTop": "auto"}}/>
 
 			<div className='group-members-button-text'>
@@ -101,8 +99,8 @@ export function in_user_button_friend(user: User, is_op: boolean): JSX.Element {
 			style={{"borderColor": "green",
 					"backgroundColor": "#2e7d32",
 			}}>
-			<Avatar src={user.avatar} alt={user.name}
-				sx={{"marginBottom": "auto",
+			<img src={user.avatar} alt={user.name}
+				style={{"marginBottom": "auto",
 					"marginTop": "auto"}}/>
 
 			<div className='group-members-button-text'>
