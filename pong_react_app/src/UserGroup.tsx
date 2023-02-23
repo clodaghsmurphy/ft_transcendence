@@ -2,6 +2,7 @@ import Button from '@mui/material/Button'
 import React from 'react'
 import { Avatar, ButtonGroup } from '@mui/material'
 import User from './User'
+import { Link } from 'react-router-dom';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -9,13 +10,15 @@ export function in_user_button_normal(user: User, is_op: boolean): JSX.Element {
 	let head: JSX.Element;
 
 	if (is_op) {
-		head = (<h2 className='is_op'>
+		head = (<Link to={"/stats/" + user.name}
+		className='is_op group-member-button-link'>
 		{user.name}
-		</h2>);
+		</Link>);
 	} else {
-		head = (<h2>
+		head = (<Link to={"/stats/" + user.name}
+			className='group-member-button-link'>
 			{user.name}
-		</h2>);
+		</Link>);
 	}
 	
 	return (
@@ -46,13 +49,15 @@ export function in_user_button_blocked(user: User, is_op: boolean): JSX.Element 
 	let head: JSX.Element;
 
 	if (is_op) {
-		head = (<h2 className='is_op'>
+		head = (<Link to={"/stats/" + user.name}
+		className='is_op group-member-button-link'>
 		{user.name}
-		</h2>);
+		</Link>);
 	} else {
-		head = (<h2>
+		head = (<Link to={"/stats/" + user.name}
+			className='group-member-button-link'>
 			{user.name}
-		</h2>);
+		</Link>);
 	}
 	
 	return (
@@ -85,13 +90,15 @@ export function in_user_button_friend(user: User, is_op: boolean): JSX.Element {
 	let head: JSX.Element;
 
 	if (is_op) {
-		head = (<h2 className='is_op'>
+		head = (<Link to={"/stats/" + user.name}
+		className='is_op group-member-button-link'>
 		{user.name}
-		</h2>);
+		</Link>);
 	} else {
-		head = (<h2>
+		head = (<Link to={"/stats/" + user.name}
+			className='group-member-button-link'>
 			{user.name}
-		</h2>);
+		</Link>);
 	}
 
 	return (
