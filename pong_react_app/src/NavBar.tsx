@@ -5,10 +5,29 @@ import user_pfp from './media/user.png'
 
 
 import { Link } from 'react-router-dom'
-
+import  {useState} from 'react'
 
 function NavBar()
 {
+
+    const [burgerClass, setBurgerClass] = useState("burger-bar unclicked");
+    const [menu_class, setMenuClass] = useState("menu hidden");
+    const [isMenuClicked, setIsMenuClicked] = useState(false);
+
+    const updateMenu = () =>
+    {
+        if (!isMenuClicked)
+        {
+            setBurgerClass("burger-bar clicked");
+            setMenuClass("menu visible");
+        }
+        else
+        {
+            setBurgerClass("burger-babr unclicked");
+            setMenuClass("menu hidden");
+        }
+    }
+
     return (
     <nav className="nav-bar">
         <div className="nav-logo">
@@ -24,7 +43,12 @@ function NavBar()
             <div className="user-pfp">
                 <img src={user_pfp} />
             </div>
-            <p className='userName'> Welcome clmurphy !</p>
+            <p className='userName' > Welcome clmurphy !</p>
+        </div>
+            <div className='hamburger-menu' onClick={updateMenu}>
+                <span className={burgerClass} ></span>
+                <span className={burgerClass} ></span>
+                <span className={burgerClass} ></span>
         </div>
     </nav>
     );
