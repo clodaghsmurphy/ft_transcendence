@@ -6,6 +6,8 @@ import nathan from './media/nguiard.jpg'
 import { Avatar } from '@mui/material'
 import { useState } from 'react'
 
+const { v4: uuidv4 } = require('uuid');
+
 interface MessageData {
 	createdAt: Date;
 	PhotoUrl: string;
@@ -18,14 +20,14 @@ interface MessageData {
 function ChatMessage(msg: MessageData)
 {
 	const my_name = "clmurhpy";
-	console.log(msg)
+	console.log(msg.text)
 	console.log(msg.name === my_name)
 	const messageClass = msg.name == my_name ? "sender message-wrapper" : "message-wrapper"
 	return (
-	<>
-		<div className={messageClass}>
-			<div className="message-avatar">
-				<img src={msg.PhotoUrl} alt={msg.name}
+	<div key={uuidv4()}>
+		<div className={messageClass} key={uuidv4()}>
+			<div className="message-avatar" key={uuidv4()}>
+				<img src={msg.PhotoUrl} alt={msg.name} key={uuidv4()}
 					style={{
 						'minWidth': '3rem',
 						'minHeight': '3rem',
@@ -37,16 +39,15 @@ function ChatMessage(msg: MessageData)
 						'borderRadius': '50%'
 					}}>
 				</img>
-				<div className="message-header">
-					<span>{msg.name}</span>
+				<div className="message-header" key={uuidv4()}>
+					<span key={uuidv4()}>{msg.name}</span>
 				</div>
 			</div>
-				<div className="message-body">
+				<div className="message-body" key={uuidv4()}>
 					{msg.text}
-
 				</div>
 		</div>	
-		</>
+	</div>
 	)
 }
 
