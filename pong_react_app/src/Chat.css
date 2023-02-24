@@ -209,6 +209,7 @@
 } */
 .chatbox {
 	display: flex;
+	height: 95%;
     flex-grow: 3;
 	flex-shrink: 1;
 	flex-basis: 500px;
