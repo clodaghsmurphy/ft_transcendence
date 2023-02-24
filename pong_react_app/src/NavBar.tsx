@@ -6,34 +6,29 @@ import user_pfp from './media/user.png'
 
 import { Link } from 'react-router-dom'
 import  {useState} from 'react'
+import { FaBars, FaTimes } from "react-icons/fa";
+import  { useRef } from "react";
+import { Fab } from '@mui/material'
 
 function NavBar()
 {
 
-    const [burgerClass, setBurgerClass] = useState("burger-bar unclicked");
-    const [menu_class, setMenuClass] = useState("menu hidden");
-    const [isMenuClicked, setIsMenuClicked] = useState(false);
+    const navRef = React.useRef<HTMLInputElement>(null);
+    const navLink = React.useRef<HTMLUListElement>(null);
 
-    const updateMenu = () =>
+    const showNavbar = () =>
     {
-        if (!isMenuClicked)
-        {
-            setBurgerClass("burger-bar clicked");
-            setMenuClass("menu visible");
-        }
-        else
-        {
-            setBurgerClass("burger-babr unclicked");
-            setMenuClass("menu hidden");
-        }
+        navRef.current?.classList.toggle("responsive_nav");
+        navLink.current?.classList.toggle("nav-list-visible")
     }
 
     return (
-    <nav className="nav-bar">
+        <header >
+    <nav className="nav-bar" ref={navRef}>
         <div className="nav-logo">
             <img src={logo} />
         </div>
-        <ul className="nav-list">
+        <ul className="nav-list" ref={navLink}>
             <Link to="/main" className='navlink'>Home</Link>
             <li className='navlink' >Stats</li>
             <Link to="/chat" className='navlink'>Chat</Link>
@@ -45,12 +40,14 @@ function NavBar()
             </div>
             <p className='userName' > Welcome clmurphy !</p>
         </div>
-            <div className='hamburger-menu' onClick={updateMenu}>
-                <span className={burgerClass} ></span>
-                <span className={burgerClass} ></span>
-                <span className={burgerClass} ></span>
-        </div>
+        <button className="nav-btn nav-close-btn" onClick={showNavbar}>
+            <FaTimes />
+        </button>
     </nav>
+    <button className="nav-btn nav-open-button" onClick={showNavbar}>
+        <FaBars />
+    </button>
+        </header>
     );
 }
 
