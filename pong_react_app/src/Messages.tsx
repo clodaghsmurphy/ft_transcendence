@@ -14,7 +14,7 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages()
 {
-	const messages: MessageData[] = [
+	let messages: MessageData[] = [
 		{
 			createdAt: new Date(),
 			PhotoUrl: clodagh,
@@ -30,8 +30,8 @@ function Messages()
 			name: "nguiard"
 		}
 	]
-	const [formValue, setFormValue] = useState("");
-	const [messagesBlocks, setMessagesBlocks] = useState(
+	let [formValue, setFormValue] = useState("");
+	let [messagesBlocks, setMessagesBlocks] = useState(
 		messages.map(msg => ChatMessage(msg))
 	);
 
@@ -62,23 +62,21 @@ function Messages()
 	// 	}
 	// ];
 
-
-	const sendMessage = (e: React.FormEvent<HTMLButtonElement>) =>
+	function sendMessage(e: React.FormEvent<HTMLButtonElement>)
 	{
 		e.preventDefault();
-		messages.push(
-			{ 
+		let test = { 
 			createdAt: new Date(),
 			PhotoUrl: clodagh,
 			text: formValue,
 			uid:	Math.floor(Math.random()),
 			name: "clmurphy"
-			}
-		)
+		}
 		if (formValue.length != 0)
 		{
-			console.log("ADDING MESSAGE " + formValue);
-			setMessagesBlocks(messages.map(msg => ChatMessage(msg)));
+			let tmp = messagesBlocks
+			tmp.push(ChatMessage(test))
+			setMessagesBlocks(tmp);
 		}
 		setFormValue('');
 	}
