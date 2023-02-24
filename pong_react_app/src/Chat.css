@@ -196,7 +196,7 @@
 }
 
 
-#messages
+/* #messages
 {
 	display: flex;
 	flex-grow: 1;
@@ -206,7 +206,7 @@
 	overflow: scroll!important;
 	margin: 1em;
 
-}
+} */
 .chatbox {
 	display: flex;
     flex-grow: 3;

@@ -15,26 +15,34 @@ interface MessageData {
 
 } 
 
-function ChatMessage(props: { name: string; text: string; uid: number; PhotoUrl: string; })
+function ChatMessage(msg: MessageData)
 {
-	const messageClass = props.uid === 1 ? "message-wrapper sender" : "message"
+	const my_name = "clmurhpy";
+	console.log(msg)
+	console.log(msg.name === my_name)
+	const messageClass = msg.name == my_name ? "sender message-wrapper" : "message-wrapper"
 	return (
 	<>
 		<div className={messageClass}>
 			<div className="message-avatar">
-				<Avatar src={props.PhotoUrl} alt={props.name}
-					sx={{
-						'width': '3em', 'height': 'auto',
-						'aspectRatio': '1 / 1', 'paddingLeft': '0px',
-						'paddingRight': '5px'
+				<img src={msg.PhotoUrl} alt={msg.name}
+					style={{
+						'minWidth': '3rem',
+						'minHeight': '3rem',
+						'height': '3rem',
+						'width': '3rem',
+						'marginTop': 'auto',
+						'marginBottom': 'auto',
+						'aspectRatio': '1 / 1',
+						'borderRadius': '50%'
 					}}>
-				</Avatar>
+				</img>
 				<div className="message-header">
-					<span>{props.name}</span>
+					<span>{msg.name}</span>
 				</div>
 			</div>
 				<div className="message-body">
-					{props.text}
+					{msg.text}
 
 				</div>
 		</div>	

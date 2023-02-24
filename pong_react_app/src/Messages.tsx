@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react'
 import './Dashboard.css'
 import user_pfp from './media/user.png'
 import nathan from './media/nguiard.jpg'
+import clodagh from './media/clmurphy.jpg'
 import { Avatar } from '@mui/material'
 import { useState } from 'react'
 import ChatMessage from './ChatMessage'
@@ -16,17 +17,17 @@ function Messages()
 		[
 			{
 				createdAt: new Date(),
-				PhotoUrl: './media/user.png',
+				PhotoUrl: clodagh,
 				text: "Tu as fait tes attaques gdc ajd? ",
 				uid: 1,
-				name: "Clodagh"
+				name: "clmurhpy"
 			},
 			{
 				createdAt: new Date(),
-				PhotoUrl: './media/user.png',
+				PhotoUrl: nathan,
 				text: "Bah bien sur que oui je suis trop fort",
 				uid: 2,
-				name: "Nathan"
+				name: "nguiard"
 			}
 		]
 	);
@@ -66,19 +67,25 @@ function Messages()
 			...messages,
 			{ 
 			createdAt: new Date(),
-			PhotoUrl: './media/user.png',
+			PhotoUrl: clodagh,
 			text: formValue,
 			uid:	Math.floor(Math.random()),
-			name: "Clodagh"
+			name: "clmurphy"
 		}
 	];
-		setMessages(temp);
+		if (temp[temp.length - 1].text.length)
+			setMessages(temp);
 		console.log(messages);
 		setFormValue('');
 	}
 	return(
-		<div id="messages">
-			{messages && messages.map(msg => <ChatMessage name={msg.name} text={msg.text} uid={msg.uid} PhotoUrl={msg.PhotoUrl} />)}			
+		<div style={{
+			'display': 'flex',
+			'flexDirection': 'column'
+		}}>
+			<div id="messages" style={{overflowY: 'scroll'}}>
+				{messages && messages.map(msg => ChatMessage(msg))}			
+			</div>
 			<form className="message-box">
 				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)}/>
 				<div className="button-submit">
@@ -86,8 +93,6 @@ function Messages()
 				</div>
 			</form>
 		</div>
-		
-		
 	);
 }
 
