@@ -11,7 +11,7 @@ services:
       context: ${PWD}/pong_react_app
       dockerfile: Dockerfile
     stdin_open: true
-    ports: 
+    ports:
       - 3001:3000
     environment:
       - CHOKIDAR_USEPOLLIN=true
@@ -19,10 +19,17 @@ services:
       # - FAST_REFRESH=false
       - WDS_SOCKET_PORT=3001
 
+  back:
+    container_name: back_nest
+    image: docker-nest_i
+    build:
+      context: ${PWD}/pong_back
+      dockerfile: Dockerfile
+
 volumes:
   front-volume:
     driver: local
-    driver_opts: 
+    driver_opts:
       type: none
       o: bind
       device: ${PWD}/pong_react_app
