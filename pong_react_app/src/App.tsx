@@ -8,7 +8,6 @@ import './App.css';
 import Dashboard from './Dashboard';
 import Main from './Main';
 import Chat from './Chat';
-import TestNathan from './TestNathan';
 
 function App() {
 
@@ -19,7 +18,6 @@ function App() {
         <Route path="/dashboard" element={< Dashboard />} />
         <Route path='/main' element={ <Main />} />
         <Route path='/chat' element={ <Chat />} />
-		<Route path='/test-nathan' element={ <TestNathan />} />
       </Routes>
     </Router>
   );
