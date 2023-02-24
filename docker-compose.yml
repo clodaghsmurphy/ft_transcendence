@@ -25,6 +25,8 @@ services:
     build:
       context: ${PWD}/pong_back
       dockerfile: Dockerfile
+    ports:
+      - 3042:3042
 
 volumes:
   front-volume:
