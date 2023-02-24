@@ -82,18 +82,19 @@ function Messages()
 		}
 		setFormValue('');
 	}
+
 	return(
 		<div style={{
 			'display': 'flex',
 			'flexDirection': 'column'
-		}} key={uuidv4()}>
-			<div id="messages" style={{overflowY: 'scroll'}} key={uuidv4()}>
+		}} key="Message-ret-a">
+			<div id="messages" style={{overflowY: 'scroll'}} key="Message-ret-b">
 				{messagesBlocks}			
 			</div>
-			<form className="message-box" key={uuidv4()}>
-				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)} key={uuidv4()}/>
-				<div className="button-submit" key={uuidv4()}>
-					<button type="submit" onClick={sendMessage} key={uuidv4()}>Send</button>
+			<form className="message-box" key="Message-ret-c">
+				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)} key="will_never_change"/>
+				<div className="button-submit" key="Message-ret-d">
+					<button type="submit" onClick={sendMessage} key="Message-ret-e">Send</button>
 				</div>
 			</form>
 		</div>
