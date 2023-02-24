@@ -450,7 +450,11 @@
         flex-direction: row;
         flex-wrap: nowrap;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: space-;
+		width: 95%;
+		min-height: 6rem;
+		flex-grow: 0;
+		flex-basis: 6rem;
     }
 
     .message-wrapper-receiver
@@ -466,11 +470,17 @@
     .message
     {
         display: flex;
-        flex-direction:row;
-        flex-wrap: nowrap;
+        flex-direction: row;
+        /* flex-wrap: nowrap; */
         align-items: flex-end;
         justify-content: space-around;
         justify-content: flex-end;
+		flex: 0;
+		width: 90%;
+		margin-top: auto;
+		/* max-height: 90%; */
+		overflow-y: scroll;
+		flex-shrink: 0;
     }
 
     .message-wrapper-receiver .message-header
@@ -488,22 +498,32 @@
 
     }
 
-    .sender .message-avatar{
-        border-radius: 50%;
+    /* .sender .message-avatar{
+		display: flex;
         justify-content: flex-end;
         align-items: flex-end;
-    }
+    } */
+
+	.message-header span {
+		color: white;
+		text-align: center;
+	}
 
     .message-avatar
     {
-        border-radius: 50%;
+		display: flex;
+		flex-direction: column;
         justify-content: center;
         align-items: flex-start;
         align-items: center;
-        flex: 20%;
+        flex: 1;
+		flex-basis: 5rem;
+		flex-grow: 0;
+		flex-shrink: 0;
         margin: 0;
-        width: 3.5em;
-        height: 3.5em;
+        height: 100%;
+		aspect-ratio: 1 / 1;
+		max-height: 4.5rem;
     }
 
     .message-body
@@ -515,22 +535,30 @@
         width: 100%;
         width:fit-content;
         position: relative;
-        margin: .5em 1.5em 1.5em .5em;
+        margin: 0 5px;
         padding: 16px 40px 16px 20px;
         border-radius: 2rem;
+		word-wrap: break-word;
     }
 
-    .sender .message-body
+    /* .sender .message-body
     {
         background-color: transparent;
-    }
+    } */
+
+	.sender {
+		flex-direction: row-reverse;
+	}
 
     .message-box {
      
         width: 100%;
         margin-top: auto;
+		margin-bottom: 10px;
         justify-content: space-between;
-        flex: 1;
+        flex: 0;
+		flex-shrink: 0;
+		flex-basis: 45px;
         background: #232526;
         /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #414345, #232526);
@@ -540,11 +568,12 @@
         flex-direction: row;
         align-self: flex-end;
         align-items: center;
-        flex: 0 1 8vh;
+        flex: 0 0 60px;
         width: 100%;
         background: rgba(0, 0, 0, 0.3);
-        padding: 2vh;
+        padding: 5px 2.5%;
         position: relative;
+		min-height: 45px;
     }
 
     .message-input {
