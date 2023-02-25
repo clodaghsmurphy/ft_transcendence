@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { UserService } from "./user.service";
 
@@ -14,5 +14,13 @@ export class UserController {
 	@Get('info/:name')
 	findUser(@Param() params) {
 		return this.userService.findUser(params.name);
+	}
+
+	@Post('create')
+	createUser(@Body() dto: any) {
+		console.log({
+			dto,
+		});
+		return '';
 	}
 }
