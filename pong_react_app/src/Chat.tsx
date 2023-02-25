@@ -73,21 +73,52 @@ function user_in_group(current_user: User, group_user_data: Group_user_data[]) {
 	return ret;
 }
 
-function api_get<T>(path: string): Promise<T> {
-	return fetch('back_nest' + path)
-	  .then(response => {
-		if (!response.ok) {
-		  throw new Error(response.statusText)
-		}
-		return response.json()
-	  })
-}
 
 function Chat()
 {
 	// To change for an API call to get every users
-	let all_users: User[] = []
-	api_get<User[]>('/user/info').then((value) => all_users = value).catch(error => {});
+	let all_users: User[] = [{
+		name: "adben-mc",
+		avatar: adam,
+		blocked_users: ["nguiard"],
+		friend_users: ["ple-lez"],
+		channels: ["Transcendence", "Illuminatis"],
+		connected: false,
+		in_game: false,
+		game_id: -1,
+		last_games: [
+			{
+				has_won: true,
+				opponnent: "clmurphy",
+				score: [10, 6],
+			},
+			{
+				has_won: true,
+				opponnent: "nguiard",
+				score: [10, 4],
+			},
+		]
+	}]
+
+	fetch('http://back_nest:3042/user/info', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin:': '*'
+		}
+	})
+		.then((response) => {
+			console.log("RESPONSE: ",response);
+			response.json()
+				.then(data => {
+					console.log("test: ", data);
+					all_users = data as User[]
+				})
+		})
+		.catch(error => console.log(error))
+
+	console.log(all_users)
+
 	// To change for an API call to get currently connected user
 	let current_user: User = all_users[2]
 
