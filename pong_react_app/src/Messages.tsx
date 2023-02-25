@@ -86,7 +86,8 @@ function Messages()
 	return(
 		<div style={{
 			'display': 'flex',
-			'flexDirection': 'column'
+			'flexDirection': 'column',
+			'justifyContent': 'space-between'
 		}} key="Message-ret-a">
 			<div id="messages" style={{overflowY: 'scroll'}} key="Message-ret-b">
 				{messagesBlocks}
