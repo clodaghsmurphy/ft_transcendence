@@ -9,13 +9,13 @@ import { useState } from 'react'
 const { v4: uuidv4 } = require('uuid');
 
 interface MessageData {
-	PhotoUrl: string;
 	text: string;
 	uid: number;
 	name: string;
+	type: number;
 } 
 
-function ChatMessage(msg: MessageData)
+function ChatMessage(msg: MessageData, avatar: string)
 {
 	const my_name = "clmurphy";
 	const messageClass = msg.name == my_name ? "sender message-wrapper" : "message-wrapper"
@@ -23,7 +23,7 @@ function ChatMessage(msg: MessageData)
 	<div key={uuidv4()}>
 		<div className={messageClass} key={uuidv4()}>
 			<div className="message-avatar" key={uuidv4()}>
-				<img src={msg.PhotoUrl} alt={msg.name} key={uuidv4()}
+				<img src={avatar} alt={msg.name} key={uuidv4()}
 					style={{
 						'minWidth': '3rem',
 						'minHeight': '3rem',

@@ -25,6 +25,12 @@ export type User = {
 	last_games: User_last_game[],
 }
 
+export function avatarOf(every_users: User[], target: string): string {
+	return (typeof(every_users.find(usr => usr.name == target)?.avatar) == 'string' ?
+			every_users.find(usr => usr.name == target)?.avatar as string :
+			'./media/default.jpg')
+}
+
 export function sample_data(): User[] {
 	let u_adam: User = {
 		name: "adben-mc",

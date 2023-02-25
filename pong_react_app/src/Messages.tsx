@@ -7,23 +7,23 @@ import { Avatar } from '@mui/material'
 import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
 import Chat from './Chat'
-
+import { Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
+import User, { avatarOf } from './User'
 
 const { v4: uuidv4 } = require('uuid');
 
-
-function Messages()
+function Messages(channels: Channel[], users: User[])
 {
 	const messageScroll = useRef<HTMLSpanElement>(null);
 	let messages: MessageData[] = [
 		{
-			PhotoUrl: clodagh,
+			type: 0,
 			text: "Tu as fait tes attaques gdc ajd? ",
 			uid: 1,
 			name: "clmurphy"
 		},
 		{
-			PhotoUrl: nathan,
+			type: 0,
 			text: "Bah bien sur que oui je suis trop fort",
 			uid: 2,
 			name: "nguiard"
@@ -31,31 +31,29 @@ function Messages()
 	]
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState(
-		messages.map(msg => ChatMessage(msg))
+		messages.map(msg => ChatMessage(msg, avatarOf(users, msg.name)))
 	);
 
 	interface MessageData {
-		PhotoUrl: string;
+		type: number;
 		text: string;
 		uid: number;
 		name: string;
-
 	}
 
 	function sendMessage(e: React.FormEvent<HTMLButtonElement>)
 	{
 		e.preventDefault();
 		let test = { 
-			createdAt: new Date(),
-			PhotoUrl: clodagh,
 			text: formValue,
 			uid:	Math.floor(Math.random()),
-			name: "clmurphy"
+			name: "clmurphy",
+			type: NORMAL
 		}
 		if (formValue.length !== 0)
 		{
 			let tmp = messagesBlocks
-			tmp.push(ChatMessage(test))
+			tmp.push(ChatMessage(test, avatarOf(users, test.name)))
 			setMessagesBlocks(tmp);
 		}
 		setFormValue('');

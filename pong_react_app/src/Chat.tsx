@@ -73,10 +73,21 @@ function user_in_group(current_user: User, group_user_data: Group_user_data[]) {
 	return ret;
 }
 
+function api_get<T>(path: string): Promise<T> {
+	return fetch('back_nest' + path)
+	  .then(response => {
+		if (!response.ok) {
+		  throw new Error(response.statusText)
+		}
+		return response.json()
+	  })
+}
+
 function Chat()
 {
 	// To change for an API call to get every users
-	let all_users: User[] = sample_data();
+	let all_users: User[] = []
+	api_get<User[]>('/user/info').then((value) => all_users = value).catch(error => {});
 	// To change for an API call to get currently connected user
 	let current_user: User = all_users[2]
 
@@ -188,7 +199,7 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				<Messages />
+				{Messages([], all_users)}
 			</div>
 
             <div className="group-members">

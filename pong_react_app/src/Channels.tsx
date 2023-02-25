@@ -1,10 +1,10 @@
 import React from 'react'
 import User from './User'
 
-const NORMAL = 0
-const KICK = 1
-const BAN = 2
-const INVITE = 3
+export const NORMAL = 0
+export const KICK = 1
+export const BAN = 2
+export const INVITE = 3
 
 interface MessageData {
 	text: string;
@@ -13,7 +13,7 @@ interface MessageData {
 	type: number,
 } 
 
-type Channel = {
+export type Channel = {
 	name: string,
 	members: string[],
 	op: string[],

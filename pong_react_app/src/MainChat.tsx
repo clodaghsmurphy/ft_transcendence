@@ -12,7 +12,7 @@ function MainChat ()
             <div className="chat-title">
             </div>
             <div className="chat-box">
-                < Messages />
+                {Messages([], [])}
             </div>
          
            
