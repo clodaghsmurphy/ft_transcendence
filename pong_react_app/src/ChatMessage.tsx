@@ -9,12 +9,10 @@ import { useState } from 'react'
 const { v4: uuidv4 } = require('uuid');
 
 interface MessageData {
-	createdAt: Date;
 	PhotoUrl: string;
 	text: string;
 	uid: number;
 	name: string;
-
 } 
 
 function ChatMessage(msg: MessageData)

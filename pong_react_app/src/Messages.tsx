@@ -17,14 +17,12 @@ function Messages()
 	const messageScroll = useRef<HTMLSpanElement>(null);
 	let messages: MessageData[] = [
 		{
-			createdAt: new Date(),
 			PhotoUrl: clodagh,
 			text: "Tu as fait tes attaques gdc ajd? ",
 			uid: 1,
 			name: "clmurphy"
 		},
 		{
-			createdAt: new Date(),
 			PhotoUrl: nathan,
 			text: "Bah bien sur que oui je suis trop fort",
 			uid: 2,
@@ -37,31 +35,12 @@ function Messages()
 	);
 
 	interface MessageData {
-		createdAt: Date;
 		PhotoUrl: string;
 		text: string;
 		uid: number;
 		name: string;
 
-	} 
-	
-	// var messages: MessageData[] = 
-	// [
-	// 	{
-	// 		createdAt: new Date(),
-	// 		PhotoUrl: './media/user.png',
-	// 		text: "Tu as fait tes attaques gdc ajd? ",
-	// 		uid: 1,
-	// 		name: "Clodagh"
-	// 	},
-	// 	{
-	// 		createdAt: new Date(),
-	// 		PhotoUrl: './media/user.png',
-	// 		text: "Bah bien sur que oui je suis trop fort",
-	// 		uid: 2,
-	// 		name: "Nathan"
-	// 	}
-	// ];
+	}
 
 	function sendMessage(e: React.FormEvent<HTMLButtonElement>)
 	{
@@ -73,7 +52,7 @@ function Messages()
 			uid:	Math.floor(Math.random()),
 			name: "clmurphy"
 		}
-		if (formValue.length != 0)
+		if (formValue.length !== 0)
 		{
 			let tmp = messagesBlocks
 			tmp.push(ChatMessage(test))
