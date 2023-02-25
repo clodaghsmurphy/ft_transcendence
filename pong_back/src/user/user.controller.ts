@@ -1,13 +1,18 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Controller, Get, Param, Post } from "@nestjs/common";
+import { User } from "@prisma/client";
 import { UserService } from "./user.service";
 
 @Controller('user')
 export class UserController {
 	constructor(private userService: UserService) {}
 
-	// These will route /user/info
 	@Get('info')
-	info() {
-		return this.userService.info();
+	getAllUsers() {
+		return this.userService.getAllUsers();
+	}
+
+	@Get('info/:name')
+	findUser(@Param() params) {
+		return this.userService.findUser(params.name);
 	}
 }
