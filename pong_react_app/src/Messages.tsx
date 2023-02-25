@@ -86,10 +86,11 @@ function Messages()
 	return(
 		<div style={{
 			'display': 'flex',
+			'height': '100%',
 			'flexDirection': 'column',
 			'justifyContent': 'space-between'
 		}} key="Message-ret-a">
-			<div id="messages" style={{overflowY: 'scroll'}} key="Message-ret-b">
+			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}
 			</div>
 			<form className="message-box" key="Message-ret-c">
