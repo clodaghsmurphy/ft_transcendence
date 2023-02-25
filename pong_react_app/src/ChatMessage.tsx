@@ -19,7 +19,7 @@ interface MessageData {
 
 function ChatMessage(msg: MessageData)
 {
-	const my_name = "clmurhpy";
+	const my_name = "clmurphy";
 	const messageClass = msg.name == my_name ? "sender message-wrapper" : "message-wrapper"
 	return (
 	<div key={uuidv4()}>
