@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 export function SearchBar(every_user_name: string[], on_click_function:
 		(str: string) => MouseEventHandler<HTMLButtonElement> | undefined): JSX.Element {
 	let res:JSX.Element[] = [];
-	let [list_users, setList_user] = useState([<></>]);
+	let [list_users, setList_user] = useState([<div key={uuidv4}/>]);
 
 	
 	function updateList(event: React.ChangeEvent<HTMLInputElement>) {
@@ -17,7 +17,7 @@ export function SearchBar(every_user_name: string[], on_click_function:
 		event.target.addEventListener("blur", resetList)
 
 		if (event.target.value.length === 0) {
-			res = [<></>]
+			res = [<div key={uuidv4}/>]
 		} else {
 			res = every_user_name.filter(str => str.includes(event.target.value)).map(
 				filtered => 
@@ -30,7 +30,7 @@ export function SearchBar(every_user_name: string[], on_click_function:
 	}
 
 	function resetList() {
-		setList_user([<></>])
+		setList_user([<div key={uuidv4}/>])
 	}
 
 	return (

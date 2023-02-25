@@ -78,7 +78,7 @@ function Chat()
 	// To change for an API call to get every users
 	let all_users: User[] = sample_data();
 	// To change for an API call to get currently connected user
-	let current_user: User = all_users[0]
+	let current_user: User = all_users[2]
 
 	let message_user_data: User_message[] = [
 		{
@@ -184,7 +184,7 @@ function Chat()
 				</div>
 				{/* Cette div sert a "contenir" celles d'au dessus pour
 					eviter qu'elles depacent de la fenetre				*/}
-				{/* <div className='channels-holder'></div> */}
+				<div className='channels-holder'></div>
 			</div>
 
             <div className="chatbox">
