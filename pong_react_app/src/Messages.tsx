@@ -21,7 +21,7 @@ function Messages()
 			PhotoUrl: clodagh,
 			text: "Tu as fait tes attaques gdc ajd? ",
 			uid: 1,
-			name: "clmurhpy"
+			name: "clmurphy"
 		},
 		{
 			createdAt: new Date(),

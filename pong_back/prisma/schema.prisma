@@ -1,0 +1,23 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Todo: find a way to share the User class between front and back
+model User {
+  name String @id
+  avatar String
+  blocked_users String[]
+  friend_users String[]
+  channels String[]
+  connected Boolean
+  in_game Boolean
+  game_id Int?
+}
