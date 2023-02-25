@@ -12,12 +12,21 @@ export class UserService {
 		return await this.prisma.user.findMany();
 	}
 
-	async findUser(username: string): Promise<User> {
+	async getUser(username: string): Promise<User> {
 		return await this.prisma.user.findUnique({
 			where: {
 				name: username,
 			},
 		});
+	}
+
+	async getUserInfo(username: string, attribute: string) {
+		const user = await this.prisma.user.findUnique({
+			where: {
+				name: username,
+			},
+		});
+		return { attribute: user[attribute] };
 	}
 
 	async createUser(dto: UserDto) {

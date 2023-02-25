@@ -13,12 +13,18 @@ export class UserController {
 	}
 
 	@Get('info/:name')
-	findUser(@Param() params) {
-		return this.userService.findUser(params.name);
+	getUser(@Param() params) {
+		return this.userService.getUser(params.name);
+	}
+
+	@Get('info/:name/:attribute')
+	getUserInfo(@Param() params) {
+		return this.userService.getUserInfo(params.name, params.attribute);
 	}
 
 	@Post('create')
 	createUser(@Body() dto: UserDto) {
 		return this.userService.createUser(dto);
 	}
+
 }
