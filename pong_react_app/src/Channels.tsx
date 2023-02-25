@@ -1,11 +1,16 @@
 import React from 'react'
 import User from './User'
 
+const NORMAL = 0
+const KICK = 1
+const BAN = 2
+const INVITE = 3
+
 interface MessageData {
-	PhotoUrl: string;
 	text: string;
 	uid: number;
 	name: string;
+	type: number,
 } 
 
 type Channel = {
@@ -38,7 +43,63 @@ export function banFromChan(chan: Channel, current: User, target: string): boole
 		let index = chan.members.indexOf(target)
 		if (index > -1) {
 			chan.members.splice(index, 1)
+			chan.banned.push(target)
 		}
+		// post le bannissement
 		return true
 	}
+	return false
+}
+
+export function kickFromChan(chan: Channel, current: User, target: string): boolean {
+	if (chan.op.includes(current.name)) {
+		if (chan.op.includes(target)) {
+			return false
+		}
+		let index = chan.members.indexOf(target)
+		if (index > -1) {
+			chan.members.splice(index, 1)
+		}
+		// post le kick
+		return true
+	}
+	return false
+}
+
+export function giveOperator(chan: Channel, current: User, target: string): boolean {
+	if (chan.op.includes(current.name)) {
+		if (chan.op.includes(target)) {
+			return true
+		}
+		chan.op.push(target)
+		// post le op
+		return true
+	}
+	return false
+}
+
+function sendMessage(chan: Channel, current: User, msg: MessageData): boolean {
+	if (chan.members.includes(current.name) && !(chan.banned.includes(current.name))) {
+		chan.messages = [
+			{
+				...msg,
+				uid: chan.curr_uid,
+			},
+			...chan.messages,
+		]
+		chan.curr_uid += 1
+		// post le nv message
+		return true
+	}
+	return false
+}
+
+export function sendToChan(chan: Channel, current: User, msg: "string"): boolean {
+	const new_message: MessageData = {
+		name: current.name,
+		uid: 0,
+		text: msg,
+		type: NORMAL,
+	}
+	return sendMessage(chan, current, new_message)
 }
