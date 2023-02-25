@@ -55,12 +55,14 @@
 
     .nav-list {
         display: flex;
+        font-size: 1em;
         font-weight: 400;
-        flex: 50%;
+        flex: 60%;
         padding: 0 auto;
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-start;
+        text-align: left;
         list-style: none;
     }
 
