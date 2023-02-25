@@ -34,7 +34,7 @@
     .nav-bar {
 
         background: rgba(0, 0, 0, .5);
-        
+        justify-content: space-between;
         font-family: 'Poppins', sans-serif;
         font-size: 2em;
         border-radius: 0em 0em .2em .2em;
@@ -44,11 +44,10 @@
         display: flex;
         background-color: #181d1b;
         color: white;
-        justify-content: space-between;
         align-items: center;
         flex-direction: row;
+        text-align: center;
         flex-wrap: nowrap;
-        max-height: 6vh;
         padding: 2rem 0;
         height: 10%;
         width:100%;
@@ -56,47 +55,129 @@
 
     .nav-list {
         display: flex;
+        font-size: 1em;
         font-weight: 400;
-        flex: 50%;
+        flex: 60%;
         padding: 0 auto;
         flex-direction: row;
-        justify-content: space-evenly;
-        align-items: center;
+        justify-content: space-between;
+        align-items: flex-start;
+        text-align: left;
         list-style: none;
+    }
+
+    .nav-list-visible
+    {
+        display: flex!important;
+        align-items: center!important;
+        justify-content: center!important;
+        list-style: none;
+        flex-direction: column;
+        font-size: 1.5em;
     }
 
 
 
     .navlink {
+        cursor: pointer;
         justify-self: center;
+        margin: 0 2em;
         letter-spacing: 0.2em;
         width: 100%;
         cursor: pointer;
         list-style: none;
         text-decoration: none;
-        background-clip: text;
-        background-image: linear-gradient(45deg, #cda5d8, #9b59b6, #224483);
+        color: white;
         margin-top: 1.5rem;
         font-size: .55em;
         font-weight: 800;
         border-radius: 1em;
-        color: transparent;
     }
 
     .navlink:hover
     {
+
+        background-clip: text;
+        cursor: pointer;
+        color: transparent;
+        filter:brightness(1.2);
+        background-image: linear-gradient(45deg, #cda5d8, #9b59b6, #224483);
         transform: scale(1.02);
         text-decoration: underline;
     }
 
+
+    .nav-btn
+    {
+        width: 6em;
+        align-self: center;
+        padding: 5px;
+        cursor: pointer;
+        align-self: flex-end;
+        background-color: transparent;
+        color: white;
+        border: none;
+        display: none;
+    }
+
+    header{
+        display: flex;
+        align-items: center!important;
+        justify-content: space-between!important;
+        height: 4em;
+        width: 100%;
+    }
+
+   
     @media only screen and (max-width: 1200px) {
-        .navlink {
+        .nav-list {
             display: none;
         }
         .nav-user 
         {
-            display: none;
+            display: none!important;
         }
+        .nav-logo {
+            display: none!important;
+            flex:none!important
+        }
+        .nav-btn
+        {
+            display: flex;
+            margin-left: auto;
+            padding: 5px;
+            cursor: pointer;
+            align-self: flex-end;
+            background-color: transparent;
+            color: white;
+            border: none;
+        }
+        .nav-bar
+        {
+            position: fixed;
+            left: 0;
+            top: -100vh;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 1.5;
+            transition: 1s;
+        }
+        .responsive_nav
+        {
+            height: 100%;
+            transform: translateY(100vh);
+        }
+
+        .nav-close-btn
+        {
+            position: absolute;
+            top: 2em;
+            right: 2em;
+        }
+       
     }
 
 
@@ -136,7 +217,7 @@
         flex-wrap: wrap;
     }
     .nav-logo {
-        flex:  30%;
+        flex: 30% 1;
         align-self: center;
         justify-self: flex-start;
         margin-top: 2vh;
@@ -144,7 +225,7 @@
         justify-content: flex-start;
         float: left;
         height: 10vh;
-        width: 50vh;
+        width: 20vh;
     }
     
 
@@ -152,7 +233,7 @@
     {
         display: flex;
         width: 100%;
-        height: 95%;
+        height: 100%;
         margin: 0 auto;
         padding : 0 !important;
         flex-grow: 1;
@@ -389,7 +470,11 @@
         flex-direction: row;
         flex-wrap: nowrap;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: space-;
+		width: 95%;
+		min-height: 6rem;
+		flex-grow: 0;
+		flex-basis: 6rem;
     }
 
     .message-wrapper-receiver
@@ -405,11 +490,17 @@
     .message
     {
         display: flex;
-        flex-direction:row;
-        flex-wrap: nowrap;
+        flex-direction: row;
+        /* flex-wrap: nowrap; */
         align-items: flex-end;
         justify-content: space-around;
         justify-content: flex-end;
+		flex: 0;
+		width: 90%;
+		margin-top: auto;
+		/* max-height: 90%; */
+		overflow-y: scroll;
+		flex-shrink: 0;
     }
 
     .message-wrapper-receiver .message-header
@@ -427,22 +518,32 @@
 
     }
 
-    .sender .message-avatar{
-        border-radius: 50%;
+    /* .sender .message-avatar{
+		display: flex;
         justify-content: flex-end;
         align-items: flex-end;
-    }
+    } */
+
+	.message-header span {
+		color: white;
+		text-align: center;
+	}
 
     .message-avatar
     {
-        border-radius: 50%;
+		display: flex;
+		flex-direction: column;
         justify-content: center;
         align-items: flex-start;
         align-items: center;
-        flex: 20%;
+        flex: 1;
+		flex-basis: 5rem;
+		flex-grow: 0;
+		flex-shrink: 0;
         margin: 0;
-        width: 3.5em;
-        height: 3.5em;
+        height: 100%;
+		aspect-ratio: 1 / 1;
+		max-height: 4.5rem;
     }
 
     .message-body
@@ -454,22 +555,30 @@
         width: 100%;
         width:fit-content;
         position: relative;
-        margin: .5em 1.5em 1.5em .5em;
+        margin: 0 5px;
         padding: 16px 40px 16px 20px;
         border-radius: 2rem;
+		word-wrap: break-word;
     }
 
-    .sender .message-body
+    /* .sender .message-body
     {
         background-color: transparent;
-    }
+    } */
+
+	.sender {
+		flex-direction: row-reverse;
+	}
 
     .message-box {
      
         width: 100%;
         margin-top: auto;
+		margin-bottom: 10px;
         justify-content: space-between;
-        flex: 1;
+        flex: 0;
+		flex-shrink: 0;
+		flex-basis: 45px;
         background: #232526;
         /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #414345, #232526);
@@ -479,11 +588,12 @@
         flex-direction: row;
         align-self: flex-end;
         align-items: center;
-        flex: 0 1 8vh;
+        flex: 0 0 60px;
         width: 100%;
         background: rgba(0, 0, 0, 0.3);
-        padding: 2vh;
+        padding: 5px 2.5%;
         position: relative;
+		min-height: 45px;
     }
 
     .message-input {

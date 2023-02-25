@@ -101,7 +101,7 @@
 	flex: 1;
 	flex-basis: 25rem;
 	flex-grow: 0;
-	max-height: 45%;
+	max-height: 40%;
 }
 
 .lists * {
@@ -129,6 +129,7 @@
 	flex-direction: column;
 	flex-basis: 19rem;
 	gap: 5px;
+	height: 90%;
 }
 
 .chat-button {
@@ -196,7 +197,7 @@
 }
 
 
-#messages
+/* #messages
 {
 	display: flex;
 	flex-grow: 1;
@@ -206,9 +207,10 @@
 	overflow: scroll!important;
 	margin: 1em;
 
-}
+} */
 .chatbox {
 	display: flex;
+	height: 100%;
     flex-grow: 3;
 	flex-shrink: 1;
 	flex-basis: 500px;
