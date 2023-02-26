@@ -40,11 +40,11 @@ function NavBar()
             </div>
             <p className='userName' > Welcome clmurphy !</p>
         </div>
-        <button className="nav-btn nav-close-btn" onClick={showNavbar}>
+        <button className="nav-btn nav-close-btn" onClick={() => showNavbar()}>
             <FaTimes />
         </button>
     </nav>
-    <button className="nav-btn nav-open-button" onClick={showNavbar}>
+    <button className="nav-btn nav-open-button" onClick={() => showNavbar()}>
         <FaBars />
     </button>
         </header>
