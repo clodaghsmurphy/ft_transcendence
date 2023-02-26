@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react'
+import React, { MouseEventHandler, useEffect } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -15,7 +15,7 @@ import {	in_user_button_friend,
 			in_user_button_blocked,
 			in_user_button_normal} from './UserGroup'
 import { SearchBar } from './SearchBar'
-import User, { avatarOf, name_to_user, sample_user_data } from './User'
+import User, { name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, sample_channel_data } from './Channels'
 
 const { v4: uuidv4 } = require('uuid');
@@ -24,54 +24,32 @@ type User_message = {user: User, message: string}
 type Group_message = {name: string, message: string}
 type Group_user_data = {user: User, status: number, is_op: boolean}
 
-function chat_button_channel(chan: Channel, text: string, click_handler:
-	(target: Channel) => MouseEventHandler<HTMLButtonElement> | undefined) {
+function chat_button(name: string, message: string, img: string) {
 	return (
-		<button className='chat-button' key={uuidv4()}
-			onClick={click_handler(chan)}>
-			<img src={group_img} alt={chan.name}
+		<Button className='chat-button' variant='outlined' key={uuidv4()}>
+			<img src={img} alt={name}
 				style={{'width': '3.5em', 'height': 'auto',
 					'aspectRatio': '10 / 9', 'paddingLeft': '0px',
 					'paddingRight': '5px'}}>
 			</img>
 			<div>
-				<h2>{chan.name}</h2>
-				<div>{text}</div>
-			</div>
-		</button>
-	);
-}
-
-function chat_button_users(usr: User, message: string, click_handler:
-	(target: User) => MouseEventHandler<HTMLButtonElement> | undefined) {
-	return (
-		<button className='chat-button' key={uuidv4()}
-			onClick={click_handler(usr)}>
-			<img src={usr.avatar} alt={usr.name}
-				style={{'width': '3.5em', 'height': 'auto',
-					'aspectRatio': '10 / 9', 'paddingLeft': '0px',
-					'paddingRight': '5px'}}>
-			</img>
-			<div>
-				<h2>{usr.name}</h2>
+				<h2>{name}</h2>
 				<div>{message}</div>
 			</div>
-		</button>
+		</Button>
 	);
 }
 
-function users_message(message_data: User_message[], users: User[], click_handler:
-	(target: User) => MouseEventHandler<HTMLButtonElement> | undefined) {
+function users_message(message_data: User_message[]) {
 	let ret: JSX.Element[] = [];
 
 	for (const data of message_data) {
-		ret.push(chat_button_users(data.user, data.user.avatar, click_handler));
+		ret.push(chat_button(data.user.name, data.message, data.user.avatar));
 	}
 	return ret;
 }
 
-function group_message(chan_data: Channel[], click_handler:
-	(target: Channel) => MouseEventHandler<HTMLButtonElement> | undefined) {
+function group_message(chan_data: Channel[]) {
 	let ret: JSX.Element[] = [];
 
 	for (const chan of chan_data) {
@@ -85,7 +63,7 @@ function group_message(chan_data: Channel[], click_handler:
 			target_message.text
 		)
 
-		ret.push(chat_button_channel(chan, message_text, click_handler));
+		ret.push(chat_button(chan.name, message_text, group_img));
 	}
 	return ret;
 }
@@ -112,7 +90,7 @@ function Chat()
 	// To change for an API call to get every users
 	let all_users: User[] = sample_user_data()
 	let all_channels: Channel[] = sample_channel_data()
-	let [current_chan, setCurrent_chan] = useState(all_channels[0])
+	let current_chan: Channel = all_channels[0]
 
 	fetch('http://back_nest:3042/user/info', {
 		method: 'GET',
@@ -161,23 +139,9 @@ function Chat()
 		document.title = 'Chat';
 	}, []);
 
-	let [centerMessages, setCenterMessages] = useState(Messages(current_chan, all_users, current_user))
-
-	function handleChannelButtonClick(chan: Channel): MouseEventHandler<HTMLButtonElement> | undefined {
-		setCurrent_chan(chan)
-		setCenterMessages(Messages(chan, all_users, current_user))
-		return;
-	}
-
 	function doesNothing(str: string): MouseEventHandler<HTMLButtonElement> | undefined {
 		console.log("Tried to open a chat between " + current_user.name +
 			" and " + str)
-		return ;
-	}
-
-	function doesNothingUser(usr: User): MouseEventHandler<HTMLButtonElement> | undefined {
-		console.log("Tried to open a chat between " + current_user.name +
-			" and " + usr.name)
 		return ;
 	}
 
@@ -202,7 +166,7 @@ function Chat()
 				<div className='lists'>
 					<h1>Group chats</h1>
 					<div className='lists-holder'>
-						{group_message(all_channels, handleChannelButtonClick)}
+						{group_message(all_channels)}
 					</div>
 				</div>
 
@@ -210,7 +174,7 @@ function Chat()
 				<div className='lists'>
 					<h1>User messages</h1>
 					<div className='lists-holder'>
-						{users_message(message_user_data, all_users, doesNothingUser)}
+						{users_message(message_user_data)}
 					</div>
 					<div className='channels-holder'></div>
 				</div>
@@ -220,7 +184,7 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{centerMessages}
+				{Messages(current_chan, all_users, current_user)}
 			</div>
 
             <div className="group-members">
