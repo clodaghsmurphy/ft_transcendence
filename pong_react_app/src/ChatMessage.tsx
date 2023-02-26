@@ -5,6 +5,7 @@ import Messages from './Messages'
 import nathan from './media/nguiard.jpg'
 import { Avatar } from '@mui/material'
 import { useState } from 'react'
+import User, { avatarOf, name_to_user, sample_user_data } from './User'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -15,15 +16,14 @@ interface MessageData {
 	type: number;
 } 
 
-function ChatMessage(msg: MessageData, avatar: string)
+function ChatMessage(every_user: User[], msg: MessageData, curr_user: User)
 {
-	const my_name = "clmurphy";
-	const messageClass = msg.name == my_name ? "sender message-wrapper" : "message-wrapper"
+	const messageClass = msg.name == curr_user.name ? "sender message-wrapper" : "message-wrapper"
 	return (
 	<div key={uuidv4()}>
 		<div className={messageClass} key={uuidv4()}>
 			<div className="message-avatar" key={uuidv4()}>
-				<img src={avatar} alt={msg.name} key={uuidv4()}
+				<img src={avatarOf(every_user, msg.name)} alt={msg.name} key={uuidv4()}
 					style={{
 						'minWidth': '3rem',
 						'minHeight': '3rem',

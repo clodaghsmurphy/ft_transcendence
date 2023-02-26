@@ -3,6 +3,8 @@ import './Dashboard.css'
 import  Messages from './Messages'
 import  user_pfp from './media/user.png'
 import  nathan from './media/nguiard.jpg'
+import { sample_channel_data } from './Channels'
+import { sample_user_data } from './User'
 
 
 function MainChat ()
@@ -12,7 +14,7 @@ function MainChat ()
             <div className="chat-title">
             </div>
             <div className="chat-box">
-                {Messages([], [])}
+                {Messages(sample_channel_data()[0], sample_user_data(), sample_user_data()[1])}
             </div>
          
            

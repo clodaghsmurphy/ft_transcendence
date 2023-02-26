@@ -8,30 +8,17 @@ import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
 import Chat from './Chat'
 import { Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
-import User, { avatarOf } from './User'
+import User, { avatarOf, name_to_user, sample_user_data } from './User'
 
 const { v4: uuidv4 } = require('uuid');
 
-function Messages(channels: Channel[], users: User[])
+function Messages(chan: Channel, users: User[], current_user: User)
 {
 	const messageScroll = useRef<HTMLSpanElement>(null);
-	let messages: MessageData[] = [
-		{
-			type: 0,
-			text: "Tu as fait tes attaques gdc ajd? ",
-			uid: 1,
-			name: "clmurphy"
-		},
-		{
-			type: 0,
-			text: "Bah bien sur que oui je suis trop fort",
-			uid: 2,
-			name: "nguiard"
-		}
-	]
+	let messages: MessageData[] = chan.messages
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState(
-		messages.map(msg => ChatMessage(msg, avatarOf(users, msg.name)))
+		messages.map(msg => ChatMessage(users, msg, current_user))
 	);
 
 	interface MessageData {
@@ -53,7 +40,7 @@ function Messages(channels: Channel[], users: User[])
 		if (formValue.length !== 0)
 		{
 			let tmp = messagesBlocks
-			tmp.push(ChatMessage(test, avatarOf(users, test.name)))
+			tmp.push(ChatMessage(users, test, current_user))
 			setMessagesBlocks(tmp);
 		}
 		setFormValue('');

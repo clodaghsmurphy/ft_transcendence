@@ -15,7 +15,7 @@ import {	in_user_button_friend,
 			in_user_button_blocked,
 			in_user_button_normal} from './UserGroup'
 import { SearchBar } from './SearchBar'
-import User, { name_to_user, sample_data } from './User'
+import User, { name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, sample_channel_data } from './Channels'
 
 const { v4: uuidv4 } = require('uuid');
@@ -88,8 +88,9 @@ function user_in_group(every_user: User[], current_user: User, chan: Channel) {
 function Chat()
 {
 	// To change for an API call to get every users
-	let all_users: User[] = sample_data()
+	let all_users: User[] = sample_user_data()
 	let all_channels: Channel[] = sample_channel_data()
+	let current_chan: Channel = all_channels[0]
 
 	fetch('http://back_nest:3042/user/info', {
 		method: 'GET',
@@ -183,14 +184,14 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{Messages([], all_users)}
+				{Messages(current_chan, all_users, current_user)}
 			</div>
 
             <div className="group-members">
 				<h1>Group users</h1>
 				
 				<div className='user-holder'>
-					{user_in_group(all_users, current_user, all_channels[0])}
+					{user_in_group(all_users, current_user, current_chan)}
 				</div>
 			</div>
         </main>

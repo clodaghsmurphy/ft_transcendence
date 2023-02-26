@@ -52,7 +52,7 @@ export function name_to_user(every_users: User[], target: string): User {
 			every_users.find(usr => usr.name == target) as User : error_user())
 }
 
-export function sample_data(): User[] {
+export function sample_user_data(): User[] {
 	let u_adam: User = {
 		name: "adben-mc",
 		avatar: adam,
