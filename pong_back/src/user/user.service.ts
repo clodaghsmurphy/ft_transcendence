@@ -26,31 +26,54 @@ export class UserService {
 		try {
 			return { attribute: user[attribute] };
 		} catch (e) {
-			throw new HttpException({
-				status: HttpStatus.BAD_REQUEST,
-				error: `User ${username} doesnt exist`,
-			}, HttpStatus.BAD_REQUEST);
+			if (e.code === 'P2002') {
+				throw new HttpException({
+					status: HttpStatus.BAD_REQUEST,
+					error: `User ${username} doesn't exist`,
+				}, HttpStatus.BAD_REQUEST);
+			}
+			throw e;
 		}
 	}
 
 	async createUser(dto: UserCreateDto) {
-		return await this.prisma.user.create({
-			data: {
-				name: dto.name,
-				avatar: dto.avatar,
-				blocked_users: [],
-				friend_users: [],
-				channels: [],
-				connected: true,
-				in_game: false,
-			},
-		});
+		try {
+			return await this.prisma.user.create({
+				data: {
+					name: dto.name,
+					avatar: dto.avatar,
+					blocked_users: [],
+					friend_users: [],
+					channels: [],
+					connected: true,
+					in_game: false,
+				},
+			});
+		} catch (e) {
+			if (e.code === 'P2002') {
+				throw new HttpException({
+					status: HttpStatus.BAD_REQUEST,
+					error: `User ${dto.name} already exists`,
+				}, HttpStatus.BAD_REQUEST);
+			}
+			throw e;
+		}
 	}
 
 	async updateUser(dto: UserUpdateDto) {
-		return await this.prisma.user.update({
-			where: { name: dto.name },
-			data: dto,
-		});
+		try {
+			return await this.prisma.user.update({
+				where: { name: dto.name },
+				data: dto,
+			});
+		} catch (e) {
+			if (e.code === 'P2025') {
+				throw new HttpException({
+					status: HttpStatus.BAD_REQUEST,
+					error: `User ${dto.name} doesn't exist`,
+				}, HttpStatus.BAD_REQUEST);
+			}
+			throw e;
+		}
 	}
 }
