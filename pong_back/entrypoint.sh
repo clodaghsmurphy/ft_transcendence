@@ -1,3 +1,5 @@
-npx prisma migrate dev
+sleep 10
+
+npx prisma migrate deploy
 
 npm run start
