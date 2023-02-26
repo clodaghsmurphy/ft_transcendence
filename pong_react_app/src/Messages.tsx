@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, memo} from 'react'
 import './Dashboard.css'
 import user_pfp from './media/user.png'
 import nathan from './media/nguiard.jpg'
@@ -14,6 +14,7 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages(chan: Channel, users: User[], current_user: User)
 {
+	console.log("Inside Message()")
 	const messageScroll = useRef<HTMLSpanElement>(null);
 	let messages: MessageData[] = chan.messages
 	let [formValue, setFormValue] = useState("");
@@ -47,7 +48,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		messageScroll.current?.scrollIntoView({ behavior: 'smooth'})
 	}
 
-	return(
+	return (
 		<div style={{
 			'display': 'flex',
 			'flexDirection': 'column',
@@ -59,7 +60,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)} key="will_never_change"/>
 				<div className="button-submit" key="Message-ret-d">
-					<button type="submit" onClick={sendMessage} key="Message-ret-e">Send</button>
+					<button type="submit" onClick={() => sendMessage} key="Message-ret-e">Send</button>
 				</div>
 			</form>
 		</div>

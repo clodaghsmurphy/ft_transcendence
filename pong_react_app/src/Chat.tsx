@@ -91,6 +91,8 @@ function Chat()
 	let all_users: User[] = sample_user_data()
 	let all_channels: Channel[] = sample_channel_data()
 	let current_chan: Channel = all_channels[0]
+	let current_user: User = all_users[2]
+	let messages = Messages(current_chan, all_users, current_user)
 
 	fetch('http://back_nest:3042/user/info', {
 		method: 'GET',
@@ -112,7 +114,6 @@ function Chat()
 	// console.log(all_users)
 
 	// To change for an API call to get currently connected user
-	let current_user: User = all_users[2]
 
 	let message_user_data: User_message[] = [
 		{
@@ -184,7 +185,7 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{Messages(current_chan, all_users, current_user)}
+				{messages}
 			</div>
 
             <div className="group-members">
