@@ -1,6 +1,21 @@
 version: "3.8"
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx_i
+    ports:
+      - 8080:80
+    build:
+      context: ${PWD}/nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - front
+      - back
+      - db
+    networks:
+      - pong
+
   front:
     container_name: front_react
     image: docker-react_i
@@ -18,6 +33,8 @@ services:
       - WATCHPACK_POLLING=true
       # - FAST_REFRESH=false
       - WDS_SOCKET_PORT=3001
+    networks:
+      - pong
 
   back:
     container_name: back_nest
