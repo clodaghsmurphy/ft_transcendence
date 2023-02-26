@@ -21,3 +21,7 @@ model User {
   in_game Boolean
   game_id Int?
 }
+
+model Channel {
+  name String @id
+}
