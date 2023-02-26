@@ -22,6 +22,105 @@ export type Channel = {
 	curr_uid: number,
 }
 
+export function sample_channel_data(): Channel[] {
+	let chan_1: Channel = {
+		name: "Transcendence",
+		members: ["adben-mc", "clmurphy", "nguiard", "ple-lez"],
+		op: ["adben-mc", "clmurphy", "nguiard", "ple-lez"],
+		banned: [],
+		messages: [{
+				name: "clmurphy",
+				text: "Je pars au ski",
+				type: NORMAL,
+				uid: 0,
+			},
+			{
+				name: "adben-mc",
+				text: "Moi aussi",
+				type: NORMAL,
+				uid: 1,
+			},
+			{
+				name: "ple-lez",
+				text: "Pas nous",
+				type: NORMAL,
+				uid: 2,
+			},
+			{
+				name: "nguiard",
+				text: "Ouais...",
+				type: NORMAL,
+				uid: 3,
+			},
+		],
+		curr_uid: 3,
+	}
+	let chan_2: Channel = {
+		name: "Raclette",
+		members: ["nguiard", "ple-lez"],
+		op: ["nguiard"],
+		banned: ["clmurphy"],
+		messages: [{
+			name: "clmurphy",
+			text: "Raclette?",
+			type: NORMAL,
+			uid: 0,
+		},
+		{
+			name: "clmurphy",
+			text: "Je peux venir?",
+			type: NORMAL,
+			uid: 1,
+		},
+		{
+			name: "ple-lez",
+			text: "non",
+			type: NORMAL,
+			uid: 2,
+		},
+		{
+			name: "nguiard",
+			text: " has banned clmurphy",
+			type: BAN,
+			uid: 3,
+		},
+		],
+		curr_uid: 3,
+	}
+	let chan_3: Channel = {
+		name: "Illuminatis",
+		members: ["adben-mc", "clmurphy"],
+		op: ["adben-mc", "clmurphy"],
+		banned: [ "nguiard", "ple-lez"],
+		messages: [{
+			name: "clmurphy",
+			text: " has banned nguiard",
+			type: BAN,
+			uid: 0,
+		},
+		{
+			name: "clmurphy",
+			text: " has banned ple-lez",
+			type: BAN,
+			uid: 1,
+		},
+		{
+			name: "clmurphy",
+			text: "ils ont ose me ban d'une raclette",
+			type: NORMAL,
+			uid: 2,
+		},
+		{
+			name: "adben-mc",
+			text: "On vas conquerir le monde",
+			type: NORMAL,
+			uid: 3,
+		},],
+		curr_uid: 3,
+	}
+	return [chan_1, chan_2, chan_3]
+}
+
 export function createChannel(c_name: string, creator: User): [Channel, boolean] {
 	const new_chan = {
 		name: c_name,

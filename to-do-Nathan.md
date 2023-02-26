@@ -13,6 +13,12 @@
   - [ ] Virer la bare de recherche
 - [ ] Code
   - [ ] Boutons de gauche responsive
+    - [ ] channels
+      - [x] visuellement
+      - [ ] onClick 
+    - [ ] dms
+      - [ ] visuellement
+      - [ ] onClick
   - [ ] Faire toutes les fonctions "irc"
     - [x] Creer chan
     - [x] Kick

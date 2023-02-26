@@ -31,6 +31,27 @@ export function avatarOf(every_users: User[], target: string): string {
 			'./media/default.jpg')
 }
 
+export function error_user(): User {
+	return (
+		{
+			name: "#########ERROR########",
+			avatar: "",
+			blocked_users: [],
+			friend_users: [],
+			connected: false,
+			game_id: -1,
+			channels: [],
+			in_game: false,
+			last_games: []
+		}
+	)
+}
+
+export function name_to_user(every_users: User[], target: string): User {
+	return (typeof(every_users.find(usr => usr.name == target)?.name) == 'string' ?
+			every_users.find(usr => usr.name == target) as User : error_user())
+}
+
 export function sample_data(): User[] {
 	let u_adam: User = {
 		name: "adben-mc",
