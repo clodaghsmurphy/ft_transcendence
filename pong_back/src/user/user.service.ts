@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreateDto, UserUpdateDto } from "./dto";
 
@@ -12,7 +13,7 @@ export class UserService {
 		return await this.prisma.user.findMany();
 	}
 
-	async getUser(username: string): Promise<User> {
+	async getUser(username: string) {
 		return await this.prisma.user.findUnique({
 			where: { name: username },
 		});
@@ -22,7 +23,14 @@ export class UserService {
 		const user = await this.prisma.user.findUnique({
 			where: { name: username },
 		});
-		return { attribute: user[attribute] };
+		try {
+			return { attribute: user[attribute] };
+		} catch (e) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${username} doesnt exist`,
+			}, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	async createUser(dto: UserCreateDto) {
