@@ -10,11 +10,11 @@ export function SearchBar(every_user_name: string[], on_click_function:
 	let [list_users, setList_user] = useState([<div key={uuidv4}/>]);
 
 	
-	function updateList(event: React.ChangeEvent<HTMLInputElement>) {
+	function updateList(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		let res: JSX.Element[];
 		let key: number = 0;
 
-		event.target.addEventListener("blur", resetList)
+		event.target.addEventListener("blur", () => resetList())
 
 		if (event.target.value.length === 0) {
 			res = [<div key={uuidv4}/>]
@@ -30,7 +30,11 @@ export function SearchBar(every_user_name: string[], on_click_function:
 	}
 
 	function resetList() {
-		setList_user([<div key={uuidv4}/>])
+		if (list_users.length > 0)
+		{
+			console.log(list_users.length)
+			setList_user([<div key={uuidv4()}/>])
+		}
 	}
 
 	return (
@@ -41,7 +45,7 @@ export function SearchBar(every_user_name: string[], on_click_function:
 			<TextField variant='standard' size='small' label='Search'
 				sx={{'width': '90%', 'marginLeft': '0'
 				, 'marginRight': '0'}}
-				onChange={updateList}/>
+				onChange={(e) => updateList(e)}/>
 			<div className="list-container">
 				{list_users}
 			</div>

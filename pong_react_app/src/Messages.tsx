@@ -15,7 +15,6 @@ const { v4: uuidv4 } = require('uuid');
 function Messages(chan: Channel, users: User[], current_user: User)
 {
 	console.log("Inside Message()")
-	const messageScroll = useRef<HTMLSpanElement>(null);
 	let messages: MessageData[] = chan.messages
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState(
@@ -43,9 +42,8 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			let tmp = messagesBlocks
 			tmp.push(ChatMessage(users, test, current_user))
 			setMessagesBlocks(tmp);
+			setFormValue('');
 		}
-		setFormValue('');
-		messageScroll.current?.scrollIntoView({ behavior: 'smooth'})
 	}
 
 	return (
@@ -60,7 +58,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)} key="will_never_change"/>
 				<div className="button-submit" key="Message-ret-d">
-					<button type="submit" onClick={() => sendMessage} key="Message-ret-e">Send</button>
+					<button type="submit" onClick={(event) => sendMessage(event)} key="Message-ret-e">Send</button>
 				</div>
 			</form>
 		</div>
