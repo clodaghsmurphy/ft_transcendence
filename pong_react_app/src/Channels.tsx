@@ -22,6 +22,19 @@ export type Channel = {
 	curr_uid: number,
 }
 
+export function basic_channel(): Channel {
+	return (
+		{
+			name: "DO NOT USE THIS",
+			members: [],
+			op: [],
+			banned: [],
+			messages: [],
+			curr_uid: 0,
+		}
+	)
+}
+
 export function sample_channel_data(): Channel[] {
 	let chan_1: Channel = {
 		name: "Transcendence",
