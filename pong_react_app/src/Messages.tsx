@@ -21,7 +21,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 	);
 
 	if (chan.members.length == 0)
-		return <></>
+		return <></>;
 
 	interface MessageData {
 		type: number;
@@ -53,7 +53,6 @@ function Messages(chan: Channel, users: User[], current_user: User)
 	return (
 		<div style={{
 			'display': 'flex',
-			'height': '100%',
 			'flexDirection': 'column',
 			'justifyContent': 'space-between',
 			'height': '95%',

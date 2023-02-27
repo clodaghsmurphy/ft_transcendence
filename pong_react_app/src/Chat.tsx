@@ -70,30 +70,9 @@ function group_message(chan_data: Channel[]) {
 	}
 	return ret;
 }
- 
-// function user_in_group(every_user: User[], current_user: User, chan: Channel) {
-// 	let ret: JSX.Element[] = [];
-
-// 	for (const name of chan.members) {
-// 		if (name == current_user.name)
-// 			continue
-// 		if (current_user.blocked_users.find(target => target == name))
-// 			ret.push(in_user_button_blocked(name_to_user(every_user, name), chan.op.includes(name)));
-// 		else if (current_user.friend_users.find(target => target == name))
-// 			ret.push(in_user_button_friend(name_to_user(every_user, name), chan.op.includes(name)));
-// 		else
-// 			ret.push(in_user_button_normal(name_to_user(every_user, name), chan.op.includes(name)));
-// 	}
-// 	return ret;
-// }
-
-function chat_after_fetch() {
-	
-}
 
 function Chat()
 {
-	// To change for an API call to get every users
 	const [isLoading, setLoading] = useState(true);
 	let [all_users, set_all_users] = useState([] as User[])
 
@@ -115,23 +94,19 @@ function Chat()
 	  }, []);
 
 	if (isLoading) {
-		Messages(basic_channel(), [] as User[], error_user())
+		Messages(basic_channel(), [error_user()], error_user())
 		return (<div>loading...</div>)
 	}
 
-	// axios.get('/api/user/info')
-	// 	.then((data: User[]) => {
-	// 		all_users= data
-	// 	})
-	// console.log("\\\\\\", all_users)
+	if (all_users.length == 0) {
+		Messages(basic_channel(), [error_user()], error_user())
+		return (<div>no users found</div>)
+	}
+
 	let all_channels: Channel[] = sample_channel_data()
 	let current_chan: Channel = all_channels[0]
 	let current_user: User = typeof all_users.find(usr => usr.name == "nguiard") == 'string' ? all_users.find(usr => usr.name == "nguiard") as User : all_users[0]
 	let messages = Messages(current_chan, all_users, current_user)
-
-	// console.log(all_users)
-
-	// To change for an API call to get currently connected user
 
 	let message_user_data: User_message[] = [
 		{
@@ -152,8 +127,6 @@ function Chat()
 		}
 	];
 
-	let every_user_name: string[] = all_users.map(user => user.name);
-
 	function doesNothing(str: string): MouseEventHandler<HTMLButtonElement> | undefined {
 		console.log("Tried to open a chat between " + current_user.name +
 			" and " + str)
@@ -167,34 +140,22 @@ function Chat()
             <div className="channels">
 				<h1>Messages</h1>
 
-				<div style={{ 'marginLeft': '5%', 'marginRight': '0',
-					'width': '100%', 'overflow': 'visible'}}>
-				{/* {SearchBar(every_user_name, doesNothing)} */}
-					{/* search
-				</input> */}
-					{/* <button type='submit'>
-						<img src="./media/search-icon.jpg"></img>
-					</button> */}
-				</div>
-
 				<div className='bar'></div>
-				<div className='lists'>
-					<h1>Group chats</h1>
-					<div className='lists-holder'>
-						{group_message(all_channels)}
+					<div className='lists'>
+						<h1>Group chats</h1>
+						<div className='lists-holder'>
+							{group_message(all_channels)}
+						</div>
 					</div>
-				</div>
 
-				<div className='bar'></div>
-				<div className='lists'>
-					<h1>User messages</h1>
-					<div className='lists-holder'>
-						{users_message(message_user_data)}
+					<div className='bar'></div>
+					<div className='lists'>
+						<h1>User messages</h1>
+						<div className='lists-holder'>
+							{users_message(message_user_data)}
+						</div>
+						<div className='channels-holder'></div>
 					</div>
-					<div className='channels-holder'></div>
-				</div>
-				{/* Cette div sert a "contenir" celles d'au dessus pour
-					eviter qu'elles depacent de la fenetre				*/}
 				<div className='channels-holder'></div>
 			</div>
 
