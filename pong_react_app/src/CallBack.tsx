@@ -41,7 +41,23 @@ function CallBack ()
         console.dir(requestToken);
 		axios.post("https://api.intra.42.fr/oauth/token", requestToken)
 			.then(response => {
-				console.log('Response :', response.data);
+				const access_token:string = response.data.access_token;
+                console.log('access token : ' + access_token);
+                const res =  axios.get('https://api.intra.42.fr/v2/me',
+                {
+                    headers : {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                })
+                .then(res => 
+                {
+                    console.log(res.data);
+                    console.log(res.data.id);
+                    console.log(res.data.login);
+                    console.log(res.data.email);
+                    console.log(res.data.image.link);
+
+                })
 			})
 			.catch(error =>{
 				console.log('Error:', error);
