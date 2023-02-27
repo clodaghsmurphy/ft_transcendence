@@ -22,6 +22,18 @@ model User {
   game_id Int?
 }
 
+model Message {
+  id Int @id @default(autoincrement())
+  uid Int
+  text String
+  name String
+  type Int
+  channel Channel @relation(fields: [name], references: [name])
+}
+
 model Channel {
   name String @id
+  members String[]
+  messages Message[]
+  curr_uid Int
 }
