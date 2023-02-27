@@ -14,12 +14,14 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages(chan: Channel, users: User[], current_user: User)
 {
-	console.log("Inside Message()", current_user.name)
 	let messages: MessageData[] = chan.messages
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState(
 		messages.map(msg => ChatMessage(users, msg, current_user))
 	);
+
+	if (chan.members.length == 0)
+		return <></>
 
 	interface MessageData {
 		type: number;

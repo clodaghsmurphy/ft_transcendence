@@ -106,24 +106,19 @@ function Chat()
 				'Content-Type': 'application/json',
 			}
 		}).then((response) => {
-			console.log("RESPONSE: ",response);
 			response.json()
 				.then(data => {
-					console.log("test: ", data);
 					set_all_users(data as User[])
 					setLoading(false);
 				})
 		})
 	  }, []);
-	
+
 	if (isLoading) {
-		// set_all_users([])
-		// setLoading(true)
 		Messages(basic_channel(), [] as User[], error_user())
 		return (<div>loading...</div>)
 	}
 
-	console.log(all_users)
 	// axios.get('/api/user/info')
 	// 	.then((data: User[]) => {
 	// 		all_users= data
