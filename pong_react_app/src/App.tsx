@@ -9,6 +9,7 @@ import Dashboard from './Dashboard';
 import Main from './Main';
 import Chat from './Chat';
 import Login from './Login';
+import CallBack from './CallBack';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/login" element={<Login />}/>
+        <Route path="/login/callback" element={<CallBack />}/>
         <Route path="/dashboard" element={< Dashboard />} />
         <Route path='/main' element={ <Main />} />
         <Route path='/chat' element={ <Chat />} />

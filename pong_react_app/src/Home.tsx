@@ -16,7 +16,7 @@ function Home()
 	}
 
 	return (
-	<body>
+	<div>
 		<main onClick={() => handleClick()}>
 			<div className="horizon">
 				<div className="paddle" id="paddle1">
@@ -35,7 +35,7 @@ function Home()
 
 		</main>
 
-	</body>
+	</div>
 	)
 };
 

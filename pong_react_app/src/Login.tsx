@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from "axios";
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
 import { Link } from 'react-router-dom'
@@ -9,10 +11,7 @@ import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 
 
-function Login ()
-{
-	const [authUrl, setAuthUrl] = useState<string>();
-	interface loginData
+export interface loginData
 	{
 		authorizeUrl:string;
 		clientID:string;
@@ -21,26 +20,31 @@ function Login ()
 		state:string;
 	}
 
-		//redirect_uri=https%3A%2F%2F42-beta.vmontagn.fr%2Fauth%2F42%2Fcallback
+function Login ()
+{
+	const [authUrl, setAuthUrl] = useState<string>();
+
+	
+	console.log('in login');
+
+	
 
 	const handleLogin = () =>
 	{
 		const login:loginData = { 
 			authorizeUrl: "https://api.intra.42.fr/oauth/authorize",
 			clientID: api_keys.client_id,
-			redirectUri: encodeURIComponent("http://localhost:8080"),
+			redirectUri: encodeURIComponent("http://localhost:8080/login/callback"),
 			scope: 'public',
 			state: nanoid(16)
 		}
-		console.log(api_keys.secret);
-		console.log(encodeURIComponent("http://localhost:8080"));
 		const authUrl:string = `https://api.intra.42.fr/oauth/authorize?client_id=${login.clientID}&redirect_uri=${login.redirectUri}&scope=${login.scope}&state=${login.state}&response_type=code`
 		setAuthUrl(authUrl);
 
 		window.location.href = authUrl
 	}
 	return (
-		<body>
+		<div>
 		<main >
 			<div className="horizon">
 				<div className="paddle" id="paddle1">
@@ -53,12 +57,12 @@ function Login ()
 					<img src={ball} />;
 				</div>
 				<div className="login-box">
-			<button className="login-button">
-				<button id="42-login" >
+			<div className="login-button">
+				<button id="42-login" onClick={handleLogin}>
 					Login via 42
 				</button >
-			</button>
-			<button  className="login-button" id="guest-login">
+			</div>
+			<button  className="login-button" id="guest-login" >
 				Login as guest
 			</button>
 		</div>
@@ -68,9 +72,12 @@ function Login ()
 
 		</main>
 
-	</body>
+	</div>
 		
 	);
-}
+};
+
+
+
 
 export default Login;
