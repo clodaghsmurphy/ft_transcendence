@@ -211,17 +211,14 @@
 }
 
 
-/* #messages
-{
+#messages {
+	max-height: 95%;
+	overflow-y: scroll;
 	display: flex;
-	flex-grow: 1;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	min-height: 100%;
-	overflow: scroll!important;
-	margin: 1em;
+	flex-direction: column-reverse;
+	color: #9b59b6;
+}
 
-} */
 .chatbox {
 	display: flex;
 	height: 100%;
