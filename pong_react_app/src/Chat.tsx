@@ -15,7 +15,8 @@ import {	in_user_button_friend,
 			in_user_button_blocked,
 			in_user_button_normal} from './UserGroup'
 import { SearchBar } from './SearchBar'
-import User, { sample_data } from './User'
+import User, { name_to_user, sample_user_data } from './User'
+import { BAN, Channel, INVITE, KICK, sample_channel_data } from './Channels'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -48,37 +49,71 @@ function users_message(message_data: User_message[]) {
 	return ret;
 }
 
-function group_message(group_data: Group_message[]) {
+function group_message(chan_data: Channel[]) {
 	let ret: JSX.Element[] = [];
 
-	for (const group of group_data) {
-		ret.push(chat_button(group.name, group.message, group_img));
+	for (const chan of chan_data) {
+		let target_message = chan.messages[chan.messages.length - 1]
+
+		let message_text: string = (
+			target_message.type == BAN ||
+			target_message.type == INVITE ||
+			target_message.type == KICK ?
+			target_message.name + target_message.text :
+			target_message.text
+		)
+
+		ret.push(chat_button(chan.name, message_text, group_img));
 	}
 	return ret;
 }
  
-function user_in_group(current_user: User, group_user_data: Group_user_data[]) {
+function user_in_group(every_user: User[], current_user: User, chan: Channel) {
 	let ret: JSX.Element[] = [];
 
-	for (const data of group_user_data) {
-		if (data.user.name == current_user.name)
+	for (const name of chan.members) {
+		if (name == current_user.name)
 			continue
-		if (current_user.blocked_users.find(target => target == data.user.name))
-			ret.push(in_user_button_blocked(data.user, data.is_op));
-		else if (current_user.friend_users.find(target => target == data.user.name))
-			ret.push(in_user_button_friend(data.user, data.is_op));
+		if (current_user.blocked_users.find(target => target == name))
+			ret.push(in_user_button_blocked(name_to_user(every_user, name), chan.op.includes(name)));
+		else if (current_user.friend_users.find(target => target == name))
+			ret.push(in_user_button_friend(name_to_user(every_user, name), chan.op.includes(name)));
 		else
-			ret.push(in_user_button_normal(data.user, data.is_op));
+			ret.push(in_user_button_normal(name_to_user(every_user, name), chan.op.includes(name)));
 	}
 	return ret;
 }
 
+
 function Chat()
 {
 	// To change for an API call to get every users
-	let all_users: User[] = sample_data();
-	// To change for an API call to get currently connected user
+	let all_users: User[] = sample_user_data()
+	let all_channels: Channel[] = sample_channel_data()
+	let current_chan: Channel = all_channels[0]
 	let current_user: User = all_users[2]
+	let messages = Messages(current_chan, all_users, current_user)
+
+	fetch('http://back_nest:3042/user/info', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			// 'Access-Control-Allow-Origin:': '*'
+		}
+		})
+		.then((response) => {
+			console.log("RESPONSE: ",response);
+			response.json()
+				.then(data => {
+					console.log("test: ", data);
+					all_users = data as User[]
+				})
+		})
+		.catch(error => console.log(error))
+
+	// console.log(all_users)
+
+	// To change for an API call to get currently connected user
 
 	let message_user_data: User_message[] = [
 		{
@@ -98,44 +133,6 @@ function Chat()
 			"message": "je speedrun le TC",
 		}
 	];
-
-	let group_message_data: Group_message[] = [
-		{
-			"name": "Trascendence",
-			"message": "Salut tout le monde!",
-		},
-		{
-			"name": "Groupe 2",
-			"message": "bla bla bla bla bla bla bla bla bla",
-		},
-		{
-			"name": "Illuminatis",
-			"message": "On vas conquerir le monde",
-		},
-	];
-
-	let user_in_group_data: Group_user_data[] = [
-		{
-			user: all_users[0],
-			"is_op": true,
-			"status": 1,
-		},
-		{
-			user: all_users[1],
-			"is_op": false,
-			"status": 0,
-		},
-		{
-			user: all_users[2],
-			"is_op": false,
-			"status": 0,
-		},
-		{
-			user: all_users[3],
-			"is_op": false,
-			"status": -1,
-		}
-	]
 
 	let every_user_name: string[] = all_users.map(user => user.name);
 
@@ -170,7 +167,7 @@ function Chat()
 				<div className='lists'>
 					<h1>Group chats</h1>
 					<div className='lists-holder'>
-						{group_message(group_message_data)}
+						{group_message(all_channels)}
 					</div>
 				</div>
 
@@ -188,15 +185,14 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				<Messages />
+				{messages}
 			</div>
 
             <div className="group-members">
 				<h1>Group users</h1>
 				
 				<div className='user-holder'>
-					
-					{user_in_group(current_user, user_in_group_data)}
+					{user_in_group(all_users, current_user, current_chan)}
 				</div>
 			</div>
         </main>
