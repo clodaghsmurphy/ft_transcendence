@@ -14,7 +14,7 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages(chan: Channel, users: User[], current_user: User)
 {
-	console.log("Inside Message()")
+	console.log("Inside Message()", current_user.name)
 	let messages: MessageData[] = chan.messages
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState(
@@ -33,8 +33,8 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		e.preventDefault();
 		let test = { 
 			text: formValue,
-			uid:	Math.floor(Math.random()),
-			name: "clmurphy",
+			uid:  chan.curr_uid + 1,
+			name: current_user.name,
 			type: NORMAL
 		}
 		if (formValue.length !== 0)
@@ -42,6 +42,8 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			let tmp = messagesBlocks
 			tmp.push(ChatMessage(users, test, current_user))
 			setMessagesBlocks(tmp);
+			chan.curr_uid += 1
+			//post update chan
 			setFormValue('');
 		}
 	}
