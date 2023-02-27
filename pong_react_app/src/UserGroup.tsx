@@ -31,13 +31,13 @@ function button_not_op(user: User, is_op: boolean): JSX.Element {
 						"marginTop": "auto"}}/>
 
 				<div className='group-members-button-text'>
-				<Link to={"/stats/" + user.name}
-					className='group-member-button-link'>
-					{user.name}
-				</Link>
-				<div className='pastille'>
+					<Link to={"/stats/" + user.name}
+						className='group-member-button-link'>
+						{user.name}
+					</Link>
+					<div className='pastille'>
 
-				</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -53,13 +53,13 @@ function button_op(user: User, is_op: boolean): JSX.Element {
 						"marginTop": "auto"}}/>
 
 				<div className='group-members-button-text'>
-				<Link to={"/stats/" + user.name}
-					className='group-member-button-link'>
-					{user.name}
-				</Link>
-				<div className='pastille'>
+					<Link to={"/stats/" + user.name}
+						className='group-member-button-link'>
+						{user.name}
+					</Link>
+					<div className='pastille'>
 
-				</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -15,8 +15,11 @@ import { user_in_group } from './UserGroup'
 import { SearchBar } from './SearchBar'
 import User, { name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, sample_channel_data } from './Channels'
+import { api_get_all_users } from './API'
+// import axios from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
+
 
 type User_message = {user: User, message: string}
 type Group_message = {name: string, message: string}
@@ -84,32 +87,34 @@ function group_message(chan_data: Channel[]) {
 // 	return ret;
 // }
 
-
 function Chat()
 {
 	// To change for an API call to get every users
-	let all_users: User[] = sample_user_data()
-	let all_channels: Channel[] = sample_channel_data()
-	let current_chan: Channel = all_channels[0]
-	let current_user: User = all_users[2]
-	let messages = Messages(current_chan, all_users, current_user)
+	let all_users: User[] = [];
 
+	axios.get('/api/user/info')
+		.then((data: User[]) => {
+			all_users= data
+		})
 	// fetch('/api/user/info', {
 	// 	method: 'GET',
 	// 	headers: {
 	// 		'Content-Type': 'application/json',
-	// 		// 'Access-Control-Allow-Origin:': '*'
 	// 	}
-	// 	})
-	// 	.then((response) => {
-	// 		console.log("RESPONSE: ",response);
-	// 		response.json()
-	// 			.then(data => {
-	// 				console.log("test: ", data);
-	// 				all_users = data as User[]
-	// 			})
-	// 	})
-	// 	.catch(error => console.log(error))
+	// }).then((response) => {
+	// 	console.log("RESPONSE: ",response);
+	// 	response.json()
+	// 		.then(data => {
+	// 			console.log("test: ", data);
+	// 			all_users = data as User[]
+	// 		})
+	// })
+	// .catch(error => console.log(error))
+	console.log("\\\\\\", all_users)
+	let all_channels: Channel[] = sample_channel_data()
+	let current_chan: Channel = all_channels[0]
+	let current_user: User = typeof all_users.find(usr => usr.name == "nguiard") == 'string' ? all_users.find(usr => usr.name == "nguiard") as User : all_users[0]
+	let messages = Messages(current_chan, all_users, current_user)
 
 	// console.log(all_users)
 
