@@ -50,7 +50,8 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		<div style={{
 			'display': 'flex',
 			'flexDirection': 'column',
-			'justifyContent': 'space-between'
+			'justifyContent': 'space-between',
+			'height': '95%',
 		}} key="Message-ret-a">
 			<div id="messages" style={{overflowY: 'scroll'}} key="Message-ret-b">
 				{messagesBlocks}

@@ -11,9 +11,7 @@ import group_img from './media/group.png'
 import test_img	from './media/test.jpg'
 import Button from '@mui/material/Button'
 import { Avatar } from '@mui/material'
-import {	in_user_button_friend,
-			in_user_button_blocked,
-			in_user_button_normal} from './UserGroup'
+import { user_in_group } from './UserGroup'
 import { SearchBar } from './SearchBar'
 import User, { name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, sample_channel_data } from './Channels'
@@ -26,8 +24,8 @@ type Group_user_data = {user: User, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string) {
 	return (
-		<div className='chat-button-wrapper'>
-			<button className='chat-button' key={uuidv4()}>
+		<div className='chat-button-wrapper' key={uuidv4()}>
+			<button className='chat-button'>
 				<img src={img} alt={name}
 					style={{'width': '3.5em', 'height': 'auto',
 						'aspectRatio': '10 / 9', 'paddingLeft': '0px',
@@ -70,21 +68,21 @@ function group_message(chan_data: Channel[]) {
 	return ret;
 }
  
-function user_in_group(every_user: User[], current_user: User, chan: Channel) {
-	let ret: JSX.Element[] = [];
+// function user_in_group(every_user: User[], current_user: User, chan: Channel) {
+// 	let ret: JSX.Element[] = [];
 
-	for (const name of chan.members) {
-		if (name == current_user.name)
-			continue
-		if (current_user.blocked_users.find(target => target == name))
-			ret.push(in_user_button_blocked(name_to_user(every_user, name), chan.op.includes(name)));
-		else if (current_user.friend_users.find(target => target == name))
-			ret.push(in_user_button_friend(name_to_user(every_user, name), chan.op.includes(name)));
-		else
-			ret.push(in_user_button_normal(name_to_user(every_user, name), chan.op.includes(name)));
-	}
-	return ret;
-}
+// 	for (const name of chan.members) {
+// 		if (name == current_user.name)
+// 			continue
+// 		if (current_user.blocked_users.find(target => target == name))
+// 			ret.push(in_user_button_blocked(name_to_user(every_user, name), chan.op.includes(name)));
+// 		else if (current_user.friend_users.find(target => target == name))
+// 			ret.push(in_user_button_friend(name_to_user(every_user, name), chan.op.includes(name)));
+// 		else
+// 			ret.push(in_user_button_normal(name_to_user(every_user, name), chan.op.includes(name)));
+// 	}
+// 	return ret;
+// }
 
 
 function Chat()

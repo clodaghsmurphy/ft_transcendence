@@ -278,17 +278,30 @@
 	min-height: 2rem;
 }
 
+.group-members-button-wrapper {
+	background-image: linear-gradient(45deg, #cda5d8, #9b59b6, #224483);
+	border-radius: 15px;
+	margin-left: 5%;
+	margin-right: 5%;
+	height: 6.5rem;
+	min-height: 6.5rem;
+	padding-top: 3px;
+}
+
 .group-members-button {
 	display: flex;
 	flex-direction: row;
-	margin-left: 5%;
-	margin-right: 5%;
-	border: 3px solid #1976d2;
-	min-height: 6.5rem;
-	border-radius: 10px;
+	border: none;
+	width: calc(100% - 6px);
+	/* height: calc(100% - 6px); */
+	min-height: calc(6.5rem - 6px);
+	border-radius: 14px;
 	color: white;
 	font-size: 0.90em;
 	text-align: left;
+	background-color: #2E2E2E;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 
 .group-members-button img {
@@ -307,13 +320,32 @@
 	color: white;
 	text-decoration: none;
 	font-size: 1.25rem;
+	padding-left: 0px;
+	padding-right: 0px;
+	margin: 0;
 }
 
 .group-members-button-text {
 	display: flex;
-	flex-direction: column;
-	margin: 5% 0;
-	gap: 5px;
+	flex-direction: row;
+	align-items: center;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin: 0;
+	padding-right: 5%;
+}
+
+.pastille {
+	display: flex;
+	background-color: yellow;
+	aspect-ratio: 1 / 1;
+	border-radius: 50%;
+	height: 25px;
+	width: 25px;
+	flex-grow: 0;
+	flex-basis: 25px;
+	flex-shrink: 0;
+	margin: 0;
 }
 
 .user-holder {
