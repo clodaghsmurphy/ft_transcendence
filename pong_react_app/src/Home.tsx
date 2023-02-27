@@ -4,13 +4,15 @@ import Login from './Login';
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Home()
 {
 	const [isShown, setIsShown] = useState(true);
 
+	const navigate = useNavigate();
 	const handleClick = () => {
-		setIsShown(false);
+		navigate('/login');
 	}
 
 	return (
