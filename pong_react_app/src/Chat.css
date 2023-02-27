@@ -335,6 +335,30 @@
 	padding-right: 5%;
 }
 
+#kick-button {
+	background-color: #e0be85;
+	color: black;
+	border: none;
+	border-radius: 5px;
+}
+
+#kick-button:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+#ban-button {
+	background-color: #e08a85;
+	color: black;
+	border: none;
+	border-radius: 5px;
+}
+
+#ban-button:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
 .pastille {
 	display: flex;
 	background-color: yellow;

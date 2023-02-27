@@ -70,7 +70,7 @@ export function sample_channel_data(): Channel[] {
 	}
 	let chan_2: Channel = {
 		name: "Raclette",
-		members: ["nguiard", "ple-lez"],
+		members: ["nguiard", "ple-lez", "adben-mc"],
 		op: ["nguiard"],
 		banned: ["clmurphy"],
 		messages: [{

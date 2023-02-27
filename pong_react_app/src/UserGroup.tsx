@@ -23,20 +23,34 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 }
 
 function button_not_op(user: User, is_op: boolean): JSX.Element {	
+	let pastille: JSX.Element
+
+	pastille = <div className='pastille'></div>
+	if (!is_op)
+		pastille = <></>
 	return (
 		<div className='group-members-button-wrapper' key={uuidv4()}>
 			<div className='group-members-button'>
 				<img src={user.avatar} alt={user.name}
 					style={{"marginBottom": "auto",
 						"marginTop": "auto"}}/>
-
-				<div className='group-members-button-text'>
-					<Link to={"/stats/" + user.name}
-						className='group-member-button-link'>
-						{user.name}
-					</Link>
-					<div className='pastille'>
-
+				<div style={{
+					"display": "flex",
+					"flexDirection": "column",
+					"margin": "0",
+					"alignItems": "center",
+					paddingTop: "2rem"
+				}}>
+					<div className='group-members-button-text'>
+						<Link to={"/stats/" + user.name}
+							className='group-member-button-link'
+							style={{
+								"textAlign": "center",
+								"width": "100%",
+								"color": (is_op ? "yellow" : "white")
+							}}>
+							{user.name}
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -51,14 +65,30 @@ function button_op(user: User, is_op: boolean): JSX.Element {
 				<img src={user.avatar} alt={user.name}
 					style={{"marginBottom": "auto",
 						"marginTop": "auto"}}/>
-
-				<div className='group-members-button-text'>
-					<Link to={"/stats/" + user.name}
-						className='group-member-button-link'>
-						{user.name}
-					</Link>
-					<div className='pastille'>
-
+				<div style={{
+					"display": "flex",
+					"flexDirection": "column",
+					"margin": "0",
+					"alignItems": "center",
+					paddingTop: "1rem"
+				}}>
+					<div className='group-members-button-text'>
+						<Link to={"/stats/" + user.name}
+							className='group-member-button-link'
+							style={is_op ? {} : {
+								"textAlign": "center",
+								"width": "100%"
+							}}>
+							{user.name}
+						</Link>
+					</div>
+					<div style={{
+						"display": "flex",
+						"flexDirection": "row",
+						"alignItems": "center"
+					}}>
+						<button id='kick-button'>Kick</button>
+						<button id='ban-button'>Ban</button>
 					</div>
 				</div>
 			</div>
