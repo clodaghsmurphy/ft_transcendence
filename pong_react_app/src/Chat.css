@@ -216,7 +216,7 @@
 	overflow-y: scroll;
 	display: flex;
 	flex-direction: column-reverse;
-	color: #9b59b6;
+	scrollbar-color: #9b59b6 grey;
 }
 
 .chatbox {
