@@ -132,15 +132,24 @@
 	height: 90%;
 }
 
+.chat-button-wrapper {
+	background-image: linear-gradient(45deg, #cda5d8, #9b59b6, #224483);
+	width: 100%;
+	height: 4.5rem;
+	max-height: 4.5rem;
+	border-radius: 10px;
+	padding: 1px;
+}
+
 .chat-button {
 	display: flex;
 	border: none;
 	background-color: #2E2E2E;
 	margin-left: 0;
-	margin-right: 5%;
+	margin-right: calc(5% + 1px);
 	width: 100%;
-	height: 4.5rem;
-	max-height: 4.5rem;
+	height: calc(4.5rem - 2px);
+	max-height: calc(4.5rem - 2px);
 	overflow: hidden;
 	border-radius: 10px;
 	flex-shrink: 0;
@@ -161,6 +170,10 @@
 	cursor: pointer;
 }
 
+.chat-button div {
+	color: #cda5d8;
+}
+
 .chat-button img {
 	justify-content: left;
 	aspect-ratio: 1 / 1;
@@ -172,10 +185,11 @@
 	margin-bottom: auto;
 	/* margin-left: 0px; */
 	margin-right: 5%;
+	margin-left: 5%;
 }
 
 .chat-button h2 {
-	color: #A09F9F;
+	color: white;
 	/* pour voir les lettres qui descendent */
 	overflow: hidden;
 	font-size: 1.15rem;

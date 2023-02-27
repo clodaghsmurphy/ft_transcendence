@@ -26,17 +26,19 @@ type Group_user_data = {user: User, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string) {
 	return (
-		<button className='chat-button' key={uuidv4()}>
-			<img src={img} alt={name}
-				style={{'width': '3.5em', 'height': 'auto',
-					'aspectRatio': '10 / 9', 'paddingLeft': '0px',
-					'paddingRight': '5px'}}>
-			</img>
-			<div>
-				<h2>{name}</h2>
-				<div>{message}</div>
-			</div>
-		</button>
+		<div className='chat-button-wrapper'>
+			<button className='chat-button' key={uuidv4()}>
+				<img src={img} alt={name}
+					style={{'width': '3.5em', 'height': 'auto',
+						'aspectRatio': '10 / 9', 'paddingLeft': '0px',
+						'paddingRight': '5px'}}>
+				</img>
+				<div>
+					<h2>{name}</h2>
+					<div>{message}</div>
+				</div>
+			</button>
+		</div>
 	);
 }
 
@@ -94,22 +96,22 @@ function Chat()
 	let current_user: User = all_users[2]
 	let messages = Messages(current_chan, all_users, current_user)
 
-	fetch('http://back_nest:3042/user/info', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			// 'Access-Control-Allow-Origin:': '*'
-		}
-		})
-		.then((response) => {
-			console.log("RESPONSE: ",response);
-			response.json()
-				.then(data => {
-					console.log("test: ", data);
-					all_users = data as User[]
-				})
-		})
-		.catch(error => console.log(error))
+	// fetch('/api/user/info', {
+	// 	method: 'GET',
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 		// 'Access-Control-Allow-Origin:': '*'
+	// 	}
+	// 	})
+	// 	.then((response) => {
+	// 		console.log("RESPONSE: ",response);
+	// 		response.json()
+	// 			.then(data => {
+	// 				console.log("test: ", data);
+	// 				all_users = data as User[]
+	// 			})
+	// 	})
+	// 	.catch(error => console.log(error))
 
 	// console.log(all_users)
 
