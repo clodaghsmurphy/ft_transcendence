@@ -18,6 +18,8 @@ RUN npm install --save-dev @types/query-string
 RUN npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
 RUN npm install --save-dev @types/uuid
 RUN npm install react-icons
+RUN npm install axios --save
+RUN npm install crypto-browserify
 
 COPY . ./
 

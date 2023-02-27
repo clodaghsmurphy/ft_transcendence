@@ -4,17 +4,19 @@ import Login from './Login';
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Home()
 {
 	const [isShown, setIsShown] = useState(true);
 
+	const navigate = useNavigate();
 	const handleClick = () => {
-		setIsShown(false);
+		navigate('/login');
 	}
 
 	return (
-	<body>
+	<div>
 		<main onClick={() => handleClick()}>
 			<div className="horizon">
 				<div className="paddle" id="paddle1">
@@ -33,7 +35,7 @@ function Home()
 
 		</main>
 
-	</body>
+	</div>
 	)
 };
 

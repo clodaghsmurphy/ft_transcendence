@@ -13,7 +13,23 @@
   box-sizing: border-box;
   overflow: hidden;
   width: 100%;
+  scrollbar-width: thin;         
+  scrollbar-color: blue orange; 
 }
+
+/* ::-webkit-scrollbar {
+  width:10px;;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;;
+  background-color: rgba(25,147,147,0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: white;
+} */
 
 body {
   margin: 0;
