@@ -15,7 +15,7 @@ function Home()
 
 	return (
 	<body>
-		<main onClick={handleClick}>
+		<main onClick={() => handleClick()}>
 			<div className="horizon">
 				<div className="paddle" id="paddle1">
 					<img src={paddle} />
