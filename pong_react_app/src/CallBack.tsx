@@ -51,6 +51,11 @@ function CallBack ()
                 })
                 .then(res => 
                 {
+                    const userData ={
+                        name:res.data.login,
+                        avatar:res.data.image.link
+                    }
+                    axios.post('http://localhost:3042/user/create', userData);
                     console.log(res.data);
                     console.log(res.data.id);
                     console.log(res.data.login);
