@@ -20,7 +20,6 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User)
 {
 	const messageClass = msg.name == curr_user.name ? "sender message-wrapper" : "message-wrapper"
 	return (
-	<div key={uuidv4()}>
 		<div className={messageClass} key={uuidv4()}>
 			<div className="message-avatar" key={uuidv4()}>
 				<img src={avatarOf(every_user, msg.name)} alt={msg.name} key={uuidv4()}
@@ -43,7 +42,6 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User)
 					{msg.text}
 				</div>
 		</div>	
-	</div>
 	)
 }
 

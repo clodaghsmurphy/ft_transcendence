@@ -104,8 +104,8 @@ function Chat()
 	}
 
 	let all_channels: Channel[] = sample_channel_data()
-	let current_chan: Channel = all_channels[0]
-	let current_user: User = typeof all_users.find(usr => usr.name == "nguiard") == 'string' ? all_users.find(usr => usr.name == "nguiard") as User : all_users[0]
+	let current_chan: Channel = all_channels[1]
+	let current_user: User = all_users[0]
 	let messages = Messages(current_chan, all_users, current_user)
 
 	let message_user_data: User_message[] = [

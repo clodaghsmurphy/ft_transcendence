@@ -17,7 +17,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 	let messages: MessageData[] = chan.messages
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState(
-		messages.map(msg => ChatMessage(users, msg, current_user))
+		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
 	);
 
 	if (chan.members.length == 0)
@@ -42,7 +42,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		if (formValue.length !== 0)
 		{
 			let tmp = messagesBlocks
-			tmp.push(ChatMessage(users, test, current_user))
+			tmp.unshift(ChatMessage(users, test, current_user))
 			setMessagesBlocks(tmp);
 			chan.curr_uid += 1
 			//post update chan
