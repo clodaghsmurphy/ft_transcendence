@@ -20,19 +20,16 @@ export class UserService {
 	}
 
 	async getUserInfo(username: string, attribute: string) {
-		const user = await this.prisma.user.findUnique({
-			where: { name: username },
-		});
 		try {
+			const user = await this.prisma.user.findUnique({
+				where: { name: username },
+			});
 			return { attribute: user[attribute] };
 		} catch (e) {
-			if (e.code === 'P2002') {
-				throw new HttpException({
-					status: HttpStatus.BAD_REQUEST,
-					error: `User ${username} doesn't exist`,
-				}, HttpStatus.BAD_REQUEST);
-			}
-			throw e;
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${username} doesn't exist`,
+			}, HttpStatus.BAD_REQUEST);
 		}
 	}
 
