@@ -10,7 +10,7 @@ import api_keys from './api_cred'
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import { AuthContext } from './App';
-
+import { initialState, reducer, State, Action, ActionKind } from "./store/reducer"
 
 export interface loginData
 	{
@@ -20,28 +20,73 @@ export interface loginData
 		scope:string;
 		state:string;
 	}
+type Data = {
+	errorMessage:string;
+	isLoading: boolean;
+};
 
 function Login ()
 {
+	const location = useLocation();
 	const [authUrl, setAuthUrl] = useState<string>();
 	const { state,  dispatch } = useContext(AuthContext);
-	const [ data, setData ] = useState<String, boolean>( {errorMessage: "", isLoading: false});
+	const [ data, setData ] = useState<Data>( {errorMessage: "", isLoading: false});
 
 	useEffect(() => {
 		const url = window.location.href;
-		console.log(url);
 		
 		if (url.includes("?code"))
 		{
-			const newUrl = url.split("?code");
-			window.history.pushState({}, "", newUrl[0]);
-			setData({ ...data, isLoading: true });
-			 const code = newUrl[1];
-		}
-	}, [state, dispatch, data] ); 
-	
-	console.log('in login');
+			const code = new URLSearchParams(location.search).get('code');
+			const ustate = new URLSearchParams(location.search).get('state');
+			
 
+			const requestToken = {
+				grant_type:'authorization_code', 
+				client_id:api_keys.client_id,
+				client_secret:api_keys.secret,
+				code:code,
+				redirect_uri:'http://localhost:8080/login',
+				state:ustate
+			}
+			console.dir(requestToken);
+			axios.post("https://api.intra.42.fr/oauth/token", requestToken)
+				.then(response => {
+					const access_token:string = response.data.access_token;
+					console.log('access token : ' + access_token);
+					const res =  axios.get('https://api.intra.42.fr/v2/me',
+					{
+						headers : {
+							'Authorization': `Bearer ${access_token}`
+						}
+					})
+					.then(res => 
+					{
+						const userData ={
+							name:res.data.login,
+							avatar:res.data.image.link
+						}
+						dispatch(
+							{
+								type: ActionKind.Login,
+								payload: { user: res.data.login, isLoggedIn: true}
+							}
+						)
+						console.log('state logged = ' + state.isLoggedIn);
+						axios.post('/api/user/create', userData);
+						console.log(res.data);
+						console.log(res.data.id);
+						console.log(res.data.login);
+						console.log(res.data.email);
+						console.log(res.data.image.link);
+					})
+				})
+				.catch(error =>{
+					console.log('Error:', error);
+				})
+		}
+		
+	}, [state, dispatch, data] ); 
 	
 
 	const handleLogin = () =>
@@ -49,20 +94,21 @@ function Login ()
 		const login:loginData = { 
 			authorizeUrl: "https://api.intra.42.fr/oauth/authorize",
 			clientID: api_keys.client_id,
-			redirectUri: encodeURIComponent("http://localhost:8080/login/callback"),
+			redirectUri: encodeURIComponent("http://localhost:8080/login"),
 			scope: 'public',
 			state: nanoid(16)
 		}
-		setData({ ...data, errorMessage: " "})
 		const authUrl:string = `https://api.intra.42.fr/oauth/authorize?client_id=${login.clientID}&redirect_uri=${login.redirectUri}&scope=${login.scope}&state=${login.state}&response_type=code`
 		setAuthUrl(authUrl);
+		window.location.href = authUrl;
+		setData({ ...data, errorMessage: " "})
 
-		window.location.href = authUrl
+		
 	}
 
 	if (state.isLoggedIn)
 	{
-		<Navigate to="/dashboard" />;
+		return <Navigate to="/dashboard" />;
 	}
 
 	return (

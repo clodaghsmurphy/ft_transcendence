@@ -1,7 +1,7 @@
 import React from 'react'
 
 export type State = {
-    isLoggedIn: string,
+    isLoggedIn: boolean,
     user: string,
     client_id: string,
     redirect_uri: string,
@@ -9,18 +9,37 @@ export type State = {
     proxy_url: string
 };
 
+export enum ActionKind {
+  Login = "LOGIN",
+  Logout = "LOGOUT"
+}
+
+export interface Login
+{
+  type: ActionKind.Login;
+  payload: any;
+}
+
+export interface Logout
+{
+  type: ActionKind.Login;
+  payload: any;
+}
+
 export type Action =
 {
-    type: "LOGOUT" | "LOGIN";   
+    type: ActionKind;
+    payload?:any;   
+
 };
 
-export const initialState = {
-    isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false,
-    user: JSON.parse(localStorage.getItem("user")) || null,
-    client_id: process.env.REACT_APP_CLIENT_ID,
-    redirect_uri: process.env.REACT_APP_REDIRECT_URI,
-    client_secret: process.env.REACT_APP_CLIENT_SECRET,
-    proxy_url: process.env.REACT_APP_PROXY_URL
+export const initialState:State = {
+    isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")!) ,
+    user: JSON.parse(localStorage.getItem("user")!) || null,
+    client_id: process.env.REACT_APP_CLIENT_ID!,
+    redirect_uri: process.env.REACT_APP_REDIRECT_URI!,
+    client_secret: process.env.REACT_APP_CLIENT_SECRET!,
+    proxy_url: process.env.REACT_APP_PROXY_URL!
   };
   
   export const reducer = (state:State, action:Action) => {

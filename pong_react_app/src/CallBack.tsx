@@ -16,7 +16,7 @@ function CallBack ()
 	{
 		grant_type:string
 		authorizeUrl:string;
-		client_id:string;
+		client_id:string | undefined;
 		client_secret:string,
 		code:string,
 		redirect_uri:string;

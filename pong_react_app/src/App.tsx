@@ -13,13 +13,18 @@ import CallBack from './CallBack';
 import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
 
-export const AuthContext = createContext( {} );
+type StateContext = {
+  state: State;
+  dispatch: React.Dispatch<Action>
+};
+
+export const AuthContext = createContext<StateContext>( {state: initialState, dispatch: () => undefined } );
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <AuthContext.Provider value={ {state, dispatch} }>
+    <AuthContext.Provider value={ { state, dispatch } }>
     <Router>
       <Routes>
         <Route path="/" element={<Home />}/>
