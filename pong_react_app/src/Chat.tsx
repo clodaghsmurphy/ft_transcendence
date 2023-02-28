@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect } from 'react'
+import React, { MouseEventHandler, useEffect, useState } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -11,14 +11,15 @@ import group_img from './media/group.png'
 import test_img	from './media/test.jpg'
 import Button from '@mui/material/Button'
 import { Avatar } from '@mui/material'
-import {	in_user_button_friend,
-			in_user_button_blocked,
-			in_user_button_normal} from './UserGroup'
+import { user_in_group } from './UserGroup'
 import { SearchBar } from './SearchBar'
-import User, { name_to_user, sample_user_data } from './User'
-import { BAN, Channel, INVITE, KICK, sample_channel_data } from './Channels'
+import User, { error_user, name_to_user, sample_user_data } from './User'
+import { BAN, Channel, INVITE, KICK, basic_channel, sample_channel_data } from './Channels'
+import { api_get_all_users } from './API'
+// import axios from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
+
 
 type User_message = {user: User, message: string}
 type Group_message = {name: string, message: string}
@@ -26,17 +27,19 @@ type Group_user_data = {user: User, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string) {
 	return (
-		<Button className='chat-button' variant='outlined' key={uuidv4()}>
-			<img src={img} alt={name}
-				style={{'width': '3.5em', 'height': 'auto',
-					'aspectRatio': '10 / 9', 'paddingLeft': '0px',
-					'paddingRight': '5px'}}>
-			</img>
-			<div>
-				<h2>{name}</h2>
-				<div>{message}</div>
-			</div>
-		</Button>
+		<div className='chat-button-wrapper' key={uuidv4()}>
+			<button className='chat-button'>
+				<img src={img} alt={name}
+					style={{'width': '3.5em', 'height': 'auto',
+						'aspectRatio': '10 / 9', 'paddingLeft': '0px',
+						'paddingRight': '5px'}}>
+				</img>
+				<div>
+					<h2>{name}</h2>
+					<div>{message}</div>
+				</div>
+			</button>
+		</div>
 	);
 }
 
@@ -67,53 +70,43 @@ function group_message(chan_data: Channel[]) {
 	}
 	return ret;
 }
- 
-function user_in_group(every_user: User[], current_user: User, chan: Channel) {
-	let ret: JSX.Element[] = [];
-
-	for (const name of chan.members) {
-		if (name == current_user.name)
-			continue
-		if (current_user.blocked_users.find(target => target == name))
-			ret.push(in_user_button_blocked(name_to_user(every_user, name), chan.op.includes(name)));
-		else if (current_user.friend_users.find(target => target == name))
-			ret.push(in_user_button_friend(name_to_user(every_user, name), chan.op.includes(name)));
-		else
-			ret.push(in_user_button_normal(name_to_user(every_user, name), chan.op.includes(name)));
-	}
-	return ret;
-}
-
 
 function Chat()
 {
-	// To change for an API call to get every users
-	let all_users: User[] = sample_user_data()
-	let all_channels: Channel[] = sample_channel_data()
-	let current_chan: Channel = all_channels[0]
-	let current_user: User = all_users[2]
-	let messages = Messages(current_chan, all_users, current_user)
+	const [isLoading, setLoading] = useState(true);
+	let [all_users, set_all_users] = useState([] as User[])
 
-	fetch('http://back_nest:3042/user/info', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			// 'Access-Control-Allow-Origin:': '*'
-		}
-		})
-		.then((response) => {
-			console.log("RESPONSE: ",response);
+
+	useEffect(() => {
+		document.title = 'Chat';
+		fetch('/api/user/info', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		}).then((response) => {
 			response.json()
 				.then(data => {
-					console.log("test: ", data);
-					all_users = data as User[]
+					set_all_users(data as User[])
+					setLoading(false);
 				})
 		})
-		.catch(error => console.log(error))
+	  }, []);
 
-	// console.log(all_users)
+	if (isLoading) {
+		Messages(basic_channel(), [error_user()], error_user())
+		return (<div>loading...</div>)
+	}
 
-	// To change for an API call to get currently connected user
+	if (all_users.length == 0) {
+		Messages(basic_channel(), [error_user()], error_user())
+		return (<div>no users found</div>)
+	}
+
+	let all_channels: Channel[] = sample_channel_data()
+	let current_chan: Channel = all_channels[1]
+	let current_user: User = all_users[0]
+	let messages = Messages(current_chan, all_users, current_user)
 
 	let message_user_data: User_message[] = [
 		{
@@ -134,12 +127,6 @@ function Chat()
 		}
 	];
 
-	let every_user_name: string[] = all_users.map(user => user.name);
-
-	useEffect(() => {
-		document.title = 'Chat';
-	}, []);
-
 	function doesNothing(str: string): MouseEventHandler<HTMLButtonElement> | undefined {
 		console.log("Tried to open a chat between " + current_user.name +
 			" and " + str)
@@ -153,34 +140,22 @@ function Chat()
             <div className="channels">
 				<h1>Messages</h1>
 
-				<div style={{ 'marginLeft': '5%', 'marginRight': '0',
-					'width': '100%', 'overflow': 'visible'}}>
-				{SearchBar(every_user_name, doesNothing)}
-					{/* search
-				</input> */}
-					{/* <button type='submit'>
-						<img src="./media/search-icon.jpg"></img>
-					</button> */}
-				</div>
-
 				<div className='bar'></div>
-				<div className='lists'>
-					<h1>Group chats</h1>
-					<div className='lists-holder'>
-						{group_message(all_channels)}
+					<div className='lists'>
+						<h1>Group chats</h1>
+						<div className='lists-holder'>
+							{group_message(all_channels)}
+						</div>
 					</div>
-				</div>
 
-				<div className='bar'></div>
-				<div className='lists'>
-					<h1>User messages</h1>
-					<div className='lists-holder'>
-						{users_message(message_user_data)}
+					<div className='bar'></div>
+					<div className='lists'>
+						<h1>User messages</h1>
+						<div className='lists-holder'>
+							{users_message(message_user_data)}
+						</div>
+						<div className='channels-holder'></div>
 					</div>
-					<div className='channels-holder'></div>
-				</div>
-				{/* Cette div sert a "contenir" celles d'au dessus pour
-					eviter qu'elles depacent de la fenetre				*/}
 				<div className='channels-holder'></div>
 			</div>
 
