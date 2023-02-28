@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react';
 import api_keys from './api_cred'
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
+import { initialState, reducer } from "./store/reducer";
 
 
 export interface loginData
