@@ -1,4 +1,4 @@
-import React, { Component,type Dispatch, createContext, useReducer } from 'react';
+import React, { Component, useState, createContext, useContext, useReducer } from 'react';
 import { render } from "react-dom";
 
 import Home from './Home';
@@ -10,16 +10,16 @@ import Main from './Main';
 import Chat from './Chat';
 import Login from './Login';
 import CallBack from './CallBack';
-import { initialState, reducer } from './store';
+import { Navigate } from 'react-router-dom'
+import { initialState, reducer, State, Action } from "./store/reducer"
 
-export const AuthContext = createContext(null);
-
+export const AuthContext = createContext( {} );
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <AuthContext.Provider
-      value={{state, dispatch}} >
+    <AuthContext.Provider value={ {state, dispatch} }>
     <Router>
       <Routes>
         <Route path="/" element={<Home />}/>
@@ -33,5 +33,7 @@ function App() {
     </AuthContext.Provider>
   );
 }
+
+
 
 export default App;

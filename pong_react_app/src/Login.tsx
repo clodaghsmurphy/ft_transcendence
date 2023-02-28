@@ -1,15 +1,15 @@
 import React from 'react';
 import axios from "axios";
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useCallback, useState } from 'react';
 import api_keys from './api_cred'
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
-import { initialState, reducer } from "./store/reducer";
+import { AuthContext } from './App';
 
 
 export interface loginData
@@ -24,7 +24,21 @@ export interface loginData
 function Login ()
 {
 	const [authUrl, setAuthUrl] = useState<string>();
+	const { state,  dispatch } = useContext(AuthContext);
+	const [ data, setData ] = useState<String, boolean>( {errorMessage: "", isLoading: false});
 
+	useEffect(() => {
+		const url = window.location.href;
+		console.log(url);
+		
+		if (url.includes("?code"))
+		{
+			const newUrl = url.split("?code");
+			window.history.pushState({}, "", newUrl[0]);
+			setData({ ...data, isLoading: true });
+			 const code = newUrl[1];
+		}
+	}, [state, dispatch, data] ); 
 	
 	console.log('in login');
 
@@ -39,11 +53,18 @@ function Login ()
 			scope: 'public',
 			state: nanoid(16)
 		}
+		setData({ ...data, errorMessage: " "})
 		const authUrl:string = `https://api.intra.42.fr/oauth/authorize?client_id=${login.clientID}&redirect_uri=${login.redirectUri}&scope=${login.scope}&state=${login.state}&response_type=code`
 		setAuthUrl(authUrl);
 
 		window.location.href = authUrl
 	}
+
+	if (state.isLoggedIn)
+	{
+		<Navigate to="/dashboard" />;
+	}
+
 	return (
 		<div>
 		<main >

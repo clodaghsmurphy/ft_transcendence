@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from "axios";
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCallback, useState } from 'react';
 import api_keys from './api_cred'
 
@@ -29,7 +29,7 @@ function CallBack ()
 		
 		const code = new URLSearchParams(location.search).get('code');
 		const state = new URLSearchParams(location.search).get('state');
-		
+
 		const requestToken = {
 			grant_type:'authorization_code', 
 			client_id:api_keys.client_id,
@@ -38,7 +38,6 @@ function CallBack ()
 			redirect_uri:'http://localhost:8080/login/callback',
 			state:state
 		}
-        console.dir(requestToken);
 		axios.post("https://api.intra.42.fr/oauth/token", requestToken)
 			.then(response => {
 				const access_token:string = response.data.access_token;
@@ -55,13 +54,12 @@ function CallBack ()
                         name:res.data.login,
                         avatar:res.data.image.link
                     }
-                    axios.post('http://localhost:3042/user/create', userData);
+                    axios.post('/api/user/create', userData);
                     console.log(res.data);
                     console.log(res.data.id);
                     console.log(res.data.login);
                     console.log(res.data.email);
                     console.log(res.data.image.link);
-
                 })
 			})
 			.catch(error =>{
