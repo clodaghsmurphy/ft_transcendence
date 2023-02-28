@@ -74,7 +74,7 @@ export function sample_channel_data(): Channel[] {
 		op: ["nguiard"],
 		banned: ["clmurphy"],
 		messages: [{
-			name: "clmurphy",
+			name: "nguiard",
 			text: "Raclette?",
 			type: NORMAL,
 			uid: 0,

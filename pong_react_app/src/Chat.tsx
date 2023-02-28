@@ -12,6 +12,7 @@ import test_img	from './media/test.jpg'
 import Button from '@mui/material/Button'
 import { Avatar } from '@mui/material'
 import { user_in_group } from './UserGroup'
+import plus_sign from './media/white_plus.png'
 import { SearchBar } from './SearchBar'
 import User, { error_user, name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, sample_channel_data } from './Channels'
@@ -30,9 +31,10 @@ function chat_button(name: string, message: string, img: string) {
 		<div className='chat-button-wrapper' key={uuidv4()}>
 			<button className='chat-button'>
 				<img src={img} alt={name}
-					style={{'width': '3.5em', 'height': 'auto',
-						'aspectRatio': '10 / 9', 'paddingLeft': '0px',
-						'paddingRight': '5px'}}>
+					style={{'width': '45px', 'height': '45px',
+						'maxWidth': '45px', 'maxHeight': '45px',
+						'aspectRatio': '1 / 1', 'paddingLeft': '0px',
+						'paddingRight': '0px'}}>
 				</img>
 				<div>
 					<h2>{name}</h2>
@@ -49,7 +51,34 @@ function users_message(message_data: User_message[]) {
 	for (const data of message_data) {
 		ret.push(chat_button(data.user.name, data.message, data.user.avatar));
 	}
+	ret.push(add_dm())
 	return ret;
+}
+
+function add_group(): JSX.Element {
+	return (
+		<div className='chat-button-wrapper' key={uuidv4()}>
+			<button className='chat-button'>
+				<div className='group-add'>
+					<img src={plus_sign} alt='plus'/>
+					<h1>Add a group</h1>
+				</div>
+			</button>
+		</div>
+	);
+}
+
+function add_dm(): JSX.Element {
+	return (
+		<div className='chat-button-wrapper' key={uuidv4()}>
+			<button className='chat-button'>
+				<div className='group-add'>
+					<img src={plus_sign} alt='plus'/>
+					<h1>Add a DM</h1>
+				</div>
+			</button>
+		</div>
+	);
 }
 
 function group_message(chan_data: Channel[]) {
@@ -68,6 +97,7 @@ function group_message(chan_data: Channel[]) {
 
 		ret.push(chat_button(chan.name, message_text, group_img));
 	}
+	ret.push(add_group())
 	return ret;
 }
 
@@ -105,7 +135,7 @@ function Chat()
 
 	let all_channels: Channel[] = sample_channel_data()
 	let current_chan: Channel = all_channels[1]
-	let current_user: User = all_users[0]
+	let current_user: User = all_users[2]
 	let messages = Messages(current_chan, all_users, current_user)
 
 	let message_user_data: User_message[] = [
