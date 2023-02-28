@@ -1,9 +1,9 @@
 # Chat
 
 - [ ] Visuellement
-  - [ ] Boutton pour ajouter un group chat
+  - [x] Boutton pour ajouter un group chat
     - [ ] ajouter une fenetre pour ajouter plusiers personnes direct a la creation du groupe
-  - [ ] Boutton pour DM qqun
+  - [x] Boutton pour DM qqun
   - [x] revoir les boutons a droite 
     - [x] Plus besoin des boutons +friend ou +block
     - [x] Ajouter des boutons de moderation (ou pour dm qqun?)

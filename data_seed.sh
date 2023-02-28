@@ -20,7 +20,7 @@ curl -H 'Content-Type: application/json' \
 	-X POST \
 	localhost:3042/user/create
 
-echo "\nupdating"
+echo "\n\nupdating\n"
 
 curl -H 'Content-Type: application/json' \
 	-d '{"name": "adben-mc", "avatar": "https://cdn.intra.42.fr/users/de7e6b8845aea12744adeaeefb48dbc8/small_adben-mc.jpg", "blocked_users": ["nguiard"], "friend_users": ["ple-lez"], "channels": ["Transcendence", "Illuminatis"], "connected": false, "in_game": false, "game_id": -1, "last_games": [ { "has_won": "true", "opponnent": "clmurphy", "score": ["10", "6"] }, { "has_won": "true", "opponnent": "nguiard", "score": ["10", "4"] } ]}' \
