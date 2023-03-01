@@ -41,7 +41,6 @@ export class UserService {
 					avatar: dto.avatar,
 					blocked_users: [],
 					friend_users: [],
-					channels: [],
 					connected: true,
 					in_game: false,
 				},

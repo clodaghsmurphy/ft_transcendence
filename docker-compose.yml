@@ -46,6 +46,8 @@ services:
       - ${PWD}/pong_back/.env
     ports:
       - 3042:3042
+      # Tmp ports for prisma studio
+      - 5555:5555
     depends_on:
       db:
         condition: service_healthy
