@@ -98,10 +98,10 @@
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-	flex: 1;
-	flex-basis: 25rem;
+	flex: 5;
+	flex-basis: 45%;
 	flex-grow: 0;
-	max-height: 40%;
+	overflow-y: scroll;
 }
 
 .lists * {
@@ -127,15 +127,17 @@
 	display: flex;
 	overflow-y: scroll;
 	flex-direction: column;
-	flex-basis: 19rem;
+	flex-basis: 70%;
 	gap: 5px;
 	height: 90%;
+	scrollbar-color: #9b59b6 transparent;
 }
 
 .chat-button-wrapper {
 	background-image: linear-gradient(45deg, #cda5d8, #9b59b6, #224483);
 	width: 100%;
 	height: 4.5rem;
+	min-height: 4.5rem;
 	max-height: 4.5rem;
 	border-radius: 10px;
 	padding: 1px;
@@ -210,22 +212,53 @@
 	margin-top: auto;
 }
 
+.group-add {
+	display: flex;
+	flex-direction: row;
+}
+
+.group-add h1 {
+	display: flex;
+	flex: 1;
+}
+
+.group-add img {
+	max-width: 45px;
+	max-height: 45px;
+	min-width: 45px;
+	min-height: 45px;
+}
+
 
 #messages {
 	max-height: 95%;
 	overflow-y: scroll;
 	display: flex;
 	flex-direction: column-reverse;
-	scrollbar-color: #9b59b6 grey;
+	scrollbar-color: #9b59b6 transparent;
+}
+
+.no-messages {
+	color: #cda5d8;
+	text-align: center;
+	font-size: 2rem;
+}
+
+.no-users {
+	color: #cda5d8;
+	font-size: 1.5rem;
+	text-align: center;
 }
 
 .chatbox {
 	display: flex;
-	height: 100%;
+	height: calc(100% - 64px);
     flex-grow: 3;
 	flex-shrink: 1;
 	flex-basis: 500px;
 	background-color: #181d1b;
+	flex-direction: column;
+	justify-content: center;	
 }
 
 .group-members

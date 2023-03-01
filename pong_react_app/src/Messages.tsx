@@ -14,23 +14,37 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages(chan: Channel, users: User[], current_user: User)
 {
-	let messages: MessageData[] = chan.messages
+	let is_undefined: boolean = false;
+	let messages: MessageData[] = chan.messages;
+	if (typeof messages === 'undefined') {
+		messages = []
+		is_undefined = true
+	}
+	let [last_chan, setLastChan] = useState(typeof chan.name === 'undefined' ? "" : chan.name)
 	let [formValue, setFormValue] = useState("");
-	let [messagesBlocks, setMessagesBlocks] = useState(
-		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
-	);
+	let [messagesBlocks, setMessagesBlocks] = useState([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 
-	if (chan.members.length == 0)
-		return <></>;
+	if (is_undefined)
+		return <div className='no-messages'>Please select a channel</div>
+
+	if (chan.messages.length === 0)
+		return <div key={"no_messages_key"}>No messages</div>;
 
 	interface MessageData {
 		type: number;
 		text: string;
 		uid: number;
 		name: string;
+		from: string;
 	}
 
-	function sendMessage(e: React.FormEvent<HTMLButtonElement>)
+	if (messagesBlocks.length === 0 || last_chan != chan.name) // si c'est vide il faut l'update
+	{
+		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
+		setLastChan(chan.name);
+	}
+
+	function sendMessage(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
 	{
 		e.preventDefault();
 		let test = { 
@@ -41,7 +55,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		}
 		if (formValue.length !== 0)
 		{
-			let tmp = messagesBlocks
+			let tmp = msg
 			tmp.unshift(ChatMessage(users, test, current_user))
 			setMessagesBlocks(tmp);
 			chan.curr_uid += 1
@@ -55,15 +69,15 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			'display': 'flex',
 			'flexDirection': 'column',
 			'justifyContent': 'space-between',
-			'height': '95%',
-		}} key="Message-ret-a">
+			'height': '100%',
+		}} key={"Message-ret-a"+uuidv4()}>
 			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}
 			</div>
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)} key="will_never_change"/>
 				<div className="button-submit" key="Message-ret-d">
-					<button type="submit" onClick={(event) => sendMessage(event)} key="Message-ret-e">Send</button>
+					<button type="submit" onClick={(event) => sendMessage(event, messagesBlocks)} key="Message-ret-e">Send</button>
 				</div>
 			</form>
 		</div>
