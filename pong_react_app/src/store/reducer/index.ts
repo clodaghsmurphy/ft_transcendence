@@ -22,7 +22,7 @@ export interface Login
 
 export interface Logout
 {
-  type: ActionKind.Login;
+  type: ActionKind.Logout;
   payload: any;
 }
 

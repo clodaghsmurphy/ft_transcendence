@@ -12,6 +12,8 @@ import Login from './Login';
 import CallBack from './CallBack';
 import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
+import ProtectedRoute from './ProtectedRoute'
+import { ProtectedRouteProps } from './ProtectedRoute';
 
 type StateContext = {
   state: State;
@@ -20,8 +22,14 @@ type StateContext = {
 
 export const AuthContext = createContext<StateContext>( {state: initialState, dispatch: () => undefined } );
 
+
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const defaultProtectedRouteProps: Omit<ProtectedRouteProps, 'outlet'> = {
+    isAuth: !!state.isLoggedIn,
+    authPath: '/login',
+  };
+  
 
   return (
     <AuthContext.Provider value={ { state, dispatch } }>
@@ -30,14 +38,16 @@ function App() {
         <Route path="/" element={<Home />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/login/callback" element={<CallBack />}/>
-        <Route path="/dashboard" element={< Dashboard />} />
-        <Route path='/main' element={ <Main />} />
-        <Route path='/chat' element={ <Chat />} />
+        <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
+        <Route path='/main' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Main /> } /> } />
+        <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat /> } /> } />
       </Routes>
     </Router>
     </AuthContext.Provider>
   );
 }
+
+
 
 
 
