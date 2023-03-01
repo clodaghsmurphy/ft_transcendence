@@ -15,7 +15,7 @@ import { user_in_group } from './UserGroup'
 import plus_sign from './media/white_plus.png'
 import { SearchBar } from './SearchBar'
 import User, { error_user, name_to_user, sample_user_data } from './User'
-import { BAN, Channel, INVITE, KICK, basic_channel, sample_channel_data } from './Channels'
+import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import { api_get_all_users } from './API'
 // import axios from 'axios'
 
@@ -114,6 +114,7 @@ function Chat()
 
 	let current_user: User = all_users[2]
 	let [current_chan, set_current_chan] = useState({} as Channel)
+	let [chanOfUser, setChanOfUser] = useState(names_to_channel(all_channels, typeof current_user === 'undefined' ? [] : current_user.channels))
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -126,6 +127,8 @@ function Chat()
 			response.json()
 				.then(data => {
 					set_all_users(data as User[])
+					const cur_usr = (data as User[])[2]
+					setChanOfUser(names_to_channel(all_channels, typeof cur_usr.avatar === 'undefined' ? [] : cur_usr.channels))
 					// setLoading(false);
 				})
 		})
@@ -174,7 +177,7 @@ function Chat()
 					<div className='lists'>
 						<h1>Group chats</h1>
 						<div className='lists-holder'>
-							{group_message(all_channels, changeChannelOrDm)}
+							{group_message(chanOfUser, changeChannelOrDm)}
 						</div>
 					</div>
 

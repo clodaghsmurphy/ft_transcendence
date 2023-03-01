@@ -17,9 +17,9 @@
 - [ ] Code
   - [ ] Boutons kick/ban ok
   - [ ] Boutons de gauche responsive
-    - [ ] channels
+    - [x] channels
       - [x] visuellement
-      - [ ] onClick 
+      - [x] onClick 
     - [ ] dms
       - [ ] visuellement
       - [ ] onClick
