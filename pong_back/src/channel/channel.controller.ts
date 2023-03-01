@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
+import { ChannelCreateDto } from "./dto";
 
 @Controller('channel')
 export class ChannelController {
@@ -13,5 +14,10 @@ export class ChannelController {
 	@Get('info/:name')
 	getChannel(@Param() params) {
 		return this.channelService.getChannel(params.name);
+	}
+
+	@Post('create')
+	createChannel(@Body() dto: ChannelCreateDto) {
+		return this.channelService.createChannel(dto);
 	}
 }

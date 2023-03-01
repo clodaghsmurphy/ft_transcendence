@@ -28,12 +28,13 @@ model Message {
   text String
   name String
   type Int
-  channel Channel @relation(fields: [name], references: [name])
+  channel String
 }
 
 model Channel {
   name String @id
-  members String[]
-  messages Message[]
-  curr_uid Int
+  members String[] @default([])
+  operators String[]
+  messages Int[] @default([])
+  curr_uid Int @default(0)
 }

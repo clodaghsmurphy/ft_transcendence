@@ -1,5 +1,4 @@
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator"
-import { Channel } from "@prisma/client";
 
 export class UserCreateDto {
 	@IsString()
