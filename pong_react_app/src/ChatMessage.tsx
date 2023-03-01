@@ -18,6 +18,9 @@ interface MessageData {
 
 function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX.Element
 {
+	if (typeof curr_user === 'undefined')
+		return <div key={uuidv4()}/>
+
 	const messageClass = msg.name == curr_user.name ? "sender message-wrapper" : "message-wrapper"
 	return (
 		<div className={messageClass} key={uuidv4()}>

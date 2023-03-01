@@ -19,7 +19,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 	let [messagesBlocks, setMessagesBlocks] = useState([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 	
 	if (chan.messages.length == 0)
-		return <div>No messages</div>;
+		return <div key={"no_messages_key"}>No messages</div>;
 
 	interface MessageData {
 		type: number;
@@ -57,7 +57,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			'flexDirection': 'column',
 			'justifyContent': 'space-between',
 			'height': '95%',
-		}} key="Message-ret-a">
+		}} key={"Message-ret-a"+uuidv4()}>
 			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}
 			</div>

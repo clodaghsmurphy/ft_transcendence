@@ -9,6 +9,10 @@ const { v4: uuidv4 } = require('uuid');
 
 export function user_in_group(every_user: User[], current_user: User, chan: Channel): JSX.Element[] {
 	let ret: JSX.Element[] = []
+
+	if (typeof current_user === 'undefined')
+		return [<div key={uuidv4()}/>]
+
 	const curr_is_op = chan.op.includes(current_user.name)
 
 	for (const user of chan.members) {

@@ -48,7 +48,13 @@ function chat_button(name: string, message: string, img: string) {
 function users_message(message_data: User_message[]) {
 	let ret: JSX.Element[] = [];
 
+	if (message_data.length === 0) {
+		return <></>
+	}
+
 	for (const data of message_data) {
+		if (typeof data === 'undefined' || typeof data.user === 'undefined')
+			return <></>
 		ret.push(chat_button(data.user.name, data.message, data.user.avatar));
 	}
 	ret.push(add_dm())
@@ -103,7 +109,6 @@ function group_message(chan_data: Channel[]) {
 
 function Chat()
 {
-	const [isLoading, setLoading] = useState(true);
 	let [all_users, set_all_users] = useState([] as User[])
 
 
@@ -118,25 +123,24 @@ function Chat()
 			response.json()
 				.then(data => {
 					set_all_users(data as User[])
-					setLoading(false);
+					// setLoading(false);
 				})
 		})
 	  }, []);
 
-	if (isLoading) {
-		Messages(basic_channel(), [error_user()], error_user())
-		return (<div>loading...</div>)
-	}
+	// if (isLoading) {
+	// 	Messages(basic_channel(), [error_user()], error_user())
+	// 	return (<div>loading...</div>)
+	// }
 
-	if (all_users.length == 0) {
-		Messages(basic_channel(), [error_user()], error_user())
-		return (<div>no users found</div>)
-	}
+	// if (all_users.length == 0) {
+	// 	Messages(basic_channel(), [error_user()], error_user())
+	// 	return (<div>no users found</div>)
+	// }
 
 	let all_channels: Channel[] = sample_channel_data()
 	let current_chan: Channel = all_channels[1]
 	let current_user: User = all_users[2]
-	let messages = Messages(current_chan, all_users, current_user)
 
 	let message_user_data: User_message[] = [
 		{
@@ -190,7 +194,7 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{messages}
+				{Messages(current_chan, all_users, current_user)}
 			</div>
 
             <div className="group-members">
