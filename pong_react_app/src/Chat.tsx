@@ -12,6 +12,7 @@ import test_img	from './media/test.jpg'
 import Button from '@mui/material/Button'
 import { Avatar } from '@mui/material'
 import { user_in_group } from './UserGroup'
+import plus_sign from './media/white_plus.png'
 import { SearchBar } from './SearchBar'
 import User, { error_user, name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, sample_channel_data } from './Channels'
@@ -25,14 +26,15 @@ type User_message = {user: User, message: string}
 type Group_message = {name: string, message: string}
 type Group_user_data = {user: User, status: number, is_op: boolean}
 
-function chat_button(name: string, message: string, img: string) {
+function chat_button(name: string, message: string, img: string, fnc: (chan: Channel | User) => void, param: Channel | User) {
 	return (
-		<div className='chat-button-wrapper' key={uuidv4()}>
+		<div className='chat-button-wrapper' key={uuidv4()} onClick={() => fnc(param)}>
 			<button className='chat-button'>
 				<img src={img} alt={name}
-					style={{'width': '3.5em', 'height': 'auto',
-						'aspectRatio': '10 / 9', 'paddingLeft': '0px',
-						'paddingRight': '5px'}}>
+					style={{'width': '45px', 'height': '45px',
+						'maxWidth': '45px', 'maxHeight': '45px',
+						'aspectRatio': '1 / 1', 'paddingLeft': '0px',
+						'paddingRight': '0px'}}>
 				</img>
 				<div>
 					<h2>{name}</h2>
@@ -43,16 +45,49 @@ function chat_button(name: string, message: string, img: string) {
 	);
 }
 
-function users_message(message_data: User_message[]) {
+function users_message(message_data: User_message[], click_handler: (param: Channel | User) => void) {
 	let ret: JSX.Element[] = [];
 
-	for (const data of message_data) {
-		ret.push(chat_button(data.user.name, data.message, data.user.avatar));
+	if (message_data.length === 0) {
+		return <></>
 	}
+
+	for (const data of message_data) {
+		if (typeof data === 'undefined' || typeof data.user === 'undefined')
+			return <></>
+		ret.push(chat_button(data.user.name, data.message, data.user.avatar, click_handler, data.user));
+	}
+	ret.push(add_dm())
 	return ret;
 }
 
-function group_message(chan_data: Channel[]) {
+function add_group(): JSX.Element {
+	return (
+		<div className='chat-button-wrapper' key={uuidv4()}>
+			<button className='chat-button'>
+				<div className='group-add'>
+					<img src={plus_sign} alt='plus'/>
+					<h1>Add a group</h1>
+				</div>
+			</button>
+		</div>
+	);
+}
+
+function add_dm(): JSX.Element {
+	return (
+		<div className='chat-button-wrapper' key={uuidv4()}>
+			<button className='chat-button'>
+				<div className='group-add'>
+					<img src={plus_sign} alt='plus'/>
+					<h1>Add a DM</h1>
+				</div>
+			</button>
+		</div>
+	);
+}
+
+function group_message(chan_data: Channel[], click_handler: (chan: Channel | User) => void) {
 	let ret: JSX.Element[] = [];
 
 	for (const chan of chan_data) {
@@ -66,16 +101,19 @@ function group_message(chan_data: Channel[]) {
 			target_message.text
 		)
 
-		ret.push(chat_button(chan.name, message_text, group_img));
+		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
 	}
+	ret.push(add_group())
 	return ret;
 }
 
 function Chat()
 {
-	const [isLoading, setLoading] = useState(true);
 	let [all_users, set_all_users] = useState([] as User[])
+	let all_channels: Channel[] = sample_channel_data()
 
+	let current_user: User = all_users[2]
+	let [current_chan, set_current_chan] = useState({} as Channel)
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -88,25 +126,11 @@ function Chat()
 			response.json()
 				.then(data => {
 					set_all_users(data as User[])
-					setLoading(false);
+					// setLoading(false);
 				})
 		})
 	  }, []);
 
-	if (isLoading) {
-		Messages(basic_channel(), [error_user()], error_user())
-		return (<div>loading...</div>)
-	}
-
-	if (all_users.length == 0) {
-		Messages(basic_channel(), [error_user()], error_user())
-		return (<div>no users found</div>)
-	}
-
-	let all_channels: Channel[] = sample_channel_data()
-	let current_chan: Channel = all_channels[1]
-	let current_user: User = all_users[0]
-	let messages = Messages(current_chan, all_users, current_user)
 
 	let message_user_data: User_message[] = [
 		{
@@ -133,6 +157,12 @@ function Chat()
 		return ;
 	}
 
+	function changeChannelOrDm(param: Channel | User): void {
+		if (typeof (param as Channel).op !== 'undefined')
+			set_current_chan(param as Channel)
+		/// else changer le DM
+	}
+
 	return (	
 		<div className="dashboard">
         <NavBar /> 
@@ -144,7 +174,7 @@ function Chat()
 					<div className='lists'>
 						<h1>Group chats</h1>
 						<div className='lists-holder'>
-							{group_message(all_channels)}
+							{group_message(all_channels, changeChannelOrDm)}
 						</div>
 					</div>
 
@@ -152,7 +182,7 @@ function Chat()
 					<div className='lists'>
 						<h1>User messages</h1>
 						<div className='lists-holder'>
-							{users_message(message_user_data)}
+							{users_message(message_user_data, changeChannelOrDm)}
 						</div>
 						<div className='channels-holder'></div>
 					</div>
@@ -160,7 +190,7 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{messages}
+				{Messages(current_chan, all_users, current_user)}
 			</div>
 
             <div className="group-members">
