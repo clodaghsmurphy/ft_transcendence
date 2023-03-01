@@ -14,14 +14,12 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages(chan: Channel, users: User[], current_user: User)
 {
-	let messages: MessageData[] = chan.messages
+	let messages: MessageData[] = chan.messages;
 	let [formValue, setFormValue] = useState("");
-	let [messagesBlocks, setMessagesBlocks] = useState(
-		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
-	);
-
-	if (chan.members.length == 0)
-		return <></>;
+	let [messagesBlocks, setMessagesBlocks] = useState([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
+	
+	if (chan.messages.length == 0)
+		return <div>No messages</div>;
 
 	interface MessageData {
 		type: number;
@@ -30,7 +28,10 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		name: string;
 	}
 
-	function sendMessage(e: React.FormEvent<HTMLButtonElement>)
+	if (messagesBlocks.length == 0 && chan.messages.length != 0)
+		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
+
+	function sendMessage(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
 	{
 		e.preventDefault();
 		let test = { 
@@ -41,7 +42,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		}
 		if (formValue.length !== 0)
 		{
-			let tmp = messagesBlocks
+			let tmp = msg
 			tmp.unshift(ChatMessage(users, test, current_user))
 			setMessagesBlocks(tmp);
 			chan.curr_uid += 1
@@ -63,7 +64,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)} key="will_never_change"/>
 				<div className="button-submit" key="Message-ret-d">
-					<button type="submit" onClick={(event) => sendMessage(event)} key="Message-ret-e">Send</button>
+					<button type="submit" onClick={(event) => sendMessage(event, messagesBlocks)} key="Message-ret-e">Send</button>
 				</div>
 			</form>
 		</div>

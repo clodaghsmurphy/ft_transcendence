@@ -16,7 +16,7 @@ interface MessageData {
 	type: number;
 } 
 
-function ChatMessage(every_user: User[], msg: MessageData, curr_user: User)
+function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX.Element
 {
 	const messageClass = msg.name == curr_user.name ? "sender message-wrapper" : "message-wrapper"
 	return (
