@@ -9,17 +9,17 @@ export class UserService {
 	constructor(private prisma: PrismaService) {
 	}
 
-	async getAllUsers(): Promise<User[]> {
+	async getAll(): Promise<User[]> {
 		return await this.prisma.user.findMany();
 	}
 
-	async getUser(username: string) {
+	async get(username: string) {
 		return await this.prisma.user.findUnique({
 			where: { name: username },
 		});
 	}
 
-	async getUserInfo(username: string, attribute: string) {
+	async getInfo(username: string, attribute: string) {
 		try {
 			const user = await this.prisma.user.findUnique({
 				where: { name: username },
@@ -33,7 +33,7 @@ export class UserService {
 		}
 	}
 
-	async createUser(dto: UserCreateDto) {
+	async create(dto: UserCreateDto) {
 		try {
 			return await this.prisma.user.create({
 				data: {
@@ -41,7 +41,6 @@ export class UserService {
 					avatar: dto.avatar,
 					blocked_users: [],
 					friend_users: [],
-					channels: [],
 					connected: true,
 					in_game: false,
 				},
@@ -57,7 +56,7 @@ export class UserService {
 		}
 	}
 
-	async updateUser(dto: UserUpdateDto) {
+	async update(dto: UserUpdateDto) {
 		try {
 			return await this.prisma.user.update({
 				where: { name: dto.name },

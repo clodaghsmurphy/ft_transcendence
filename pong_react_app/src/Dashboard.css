@@ -217,6 +217,25 @@
         justify-self: flex-end;
         flex-wrap: wrap;
     }
+
+    .user-pfp:hover{
+        transform: scale(1.1);
+        cursor: pointer;
+
+    }
+
+    .logout-btn
+    {
+        height: 5vh;
+        fill: white;
+        width: 5vw;
+    }
+
+    .logout-btn:hover
+    {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
     .nav-logo {
         flex: 30% 1;
         align-self: center;

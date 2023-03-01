@@ -5,14 +5,18 @@ import user_pfp from './media/user.png'
 
 
 import { Link } from 'react-router-dom'
-import  {useState} from 'react'
+import  {useState, useContext } from 'react'
 import { FaBars, FaTimes } from "react-icons/fa";
 import  { useRef } from "react";
 import { Fab } from '@mui/material'
+import { AiOutlineLogout } from "react-icons/ai"
+import { AuthContext } from './App'
+import { initialState, reducer, State, ActionKind } from "./store/reducer"
+
 
 function NavBar()
 {
-
+    const { state,  dispatch } = useContext(AuthContext);
     const navRef = React.useRef<HTMLInputElement>(null);
     const navLink = React.useRef<HTMLUListElement>(null);
 
@@ -20,6 +24,14 @@ function NavBar()
     {
         navRef.current?.classList.toggle("responsive_nav");
         navLink.current?.classList.toggle("nav-list-visible")
+    }
+
+    const handleLogout = () => {
+        dispatch ({
+            type: ActionKind.Logout
+        });
+        localStorage.clear();
+        window.location.pathname = "/login";
     }
 
     return (
@@ -35,10 +47,13 @@ function NavBar()
             <li className='navlink'>Friends</li>
         </ul>
         <div className="nav-user" id="nav-user">
+            <AiOutlineLogout className="logout-btn" onClick={ handleLogout}/>
             <div className="user-pfp">
                 <img src={user_pfp} />
+                
             </div>
             <p className='userName' > Welcome clmurphy !</p>
+           
         </div>
         <button className="nav-btn nav-close-btn" onClick={() => showNavbar()}>
             <FaTimes />
