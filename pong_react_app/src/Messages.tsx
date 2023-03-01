@@ -14,11 +14,19 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages(chan: Channel, users: User[], current_user: User)
 {
+	let is_undefined: boolean = false;
 	let messages: MessageData[] = chan.messages;
+	if (typeof messages === 'undefined') {
+		messages = []
+		is_undefined = true
+	}
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
-	
-	if (chan.messages.length == 0)
+
+	if (is_undefined)
+		return <div className='no-messages'>Please select a channel</div>
+
+	if (chan.messages.length === 0)
 		return <div key={"no_messages_key"}>No messages</div>;
 
 	interface MessageData {

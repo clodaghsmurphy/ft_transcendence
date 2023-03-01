@@ -110,7 +110,10 @@ function group_message(chan_data: Channel[]) {
 function Chat()
 {
 	let [all_users, set_all_users] = useState([] as User[])
+	let all_channels: Channel[] = sample_channel_data()
 
+	let current_user: User = all_users[2]
+	let [current_chan, set_current_chan] = useState({} as Channel)
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -128,19 +131,6 @@ function Chat()
 		})
 	  }, []);
 
-	// if (isLoading) {
-	// 	Messages(basic_channel(), [error_user()], error_user())
-	// 	return (<div>loading...</div>)
-	// }
-
-	// if (all_users.length == 0) {
-	// 	Messages(basic_channel(), [error_user()], error_user())
-	// 	return (<div>no users found</div>)
-	// }
-
-	let all_channels: Channel[] = sample_channel_data()
-	let current_chan: Channel = all_channels[1]
-	let current_user: User = all_users[2]
 
 	let message_user_data: User_message[] = [
 		{

@@ -238,13 +238,27 @@
 	scrollbar-color: #9b59b6 transparent;
 }
 
+.no-messages {
+	color: #cda5d8;
+	text-align: center;
+	font-size: 2rem;
+}
+
+.no-users {
+	color: #cda5d8;
+	font-size: 1.5rem;
+	text-align: center;
+}
+
 .chatbox {
 	display: flex;
-	height: 100%;
+	height: calc(100% - 64px);
     flex-grow: 3;
 	flex-shrink: 1;
 	flex-basis: 500px;
 	background-color: #181d1b;
+	flex-direction: column;
+	justify-content: center;	
 }
 
 .group-members
