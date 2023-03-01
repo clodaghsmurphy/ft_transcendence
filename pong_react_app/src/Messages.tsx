@@ -20,6 +20,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		messages = []
 		is_undefined = true
 	}
+	let [last_chan, setLastChan] = useState(typeof chan.name === 'undefined' ? "" : chan.name)
 	let [formValue, setFormValue] = useState("");
 	let [messagesBlocks, setMessagesBlocks] = useState([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 
@@ -34,10 +35,14 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		text: string;
 		uid: number;
 		name: string;
+		from: string;
 	}
 
-	if (messagesBlocks.length == 0 && chan.messages.length != 0)
+	if (messagesBlocks.length === 0 || last_chan != chan.name) // si c'est vide il faut l'update
+	{
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
+		setLastChan(chan.name);
+	}
 
 	function sendMessage(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
 	{
@@ -64,7 +69,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 			'display': 'flex',
 			'flexDirection': 'column',
 			'justifyContent': 'space-between',
-			'height': '95%',
+			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
 			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}

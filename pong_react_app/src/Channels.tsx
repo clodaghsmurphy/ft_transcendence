@@ -11,6 +11,7 @@ interface MessageData {
 	uid: number;
 	name: string;
 	type: number,
+	from: string
 } 
 
 export type Channel = {
@@ -46,24 +47,28 @@ export function sample_channel_data(): Channel[] {
 				text: "Je pars au ski",
 				type: NORMAL,
 				uid: 0,
+				from: "Transcendence"
 			},
 			{
 				name: "adben-mc",
 				text: "Moi aussi",
 				type: NORMAL,
 				uid: 1,
+				from: "Transcendence"
 			},
 			{
 				name: "ple-lez",
 				text: "Pas nous",
 				type: NORMAL,
 				uid: 2,
+				from: "Transcendence"
 			},
 			{
 				name: "nguiard",
 				text: "Ouais...",
 				type: NORMAL,
 				uid: 3,
+				from: "Transcendence"
 			},
 		],
 		curr_uid: 3,
@@ -78,24 +83,28 @@ export function sample_channel_data(): Channel[] {
 			text: "Raclette?",
 			type: NORMAL,
 			uid: 0,
+			from: "Raclette"
 		},
 		{
 			name: "clmurphy",
 			text: "Je peux venir?",
 			type: NORMAL,
 			uid: 1,
+			from: "Raclette"
 		},
 		{
 			name: "ple-lez",
 			text: "non",
 			type: NORMAL,
 			uid: 2,
+			from: "Raclette"
 		},
 		{
 			name: "nguiard",
 			text: " has banned clmurphy",
 			type: BAN,
 			uid: 3,
+			from: "Raclette"
 		},
 		],
 		curr_uid: 3,
@@ -110,24 +119,28 @@ export function sample_channel_data(): Channel[] {
 			text: " has banned nguiard",
 			type: BAN,
 			uid: 0,
+			from: "Illuminatis"
 		},
 		{
 			name: "clmurphy",
 			text: " has banned ple-lez",
 			type: BAN,
 			uid: 1,
+			from: "Illuminatis"
 		},
 		{
 			name: "clmurphy",
 			text: "ils ont ose me ban d'une raclette",
 			type: NORMAL,
 			uid: 2,
+			from: "Illuminatis"
 		},
 		{
 			name: "adben-mc",
 			text: "On vas conquerir le monde",
 			type: NORMAL,
 			uid: 3,
+			from: "Illuminatis"
 		},],
 		curr_uid: 3,
 	}
@@ -212,6 +225,7 @@ export function sendToChan(chan: Channel, current: User, msg: "string"): boolean
 		uid: 0,
 		text: msg,
 		type: NORMAL,
+		from: chan.name,
 	}
 	return sendMessage(chan, current, new_message)
 }
