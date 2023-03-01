@@ -22,6 +22,19 @@ model User {
   game_id Int?
 }
 
+model Message {
+  id Int @id @default(autoincrement())
+  uid Int
+  text String
+  name String
+  type Int
+  channel String
+}
+
 model Channel {
   name String @id
+  members String[] @default([])
+  operators String[]
+  messages Int[] @default([])
+  curr_uid Int @default(0)
 }
