@@ -594,7 +594,7 @@
      
         width: 100%;
         margin-top: auto;
-		margin-bottom: 10px;
+		margin-bottom: 0;
         justify-content: space-between;
         flex: 0;
 		flex-shrink: 0;
@@ -617,7 +617,7 @@
     }
 
     .message-input {
-        height: 4vh;
+        height: 45px;
         margin-right: 4em;
         flex: 30%;
         border-radius: 1em;

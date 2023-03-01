@@ -9,3 +9,6 @@ export class ChannelCreateDto {
 	@IsNotEmpty()
 	username: string;
 }
+
+export class ChannelJoinDto extends ChannelCreateDto {
+}
