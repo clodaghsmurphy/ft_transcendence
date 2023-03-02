@@ -229,3 +229,7 @@ export function sendToChan(chan: Channel, current: User, msg: "string"): boolean
 	}
 	return sendMessage(chan, current, new_message)
 }
+
+export function names_to_channel(every_channels: Channel[], asked_channels: string[]): Channel[] {
+	return every_channels.filter(chan => asked_channels.includes(chan.name))
+}

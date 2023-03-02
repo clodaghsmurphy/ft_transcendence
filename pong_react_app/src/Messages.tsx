@@ -22,7 +22,9 @@ function Messages(chan: Channel, users: User[], current_user: User)
 	}
 	let [last_chan, setLastChan] = useState(typeof chan.name === 'undefined' ? "" : chan.name)
 	let [formValue, setFormValue] = useState("");
-	let [messagesBlocks, setMessagesBlocks] = useState([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
+	let [messagesBlocks, setMessagesBlocks] = useState(
+		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
+	);
 
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
@@ -44,7 +46,7 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		setLastChan(chan.name);
 	}
 
-	function sendMessage(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
+	function sendMessageOnClick(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
 	{
 		e.preventDefault();
 		let test = { 
@@ -75,9 +77,12 @@ function Messages(chan: Channel, users: User[], current_user: User)
 				{messagesBlocks}
 			</div>
 			<form className="message-box" key="Message-ret-c">
-				<input type="text" className="message-input" placeholder="Type message..." value={ formValue } onChange={(e: ChangeEvent<HTMLInputElement>) => setFormValue(e.target.value)} key="will_never_change"/>
+				<input type="text" className="message-input"
+					placeholder="Type message..." value={ formValue }
+					onChange={e => setFormValue(e.target.value)} autoFocus
+					key="will_never_change"/>
 				<div className="button-submit" key="Message-ret-d">
-					<button type="submit" onClick={(event) => sendMessage(event, messagesBlocks)} key="Message-ret-e">Send</button>
+					<button type="submit" onClick={(event) => sendMessageOnClick(event, messagesBlocks)} key="Message-ret-e">Send</button>
 				</div>
 			</form>
 		</div>
