@@ -546,3 +546,68 @@
 	width: 100%;
 	border-radius: 5px;
 }
+
+.ban-message {
+	color:#2E2E2E;
+	font-style: italic;
+	text-transform: lowercase;
+	background-color: #e08a85;
+	height: 1.5rem;
+	width: 100%;
+	text-align: center;
+	border-bottom: #2E2E2E solid 1px;
+}
+
+.kick-message {
+	color:#2E2E2E;
+	font-style: italic;
+	text-transform: lowercase;
+	background-color: #e0be85;
+	height: 1.5rem;
+	width: 100%;
+	text-align: center;
+	border-bottom: #2E2E2E solid 1px;
+}
+
+.invite-message {
+	border: 0.1em solid transparent;
+	color: white;
+	border-image: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+	border-image-slice: 1;
+	width: 100%;
+	width:fit-content;
+	position: relative;
+	margin: 0 5px;
+	padding: 16px 40px 16px 20px;
+	border-radius: 2rem;
+	word-wrap: break-word;
+}
+
+.message-body-link
+{
+	border: 0.1em solid transparent;
+	color: white;
+	border-image: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+	border-image-slice: 1;
+	width: 100%;
+	width:fit-content;
+	position: relative;
+	margin: 0 5px;
+	padding: 16px 40px 16px 20px;
+	border-radius: 2rem;
+	word-wrap: break-word;
+}
+
+.message-body-link div
+{
+	background-color: #cda5d8;
+	color: black;
+	border-radius: 5px;
+	width: 90%;
+	text-align: center;
+	margin-left: 5%;
+}
+
+.message-body-link:link {
+	text-decoration: none;
+}
