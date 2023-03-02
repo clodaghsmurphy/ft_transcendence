@@ -40,7 +40,7 @@ function Login ()
 			const code = new URLSearchParams(location.search).get('code');
 			const ustate = new URLSearchParams(location.search).get('state');
 			
-
+			console.log('code = ' + code);
 			const requestToken = {
 				grant_type:'authorization_code', 
 				client_id:api_keys.client_id,
