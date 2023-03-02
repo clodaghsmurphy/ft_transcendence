@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@types/node": "^18.14.4"
+  },
+  "dependencies": {
+    "nest": "^0.1.6"
+  }
+}
