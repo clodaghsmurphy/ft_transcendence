@@ -8,7 +8,7 @@ export class AuthController {
 
     @Get('/42/login')
     signout(){
-        return this.authService.signout();
+        return 'hi';
     }
 
     @Post('/42/redierct')
