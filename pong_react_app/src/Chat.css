@@ -451,27 +451,20 @@
 }
 
 .popup-content {
+	height: 70%;
 	margin: auto;
 	background: #2E2E2E;
 	width: 50%;
 	padding: 5px;
 	border:#cda5d8 3px solid;
 	border-radius: 15px;
+	display: flex;
+	flex-direction: column;
 }
-  /* .popup-arrow {
-	color: rgb(255, 255, 255);
-  }
-  [role='tooltip'].popup-content {
-	width: 200px;
-	box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
-  } */
-  
+
 .popup-overlay {
 	background: rgba(0, 0, 0, 0.5);
 }
-  /* [data-popup='tooltip'].popup-overlay {
-	background: transparent;
-  } */
 
 .popup-content > h1 {
 	color: white;
@@ -494,6 +487,8 @@
 	border-radius: 10px;
 	display: flex;
 	flex-direction: row;
+	display: flex;
+	flex: 0 0 80px;
 	align-items: center;
 	padding: 0 2.5%;
 }
@@ -522,5 +517,32 @@
 	flex-direction: row;
 	width: 90%;
 	margin: 5px 5%;
-	border: 1px red solid;
+	gap: 5px;
+	align-self: flex-end;
+}
+
+.popup-prompt input {
+	display: flex;
+	flex: 8;
+	font-size: 1.25rem;
+	background-color: #A09F9F;
+	color: black;
+	border: none;
+	border-radius: 5px;
+}
+
+.popup-prompt input:focus {
+	outline: none;
+}
+
+.popup-prompt button {
+	display: flex;
+	flex: 1;
+	font-size: 1.25rem;
+	text-align: center;
+	background-color: #cda5d8;
+	color: black;
+	border: none;
+	width: 100%;
+	border-radius: 5px;
 }

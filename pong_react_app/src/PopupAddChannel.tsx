@@ -3,10 +3,19 @@ import Popup from 'reactjs-popup'
 import { add_group } from './Chat'
 import User from './User'
 import Checkbox from '@mui/material/Checkbox'
-import { Channel } from './Channels'
+import { Channel, MessageData } from './Channels'
 
 const { v4: uuidv4 } = require('uuid');
 
+type ChannelPost = {
+	name: string,
+	username: string,
+	members: string[] | null,
+	op: string[] | null,
+	messages: MessageData[] | null,
+	banned: string[] | null,
+	curr_uid: number | null,
+}
 
 export default function PopupAddChannel(every_users: User[], current_user: User) {
 	let base = ''
@@ -42,10 +51,10 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 				<div className='popup-user' key={uuidv4()}>
 					<img src={user.avatar} alt={user.name} />
 					<div>{user.name}</div>
-					<Checkbox sx={{
+					<input type="checkbox" style={{
 						display: 'flex',
 						flex: '0 0 42px',
-					}} onClick={() => clickCheckbox(user.name)}/>
+					}} onChange={() => clickCheckbox(user.name)}/>
 				</div>
 			)
 		}
@@ -55,16 +64,23 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 	function ValidateChan() {
 		if (!inputRef.current || inputRef.current.value == '')
 			return ;
-		let chan: Channel = {
+		let chan: ChannelPost = {
 			name: inputRef.current!.value,
+			username: current_user.name,
 			members: selected,
 			op: [current_user.name],
 			banned: [],
 			messages: [],
 			curr_uid: 0,
 		}
-		console.log(chan.members);
-		inputRef.current!.value = ''
+		console.log(JSON.stringify(chan));
+		inputRef.current!.value = '';
+		setSelected([current_user.name]);
+		fetch('/api/channel/create', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify(chan),
+		})
 	}
 
 	return (
@@ -73,6 +89,14 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 			<div className='popup-user-container'>
 				{basic_users(every_users.filter(usr => usr.name != current_user.name))}
 			</div>
+			
+			<div className='bar' style={{
+				width: '90%',
+				marginLeft: '5%',
+				marginBottom: '10px',
+				marginTop: 'auto'
+			}}></div>
+
 			<div className='popup-prompt'>
 				<input ref={inputRef} type='text'></input>
 				<button onClick={() => ValidateChan()}>Create</button>
@@ -80,4 +104,3 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 		</Popup>
 	)
 }
-

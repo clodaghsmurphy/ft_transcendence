@@ -6,7 +6,7 @@ export const KICK = 1
 export const BAN = 2
 export const INVITE = 3
 
-interface MessageData {
+export interface MessageData {
 	text: string;
 	uid: number;
 	name: string;
