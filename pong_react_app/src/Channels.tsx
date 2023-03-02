@@ -6,7 +6,7 @@ export const KICK = 1
 export const BAN = 2
 export const INVITE = 3
 
-interface MessageData {
+export interface MessageData {
 	text: string;
 	uid: number;
 	name: string;
@@ -123,8 +123,8 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			name: "clmurphy",
-			text: " has banned ple-lez",
-			type: BAN,
+			text: " has kicked ple-lez",
+			type: KICK,
 			uid: 1,
 			from: "Illuminatis"
 		},
@@ -140,6 +140,13 @@ export function sample_channel_data(): Channel[] {
 			text: "On vas conquerir le monde",
 			type: NORMAL,
 			uid: 3,
+			from: "Illuminatis"
+		},
+		{
+			name: "clmurphy",
+			text: "/game/6",
+			type: INVITE,
+			uid: 4,
 			from: "Illuminatis"
 		},],
 		curr_uid: 3,

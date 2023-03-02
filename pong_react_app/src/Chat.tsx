@@ -17,6 +17,7 @@ import { SearchBar } from './SearchBar'
 import User, { error_user, name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import { api_get_all_users } from './API'
+import PopupAddChannel from './PopupAddChannel'
 // import axios from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
@@ -61,7 +62,7 @@ function users_message(message_data: User_message[], click_handler: (param: Chan
 	return ret;
 }
 
-function add_group(): JSX.Element {
+export function add_group(): JSX.Element {
 	return (
 		<div className='chat-button-wrapper' key={uuidv4()}>
 			<button className='chat-button'>
@@ -87,7 +88,8 @@ function add_dm(): JSX.Element {
 	);
 }
 
-function group_message(chan_data: Channel[], click_handler: (chan: Channel | User) => void) {
+function group_message(chan_data: Channel[], click_handler: (chan: Channel | User) => void,
+	every_user: User[], current_user: User) {
 	let ret: JSX.Element[] = [];
 
 	for (const chan of chan_data) {
@@ -103,7 +105,7 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 
 		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
 	}
-	ret.push(add_group())
+	ret.push(PopupAddChannel(every_user, current_user))
 	return ret;
 }
 
@@ -177,7 +179,7 @@ function Chat()
 					<div className='lists'>
 						<h1>Group chats</h1>
 						<div className='lists-holder'>
-							{group_message(chanOfUser, changeChannelOrDm)}
+							{group_message(chanOfUser, changeChannelOrDm, all_users, current_user)}
 						</div>
 					</div>
 
