@@ -5,8 +5,27 @@
         height: 100vh;
         overflow: hidden;
         width: 100%;
+        background-color: #181d1b;
+
           /* scroll thumb and track */ 
     }
+
+    *::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+    *::-webkit-scrollbar-track {
+        background-color: rgba(25,147,147,0.1);
+        border-radius: 8px;
+      }
+      
+    *::-webkit-scrollbar-thumb {
+        background: rgba(237, 234, 238, 0.2);;
+      }
+      
+    *::-webkit-scrollbar-thumb:hover {
+        background: #6E6E6E;
+      }
     
     
     .body {
@@ -459,7 +478,7 @@
         width: 100%;
         background: rgba(0, 0, 0, .5);
         box-shadow: 0 5px 30px rgba(0, 0, 0, .2);
-        overflow-y: scroll;
+        overflow-y: hidden;
         background-size: cover;
         justify-content: space-between;
         

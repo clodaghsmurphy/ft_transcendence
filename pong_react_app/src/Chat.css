@@ -101,7 +101,7 @@
 	flex: 5;
 	flex-basis: 45%;
 	flex-grow: 0;
-	overflow-y: scroll;
+	overflow-y: hidden;
 }
 
 .lists * {
