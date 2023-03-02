@@ -14,7 +14,7 @@ import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './ProtectedRoute'
 import { ProtectedRouteProps } from './ProtectedRoute';
-import TestNathan from './TestNathan';
+// import TestNathan from './TestNathan';
 
 type StateContext = {
   state: State;
@@ -42,7 +42,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/main' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Main /> } /> } />
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat /> } /> } />
-		<Route path='/testnathan' element={<TestNathan />}/>
+		{/* <Route path='/testnathan' element={<TestNathan />}/> */}
 	  </Routes>
     </Router>
     </AuthContext.Provider>
