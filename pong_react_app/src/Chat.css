@@ -449,3 +449,78 @@
 	width: 100%;
 	flex: 0;
 }
+
+.popup-content {
+	margin: auto;
+	background: #2E2E2E;
+	width: 50%;
+	padding: 5px;
+	border:#cda5d8 3px solid;
+	border-radius: 15px;
+}
+  /* .popup-arrow {
+	color: rgb(255, 255, 255);
+  }
+  [role='tooltip'].popup-content {
+	width: 200px;
+	box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+  } */
+  
+.popup-overlay {
+	background: rgba(0, 0, 0, 0.5);
+}
+  /* [data-popup='tooltip'].popup-overlay {
+	background: transparent;
+  } */
+
+.popup-content > h1 {
+	color: white;
+	text-align: center;
+}
+
+.popup-user-container {
+	width: 90%;
+	/* margin-top: 15px; */
+	margin: 5px 5%;
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
+	gap: 5px;
+}
+
+.popup-user {
+	background-color: #2E2E2E;
+	border: #9b59b6 2px solid;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0 2.5%;
+}
+
+.popup-user img {
+	flex: 1;
+	border-radius: 50%;
+	max-width: 3.5rem;
+	max-height: 3.5rem;
+	width: 3.5rem;
+	height: 3.5rem;
+	min-height: 3.5rem;
+	max-height: 3.5rem;
+	margin: 10px 10px;
+}
+
+.popup-user div {
+	flex: 1;
+	color: white;
+	font-size: 2rem;
+	margin-left: 2.5%;
+}
+
+.popup-prompt {
+	display: flex;
+	flex-direction: row;
+	width: 90%;
+	margin: 5px 5%;
+	border: 1px red solid;
+}
