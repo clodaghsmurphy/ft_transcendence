@@ -69,7 +69,7 @@ function Login ()
 						dispatch(
 							{
 								type: ActionKind.Login,
-								payload: { user: res.data.login, isLoggedIn: true}
+								payload: { user :{login: res.data.login, id:res.data.id, avatar:res.data.image.link}, isLoggedIn: true}
 							}
 						)
 						console.log('state logged = ' + state.isLoggedIn);

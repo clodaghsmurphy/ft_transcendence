@@ -49,7 +49,7 @@ function NavBar()
         <div className="nav-user" id="nav-user">
             <AiOutlineLogout className="logout-btn" onClick={ handleLogout}/>
             <div className="user-pfp">
-                <img src={user_pfp} />
+                <img src={state.user.avatar} />
                 
             </div>
             <p className='userName' > Welcome clmurphy !</p>

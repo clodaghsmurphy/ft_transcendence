@@ -6,9 +6,13 @@ import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import  user_pfp from './media/user.png'
 import  nathan from './media/nguiard.jpg'
+import { AuthContext  } from './App';
+import { useContext } from 'react'
 
 function Main()
 {
+	const { state,  dispatch } = useContext(AuthContext);
+
     return (
         <div className='body '>
             <div className="app">
@@ -30,10 +34,10 @@ function Main()
                     <div className="player-vs">
                         <div className="player">
                             <div className="avatar">
-                                <img src={user_pfp} />
+                                <img src={state.user.avatar} />
                             </div>
                             <div className="player-info">
-                                <span className="player-name">clmurphy</span>
+                                <span className="player-name">{state.user.login}</span>
                                 <span className="player-level">LVL 12</span>
                             </div>
                         </div>

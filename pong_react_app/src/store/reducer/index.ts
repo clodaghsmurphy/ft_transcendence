@@ -2,7 +2,7 @@ import React from 'react'
 
 export type State = {
     isLoggedIn: boolean,
-    user: string,
+    user: user,
     client_id: string,
     redirect_uri: string,
     client_secret: string,
@@ -33,9 +33,17 @@ export type Action =
 
 };
 
+export type user = 
+{
+  login:string;
+  id: string;
+  avatar: string;
+
+}
+
 export const initialState:State = {
     isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")!) ,
-    user: JSON.parse(localStorage.getItem("user")!) || null,
+    user: { login: 'clmurphy', id: '1', avatar: 'https://cdn.intra.42.fr/users/b055b9ed5ffb394bcd9f0da75db1879a/clmurphy.jpg'},
     client_id: process.env.REACT_APP_CLIENT_ID!,
     redirect_uri: process.env.REACT_APP_REDIRECT_URI!,
     client_secret: process.env.REACT_APP_CLIENT_SECRET!,
