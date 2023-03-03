@@ -18,14 +18,10 @@ import User, { error_user, name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import { api_get_all_users } from './API'
 import PopupAddChannel from './PopupAddChannel'
-// import axios from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
 
-
 type User_message = {user: User, message: string}
-type Group_message = {name: string, message: string}
-type Group_user_data = {user: User, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string, fnc: (chan: Channel | User) => void, param: Channel | User) {
 	return (
@@ -97,12 +93,12 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 
 		let message_text: string = (
 			target_message.type == BAN ||
-			target_message.type == INVITE ||
 			target_message.type == KICK ?
 			target_message.name + target_message.text :
 			target_message.text
 		)
-
+		if (target_message.type)
+			message_text = target_message.name + " sent an invite"
 		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
 	}
 	ret.push(PopupAddChannel(every_user, current_user))
