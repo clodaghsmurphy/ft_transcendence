@@ -19,6 +19,16 @@ export class UserService {
 		});
 	}
 
+	async userExists(name: string): Promise<User> {
+		const user = await this.prisma.user.findUnique({
+			where: { name: name },
+		});
+		console.log('name : ' + name);
+		console.log('user ');
+		console.log(user);
+		return user;
+	}
+
 	async getInfo(username: string, attribute: string) {
 		try {
 			const user = await this.prisma.user.findUnique({

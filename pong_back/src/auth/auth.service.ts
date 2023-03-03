@@ -5,8 +5,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class AuthService {
     constructor(private prisma: PrismaService) {}
 
-    async signout() {
-        return 'signout'
-    }
+    
 }
 

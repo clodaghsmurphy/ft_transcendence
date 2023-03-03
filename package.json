@@ -3,6 +3,10 @@
     "@types/node": "^18.14.4"
   },
   "dependencies": {
-    "nest": "^0.1.6"
+    "@nestjs/passport": "^9.0.3",
+    "nest": "^0.1.6",
+    "passport": "^0.6.0",
+    "passport-42": "^1.2.6",
+    "passport-local": "^1.0.0"
   }
 }
