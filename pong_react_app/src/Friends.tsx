@@ -19,10 +19,17 @@ function one_friend(usr: User): JSX.Element {
 				<span className='status' style={usr.connected ? {backgroundColor: 'green'} : {}}>{usr.connected ? "online" : "offline" }</span>
 			</Link>
 
-			<div>
+			<div className='jsp-comment-lappeler'>
 				<div className='game-status'>
 					<div>{status_text}</div>
 					<button>{button_text}</button>
+				</div>
+				<div className='below-status'>
+					<div style={{flex: '4'}}>bla-bla</div>
+					<div className='truc'>
+						<button>DM</button>
+						<button>Remove</button>
+					</div>
 				</div>
 			</div>
 		</div>
