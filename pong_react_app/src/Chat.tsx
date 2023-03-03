@@ -16,7 +16,6 @@ import plus_sign from './media/white_plus.png'
 import { SearchBar } from './SearchBar'
 import User, { error_user, name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
-import { api_get_all_users } from './API'
 import PopupAddChannel from './PopupAddChannel'
 
 const { v4: uuidv4 } = require('uuid');

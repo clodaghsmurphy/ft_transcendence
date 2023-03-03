@@ -44,7 +44,7 @@ function NavBar()
             <Link to="/main" className='navlink'>Home</Link>
             <li className='navlink' >Stats</li>
             <Link to="/chat" className='navlink'>Chat</Link>
-            <li className='navlink'>Friends</li>
+            <Link to="/friends" className='navlink'>Friends</Link>
         </ul>
         <div className="nav-user" id="nav-user">
             <AiOutlineLogout className="logout-btn" onClick={ handleLogout}/>
