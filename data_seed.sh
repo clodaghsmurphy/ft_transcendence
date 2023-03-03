@@ -47,7 +47,7 @@ curl -H 'Content-Type: application/json' \
 echo "\n\nCreating Channels\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "chan", "username": "ple-lez" }' \
+	-d '{ "name": "Transcendence", "username": "ple-lez" }' \
 	-X POST \
 	localhost:3042/channel/create
 
@@ -56,3 +56,9 @@ curl -H 'Content-Type: application/json' \
 	-X POST \
 	localhost:3042/channel/create
 
+echo "\n\nUpdating Channels\n"
+
+curl -H 'Content-Type: application/json' \
+	-d '{"name":"Transcendence","members":["adben-mc","clmurphy","nguiard","ple-lez"],"op":["adben-mc","clmurphy","nguiard","ple-lez"],"banned":[],"messages":[{"name":"clmurphy","text":"Je pars au ski","type":0,"uid":0,"from":"Transcendence"},{"name":"adben-mc","text":"Moi aussi","type":0,"uid":1,"from":"Transcendence"},{"name":"ple-lez","text":"Pas nous","type":0,"uid":2,"from":"Transcendence"},{"name":"nguiard","text":"Ouais...","type":0,"uid":3,"from":"Transcendence"}],"curr_uid":3}'  \
+	-X POST \
+	localhost:3042/user/update

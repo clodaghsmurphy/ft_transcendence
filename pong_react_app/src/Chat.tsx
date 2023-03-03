@@ -108,9 +108,8 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 function Chat()
 {
 	let [all_users, set_all_users] = useState([] as User[])
-	let all_channels: Channel[] = sample_channel_data()
-
-	let current_user: User = all_users[2]
+	let [all_channels, set_all_channels] = useState([] as Channel[])
+	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as Channel)
 	let [chanOfUser, setChanOfUser] = useState(names_to_channel(all_channels, typeof current_user === 'undefined' ? [] : current_user.channels))
 
@@ -125,14 +124,21 @@ function Chat()
 			response.json()
 				.then(data => {
 					set_all_users(data as User[])
-					const cur_usr = (data as User[])[2]
-					setChanOfUser(names_to_channel(all_channels, typeof cur_usr.avatar === 'undefined' ? [] : cur_usr.channels))
-					// setLoading(false);
+					set_current_user(data[2] as User) // A changer par jsp quoi
 				})
-		})
-	  }, []);
+			})
 
-
+		fetch('/api/channel/info')
+			.then((response) => {
+				response.json()
+				.then(data => {
+				set_all_channels(data as Channel[])
+				setChanOfUser(names_to_channel(all_channels,
+					typeof current_user.channels === 'undefined' ? [] : current_user.channels))
+				})
+			})
+	}, []);
+	
 	let message_user_data: User_message[] = [
 		{
 			user: all_users[0],
@@ -151,12 +157,6 @@ function Chat()
 			"message": "je speedrun le TC",
 		}
 	];
-
-	function doesNothing(str: string): MouseEventHandler<HTMLButtonElement> | undefined {
-		console.log("Tried to open a chat between " + current_user.name +
-			" and " + str)
-		return ;
-	}
 
 	function changeChannelOrDm(param: Channel | User): void {
 		if (typeof (param as Channel).op !== 'undefined')
