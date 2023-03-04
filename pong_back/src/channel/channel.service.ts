@@ -17,6 +17,15 @@ export class ChannelService {
 		});
 	}
 
+	async getInfo(channelName: string, attribute: string) {
+		this.checkChannel(channelName);
+
+		const channel: Channel = await this.prisma.channel.findUnique({
+			where: {name: channelName},
+		});
+		return {attribute: channel[attribute]};
+	}
+
 	async create(dto: ChannelCreateDto) : Promise<Channel> {
 		await this.checkUser(dto.username);
 		try {
@@ -40,6 +49,9 @@ export class ChannelService {
 
 	async join(dto: ChannelCreateDto) : Promise<Channel> {
 		await this.checkUser(dto.username);
+		await this.checkChannel(dto.name);
+
+		// Check that user isn't already joined
 		if (await this.prisma.channel.count({where: {
 				name: dto.name,
 				members: {has: dto.username}
@@ -51,22 +63,12 @@ export class ChannelService {
 			}, HttpStatus.BAD_REQUEST);
 		}
 
-		try {
-			return await this.prisma.channel.update({
-				where: {name: dto.name},
-				data: {
-					members: {push: dto.username}
-				},
-			});
-		} catch (e) {
-			if (e.code == 'P2025') {
-				throw new HttpException({
-					status: HttpStatus.BAD_REQUEST,
-					error: `Channel ${dto.name} doesn't exist`,
-				}, HttpStatus.BAD_REQUEST);
-			}
-			throw e;
-		}
+		return await this.prisma.channel.update({
+			where: {name: dto.name},
+			data: {
+				members: {push: dto.username}
+			},
+		});
 	}
 
 	async getAllMessages(channelName: string) : Promise<Message[]> {

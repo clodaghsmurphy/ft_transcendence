@@ -16,6 +16,11 @@ export class ChannelController {
 		return this.channelService.get(params.name);
 	}
 
+	@Get('info/:name/:attribute')
+	getChannelInfo(@Param() params) {
+		return this.channelService.getInfo(params.name, params.attribute);
+	}
+
 	@Post('create')
 	createChannel(@Body() dto: ChannelCreateDto) {
 		return this.channelService.create(dto);
