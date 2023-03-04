@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Channel } from '@prisma/client';
+import { Channel, Message } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
-import { ChannelCreateDto } from "./dto";
+import { ChannelCreateDto, MessageCreateDto } from "./dto";
 
 @Injectable()
 export class ChannelService {
@@ -69,12 +69,56 @@ export class ChannelService {
 		}
 	}
 
+	async getAllMessages(channelName: string) : Promise<Message[]> {
+		this.checkChannel(channelName);
+
+		const channel: Channel = await this.prisma.channel.findUnique({where: {name: channelName}});
+		const messageIds: number[] = channel.messages;
+
+		return await this.prisma.message.findMany({
+			where: {
+				id: {in: messageIds},
+			},
+		});
+	}
+
+	async postMessage(channelName: string, dto: MessageCreateDto) : Promise<Message> {
+		this.checkChannel(channelName);
+
+		const message = await this.prisma.message.create({
+			data: {
+				uid: dto.uid,
+				text: dto.text,
+				name: dto.name,
+				channel: channelName,
+				type: 0,
+			},
+		});
+		await this.prisma.channel.update({
+			where: {name: channelName},
+			data: {
+				messages: {push: message.id},
+			},
+		});
+		return message;
+	}
+
 	async checkUser(username: string) {
 		if (await this.prisma.user.count({where: {name: username}}) == 0)
 		{
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `User ${username} doesn't exist`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	async checkChannel(channelName: string) {
+		if (await this.prisma.channel.count({where: {name: channelName}}) == 0)
+		{
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `Channel ${channelName} doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}
