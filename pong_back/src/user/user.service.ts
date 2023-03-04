@@ -13,7 +13,7 @@ export class UserService {
 		return await this.prisma.user.findMany();
 	}
 
-	async get(username: string) {
+	async get(username: string): Promise<User> {
 		return await this.prisma.user.findUnique({
 			where: { name: username },
 		});
@@ -28,7 +28,7 @@ export class UserService {
 		return { attribute: user[attribute] };
 	}
 
-	async create(dto: UserCreateDto) {
+	async create(dto: UserCreateDto): Promise<User> {
 		try {
 			return await this.prisma.user.create({
 				data: {
@@ -51,7 +51,7 @@ export class UserService {
 		}
 	}
 
-	async update(dto: UserUpdateDto) {
+	async update(dto: UserUpdateDto): Promise<User> {
 		this.checkUser(dto.name);
 
 		return await this.prisma.user.update({
