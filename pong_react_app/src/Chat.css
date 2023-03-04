@@ -101,7 +101,7 @@
 	flex: 5;
 	flex-basis: 45%;
 	flex-grow: 0;
-	overflow-y: scroll;
+	overflow-y: hidden;
 }
 
 .lists * {
@@ -448,4 +448,166 @@
 	margin-top: 10px;
 	width: 100%;
 	flex: 0;
+}
+
+.popup-content {
+	height: 70%;
+	margin: auto;
+	background: #2E2E2E;
+	width: 50%;
+	padding: 5px;
+	border:#cda5d8 3px solid;
+	border-radius: 15px;
+	display: flex;
+	flex-direction: column;
+}
+
+.popup-overlay {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content > h1 {
+	color: white;
+	text-align: center;
+}
+
+.popup-user-container {
+	width: 90%;
+	/* margin-top: 15px; */
+	margin: 5px 5%;
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
+	gap: 5px;
+}
+
+.popup-user {
+	background-color: #2E2E2E;
+	border: #9b59b6 2px solid;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: row;
+	display: flex;
+	flex: 0 0 80px;
+	align-items: center;
+	padding: 0 2.5%;
+}
+
+.popup-user img {
+	flex: 1;
+	border-radius: 50%;
+	max-width: 3.5rem;
+	max-height: 3.5rem;
+	width: 3.5rem;
+	height: 3.5rem;
+	min-height: 3.5rem;
+	max-height: 3.5rem;
+	margin: 10px 10px;
+}
+
+.popup-user div {
+	flex: 1;
+	color: white;
+	font-size: 2rem;
+	margin-left: 2.5%;
+}
+
+.popup-prompt {
+	display: flex;
+	flex-direction: row;
+	width: 90%;
+	margin: 5px 5%;
+	gap: 5px;
+	align-self: flex-end;
+}
+
+.popup-prompt input {
+	display: flex;
+	flex: 8;
+	font-size: 1.25rem;
+	background-color: #A09F9F;
+	color: black;
+	border: none;
+	border-radius: 5px;
+}
+
+.popup-prompt input:focus {
+	outline: none;
+}
+
+.popup-prompt button {
+	display: flex;
+	flex: 1;
+	font-size: 1.25rem;
+	text-align: center;
+	background-color: #cda5d8;
+	color: black;
+	border: none;
+	width: 100%;
+	border-radius: 5px;
+}
+
+.ban-message {
+	color:#2E2E2E;
+	font-style: italic;
+	text-transform: lowercase;
+	background-color: #e08a85;
+	height: 1.5rem;
+	width: 100%;
+	text-align: center;
+	border-bottom: #2E2E2E solid 1px;
+}
+
+.kick-message {
+	color:#2E2E2E;
+	font-style: italic;
+	text-transform: lowercase;
+	background-color: #e0be85;
+	height: 1.5rem;
+	width: 100%;
+	text-align: center;
+	border-bottom: #2E2E2E solid 1px;
+}
+
+.invite-message {
+	border: 0.1em solid transparent;
+	color: white;
+	border-image: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+	border-image-slice: 1;
+	width: 100%;
+	width:fit-content;
+	position: relative;
+	margin: 0 5px;
+	padding: 16px 40px 16px 20px;
+	border-radius: 2rem;
+	word-wrap: break-word;
+}
+
+.message-body-link
+{
+	border: 0.1em solid transparent;
+	color: white;
+	border-image: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+	border-image-slice: 1;
+	width: 100%;
+	width:fit-content;
+	position: relative;
+	margin: 0 5px;
+	padding: 16px 40px 16px 20px;
+	border-radius: 2rem;
+	word-wrap: break-word;
+}
+
+.message-body-link div
+{
+	background-color: #cda5d8;
+	color: black;
+	border-radius: 5px;
+	width: 90%;
+	text-align: center;
+	margin-left: 5%;
+}
+
+.message-body-link:link {
+	text-decoration: none;
 }

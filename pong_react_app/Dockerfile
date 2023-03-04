@@ -20,6 +20,7 @@ RUN npm install --save-dev @types/uuid
 RUN npm install react-icons
 RUN npm install axios --save
 RUN npm install crypto-browserify
+RUN npm install reactjs-popup --save
 
 COPY . ./
 

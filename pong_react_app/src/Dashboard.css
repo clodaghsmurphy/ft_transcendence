@@ -5,8 +5,27 @@
         height: 100vh;
         overflow: hidden;
         width: 100%;
+        background-color: #181d1b;
+
           /* scroll thumb and track */ 
     }
+
+    *::-webkit-scrollbar {
+        width: 10px;
+      }
+      
+    *::-webkit-scrollbar-track {
+        background-color: rgba(25,147,147,0.1);
+        border-radius: 10px;
+      }
+      
+    *::-webkit-scrollbar-thumb {
+        background: rgba(153, 97, 175, 0.2);;
+      }
+      
+    *::-webkit-scrollbar-thumb:hover {
+        background: #6E6E6E;
+      }
     
     
     .body {
@@ -216,6 +235,25 @@
         align-items: center;
         justify-self: flex-end;
         flex-wrap: wrap;
+    }
+
+    .user-pfp:hover{
+        transform: scale(1.1);
+        cursor: pointer;
+
+    }
+
+    .logout-btn
+    {
+        height: 5vh;
+        fill: white;
+        width: 5vw;
+    }
+
+    .logout-btn:hover
+    {
+        cursor: pointer;
+        transform: scale(1.1);
     }
     .nav-logo {
         flex: 30% 1;
@@ -440,7 +478,7 @@
         width: 100%;
         background: rgba(0, 0, 0, .5);
         box-shadow: 0 5px 30px rgba(0, 0, 0, .2);
-        overflow-y: scroll;
+        overflow-y: hidden;
         background-size: cover;
         justify-content: space-between;
         

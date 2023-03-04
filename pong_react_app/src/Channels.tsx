@@ -6,7 +6,7 @@ export const KICK = 1
 export const BAN = 2
 export const INVITE = 3
 
-interface MessageData {
+export interface MessageData {
 	text: string;
 	uid: number;
 	name: string;
@@ -123,8 +123,8 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			name: "clmurphy",
-			text: " has banned ple-lez",
-			type: BAN,
+			text: " has kicked ple-lez",
+			type: KICK,
 			uid: 1,
 			from: "Illuminatis"
 		},
@@ -140,6 +140,13 @@ export function sample_channel_data(): Channel[] {
 			text: "On vas conquerir le monde",
 			type: NORMAL,
 			uid: 3,
+			from: "Illuminatis"
+		},
+		{
+			name: "clmurphy",
+			text: "/game/6",
+			type: INVITE,
+			uid: 4,
 			from: "Illuminatis"
 		},],
 		curr_uid: 3,
@@ -228,4 +235,8 @@ export function sendToChan(chan: Channel, current: User, msg: "string"): boolean
 		from: chan.name,
 	}
 	return sendMessage(chan, current, new_message)
+}
+
+export function names_to_channel(every_channels: Channel[], asked_channels: string[]): Channel[] {
+	return every_channels.filter(chan => asked_channels.includes(chan.name))
 }
