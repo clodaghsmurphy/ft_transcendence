@@ -24,6 +24,7 @@ export class ChannelService {
 				data: {
 					name: dto.name,
 					operators: [dto.username],
+					members: [dto.username],
 				},
 			});
 		} catch (e) {
@@ -40,10 +41,6 @@ export class ChannelService {
 	async join(dto: ChannelCreateDto) : Promise<Channel> {
 		await this.checkUser(dto.username);
 		if (await this.prisma.channel.count({where: {
-				name: dto.name,
-				operators: {has: dto.username}
-			}}) > 0 ||
-			await this.prisma.channel.count({where: {
 				name: dto.name,
 				members: {has: dto.username}
 			}}) > 0)
