@@ -47,7 +47,7 @@ curl -H 'Content-Type: application/json' \
 echo "\n\nCreating Channels\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "chan", "username": "ple-lez" }' \
+	-d '{ "name": "Transcendence", "username": "ple-lez" }' \
 	-X POST \
 	localhost:3042/channel/create
 
@@ -56,41 +56,9 @@ curl -H 'Content-Type: application/json' \
 	-X POST \
 	localhost:3042/channel/create
 
-echo "\n\nJoining Channels\n"
+echo "\n\nUpdating Channels\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "chan", "username": "nguiard" }' \
+	-d '{"name":"Transcendence","members":["adben-mc","clmurphy","nguiard","ple-lez"],"op":["adben-mc","clmurphy","nguiard","ple-lez"],"banned":[],"messages":[{"name":"clmurphy","text":"Je pars au ski","type":0,"uid":0,"from":"Transcendence"},{"name":"adben-mc","text":"Moi aussi","type":0,"uid":1,"from":"Transcendence"},{"name":"ple-lez","text":"Pas nous","type":0,"uid":2,"from":"Transcendence"},{"name":"nguiard","text":"Ouais...","type":0,"uid":3,"from":"Transcendence"}],"curr_uid":3}'  \
 	-X POST \
-	localhost:3042/channel/join
-
-curl -H 'Content-Type: application/json' \
-	-d '{ "name": "supergroupe", "username": "adben-mc" }' \
-	-X POST \
-	localhost:3042/channel/join
-
-echo "\n\nCreating Messages\n"
-
-curl -H 'Content-Type: application/json' \
-	-d '{ "name": "ple-lez", "uid": 0, "text": "Hello channel world" }' \
-	-X POST \
-	localhost:3042/channel/chan/message
-
-curl -H 'Content-Type: application/json' \
-	-d '{ "name": "nguiard", "uid": 1, "text": "Lorem ipsum" }' \
-	-X POST \
-	localhost:3042/channel/chan/message
-
-curl -H 'Content-Type: application/json' \
-	-d '{ "name": "clmurphy", "uid": 0, "text": "Another channel" }' \
-	-X POST \
-	localhost:3042/channel/supergroupe/message
-
-curl -H 'Content-Type: application/json' \
-	-d '{ "name": "nguiard", "uid": 2, "text": "Back to first one" }' \
-	-X POST \
-	localhost:3042/channel/chan/message
-
-curl -H 'Content-Type: application/json' \
-	-d '{ "name": "adben-mc", "uid": 1, "text": "And another user" }' \
-	-X POST \
-	localhost:3042/channel/supergroupe/message
+	localhost:3042/user/update

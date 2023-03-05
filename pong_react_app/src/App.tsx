@@ -8,6 +8,7 @@ import './App.css';
 import Dashboard from './Dashboard';
 import Main from './Main';
 import Chat from './Chat';
+import Friends from './Friends';
 import Login from './Login';
 import CallBack from './CallBack';
 import Stats from './stats';
@@ -43,6 +44,7 @@ function App() {
         <Route path='/main' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Main /> } /> } />
           <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats /> } /> } />
+        <Route path='/friends' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Friends /> } /> } />
 	  </Routes>
     </Router>
     </AuthContext.Provider>
