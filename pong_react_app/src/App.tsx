@@ -10,6 +10,7 @@ import Main from './Main';
 import Chat from './Chat';
 import Login from './Login';
 import CallBack from './CallBack';
+import Stats from './stats';
 import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './ProtectedRoute'
@@ -40,7 +41,8 @@ function App() {
         <Route path="/login/callback" element={<CallBack />}/>
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/main' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Main /> } /> } />
-        <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat /> } /> } />
+          <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
+        <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats /> } /> } />
 	  </Routes>
     </Router>
     </AuthContext.Provider>
