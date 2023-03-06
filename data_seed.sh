@@ -55,3 +55,42 @@ curl -H 'Content-Type: application/json' \
 	-d '{ "name": "supergroupe", "username": "clmurphy" }' \
 	-X POST \
 	localhost:3042/channel/create
+
+echo "\n\nJoining Channels\n"
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "chan", "username": "nguiard" }' \
+	-X POST \
+	localhost:3042/channel/join
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "supergroupe", "username": "adben-mc" }' \
+	-X POST \
+	localhost:3042/channel/join
+
+echo "\n\nCreating Messages\n"
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "ple-lez", "uid": 0, "text": "Hello channel world" }' \
+	-X POST \
+	localhost:3042/channel/chan/message
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "nguiard", "uid": 1, "text": "Lorem ipsum" }' \
+	-X POST \
+	localhost:3042/channel/chan/message
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "clmurphy", "uid": 0, "text": "Another channel" }' \
+	-X POST \
+	localhost:3042/channel/supergroupe/message
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "nguiard", "uid": 2, "text": "Back to first one" }' \
+	-X POST \
+	localhost:3042/channel/chan/message
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "adben-mc", "uid": 1, "text": "And another user" }' \
+	-X POST \
+	localhost:3042/channel/supergroupe/message
