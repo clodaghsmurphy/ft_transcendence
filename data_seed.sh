@@ -47,7 +47,7 @@ curl -H 'Content-Type: application/json' \
 echo "\n\nCreating Channels\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "Transcendence", "username": "ple-lez" }' \
+	-d '{ "name": "chan", "username": "ple-lez" }' \
 	-X POST \
 	localhost:3042/channel/create
 
