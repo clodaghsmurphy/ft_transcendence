@@ -3,9 +3,9 @@ import NavBar from "./NavBar";
 import './stats.css';
 import user_photo from './media/user.png';
 import Dropdown from 'react-bootstrap/Dropdown';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import FTlogo from './media/42_Logo.jpeg'
-
+import { BsFillGearFill } from "react-icons/bs";
 
 function Stats()
 {
@@ -36,17 +36,20 @@ function Stats()
 							<span className="user-name">Clmurphy</span>
 
 						</div>
-							<Dropdown>
-								<Dropdown.Toggle variant="success" id="dropdown-basic">
-									Dropdown Button
-								</Dropdown.Toggle>
+						<div className='drop-down'>
+								<Dropdown>
+									<Dropdown.Toggle variant="success" id="dropdown-basic">
+										<BsFillGearFill />
+									</Dropdown.Toggle>
 
-								<Dropdown.Menu>
-									<Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-									<Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-									<Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-								</Dropdown.Menu>
-							</Dropdown>
+									<Dropdown.Menu>
+										<Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+										<Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+										<Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+									</Dropdown.Menu>
+								</Dropdown>
+						</div>
+							
 						<a>
 							<img src={FTlogo}/>
 						</a>
