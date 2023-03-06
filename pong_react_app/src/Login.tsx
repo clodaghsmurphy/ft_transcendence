@@ -6,7 +6,7 @@ import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
 import { Link, Navigate } from 'react-router-dom'
 import { useCallback, useState } from 'react';
-import api_keys from './api_cred'
+import api_keys from './api_keys'
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import { AuthContext } from './App';
@@ -43,8 +43,8 @@ function Login ()
 			console.log('code = ' + code);
 			const requestToken = {
 				grant_type:'authorization_code', 
-				client_id:api_keys.client_id,
-				client_secret:api_keys.secret,
+				client_id:api_keys.api_keys.client_id,
+				client_secret:api_keys.api_keys.client_secret,
 				code:code,
 				redirect_uri:'http://localhost:8080/login',
 				state:ustate
@@ -94,7 +94,7 @@ function Login ()
 	{
 		const login:loginData = { 
 			authorizeUrl: "https://api.intra.42.fr/oauth/authorize",
-			clientID: api_keys.client_id,
+			clientID: api_keys.api_keys.client_id,
 			redirectUri: encodeURIComponent("http://localhost:8080/login"),
 			scope: 'public',
 			state: nanoid(16)

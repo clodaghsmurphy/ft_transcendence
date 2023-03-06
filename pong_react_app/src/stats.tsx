@@ -4,11 +4,26 @@ import './stats.css';
 import user_photo from './media/user.png';
 import Dropdown from 'react-bootstrap/Dropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FTlogo from './media/42_Logo.jpeg'
+import FTlogo from './media/42_Logo.png'
 import { BsFillGearFill } from "react-icons/bs";
+import tron_bg from './media/tron_bg.jpeg'
+import { useState, useContext } from "react";
+import { AuthContext } from "./App";
+import GameHistory from './GameHistory';
+import Leaderboard from "./LeaderBoard";
+import StatsFriends from "./StatsFriends";
 
 function Stats()
 {
+	const [open, setOpen] = useState(false);
+	const { state, dispatch } = useContext(AuthContext);
+
+
+	const handleOpen = () =>
+	{
+		setOpen(!open);
+	};
+
 	return(
 		
 			<>
@@ -16,55 +31,66 @@ function Stats()
 			<div className="stats-page">
 				<div className="stats">
 					<div className="profile-header">
-					<div className="profile-sub-header">
+						<div className="profile-sub-header" >
 						<ul className="profile-game-stats">
 								<li>
-									<span>Total games</span>
+									<span style={{color: "#7070a5",
+								fontSize: '.9em'}} >Total games</span>
 									<span>13</span>	
 								</li>
 								<li>
-									<span>Wins</span>
+									<span style={{ color: "#7070a5",
+										fontSize: '.9em' }}>Wins</span>
 									<span>85%</span>
 								</li>
 								<li>
-									<span>Loss</span>
+									<span style={{ color: "#7070a5",
+										fontSize: '.9em' }}>Loss</span>
 									<span>15%</span>
 								</li>
 						</ul>
 						<div className="avatar-stats">
-							<img src={user_photo} />
+								<img src={state.user.avatar} />
 							<span className="user-name">Clmurphy</span>
 
 						</div>
-						<div className='drop-down'>
-								<Dropdown>
-									<Dropdown.Toggle variant="success" id="dropdown-basic">
-										<BsFillGearFill />
-									</Dropdown.Toggle>
-
-									<Dropdown.Menu>
-										<Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-										<Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-										<Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-									</Dropdown.Menu>
-								</Dropdown>
+						<div className='right-options'>
+							<div className="drop-down" onClick={handleOpen}>
+								<BsFillGearFill style={ {color: 'white', height: '3vh'} }/>
+								{ open ? (
+								<ul className="options-list">
+									<li className="options-list-item">Change photo</li>
+									<li className="options-list-item">Delete account</li>
+								</ul> ) : null}
+							</div>
+								<a className='ftlogo'>
+									<img src={FTlogo} />
+								</a>
+									
 						</div>
 							
-						<a>
-							<img src={FTlogo}/>
-						</a>
+						
 					</div>
 
 					</div>
 					<div className="sub-stats">
 						<div className="info-card game-history">
-							<h1>Game History</h1>
+							<header>
+								<h1>Game History</h1>
+							</header>
+							<GameHistory />
 						</div>
 						<div className="info-card friends">
-							<h1>Leaderboard</h1>
+							<header>
+								<h1>Leaderboard</h1>
+							</header>
+							<Leaderboard />
 						</div>
 						<div className="info-card game-history">
-							<h1>Friends</h1>
+							<header>
+								<h1>Friends</h1>
+							</header>
+							<StatsFriends />
 						</div>
 					</div>
 				</div>
