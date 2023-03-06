@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+.stats-page
+{
+	display: flex;
+	height: 95vh;
+	flex-direction: row;
+	background-color: blue;
+}
+
+.side-nav
+{
+	display: flex;
+	flex-direction: column;
+	flex-basis: 20%;
+	background-color: aquamarine;
+}
+
+.stats
+{
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+	background-color: pink;
+}
+
+.profile-header
+{
+	flex-basis: 25%;
+	overflow: visible;
+	position: relative;
+	width: 95%;
+	margin: 30px;
+	border-radius: 1em;
+	background-color: bisque;
+}
+
+.profile-sub-header
+{
+	display: flex;
+	width: 103%;
+	left: -10px;
+	border-radius: 1.5em;
+	height: 10vh;
+	background-color: brown;
+	position: absolute;
+	overflow: visible!important;
+	bottom: 0;
+}
+
+
+.avatar-stats
+{
+	display: flex;
+	position: absolute;
+	left: 45%;
+	flex-direction: column;
+	height: 21vh;
+	width: 20vh;
+	bottom: 0vh;
+}
+.profile-sub-header img{
+	
+	border-radius: 50%;
+	flex-basis: 50%;
+	z-index: 2;
+}
+
+.profile-sub-header a {
+	position: absolute;
+	right: 1vh;
+	height: 10vh;
+	width: 10vh;
+	border-radius: 50%;
+	flex-basis: 10%;
+	z-index: 2;
+}
+
+.user-name
+{
+	color: white;
+	font-weight: 900;
+	font-size: 1.5em;
+	font-family: 'Poppins', sans-serif;
+	text-align: center;
+}
+
+.profile-game-stats
+{
+	display: flex;
+	flex-direction: row;
+	overflow: hidden;
+	color: white;
+		font-weight: 700;
+		width: 50%;
+		align-items: flex-start;
+
+}
+
+.profile-game-stats li
+{
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	
+}
+
+.sub-stats
+{
+	display: flex;
+	flex-direction: row;
+	flex-basis: 70%;
+}
+
+.info-card
+{
+	display: flex;
+	flex-direction: column;
+	background-color: green;
+	flex-basis: 30%;
+	margin: 2vh;
+}
+
+
+
+
+
+
+

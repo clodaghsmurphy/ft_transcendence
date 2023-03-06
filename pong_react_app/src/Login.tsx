@@ -53,6 +53,7 @@ function Login ()
 			axios.post("https://api.intra.42.fr/oauth/token", requestToken)
 				.then(response => {
 					const access_token:string = response.data.access_token;
+					console.dir(response.data);
 					console.log('access token : ' + access_token);
 					const res =  axios.get('https://api.intra.42.fr/v2/me',
 					{
