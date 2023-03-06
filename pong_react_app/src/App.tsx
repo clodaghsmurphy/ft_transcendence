@@ -42,8 +42,8 @@ function App() {
         <Route path="/login/callback" element={<CallBack />}/>
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/main' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Main /> } /> } />
-          <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
-        <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats /> } /> } />
+        <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
+        <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
         <Route path='/friends' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Friends /> } /> } />
 	  </Routes>
     </Router>
