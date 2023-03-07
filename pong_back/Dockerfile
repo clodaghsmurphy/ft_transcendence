@@ -16,7 +16,6 @@ RUN npm install passport-42
 RUN  npm i express-session
 RUN npm i -D @types/express-session
 
-
 EXPOSE 3042
 
 CMD ["bash", "entrypoint.sh"]
