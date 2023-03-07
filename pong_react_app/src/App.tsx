@@ -12,6 +12,8 @@ import Friends from './Friends';
 import Login from './Login';
 import CallBack from './CallBack';
 import Stats from './stats';
+import Game from './Game';
+
 import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './ProtectedRoute'
@@ -45,6 +47,7 @@ function App() {
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
         <Route path='/friends' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Friends /> } /> } />
+        <Route path='/adam' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Game /> } /> } />
 	  </Routes>
     </Router>
     </AuthContext.Provider>
