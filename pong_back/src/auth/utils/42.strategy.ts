@@ -19,19 +19,16 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
     
     async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any) 
     {
+        console.log('in validate');
         console.log(accessToken);
         console.log(refreshToken);
-        console.log(profile);
-        console.log('cb is ');
-        console.log(cb);
-        console.log(profile._json.image.link);
 
         const userData = {
             name: profile.username,
             id: profile.id,
             avatar: profile._json.image.link
         }
-        console.log('before user exits');
+        console.log('changed user exits');
             
         const user = await this.userService.userExists(userData.name);
         if (!user)
