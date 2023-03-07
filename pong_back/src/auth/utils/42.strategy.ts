@@ -33,9 +33,9 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
         }
         console.log('before user exits');
             
-        const user = this.userService.userExists(userData.name);
+        const user = await this.userService.userExists(userData.name);
         if (!user)
-            this.userService.create(userData);
+            return await this.userService.create(userData);
         return user;
     }
 }
