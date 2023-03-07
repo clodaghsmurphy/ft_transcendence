@@ -14,6 +14,9 @@ RUN npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.pri
 RUN npm install --save @nestjs/passport passport passport-local
 RUN npm install passport-42
 RUN  npm i express-session
+RUN npm install --save @nestjs/jwt passport-jwt
+RUN npm install --save-dev @types/passport-jwt
+RUN npm install passport-jwt
 RUN npm i -D @types/express-session
 
 EXPOSE 3042

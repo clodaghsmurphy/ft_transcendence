@@ -13,6 +13,7 @@ datasource db {
 // Todo: find a way to share the User class between front and back
 model User {
   name String @id
+  id String
   avatar String
   blocked_users String[]
   friend_users String[]

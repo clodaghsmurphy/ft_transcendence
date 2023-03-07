@@ -8,6 +8,10 @@ export class UserCreateDto {
 	@IsString()
 	@IsNotEmpty()
 	avatar: string;
+
+	@IsString()
+	@IsNotEmpty()
+	id: string;
 }
 
 export class UserUpdateDto {

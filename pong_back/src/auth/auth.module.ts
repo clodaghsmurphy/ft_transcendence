@@ -6,11 +6,16 @@ import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { Ft_Strategy } from './utils/42.strategy';
 import { SessionSerializer } from './session.serializer';
+import { JwtModule } from '@nestjs/common';
 
 @Module({
     controllers: [AuthController],
     providers: [AuthService, Ft_Strategy, SessionSerializer],
     imports: [UserModule,
-    PassportModule]
+    PassportModule, JwtModule.register(
+        {
+            secret: process.env.
+        }
+    )]
 })
 export class AuthModule {}
