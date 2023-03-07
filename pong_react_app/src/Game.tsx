@@ -13,13 +13,13 @@ export default function Game() {
 	useEffect(() => {
 	  const handleKeyDown = (event: KeyboardEvent) => {
 		if (event.key === "ArrowUp") {
-		  setRightPaddleY(prevY => prevY - 10);
+		  setRightPaddleY(prevY => Math.max(50, prevY - 10));
 		} else if (event.key === "ArrowDown") {
-		  setRightPaddleY(prevY => prevY + 10);
+		  setRightPaddleY(prevY => Math.min(window.innerHeight - 50, prevY + 10));
 		} else if (event.key === "z") {
-		  setLeftPaddleY(prevY => prevY - 10);
+		  setLeftPaddleY(prevY => Math.max(50, prevY - 10));
 		} else if (event.key === "s") {
-		  setLeftPaddleY(prevY => prevY + 10);
+		  setLeftPaddleY(prevY => Math.min(window.innerHeight - 50, prevY + 10));
 		}
 	  };
   
