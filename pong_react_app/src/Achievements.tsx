@@ -1,7 +1,26 @@
 import React from "react";
 import gameAvatar from './media/nguiard.jpg';
 import { TbUserSearch } from "react-icons/tb";
-import cup from './media/cup.png'
+import Winner from './media/ach_icons/Winner.png'
+import Addicted from './media/ach_icons/Addicted.png'
+import Blah_blah from './media/ach_icons/Blah_blah.png'
+import Bully from './media/ach_icons/Bully.png'
+import Collector from './media/ach_icons/Collector.png'
+import Community from './media/ach_icons/Community.png'
+import First_Steps from './media/ach_icons/First_Steps.png'
+import For_life from './media/ach_icons/For_life.png'
+import Master from './media/ach_icons/Master.png'
+import Newbie from './media/ach_icons/Newbie.png'
+import OldFashioned from './media/ach_icons/Old-Fashioned.png'
+import On_Fire from './media/ach_icons/On_Fire.png'
+import Player from './media/ach_icons/Player.png'
+import Serial_Streaker from './media/ach_icons/Serial_Streaker.png'
+import Sharp_Shooter from './media/ach_icons/Sharp_Shooter.png'
+import Striker from './media/ach_icons/Striker.png'
+import Surpass_the_Masters from './media/ach_icons/Surpass_the_Masters.png'
+import Who_can_stop_you from './media/ach_icons/Who_can_stop_you.png'
+import Zoomer from './media/ach_icons/Zoomer.png'
+import Legend from './media/ach_icons/Legend.png'
 
 type Achievement = {
 	icon: string,		// Icon of the achievement
@@ -21,140 +40,140 @@ type UserAchievement = {
 export function every_achievements(): Achievement[] {
 	return ([
 		{
-			icon: cup,
+			icon: Newbie,
 			title: 'Newbie',
 			descripton: 'Play 5 games',
 			id: 1,
 			cap: 5,
 		},
 		{
-			icon: cup,
+			icon: Player,
 			title: 'Player',
 			descripton: 'Play 25 games',
 			id: 2,
 			cap: 25,
 		},
 		{
-			icon: cup,
+			icon: Addicted,
 			title: 'Addicted',
 			descripton: 'Play 200 games',
 			id: 3,
 			cap: 200,
 		},
 		{
-			icon: cup,
+			icon: Winner,
 			title: 'Winner',
 			descripton: 'Win 5 games',
 			id: 4,
 			cap: 5,
 		},
 		{
-			icon: cup,
+			icon: Master,
 			title: 'Master',
 			descripton: 'Win 15 games',
 			id: 5,
 			cap: 15,
 		},
 		{
-			icon: cup,
+			icon: Legend,
 			title: 'Legend',
 			descripton: 'Win 50 games',
 			id: 6,
 			cap: 50,
 		},
 		{
-			icon: cup,
+			icon: OldFashioned,
 			title: 'Old-Fashioned',
 			descripton: 'Play 5 normal games',
 			id: 7,
 			cap: 5,
 		},
 		{
-			icon: cup,
+			icon: Zoomer,
 			title: 'Zoomer',
 			descripton: 'Play 5 custom games',
 			id: 8,
 			cap: 5,
 		},
 		{
-			icon: cup,
+			icon: On_Fire,
 			title: 'On Fire',
 			descripton: 'Win 3 games in a row',
 			id: 9,
 			cap: 3,
 		},
 		{
-			icon: cup,
+			icon: Serial_Streaker,
 			title: 'Serial Streaker',
 			descripton: 'Win 5 games in a row',
 			id: 10,
 			cap: 5,
 		},
 		{
-			icon: cup,
-			title: 'Who can stop him?',
+			icon: Who_can_stop_you,
+			title: 'Who can stop you?',
 			descripton: 'Win 10 games in a row',
 			id: 11,
 			cap: 10,
 		},
 		{
-			icon: cup,
+			icon: First_Steps,
 			title: 'First steps',
 			descripton: 'Score 10 points',
 			id: 12,
 			cap: 10,
 		},
 		{
-			icon: cup,
-			title: 'Sharp Shots',
+			icon: Sharp_Shooter,
+			title: 'Sharp Shooter',
 			descripton: 'Score 50 points',
 			id: 13,
 			cap: 50,
 		},
 		{
-			icon: cup,
+			icon: Collector,
 			title: 'Collector',
 			descripton: 'Score 500 points',
 			id: 14,
 			cap: 500,
 		},
 		{
-			icon: cup,
+			icon: Surpass_the_Masters,
 			title: 'Surpass the masters',
 			descripton: 'Beat every website creators',
 			id: 15,
 			cap: 4,
 		},
 		{
-			icon: cup,
-			title: 'For the rest of my life',
+			icon: For_life,
+			title: 'For life',
 			descripton: 'Add a friend',
 			id: 16,
 			cap: 1,
 		},
 		{
-			icon: cup,
+			icon: Community,
 			title: 'Community',
 			descripton: 'Create a group chat',
 			id: 17,
 			cap: 1,
 		},
 		{
-			icon: cup,
-			title: 'Bla-bla',
+			icon: Blah_blah,
+			title: 'Blah blah',
 			descripton: 'Send 50 messages',
 			id: 18,
 			cap: 50,
 		},
 		{
-			icon: cup,
+			icon: Bully,
 			title: 'Bully',
 			descripton: 'Go on a 5 win streak against the same player',
 			id: 19,
 			cap: 5,
 		},
 		{
-			icon: cup,
+			icon: Striker,
 			title: 'Striker',
 			descripton: 'Block a website creator',
 			id: 20,
