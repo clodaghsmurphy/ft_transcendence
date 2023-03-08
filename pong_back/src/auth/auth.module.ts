@@ -6,7 +6,7 @@ import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { Ft_Strategy } from './utils/42.strategy';
 import { SessionSerializer } from './session.serializer';
-import { JwtModule } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
     controllers: [AuthController],
@@ -14,7 +14,7 @@ import { JwtModule } from '@nestjs/common';
     imports: [UserModule,
     PassportModule, JwtModule.register(
         {
-            secret: process.env.
+            secret: process.env.JWT_TOKEN,
         }
     )]
 })
