@@ -29,8 +29,6 @@ function StatsFriends() {
 					</div>
 				</div>
 			</div>
-			<div className="info-item"></div>
-			<div className="info-item"></div>
 		</div>
 	);
 }

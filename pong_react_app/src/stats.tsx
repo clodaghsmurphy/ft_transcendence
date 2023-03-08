@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavBar from "./NavBar"; 
 import './stats.css';
 import user_photo from './media/user.png';
@@ -10,12 +10,30 @@ import { AuthContext } from "./App";
 import GameHistory from './GameHistory';
 import Leaderboard from "./LeaderBoard";
 import StatsFriends from "./StatsFriends";
+import User, { name_to_user } from "./User";
 
 function Stats()
 {
 	const [open, setOpen] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
+	let [current_user, set_current_user] = useState({} as User);
+	let [all_users, set_all_users] = useState([] as User[]);
 
+	useEffect(() => {
+		document.title = 'Chat';
+		fetch('/api/user/info', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		}).then((response) => {
+			response.json()
+				.then(data => {
+					set_all_users(data as User[])
+					set_current_user(name_to_user(all_users, state.user.login)) // A changer par jsp quoi
+				})
+			})
+	}, []);
 
 	const handleOpen = () =>
 	{
@@ -23,7 +41,6 @@ function Stats()
 	};
 
 	return(
-		
 			<>
 				<NavBar />
 			<div className="stats-page">
@@ -72,10 +89,7 @@ function Stats()
 								<a className='ftlogo'>
 									<img src={FTlogo} />
 								</a>
-									
 						</div>
-							
-						
 					</div>
 
 					</div>
