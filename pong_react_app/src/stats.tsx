@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavBar from "./NavBar"; 
 import './stats.css';
 import user_photo from './media/user.png';
@@ -8,14 +8,33 @@ import tron_bg from './media/tron_bg.jpeg'
 import { useState, useContext } from "react";
 import { AuthContext } from "./App";
 import GameHistory from './GameHistory';
-import Leaderboard from "./LeaderBoard";
+import StatsAchievements from './Achievements';
 import StatsFriends from "./StatsFriends";
+import { Link } from 'react-router-dom'
+import User, { name_to_user } from "./User";
 
 function Stats()
 {
 	const [open, setOpen] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
+	let [current_user, set_current_user] = useState({} as User);
+	let [all_users, set_all_users] = useState([] as User[]);
 
+	useEffect(() => {
+		document.title = 'Chat';
+		fetch('/api/user/info', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		}).then((response) => {
+			response.json()
+				.then(data => {
+					set_all_users(data as User[])
+					set_current_user(name_to_user(all_users, state.user.login)) // A changer par jsp quoi
+				})
+			})
+	}, []);
 
 	const handleOpen = () =>
 	{
@@ -23,7 +42,6 @@ function Stats()
 	};
 
 	return(
-		
 			<>
 				<NavBar />
 			<div className="stats-page">
@@ -48,8 +66,16 @@ function Stats()
 								</li>
 						</ul>
 						<div className="avatar-stats">
-								<img src={state.user.avatar} />
-							<span className="user-name">Clmurphy</span>
+								<img style={{
+									width: "150px",
+									height: "150px",
+									minWidth: "150px",
+									minHeight: "150px",
+									maxWidth: "150px",
+									maxHeight: "150px",
+									alignSelf: "center",
+								}}src={state.user.avatar} />
+							<span className="user-name">{state.user.login}</span>
 
 						</div>
 						<div className='right-options'>
@@ -61,13 +87,10 @@ function Stats()
 									<li className="options-list-item">Delete account</li>
 								</ul> ) : null}
 							</div>
-								<a className='ftlogo'>
+								<Link to={"https://profile.intra.42.fr/users/" + state.user.login} className='ftlogo'>
 									<img src={FTlogo} />
-								</a>
-									
+								</Link>
 						</div>
-							
-						
 					</div>
 
 					</div>
@@ -76,19 +99,19 @@ function Stats()
 							<header>
 								<h1>Game History</h1>
 							</header>
-							<GameHistory />
+							{GameHistory(all_users, current_user)}
 						</div>
 						<div className="info-card friends">
 							<header>
-								<h1>Leaderboard</h1>
+								<h1>Achievements</h1>
 							</header>
-							<Leaderboard />
+							{StatsAchievements(current_user)}
 						</div>
 						<div className="info-card game-history">
 							<header>
 								<h1>Friends</h1>
 							</header>
-							<StatsFriends />
+							{StatsFriends(all_users, current_user)}
 						</div>
 					</div>
 				</div>
