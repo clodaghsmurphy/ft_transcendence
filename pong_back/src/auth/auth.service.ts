@@ -8,14 +8,11 @@ export class AuthService {
         private jwtService: JwtService,
         ) {}
 
-        generateJwt(payload) {
-            return this.jwtService.sign(payload)
-        }
 
         async login(user: any) {
-            
+            console.log('in llogin and user is');
+            console.log(user);
             const payload = { name: user.name, sub: user.id};
-
             return {
                 access_token: this.jwtService.sign(payload),
             }

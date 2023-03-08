@@ -5,16 +5,19 @@ import { UserService } from 'src/user/user.service';
 import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { Ft_Strategy } from './utils/42.strategy';
+import { JwtStrategy } from './utils/jwt.strategy';
 import { SessionSerializer } from './session.serializer';
 import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constants';
+
 
 @Module({
     controllers: [AuthController],
-    providers: [AuthService, Ft_Strategy, SessionSerializer],
+    providers: [AuthService, Ft_Strategy, SessionSerializer, JwtStrategy],
     imports: [UserModule,
     PassportModule, JwtModule.register(
         {
-            secret: process.env.JWT_TOKEN,
+            secret: jwtConstants.secret,
         }
     )]
 })

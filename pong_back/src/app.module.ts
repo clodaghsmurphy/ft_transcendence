@@ -8,6 +8,6 @@ import { Ft_Strategy } from './auth/utils/42.strategy';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [ConfigModule.forRoot(), UserModule, PrismaModule, ChannelModule, AuthModule, PassportModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true}), UserModule, PrismaModule, ChannelModule, AuthModule, PassportModule],
 })
 export class AppModule {}

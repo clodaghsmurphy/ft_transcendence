@@ -8,7 +8,10 @@ declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, }));
-  app.enableCors();
+
+  app.enableCors({
+    origin: 'http://localhost:8080'
+  });
   app.use(
     session({
       secret: 'my-secret',
@@ -21,9 +24,5 @@ async function bootstrap() {
   app.use(passport.session());
   await app.listen(3042);
 
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
 }
 bootstrap();
