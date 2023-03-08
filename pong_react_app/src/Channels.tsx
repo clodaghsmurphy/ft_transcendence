@@ -238,7 +238,7 @@ export function sendToChan(chan: Channel, current: User, msg: "string"): boolean
 }
 
 export function names_to_channel(every_channels: Channel[], asked_channels: string[]): Channel[] {
-	if (typeof asked_channels === 'undefined')
+	if (typeof asked_channels === 'undefined' || typeof every_channels[0] === 'undefined')
 		return [];
 	return every_channels.filter(chan => asked_channels.includes(chan.name))
 }
