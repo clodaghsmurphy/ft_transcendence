@@ -23,9 +23,6 @@ export class UserService {
 		const user = await this.prisma.user.findUnique({
 			where: { name: name },
 		});
-		console.log('name : ' + name);
-		console.log('user ');
-		console.log(user);
 		return user;
 	}
 
@@ -43,6 +40,7 @@ export class UserService {
 			return await this.prisma.user.create({
 				data: {
 					name: dto.name,
+					id: dto.id,
 					avatar: dto.avatar,
 					blocked_users: [],
 					friend_users: [],

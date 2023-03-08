@@ -2,8 +2,6 @@ import React from "react";
 import NavBar from "./NavBar"; 
 import './stats.css';
 import user_photo from './media/user.png';
-import Dropdown from 'react-bootstrap/Dropdown';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import FTlogo from './media/42_Logo.png'
 import { BsFillGearFill } from "react-icons/bs";
 import tron_bg from './media/tron_bg.jpeg'
