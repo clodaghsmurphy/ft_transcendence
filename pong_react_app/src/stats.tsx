@@ -8,7 +8,7 @@ import tron_bg from './media/tron_bg.jpeg'
 import { useState, useContext } from "react";
 import { AuthContext } from "./App";
 import GameHistory from './GameHistory';
-import Achievements from './Achievements';
+import StatsAchievements from './Achievements';
 import StatsFriends from "./StatsFriends";
 import { Link } from 'react-router-dom'
 import User, { name_to_user } from "./User";
@@ -105,7 +105,7 @@ function Stats()
 							<header>
 								<h1>Achievements</h1>
 							</header>
-							<Achievements />
+							<StatsAchievements />
 						</div>
 						<div className="info-card game-history">
 							<header>
