@@ -342,3 +342,19 @@
 	text-decoration: none;
 	color:inherit;
 }
+
+.achievement-title {
+	font-size: 1.25rem;
+	text-align: center;
+}
+
+.achievement-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.achievement-info {
+	display: flex;
+	flex-direction: row;
+	
+}

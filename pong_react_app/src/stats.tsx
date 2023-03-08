@@ -105,7 +105,7 @@ function Stats()
 							<header>
 								<h1>Achievements</h1>
 							</header>
-							<StatsAchievements />
+							{StatsAchievements(current_user)}
 						</div>
 						<div className="info-card game-history">
 							<header>

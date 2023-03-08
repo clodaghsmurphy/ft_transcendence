@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import gameAvatar from './media/nguiard.jpg';
 import { TbUserSearch } from "react-icons/tb";
 import Winner from './media/ach_icons/Winner.png'
@@ -21,6 +21,10 @@ import Surpass_the_Masters from './media/ach_icons/Surpass_the_Masters.png'
 import Who_can_stop_you from './media/ach_icons/Who_can_stop_you.png'
 import Zoomer from './media/ach_icons/Zoomer.png'
 import Legend from './media/ach_icons/Legend.png'
+import User from "./User";
+
+const { v4: uuidv4 } = require('uuid');
+
 
 type Achievement = {
 	icon: string,		// Icon of the achievement
@@ -186,10 +190,44 @@ export function id_to_achievement(id: number): Achievement {
 	return (every_achievements().filter(ach => ach.id == id)[0]);
 }
 
+function AchievementShower(id: number, current_user: User): JSX.Element {
+	let curr = id_to_achievement(id);
+	let score = '0' + " / " + curr.cap
+	let size = score.length.toString();
 
-function StatsAchievements() {
+	return (
+		<div className="info-item" key={uuidv4()}
+			style={{
+				minHeight: '75px',
+			}}>
+			<div className="stats-avatar">
+				<img src={curr.icon}/>
+			</div>
+			<div className='achievement-container'>
+				<div className="achievement-title">{curr.title}</div>
+				<div className="achievement-info">
+					<div>{curr.descripton}</div>
+					<div style={{
+						width: "calc(" + size + " * 0.75rem)"
+					}}>{score}</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+function StatsAchievements(current_user: User) {
+	let every = every_achievements();
+	let [AchBlocks, SetAchBlocks] = useState([] as JSX.Element[]);
+
+	for (const ach of every) {
+		let tmp = AchBlocks;
+		tmp.push(AchievementShower(ach.id, current_user))
+		// SetAchBlocks(tmp);
+	}
 	return (
 		<div className="info-body">
+			{AchBlocks}
 		</div>
 	);
 }
