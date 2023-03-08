@@ -19,8 +19,7 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
     
     async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any) 
     {
-        
-
+    
         const userData = {
             name: profile.username,
             id: profile.id,
