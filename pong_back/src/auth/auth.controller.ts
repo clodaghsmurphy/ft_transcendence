@@ -1,6 +1,7 @@
-import { Controller,  Body, Get, Res, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller,  Body, Get, Res, Req, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { FT_AuthGuard } from './utils/Guards';
+
 
 @Controller('auth')
 export class AuthController {
@@ -19,4 +20,5 @@ export class AuthController {
         res.redirect('http://localhost:8080/dashboard')
         return { msg: 'test'};
     }
+
 }

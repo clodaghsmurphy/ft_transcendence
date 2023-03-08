@@ -22,6 +22,8 @@ RUN npm install axios --save --force
 RUN npm install crypto-browserify --force
 RUN npm install reactjs-popup --save --force
 RUN npm install react-bootstrap bootstrap --force
+RUN npm install bootstrap jquery @popperjs/core --force
+
 
 
 COPY . ./

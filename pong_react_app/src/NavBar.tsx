@@ -42,7 +42,7 @@ function NavBar()
         </div>
         <ul className="nav-list" ref={navLink}>
             <Link to="/main" className='navlink'>Home</Link>
-            <li className='navlink' >Stats</li>
+            <Link to="/stats" className='navlink' >Stats</Link>
             <Link to="/chat" className='navlink'>Chat</Link>
             <Link to="/friends" className='navlink'>Friends</Link>
         </ul>
@@ -52,7 +52,7 @@ function NavBar()
                 <img src={state.user.avatar} />
                 
             </div>
-            <p className='userName' > Welcome clmurphy !</p>
+            <p className='userName' > Welcome {state.user.login} !</p>
            
         </div>
         <button className="nav-btn nav-close-btn" onClick={() => showNavbar()}>
