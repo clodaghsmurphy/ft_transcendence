@@ -337,3 +337,8 @@
 	box-shadow: #7070a560 0px 5px 15px;
 
 }
+
+.friend-profile:link {
+	text-decoration: none;
+	color:inherit;
+}

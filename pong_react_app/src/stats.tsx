@@ -8,8 +8,9 @@ import tron_bg from './media/tron_bg.jpeg'
 import { useState, useContext } from "react";
 import { AuthContext } from "./App";
 import GameHistory from './GameHistory';
-import Leaderboard from "./LeaderBoard";
+import Achievements from './Achievements';
 import StatsFriends from "./StatsFriends";
+import { Link } from 'react-router-dom'
 import User, { name_to_user } from "./User";
 
 function Stats()
@@ -86,9 +87,9 @@ function Stats()
 									<li className="options-list-item">Delete account</li>
 								</ul> ) : null}
 							</div>
-								<a className='ftlogo'>
+								<Link to={"https://profile.intra.42.fr/users/" + state.user.login} className='ftlogo'>
 									<img src={FTlogo} />
-								</a>
+								</Link>
 						</div>
 					</div>
 
@@ -98,19 +99,19 @@ function Stats()
 							<header>
 								<h1>Game History</h1>
 							</header>
-							<GameHistory />
+							{GameHistory(all_users, current_user)}
 						</div>
 						<div className="info-card friends">
 							<header>
 								<h1>Achievements</h1>
 							</header>
-							<Leaderboard />
+							<Achievements />
 						</div>
 						<div className="info-card game-history">
 							<header>
 								<h1>Friends</h1>
 							</header>
-							<StatsFriends />
+							{StatsFriends(all_users, current_user)}
 						</div>
 					</div>
 				</div>
