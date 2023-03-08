@@ -48,8 +48,16 @@ function Stats()
 								</li>
 						</ul>
 						<div className="avatar-stats">
-								<img src={state.user.avatar} />
-							<span className="user-name">Clmurphy</span>
+								<img style={{
+									width: "150px",
+									height: "150px",
+									minWidth: "150px",
+									minHeight: "150px",
+									maxWidth: "150px",
+									maxHeight: "150px",
+									alignSelf: "center",
+								}}src={state.user.avatar} />
+							<span className="user-name">{state.user.login}</span>
 
 						</div>
 						<div className='right-options'>
@@ -80,7 +88,7 @@ function Stats()
 						</div>
 						<div className="info-card friends">
 							<header>
-								<h1>Leaderboard</h1>
+								<h1>Achievements</h1>
 							</header>
 							<Leaderboard />
 						</div>

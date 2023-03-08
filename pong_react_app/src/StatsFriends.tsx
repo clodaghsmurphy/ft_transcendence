@@ -6,25 +6,25 @@ import { TbUserSearch } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 
 function StatsFriends() {
+	let style_buttons = {
+		"display": "flex",
+		"alignItems": "center",
+	}
 	return (
 		<div className="info-body">
-			<div className="search-bar">
-				<input className='search-bar' placeholder={'Search friends..'}/>
-				<TbUserSearch style={ { position: 'absolute', left: '40%', margin: '1vh'}}/>
-			</div>
 			<div className="info-item">
-				<div className="friends-avatar">
+				<div className="stats-avatar">
 					<img src={gameAvatar} />
 				</div>
-				<span className="rank-username">nguiard</span>
+				<span className="game-username">nguiard</span>
 				<div className="friends-options">
-					<div className="play">
+					<div style={style_buttons} className="play">
 						<RiPingPongLine style={{ height: '4vh', cursor:'pointer' }} />
 					</div>
-					<div className="delete">
+					<div style={style_buttons} className="delete">
 						<TiDelete style={{ height: '4vh', cursor: 'pointer'}}/>
 					</div>
-					<div className="friend-profile">
+					<div style={style_buttons} className="friend-profile">
 						<CgProfile style={{ height: '4vh', cursor: 'pointer' }} />
 					</div>
 				</div>
