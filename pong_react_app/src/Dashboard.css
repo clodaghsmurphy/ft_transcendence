@@ -29,7 +29,7 @@
     
     
     .body {
-        background-color: #181d1b;
+        background-color: #192131;
         z-index: -1;
         inset: 0;
         place-content: center;
@@ -113,6 +113,11 @@
         border-radius: 1em;
     }
 
+    .navlink-logout
+    {
+        display: none;
+    }
+
     .navlink:hover
     {
 
@@ -149,7 +154,7 @@
     }
 
    
-    @media only screen and (max-width: 1200px) {
+    @media only screen and (max-width: 1000px) {
         .nav-list {
             display: none;
         }
@@ -196,6 +201,35 @@
             position: absolute;
             top: 2em;
             right: 2em;
+        }
+
+        .navlink-logout
+        {
+            display: flex;
+            cursor: pointer;
+            justify-self: center;
+            margin: 0 2em;
+            letter-spacing: 0.2em;
+            width: 100%;
+            cursor: pointer;
+            list-style: none;
+            text-decoration: none;
+            color: white;
+            margin-top: 1.5rem;
+            font-size: .55em;
+            font-weight: 800;
+            border-radius: 1em;
+        }
+
+        .navlink-logout:hover
+        {
+            background-clip: text;
+            cursor: pointer;
+            color: transparent;
+            filter:brightness(1.2);
+            background-image: linear-gradient(45deg, #cda5d8, #9b59b6, #224483);
+            transform: scale(1.02);
+            text-decoration: underline;
         }
        
     }
@@ -277,7 +311,7 @@
         padding : 0 !important;
         flex-grow: 1;
         overflow: hidden;
-        background-color: #181d1b;
+        background-color: #192131;
         font-family: 'Poppins', sans-serif;
         background-color: transparent;
         flex-direction: row;
@@ -292,7 +326,7 @@
     .game-screen
     {
         position: relative;
-        background-color: #181d1b;
+        background-color: #192131;
         align-self:flex-start;
         justify-self:flex-end;
         display: flex;
@@ -331,12 +365,16 @@
     .player-vs
     {
         display: flex;
+        border-radius: 1em 1em 0 0;
+        overflow: visible;
         justify-self: flex-start;
         align-items: center;
-        background-color: #181d1b;
+        background-color: #161848dc;
         flex: 10%;
         margin: auto;
-        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.2);
+        border: solid 1px;
+        border-color: #7070a535;
+        box-shadow: #7070a560 0px 5px 15px;
         flex-direction: row;
         justify-content: space-between;
     }
