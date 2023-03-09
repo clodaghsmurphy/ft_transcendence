@@ -1,7 +1,7 @@
 import React from 'react'
 
 export type State = {
-    isLoggedIn: boolean,
+    isLoggedIn: string,
     user: user,
     client_id: string,
     redirect_uri: string,
@@ -42,7 +42,7 @@ export type user =
 }
 
 export const initialState:State = {
-    isLoggedIn: false ,
+    isLoggedIn: localStorage.getItem("isLoggedIn")! ,
     user: { login: 'clmurphy', id: '1', avatar: 'https://cdn.intra.42.fr/users/b055b9ed5ffb394bcd9f0da75db1879a/clmurphy.jpg'},
     client_id: process.env.REACT_APP_CLIENT_ID!,
     redirect_uri: process.env.REACT_APP_REDIRECT_URI!,

@@ -67,13 +67,6 @@ function Stats()
 						</ul>
 						<div className="avatar-stats">
 								<img style={{
-									width: "150px",
-									height: "150px",
-									minWidth: "150px",
-									minHeight: "150px",
-									maxWidth: "150px",
-									maxHeight: "150px",
-									alignSelf: "center",
 								}}src={state.user.avatar} />
 							<span className="user-name">{state.user.login}</span>
 

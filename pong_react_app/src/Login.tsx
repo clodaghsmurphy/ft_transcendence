@@ -45,6 +45,7 @@ function Login ()
 				}
 			)
 			localStorage.setItem("isLoggedIn", 'true');
+			console.log(localStorage.getItem("isLoggedIn"));
 	}
 	useEffect( () => {
 		const url = window.location.href;

@@ -193,6 +193,7 @@
         .responsive_nav
         {
             height: 100%;
+            z-index: 4;
             transform: translateY(100vh);
         }
 

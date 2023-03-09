@@ -41,7 +41,7 @@ function NavBar()
             <img src={logo} />
         </div>
         <ul className="nav-list" ref={navLink}>
-            <Link to="/main" className='navlink'>Home</Link>
+            <Link to="/dashboard" className='navlink'>Home</Link>
             <Link to="/stats" className='navlink' >Stats</Link>
             <Link to="/chat" className='navlink'>Chat</Link>
             <li className='navlink-logout' onClick={ handleLogout}>Logout</li>

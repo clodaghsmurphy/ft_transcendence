@@ -63,13 +63,13 @@
 .avatar-stats
 {
 	opacity: unset;
+	overflow: visible;
 	text-transform: uppercase;
 	display: flex;
 	position: absolute;
 	left: 45%;
 	flex-direction: column;
-	height: 21vh;
-	width: 20vh;
+	width: 10%;
 	bottom: 0vh;
 }
 .profile-sub-header img{
@@ -98,7 +98,7 @@
 {
 	color: white;
 	font-weight: 900;
-	font-size: 1.5em;
+	font-size: 1em;
 	font-family: 'Poppins', sans-serif;
 	text-align: center;
 }
