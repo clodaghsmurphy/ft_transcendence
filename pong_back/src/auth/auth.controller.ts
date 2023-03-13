@@ -6,6 +6,8 @@ import { JwtAuthGuard } from './utils/JwtGuard';
 import { jwtConstants } from './constants';
 import { UserService } from 'src/user/user.service';
 import { authenticator } from 'otplib';
+import *  as qrcode from 'qrcode';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -59,12 +61,25 @@ export class AuthController {
     @Post('generate')
     async generate(@Req() req: Request, @Res() res: Response)
     {
-        console.log(req);
         const secret = authenticator.generateSecret();
 
-        //const otpauth_url = authenticator.keyuri(re)
-        console.log(secret);
-        res.status(200).json(secret)
+        const otpauth_url = authenticator.keyuri('clmurphy', 'transcendence', secret);
+        const response = {
+            secret: secret,
+            uri: otpauth_url,
+        };
+        console.log('url =- ' + otpauth_url);
+    
+        const code = await qrcode.toDataURL(otpauth_url);
+        qrcode.toString('I am a pony!',{type:'terminal'}, function (err, url) {
+            console.log(url)
+          })
+        console.log(code);
+            res.header('Content-Type', 'image/png');
+            res.send(code);
+        //res.status(200).json(response);
     }
+
+ 
 }
 
