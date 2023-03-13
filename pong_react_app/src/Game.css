@@ -49,6 +49,7 @@ body {
   #ball {
 	position: absolute;
 	width: 10px;
+	transform: translateY(-50%);
 	height: 10px;
 	background-color: #fff;
 	border-radius: 50%;
