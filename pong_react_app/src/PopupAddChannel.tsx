@@ -18,10 +18,7 @@ type ChannelPost = {
 }
 
 export default function PopupAddChannel(every_users: User[], current_user: User) {
-	let base = ''
-	if (typeof current_user !== 'undefined')
-		base = current_user.name
-	let [selected, setSelected] = useState([base]);
+	let [selected, setSelected] = useState([] as string[]);
 	let inputRef = useRef<HTMLInputElement | null>(null);
 	if (typeof current_user === 'undefined')
 		return <div key={uuidv4()}></div>
@@ -92,6 +89,7 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 								name: chan_name,
 								username: "adben-mc",
 							}));
+							console.log(data);
 							fetch('/api/channel/join', {
 								method: 'POST',
 								headers: {'Content-Type': 'application/json'},

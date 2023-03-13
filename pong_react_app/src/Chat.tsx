@@ -17,6 +17,7 @@ import { SearchBar } from './SearchBar'
 import User, { error_user, name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
+import io from 'socket.io-client'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -140,19 +141,19 @@ function Chat()
 	
 	let message_user_data: User_message[] = [
 		{
-			user: all_users[0],
+			user: name_to_user(all_users, 'adben-mc'),
 			"message": "18h == matin",
 		},
 		{
-			user: all_users[1],
+			user: name_to_user(all_users, 'clmurphy'),
 			"message": "webserv > irc",
 		},
 		{
-			user: all_users[2],
+			user: name_to_user(all_users, 'nguiard'),
 			"message": "jsp quoi dire",
 		},
 		{
-			user: all_users[3],
+			user: name_to_user(all_users, 'ple-lez'),
 			"message": "je speedrun le TC",
 		}
 	];

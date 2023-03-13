@@ -23,8 +23,8 @@ RUN npm install crypto-browserify --force
 RUN npm install reactjs-popup --save --force
 RUN npm install react-bootstrap bootstrap --force
 RUN npm install bootstrap jquery @popperjs/core --force
-
-
+RUN npm install --save-dev @types/socket.io-client --force
+RUN npm install socket.io-client --save --force
 
 COPY . ./
 
