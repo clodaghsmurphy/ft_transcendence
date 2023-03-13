@@ -12,6 +12,9 @@ import StatsAchievements from './Achievements';
 import StatsFriends from "./StatsFriends";
 import { Link } from 'react-router-dom'
 import User, { name_to_user } from "./User";
+import Popup from 'reactjs-popup';
+import { usePrompt } from "./usePrompt";
+import Prompt from "./Prompt";
 
 function Stats()
 {
@@ -40,6 +43,23 @@ function Stats()
 	{
 		setOpen(!open);
 	};
+
+	const changePhoto = () =>
+	{
+
+	}
+	const {triggerPrompt } = usePrompt();
+
+	const changeName = () =>
+	{
+
+		triggerPrompt({
+			title: "Name change",
+			text: "Please enter a new name",
+			isInput: true,
+			onSubmit: (input: string) => console.log(input)
+		})
+	}
 
 	return(
 			<>
@@ -76,9 +96,12 @@ function Stats()
 								<BsFillGearFill style={ {color: 'white', height: '3vh'} }/>
 								{ open ? (
 								<ul className="options-list">
-									<li className="options-list-item">Change photo</li>
-									<li className="options-list-item">Delete account</li>
+									<li className="options-list-item" onClick={changePhoto}>Change photo</li >
+									<li className="options-list-item" onClick={changeName}>Change Name</li >
+								
+									
 								</ul> ) : null}
+								<Prompt />
 							</div>
 								<Link to={"https://profile.intra.42.fr/users/" + state.user.login} className='ftlogo'>
 									<img src={FTlogo} />

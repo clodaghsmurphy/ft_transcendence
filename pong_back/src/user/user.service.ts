@@ -13,24 +13,24 @@ export class UserService {
 		return await this.prisma.user.findMany();
 	}
 
-	async get(username: string): Promise<User> {
+	async get(id: number): Promise<User> {
 		return await this.prisma.user.findUnique({
-			where: { name: username },
+			where: { id: id },
 		});
 	}
 
-	async userExists(name: string): Promise<User> {
+	async userExists(id: number): Promise<User> {
 		const user = await this.prisma.user.findUnique({
-			where: { name: name },
+			where: { id: id },
 		});
 		return user;
 	}
 
-	async getInfo(username: string, attribute: string) {
-		this.checkUser(username);
+	async getInfo(id: number, attribute: string) {
+		this.checkUser(id);
 
 		const user = await this.prisma.user.findUnique({
-			where: { name: username },
+			where: { id: id },
 		});
 		return { attribute: user[attribute] };
 	}
@@ -60,20 +60,20 @@ export class UserService {
 	}
 
 	async update(dto: UserUpdateDto): Promise<User> {
-		this.checkUser(dto.name);
+		this.checkUser(dto.id);
 
 		return await this.prisma.user.update({
-			where: { name: dto.name },
+			where: { id: dto.id },
 			data: dto,
 		});
 	}
 
-	async checkUser(username: string) {
-		if (await this.prisma.user.count({where: {name: username}}) == 0)
+	async checkUser(id: number) {
+		if (await this.prisma.user.count({where: {id: id}}) == 0)
 		{
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: `User ${username} doesn't exist`,
+				error: `User user doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}

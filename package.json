@@ -9,6 +9,7 @@
     "passport": "^0.6.0",
     "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "speakeasy": "^2.0.0"
   }
 }

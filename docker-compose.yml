@@ -48,9 +48,6 @@ services:
       - 3042:3042
       # Tmp ports for prisma studio
       - 5555:5555
-    volumes:
-      - './pong_back:/app'
-      - '/app/node_modules'
     depends_on:
       db:
         condition: service_healthy

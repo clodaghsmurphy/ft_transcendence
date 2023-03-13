@@ -18,6 +18,8 @@ RUN npm install --save @nestjs/jwt passport-jwt
 RUN npm install --save-dev @types/passport-jwt
 RUN npm install passport-jwt
 RUN npm i -D @types/express-session
+RUN npm install  --save-dev @types/otplib
+RUN npm install qrcode
 
 EXPOSE 3042
 

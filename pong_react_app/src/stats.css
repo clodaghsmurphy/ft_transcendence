@@ -198,6 +198,10 @@
 .options-list
 {
 	display: flex;
+	overflow: visible!important;
+	font-size: .9em;
+	overflow: visible;
+	z-index: 3;
 	height: 7vh;
 	justify-content: space-between;
 	color: white;
@@ -217,6 +221,11 @@
 .options-list-item
 {
 	cursor: pointer;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	flex:50%;
+	width: 100%;
+	margin: 0.5em 0;
 	border-radius: inherit;
 }
 
@@ -358,3 +367,11 @@
 	flex-direction: row;
 	
 }
+
+.popup-content {
+	margin: auto;
+	background: rgb(255, 255, 255);
+	width: 50%;
+	padding: 5px;
+	height: 15vh;
+  }
