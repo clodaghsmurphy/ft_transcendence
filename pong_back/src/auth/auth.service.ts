@@ -14,7 +14,9 @@ export class AuthService {
         async login(@Res() res : Response, user: any) {
             if (!user)
                 throw new HttpException('Failed to login', HttpStatus.UNAUTHORIZED);
+            console.log('in login and paylaod is ');
             const payload = { name: user.name, opt_enabled: user.opt_enabled, sub: user.id};
+            console.log(payload);
             return {
                 access_token: this.jwtService.sign(payload),
             }

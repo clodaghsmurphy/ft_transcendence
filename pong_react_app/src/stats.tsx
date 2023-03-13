@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom'
 import User, { name_to_user } from "./User";
 import Popup from 'reactjs-popup';
 import { usePrompt } from "./usePrompt";
-import Prompt from "./Prompt";
+
 
 function Stats()
 {
@@ -101,7 +101,7 @@ function Stats()
 								
 									
 								</ul> ) : null}
-								<Prompt />
+								
 							</div>
 								<Link to={"https://profile.intra.42.fr/users/" + state.user.login} className='ftlogo'>
 									<img src={FTlogo} />
