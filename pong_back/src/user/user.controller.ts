@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from "@nestjs/common";
 import { UserCreateDto, UserUpdateDto } from "./dto";
 import { UserService } from "./user.service";
 
@@ -11,14 +11,16 @@ export class UserController {
 		return this.userService.getAll();
 	}
 
-	@Get('info/:name')
+	@Get('info/:id')
 	getUser(@Param() params) {
-		return this.userService.get(params.name);
+		this.checkId(params.id);
+		return this.userService.get(parseInt(params.id));
 	}
 
-	@Get('info/:name/:attribute')
+	@Get('info/:id/:attribute')
 	getUserInfo(@Param() params) {
-		return this.userService.getInfo(params.name, params.attribute);
+		this.checkId(params.id);
+		return this.userService.getInfo(parseInt(params.id), params.attribute);
 	}
 
 	@Post('create')
@@ -30,4 +32,14 @@ export class UserController {
 	updateUser(@Body() dto: UserUpdateDto) {
 		return this.userService.update(dto);
 	}
+
+	checkId(id: string) {
+		if (Number.isNaN(parseInt(id))) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `'${id}' is not a valid number`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
 }
+

@@ -18,7 +18,7 @@ export class ChannelService {
 	}
 
 	async getInfo(channelName: string, attribute: string) {
-		this.checkChannel(channelName);
+		await this.checkChannel(channelName);
 
 		const channel: Channel = await this.prisma.channel.findUnique({
 			where: {name: channelName},
@@ -27,13 +27,14 @@ export class ChannelService {
 	}
 
 	async create(dto: ChannelCreateDto) : Promise<Channel> {
-		await this.checkUser(dto.username);
+		await this.checkUser(dto.user_id);
+
 		try {
 			return await this.prisma.channel.create({
 				data: {
 					name: dto.name,
-					operators: [dto.username],
-					members: [dto.username],
+					operators: [dto.user_id],
+					members: [dto.user_id],
 				},
 			});
 		} catch (e) {
@@ -48,31 +49,31 @@ export class ChannelService {
 	}
 
 	async join(dto: ChannelCreateDto) : Promise<Channel> {
-		await this.checkUser(dto.username);
+		await this.checkUser(dto.user_id);
 		await this.checkChannel(dto.name);
 
 		// Check that user isn't already joined
 		if (await this.prisma.channel.count({where: {
 				name: dto.name,
-				members: {has: dto.username}
+				members: {has: dto.user_id}
 			}}) > 0)
 		{
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: `User ${dto.username} has already joined channel ${dto.name}`,
+				error: `User ${dto.user_id} has already joined channel ${dto.name}`,
 			}, HttpStatus.BAD_REQUEST);
 		}
 
 		return await this.prisma.channel.update({
 			where: {name: dto.name},
 			data: {
-				members: {push: dto.username}
+				members: {push: dto.user_id}
 			},
 		});
 	}
 
 	async getAllMessages(channelName: string) : Promise<Message[]> {
-		this.checkChannel(channelName);
+		await this.checkChannel(channelName);
 
 		const channel: Channel = await this.prisma.channel.findUnique({where: {name: channelName}});
 		const messageIds: number[] = channel.messages;
@@ -85,13 +86,14 @@ export class ChannelService {
 	}
 
 	async postMessage(channelName: string, dto: MessageCreateDto) : Promise<Message> {
-		this.checkChannel(channelName);
+		await this.checkChannel(channelName);
 
 		const message = await this.prisma.message.create({
 			data: {
 				uid: dto.uid,
 				text: dto.text,
-				name: dto.name,
+				sender_name: dto.sender_name,
+				sender_id: dto.sender_id,
 				channel: channelName,
 				type: 0,
 			},
@@ -105,12 +107,12 @@ export class ChannelService {
 		return message;
 	}
 
-	async checkUser(username: string) {
-		if (await this.prisma.user.count({where: {name: username}}) == 0)
+	async checkUser(id: number) {
+		if (await this.prisma.user.count({where: {id: id}}) == 0)
 		{
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: `User ${username} doesn't exist`,
+				error: `User ${id} doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}
