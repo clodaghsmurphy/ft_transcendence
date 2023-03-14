@@ -30,11 +30,11 @@ export class UserUpdateDto {
 
 	@IsOptional()
 	@IsArray()
-	blocked_users: string[];
+	blocked_users: number[];
 
 	@IsOptional()
 	@IsArray()
-	friend_users: string[];
+	friend_users: number[];
 
 	@IsOptional()
 	@IsArray()

@@ -46,10 +46,6 @@ export class UserService {
 					name: dto.name,
 					id: dto.id,
 					avatar: dto.avatar,
-					blocked_users: [],
-					friend_users: [],
-					connected: true,
-					in_game: false,
 				},
 			});
 		} catch (e) {
