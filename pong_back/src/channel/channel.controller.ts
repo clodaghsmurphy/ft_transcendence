@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
 
 @Controller('channel')
 export class ChannelController {
@@ -16,6 +16,11 @@ export class ChannelController {
 		return this.channelService.get(params.name);
 	}
 
+	@Get('info/:name/:attribute')
+	getChannelInfo(@Param() params) {
+		return this.channelService.getInfo(params.name, params.attribute);
+	}
+
 	@Post('create')
 	createChannel(@Body() dto: ChannelCreateDto) {
 		return this.channelService.create(dto);
@@ -24,5 +29,16 @@ export class ChannelController {
 	@Post('join')
 	joinChannel(@Body() dto: ChannelJoinDto) {
 		return this.channelService.join(dto);
+	}
+	
+	@Get(':name/messages')
+	getAllMessages(@Param() params) {
+		return this.channelService.getAllMessages(params.name);
+	}
+
+	// Temporary Route to test channel messages
+	@Post(':name/message')
+	postMessage(@Param() params, @Body() dto: MessageCreateDto) {
+		return this.channelService.postMessage(params.name, dto);
 	}
 }
