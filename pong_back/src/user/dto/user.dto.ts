@@ -10,6 +10,7 @@ export class UserCreateDto {
 	avatar: string;
 
 	@IsNotEmpty()
+	@IsNumber()
 	id: number;
 }
 
@@ -24,6 +25,7 @@ export class UserUpdateDto {
 	avatar: string;
 
 	@IsNotEmpty()
+	@IsNumber()
 	id: number;
 
 	@IsOptional()

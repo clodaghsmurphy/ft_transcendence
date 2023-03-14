@@ -11,14 +11,14 @@ export class UserController {
 		return this.userService.getAll();
 	}
 
-	@Get('info/:name')
+	@Get('info/:id')
 	getUser(@Param() params) {
-		return this.userService.get(params.name);
+		return this.userService.get(parseInt(params.id));
 	}
 
-	@Get('info/:name/:attribute')
+	@Get('info/:id/:attribute')
 	getUserInfo(@Param() params) {
-		return this.userService.getInfo(params.name, params.attribute);
+		return this.userService.getInfo(parseInt(params.id), params.attribute);
 	}
 
 	@Post('create')
