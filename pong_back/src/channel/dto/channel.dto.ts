@@ -5,9 +5,9 @@ export class ChannelCreateDto {
 	@IsNotEmpty()
 	name: string;
 
-	@IsString()
+	@IsNumber()
 	@IsNotEmpty()
-	username: string;
+	user_id: number;
 }
 
 export class ChannelJoinDto extends ChannelCreateDto {
@@ -22,7 +22,7 @@ export class MessageCreateDto {
 	@IsNotEmpty()
 	text: string;
 
-	@IsString()
+	@IsNumber()
 	@IsNotEmpty()
-	name: string;
+	sender_id: number;
 }

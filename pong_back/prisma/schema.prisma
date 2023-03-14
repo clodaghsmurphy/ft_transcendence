@@ -12,14 +12,14 @@ datasource db {
 
 // Todo: find a way to share the User class between front and back
 model User {
-  name String 
+  name String
   id Int @id
   avatar String
-  blocked_users String[]
-  friend_users String[]
-  channels String[]
-  connected Boolean
-  in_game Boolean
+  blocked_users Int[] @default([])
+  friend_users Int[] @default([])
+  channels String[] @default([])
+  connected Boolean @default(true)
+  in_game Boolean @default(false)
   game_id Int?
 
   otp_enabled Boolean @default(false)
@@ -28,22 +28,24 @@ model User {
   otp_ascii String?
   otp_hex   String?
   otp_base32  String?
-  otp_auth_url  String? 
+  otp_auth_url  String?
 }
 
 model Message {
   id Int @id @default(autoincrement())
   uid Int
   text String
-  name String
+  sender_name String
+  sender_id Int
   type Int
   channel String
 }
 
 model Channel {
   name String @id
-  members String[] @default([])
-  operators String[]
+  members Int[] @default([])
+  operators Int[]
+  blocked Int[] @default([])
   messages Int[] @default([])
   curr_uid Int @default(0)
 }

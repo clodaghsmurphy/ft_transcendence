@@ -11,7 +11,7 @@ import GameHistory from './GameHistory';
 import StatsAchievements from './Achievements';
 import StatsFriends from "./StatsFriends";
 import { Link } from 'react-router-dom'
-import User, { name_to_user } from "./User";
+import User, { id_to_user } from "./User";
 import Popup from 'reactjs-popup';
 import { usePrompt } from "./usePrompt";
 import EnableTwoFAuth from "./EnableTWoFAuth";
@@ -35,7 +35,7 @@ function Stats()
 			response.json()
 				.then(data => {
 					set_all_users(data as User[])
-					set_current_user(name_to_user(all_users, state.user.login)) // A changer par jsp quoi
+					set_current_user(id_to_user(all_users, Number(state.user.id))) // A changer par jsp quoi
 				})
 			})
 	}, []);

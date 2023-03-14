@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import React from 'react'
 import { Avatar, ButtonGroup } from '@mui/material'
-import User, { name_to_user } from './User'
+import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
 
@@ -13,14 +13,14 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 	if (typeof current_user === 'undefined' || typeof chan.op === 'undefined' || chan.members.length === 0)
 		return [<div key={uuidv4()} className='no-users'>No user found</div>]
 
-	const curr_is_op = chan.op.includes(current_user.name)
+	const curr_is_op = chan.op.includes(current_user.id)
 
 	for (const user of chan.members) {
-		if (user != current_user.name) {
+		if (user != current_user.id) {
 			if (curr_is_op && !chan.op.includes(user))
-				ret.push(button_op(name_to_user(every_user, user), chan.op.includes(user)))
+				ret.push(button_op(id_to_user(every_user, user), chan.op.includes(user)))
 			else
-				ret.push(button_not_op(name_to_user(every_user, user), chan.op.includes(user)))
+				ret.push(button_not_op(id_to_user(every_user, user), chan.op.includes(user)))
 		}
 	}
 	return ret

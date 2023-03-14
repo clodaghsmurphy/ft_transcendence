@@ -10,6 +10,7 @@ export class UserCreateDto {
 	avatar: string;
 
 	@IsNotEmpty()
+	@IsNumber()
 	id: number;
 }
 
@@ -24,15 +25,16 @@ export class UserUpdateDto {
 	avatar: string;
 
 	@IsNotEmpty()
+	@IsNumber()
 	id: number;
 
 	@IsOptional()
 	@IsArray()
-	blocked_users: string[];
+	blocked_users: number[];
 
 	@IsOptional()
 	@IsArray()
-	friend_users: string[];
+	friend_users: number[];
 
 	@IsOptional()
 	@IsArray()

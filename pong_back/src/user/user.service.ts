@@ -14,6 +14,8 @@ export class UserService {
 	}
 
 	async get(id: number): Promise<User> {
+		await this.checkUser(id);
+
 		return await this.prisma.user.findUnique({
 			where: { id: id },
 		});
@@ -27,11 +29,13 @@ export class UserService {
 	}
 
 	async getInfo(id: number, attribute: string) {
-		this.checkUser(id);
+		await this.checkUser(id);
 
 		const user = await this.prisma.user.findUnique({
 			where: { id: id },
 		});
+		if (user == null)
+			return ;
 		return { attribute: user[attribute] };
 	}
 
@@ -42,10 +46,6 @@ export class UserService {
 					name: dto.name,
 					id: dto.id,
 					avatar: dto.avatar,
-					blocked_users: [],
-					friend_users: [],
-					connected: true,
-					in_game: false,
 				},
 			});
 		} catch (e) {
@@ -60,7 +60,7 @@ export class UserService {
 	}
 
 	async update(dto: UserUpdateDto): Promise<User> {
-		this.checkUser(dto.id);
+		await this.checkUser(dto.id);
 
 		return await this.prisma.user.update({
 			where: { id: dto.id },
@@ -69,11 +69,10 @@ export class UserService {
 	}
 
 	async checkUser(id: number) {
-		if (await this.prisma.user.count({where: {id: id}}) == 0)
-		{
+		if (await this.prisma.user.count({where: {id: id}}) == 0) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: `User user doesn't exist`,
+				error: `User ${id} doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}
