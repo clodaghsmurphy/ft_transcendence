@@ -30,7 +30,7 @@ export class ChannelController {
 	joinChannel(@Body() dto: ChannelJoinDto) {
 		return this.channelService.join(dto);
 	}
-
+	
 	@Get(':name/messages')
 	getAllMessages(@Param() params) {
 		return this.channelService.getAllMessages(params.name);

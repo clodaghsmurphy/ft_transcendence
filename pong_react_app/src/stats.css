@@ -1,0 +1,376 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+.stats-page
+{
+	display: flex;
+	height: 95vh;
+	flex-direction: row;
+	background-color: #18194B;
+}
+
+.side-nav
+{
+	display: flex;
+	flex-direction: column;
+	flex-basis: 20%;
+	background-color: aquamarine;
+}
+
+.stats
+{
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+	background-color: #192131;
+}
+
+.profile-header
+{
+	flex-basis: 25%;
+	background-image: url('./media/tron_bg.jpeg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	overflow: visible;
+	position: relative;
+	width: 95%;
+	margin: 30px;
+	border-radius: 1em;
+	background-color: bisque;
+}
+
+.profile-sub-header
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	left: -10px;
+	border-radius: 1em;
+	height: 10vh;
+	background-color: #161848ec;
+	position: absolute;
+	overflow: visible!important;
+	bottom: 0;
+	border: solid 1px;
+	border-color: #7070a535;
+	box-shadow: #7070a560 0px 5px 15px;
+	margin-left: 0.75vw;
+}
+
+
+
+.avatar-stats
+{
+	opacity: unset;
+	overflow: visible;
+	text-transform: uppercase;
+	display: flex;
+	position: absolute;
+	left: 45%;
+	flex-direction: column;
+	width: 10%;
+	bottom: 0vh;
+}
+.profile-sub-header img{
+	
+	border-radius: 50%;
+	flex-basis: 10%;
+	z-index: 2;
+}
+
+.ftlogo {
+	flex-basis: 30%;
+	display: flex;
+	overflow: visible;
+	flex-shrink: 4;
+	cursor: pointer;
+	border-radius: 50%;
+	margin-right: 3vh;
+	z-index: 2;
+}
+
+.ftlogo:hover{
+	transform: scale(1.1);
+}
+
+.user-name
+{
+	color: white;
+	font-weight: 900;
+	font-size: 1em;
+	font-family: 'Poppins', sans-serif;
+	text-align: center;
+}
+
+.profile-game-stats
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	overflow: hidden;
+	color: white;
+		font-weight: 700;
+		width: 50%;
+
+}
+
+.profile-game-stats li
+{
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	
+}
+
+.sub-stats
+{
+	display: flex;
+	flex-direction: row;
+	flex-basis: 65%;
+}
+
+.info-card
+{
+	display: flex;
+	align-items: center;
+	border: solid 1px;
+	border-color: #7070a535;
+	box-shadow: #7070a560 0px 5px 15px;
+	color: white;
+	border-radius: 1em;
+	flex-direction: column;
+	background-color: #161848c5;;
+	flex-basis: 30%;
+	margin: 2vh;
+}
+
+.info-card header{
+	display: flex;
+	z-index: 1;
+	overflow: visible;
+	border-bottom: solid 1px;
+	border-color: #7070a535;
+	box-shadow: #7070a560 0px 0px 9px;
+	align-items: center;
+	background-color: #161848c5;
+	border-radius: 1em;
+	padding: 1vh;
+}
+
+.info-card h1
+{
+	font-size: 1.5em;
+	padding: 1vh;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.drop-down
+{
+	display: flex;
+	position: relative;
+	overflow: visible;
+	cursor: pointer;
+	flex-basis: 60%;
+	align-items: center;
+	height:100%;
+}
+
+.drop-down:hover
+{
+	background: transparent;
+	color: #9b59b6;
+}
+
+.right-options
+{
+	display: flex;
+	align-items: center;
+	overflow: visible;
+	justify-content: flex-end;
+	margin-right: 3vh;
+	flex-basis: 20%;
+}
+
+.options-list
+{
+	display: flex;
+	overflow: visible!important;
+	font-size: .9em;
+	overflow: visible;
+	z-index: 3;
+	height: 10vh;
+	color: white;
+	border-radius: 1em;
+	background-color: rgba(17, 11, 49, 0.897);
+	padding: 0;
+	text-align: center;
+	flex-direction: column;
+	list-style: none;
+	position: absolute;
+	top: 5vh;
+	border: solid 1px;
+	border-color: #7070a535;
+	box-shadow: #7070a560 0px 5px 15px;
+}
+
+.options-list-item
+{
+	cursor: pointer;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	flex:30%;
+	width: 100%;
+	margin: 0.5em 0;
+	border-radius: inherit;
+}
+
+.options-list-item:hover {
+	background: transparent;
+	border: solid;
+	border-color: linear-gradient(45deg, #45294d, #9b59b6, #224483);
+	color: #9b59b6;
+}
+
+.info-body
+{
+	display: flex;
+	flex-direction: column;
+	padding: 1.2vh;
+	border-radius: 1em;
+	flex-basis: 85%;
+	height: 100%;
+	width: 95%;
+	overflow-y: scroll;
+	gap: 10px
+}
+
+.info-item
+{
+	background-color: transparent;
+	border: solid 1px;
+	border-color: #7070a535;
+	box-shadow: #7070a560 0px 5px 15px;
+	max-height: 9vh;
+	align-items:center ;
+	overflow: visible;
+	padding: .6vh;
+	border-radius: 1em;
+	flex-basis: 15%;
+	display: flex;
+	flex-direction: row;
+}
+
+.stats-avatar
+{
+	border-radius: 50%;
+	height: 45px;
+	width: 45px;
+	display: flex;
+	flex: 0 0 45px;
+	margin-left: 3%;
+	margin-right: 3%;
+}
+
+.game-username
+{
+	margin: .5vh;
+	font-size: 1em;
+	align-self: center;
+	flex-basis: 25%;
+	flex-shrink: 0;
+}
+
+.game-score
+{
+	display: flex;
+	letter-spacing: .5em;
+	flex-wrap: nowrap;
+	font-size: 1.3em;
+	margin-right: 3%;
+	margin-left: auto;
+	font-weight:800;
+	text-align: center;
+	flex-basis: 35%;
+	text-align: right;
+	justify-content: right;
+}
+
+.ranking
+{
+	flex-basis: 10%;
+	font-weight: 800;
+}
+
+.rank-username
+{
+	flex-basis: 35%;
+	margin-left: 3vh;
+}
+
+.friends-avatar
+{
+	border-radius: 50%;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-basis: 15%;
+}
+
+.friends-options
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	justify-items: flex-end;
+	flex-basis: 35%;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	margin-right: 3%;
+	align-items: center;
+}
+
+.search-bar
+{
+	position: relative;
+	color: white;
+	background-color: #7070a5;
+	border-radius: 1em;
+	border: solid 1px;
+	border-color: #7070a535;
+	box-shadow: #7070a560 0px 5px 15px;
+
+}
+
+.friend-profile:link {
+	text-decoration: none;
+	color:inherit;
+}
+
+.achievement-title {
+	font-size: 1.25rem;
+	text-align: center;
+}
+
+.achievement-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.achievement-info {
+	display: flex;
+	flex-direction: row;
+	
+}
+
+.popup-content {
+	margin: auto;
+	background: rgb(255, 255, 255);
+	width: 50%;
+	padding: 5px;
+	height: 15vh;
+  }

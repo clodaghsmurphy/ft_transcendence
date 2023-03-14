@@ -12,7 +12,8 @@ datasource db {
 
 // Todo: find a way to share the User class between front and back
 model User {
-  name String @id
+  name String 
+  id Int @id
   avatar String
   blocked_users String[]
   friend_users String[]
@@ -20,6 +21,14 @@ model User {
   connected Boolean
   in_game Boolean
   game_id Int?
+
+  otp_enabled Boolean @default(false)
+  otp_verified Boolean @default(false)
+
+  otp_ascii String?
+  otp_hex   String?
+  otp_base32  String?
+  otp_auth_url  String? 
 }
 
 model Message {

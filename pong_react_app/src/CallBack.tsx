@@ -6,7 +6,7 @@ import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCallback, useState } from 'react';
-import api_keys from './api_cred'
+import api_keys from './api_keys'
 
 function CallBack () 
 {
@@ -32,8 +32,8 @@ function CallBack ()
 
 		const requestToken = {
 			grant_type:'authorization_code', 
-			client_id:api_keys.client_id,
-			client_secret:api_keys.secret,
+			client_id:api_keys.api_keys.client_id,
+			client_secret:api_keys.api_keys.client_secret,
 			code:code,
 			redirect_uri:'http://localhost:8080/login/callback',
 			state:state
