@@ -25,17 +25,17 @@ curl -H 'Content-Type: application/json' \
 echo "\n\nUpdating Users\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{"name": "adben-mc", "id" : 3 , "avatar": "https://cdn.intra.42.fr/users/de7e6b8845aea12744adeaeefb48dbc8/small_adben-mc.jpg", "blocked_users": ["nguiard"], "friend_users": ["ple-lez"], "channels": ["Transcendence", "Illuminatis"], "connected": false, "in_game": false, "game_id": -1, "last_games": [ { "has_won": "true", "opponnent": "clmurphy", "score": ["10", "6"] }, { "has_won": "true", "opponnent": "nguiard", "score": ["10", "4"] } ]}' \
+	-d '{"name": "adben-mc", "id" : 1 , "avatar": "https://cdn.intra.42.fr/users/de7e6b8845aea12744adeaeefb48dbc8/small_adben-mc.jpg", "blocked_users": ["nguiard"], "friend_users": ["ple-lez"], "channels": ["Transcendence", "Illuminatis"], "connected": false, "in_game": false, "game_id": -1, "last_games": [ { "has_won": "true", "opponnent": "clmurphy", "score": ["10", "6"] }, { "has_won": "true", "opponnent": "nguiard", "score": ["10", "4"] } ]}' \
 	-X POST \
 	localhost:3042/user/update
 
 curl -H 'Content-Type: application/json' \
-	-d '{"name":"clmurphy", "id" : 1, "avatar":"https://cdn.intra.42.fr/users/6700ab6b3b9c0b82eb76e0ae301023b7/small_clmurphy.jpg","blocked_users":[],"friend_users":[],"channels":["Transcendence"],"connected":true,"in_game":true,"game_id":2,"last_games":[{"has_won":false,"opponnent":"nguiard","score":[0,10]}]}' \
+	-d '{"name":"clmurphy", "id" : 2, "avatar":"https://cdn.intra.42.fr/users/6700ab6b3b9c0b82eb76e0ae301023b7/small_clmurphy.jpg","blocked_users":[],"friend_users":[],"channels":["Transcendence"],"connected":true,"in_game":true,"game_id":2,"last_games":[{"has_won":false,"opponnent":"nguiard","score":[0,10]}]}' \
 	-X POST \
 	localhost:3042/user/update
 
 curl -H 'Content-Type: application/json' \
-	-d '{"name":"nguiard", "id" : 2, "avatar":"https://cdn.intra.42.fr/users/2a54f27654e8ff846ba033f7ba41caf5/small_nguiard.jpg","blocked_users":["adben-mc"],"friend_users":["ple-lez","clmurphy"],"channels":["Illuminatis"],"connected":true,"in_game":true,"game_id":2,"last_games":[{"has_won":true,"opponnent":"clmurphy","score":[10,0]},{"has_won":false,"opponnent":"adben-mc","score":[4,10]}]}'  \
+	-d '{"name":"nguiard", "id" : 3, "avatar":"https://cdn.intra.42.fr/users/2a54f27654e8ff846ba033f7ba41caf5/small_nguiard.jpg","blocked_users":["adben-mc"],"friend_users":["ple-lez","clmurphy"],"channels":["Illuminatis"],"connected":true,"in_game":true,"game_id":2,"last_games":[{"has_won":true,"opponnent":"clmurphy","score":[10,0]},{"has_won":false,"opponnent":"adben-mc","score":[4,10]}]}'  \
 	-X POST \
 	localhost:3042/user/update
 

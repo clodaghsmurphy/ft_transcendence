@@ -7,8 +7,8 @@ import { Avatar } from '@mui/material'
 import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
 import Chat from './Chat'
-import { Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
-import User, { avatarOf, name_to_user, sample_user_data } from './User'
+import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
+import User, { avatarOf, id_to_user, sample_user_data } from './User'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -32,14 +32,6 @@ function Messages(chan: Channel, users: User[], current_user: User)
 	if (chan.messages.length === 0)
 		return <div key={"no_messages_key"}>No messages</div>;
 
-	interface MessageData {
-		type: number;
-		text: string;
-		uid: number;
-		name: string;
-		from: string;
-	}
-
 	if (messagesBlocks.length === 0 || last_chan != chan.name) // si c'est vide il faut l'update
 	{
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
@@ -52,7 +44,9 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		let test = { 
 			text: formValue,
 			uid:  chan.curr_uid + 1,
-			name: current_user.name,
+			sender_name: current_user.name,
+			sender_id: current_user.id,
+			from: chan.name,
 			type: NORMAL
 		}
 		if (formValue.length !== 0)

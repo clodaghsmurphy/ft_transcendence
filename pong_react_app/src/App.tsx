@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css';
 import Dashboard from './Dashboard';
 import Chat from './Chat';
-import Friends from './Friends';
+// import Friends from './Friends';
 import Login from './Login';
 import CallBack from './CallBack';
 import Stats from './stats';
@@ -46,7 +46,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
-        <Route path='/friends' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Friends /> } /> } />
+        {/* <Route path='/friends' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Friends /> } /> } /> */}
     </Routes>
     </PromptContext.Provider>
     <JWTverify />

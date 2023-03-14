@@ -14,7 +14,7 @@ import { Avatar } from '@mui/material'
 import { user_in_group } from './UserGroup'
 import plus_sign from './media/white_plus.png'
 import { SearchBar } from './SearchBar'
-import User, { error_user, name_to_user, sample_user_data } from './User'
+import User, { error_user, id_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
 import io from 'socket.io-client'
@@ -94,11 +94,11 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 		let message_text: string = (
 			target_message.type == BAN ||
 			target_message.type == KICK ?
-			target_message.name + target_message.text :
+			target_message.sender_name + target_message.text :
 			target_message.text
 		)
 		if (target_message.type)
-			message_text = target_message.name + " sent an invite"
+			message_text = target_message.sender_name + " sent an invite"
 		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
 	}
 	ret.push(PopupAddChannel(every_user, current_user))
@@ -141,19 +141,19 @@ function Chat()
 	
 	let message_user_data: User_message[] = [
 		{
-			user: name_to_user(all_users, 'adben-mc'),
+			user: id_to_user(all_users, 1),
 			"message": "18h == matin",
 		},
 		{
-			user: name_to_user(all_users, 'clmurphy'),
+			user: id_to_user(all_users, 2),
 			"message": "webserv > irc",
 		},
 		{
-			user: name_to_user(all_users, 'nguiard'),
+			user: id_to_user(all_users, 3),
 			"message": "jsp quoi dire",
 		},
 		{
-			user: name_to_user(all_users, 'ple-lez'),
+			user: id_to_user(all_users, 4),
 			"message": "je speedrun le TC",
 		}
 	];
