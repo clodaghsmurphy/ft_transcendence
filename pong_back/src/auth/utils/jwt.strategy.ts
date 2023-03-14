@@ -21,7 +21,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		console.log(payload);
 		const user = await this.userService.userExists(payload.sub);
 		if (!user)
+		{
+			console.log('returning null in jwt strategy')
 			return null;
+		}
 		return {
 			id: payload.sub,
 			name: payload.name,

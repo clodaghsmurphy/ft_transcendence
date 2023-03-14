@@ -3,22 +3,22 @@
 echo "\n\nCreating Users\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "clmurphy", "avatar": "media/clmurphy.jpg", "id" : "1" }' \
+	-d '{ "name": "clmurphy", "avatar": "media/clmurphy.jpg", "id" : 1 }' \
 	-X POST \
 	localhost:3042/user/create
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "nguiard", "avatar": "media/nguiard.jpg",  "id" : "2"}' \
+	-d '{ "name": "nguiard", "avatar": "media/nguiard.jpg",  "id" : 2}' \
 	-X POST \
 	localhost:3042/user/create
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "adben-mc", "avatar": "media/adben-mc.jpg", "id" : "3" }' \
+	-d '{ "name": "adben-mc", "avatar": "media/adben-mc.jpg", "id" : 3 }' \
 	-X POST \
 	localhost:3042/user/create
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "ple-lez", "avatar": "media/ple-lez.jpg", "id" : "4"  }' \
+	-d '{ "name": "ple-lez", "avatar": "media/ple-lez.jpg", "id" : 4  }' \
 	-X POST \
 	localhost:3042/user/create
 

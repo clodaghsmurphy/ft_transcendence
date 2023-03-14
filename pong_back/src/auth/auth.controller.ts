@@ -1,4 +1,4 @@
-import { Controller,  Body, Get, Res, Req, Request, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller,  Body, Get, UnauthorizedException, Res, Req, Request, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { FT_AuthGuard } from './utils/Guards';
@@ -50,36 +50,44 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Get('profile')
     getProfile(@Request() req) {
-        console.log('In get profile and req is');
-        console.log(req);
-        console.log(req.user);
-        console.log(this.userService.get(req.user.id));
-         
+        console.log(req.headers);
         return this.userService.get(req.user.id);
     }
 
-    @Post('generate')
+    @UseGuards(JwtAuthGuard)
+    @Get('generate')
     async generate(@Req() req: Request, @Res() res: Response)
     {
+        console.log(req.headers);
         const secret = authenticator.generateSecret();
+        console.log('secret is' );
+        console.log(secret);
 
         const otpauth_url = authenticator.keyuri('clmurphy', 'transcendence', secret);
         const response = {
             secret: secret,
             uri: otpauth_url,
         };
-        console.log('url =- ' + otpauth_url);
-    
         const code = await qrcode.toDataURL(otpauth_url);
-        qrcode.toString('I am a pony!',{type:'terminal'}, function (err, url) {
-            console.log(url)
-          })
-        console.log(code);
-            res.header('Content-Type', 'image/png');
-            res.send(code);
-        //res.status(200).json(response);
+        res.status(200).json({code});
+        return {code};
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Post('validate')
+    async validate(@Req() req : Request, @Res() res : Response){
+        console.log(req.user.id);    
+        console.log(req.body);
+        const totp = req.body.totp;
+        const user = this.userService.userExists(parseInt(req.user.id));
+        if (!user)
+            throw new UnauthorizedException();
+        try {
+            const isValid
+        }
+        const verifeid = authenticator.
+        return res.status(200).json({ msg: 'ok'});
+    }
  
 }
 

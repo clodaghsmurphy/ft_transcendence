@@ -93,8 +93,8 @@ function Stats()
 
 						</div>
 						<div className='right-options'>
-							<div className="drop-down" onClick={handleOpen}>
-								<BsFillGearFill style={ {color: 'white', height: '3vh'} }/>
+							<div className="drop-down" >
+								<BsFillGearFill style={ {color: 'white', height: '3vh'} } onClick={handleOpen}/>
 								{ open ? (
 								<ul className="options-list">
 									<li className="options-list-item" onClick={changePhoto}>Change photo</li >

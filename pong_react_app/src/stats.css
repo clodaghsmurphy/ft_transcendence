@@ -97,8 +97,9 @@
 .user-name
 {
 	color: white;
+	overflow: visible!important;
 	font-weight: 900;
-	font-size: 1em;
+	font-size: 2vw;
 	font-family: 'Poppins', sans-serif;
 	text-align: center;
 }
@@ -106,6 +107,7 @@
 .profile-game-stats
 {
 	display: flex;
+	font-size: 1vw;
 	flex-direction: row;
 	justify-content: space-around;
 	align-items: center;
@@ -162,7 +164,7 @@
 
 .info-card h1
 {
-	font-size: 1.5em;
+	font-size: 2vw;
 	padding: 1vh;
 	text-align: center;
 	text-transform: uppercase;
@@ -199,7 +201,7 @@
 {
 	display: flex;
 	overflow: visible!important;
-	font-size: .9em;
+	font-size: 1vw;
 	overflow: visible;
 	z-index: 3;
 	height: 10vh;
@@ -278,7 +280,7 @@
 .game-username
 {
 	margin: .5vh;
-	font-size: 1em;
+	font-size: 1vw;
 	align-self: center;
 	flex-basis: 25%;
 	flex-shrink: 0;
@@ -289,7 +291,7 @@
 	display: flex;
 	letter-spacing: .5em;
 	flex-wrap: nowrap;
-	font-size: 1.3em;
+	font-size: 1vw;
 	margin-right: 3%;
 	margin-left: auto;
 	font-weight:800;
@@ -374,3 +376,60 @@
 	padding: 5px;
 	height: 15vh;
   }
+
+  .TwoFactorPopUp
+  {
+	display: flex;
+	align-items: center;
+	position: fixed;
+	flex-direction: column;
+	background-color: white;
+	right: 25%;
+	top: 5vh;
+	height: 60vh;
+	width: 50vh;
+  }
+
+
+  .QRcode {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex:30%;
+	border-radius: 0!important;
+	overflow: visible!important;
+	height: 50%;
+	width:50%;
+	border:1px solid #000000;
+  }
+
+  .QRcode img{
+	border-radius: 0!important;
+  }
+
+  .instructions {
+	display: flex;
+	flex-direction: column;
+	flex: 20%;
+	background-color: red;
+
+  }
+
+  .pop-up-title
+  {
+	color: white;
+  }
+
+  .instructions li{
+	text-align: left;
+	font-size: 1vw;
+	line-break: auto;
+	list-style: decimal;
+  }
+
+  .buttons
+  {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}

@@ -38,6 +38,7 @@ export type user =
   login:string;
   id: string;
   avatar: string;
+  is2FA: boolean;
 
 }
 
