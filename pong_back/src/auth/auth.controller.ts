@@ -5,14 +5,18 @@ import { FT_AuthGuard } from './utils/Guards';
 import { JwtAuthGuard } from './utils/JwtGuard';
 import { jwtConstants } from './constants';
 import { UserService } from 'src/user/user.service';
-import { authenticator } from 'otplib';
+import { authenticator, totp } from 'otplib';
 import *  as qrcode from 'qrcode';
 import { AuthGuard } from '@nestjs/passport';
+import { PrismaService } from "src/prisma/prisma.service";
+import { User } from "@prisma/client";
+
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService,
-        private userService: UserService) {}
+        private userService: UserService,
+        private prisma: PrismaService) {}
 
 
     @Get('healthcheck')
@@ -56,18 +60,27 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Get('generate')
-    async generate(@Req() req: Request, @Res() res: Response)
+    async generate(@Req() req, @Res() res: Response)
     {
         console.log(req.headers);
-        const secret = authenticator.generateSecret();
+        const user = await this.userService.userExists(parseInt(req.user.id));
+        if (!user)
+            throw new UnauthorizedException();
+        const secret = await user.otp_base32 || authenticator.generateSecret();
         console.log('secret is' );
         console.log(secret);
-
-        const otpauth_url = authenticator.keyuri('clmurphy', 'transcendence', secret);
+        const otpauth_url = authenticator.keyuri(req.user.name, 'transcendence', secret);
         const response = {
             secret: secret,
             uri: otpauth_url,
         };
+        const updateUser = await this.prisma.user.update({
+            where: {id: req.user.id},
+            data: { otp_base32: secret,
+                otp_auth_url: otpauth_url },
+        });
+        if (!updateUser)
+            throw new UnauthorizedException();
         const code = await qrcode.toDataURL(otpauth_url);
         res.status(200).json({code});
         return {code};
@@ -75,14 +88,29 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @Post('validate')
-    async validate(@Req() req : Request, @Res() res : Response){
-        console.log(req);    
-        console.log(req.body);
-        const totp = req.body.totp;
-        //const user = this.userService.userExists(parseInt(req.user.id));
-        //if (!user)
-            //throw new UnauthorizedException();
-    
+    async validate(@Body() body:any, @Req() req , @Res() res : Response){
+        console.log(req.user);
+        console.log(body.totp);
+        const token = body.totp;
+        const user = await this.userService.userExists(parseInt(req.user.id));
+        if (!user)
+            throw new UnauthorizedException();
+        console.log(user);
+        const secret = user.otp_base32;
+        try {
+            const isValid = authenticator.verify({ token, secret});
+            console.log('isValid == ' + isValid);
+            if (isValid == true)
+            {
+                const updateUser = await this.prisma.user.update({
+                    where: {id: req.user.id},
+                    data: { otp_enabled: true },
+                });
+            }
+        } catch (e)
+        {
+            throw new UnauthorizedException();
+        }
         return res.status(200).json({ msg: 'ok'});
     }
  

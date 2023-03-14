@@ -1,7 +1,8 @@
 import react from 'react'
 import axios from 'axios'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import './stats.css';
+import { AuthContext } from './App';
 
 interface PopUpProps
 {
@@ -11,6 +12,7 @@ interface PopUpProps
 
 function PopUp2FA(props: PopUpProps)
 {
+    const { state,  dispatch } = useContext(AuthContext);
     const [imageSrc, setImageSrc] = useState("");
     const [value, setValue] = useState("");
     console.log(axios.defaults.headers.common);
@@ -31,11 +33,19 @@ function PopUp2FA(props: PopUpProps)
     const handleSubmit = async () =>
     {
         console.log('in handle sucmit');
-        const response = await axios.post('http://localhost:3042/auth/validate',
+        const {data} = await axios.post('http://localhost:3042/auth/validate',
         {
             totp: value,
         })
-        console.log(response);
+        console.log('data is ');
+        console.log(data);
+    
+        if(data.msg == "ok")
+        {
+            console.log('here');
+            state.user.is2FA = true;
+            console.log(state.user);
+        }
     }
     return (
         <div className="TwoFactorPopUp">

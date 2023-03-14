@@ -51,4 +51,12 @@ export class UserUpdateDto {
 	@IsOptional()
 	@IsNumber()
 	game_id: number;
+
+	@IsOptional()
+	@IsString()
+	otp_base32: string;
+
+	@IsOptional()
+	@IsString()
+	otp_auth_url: string
 }

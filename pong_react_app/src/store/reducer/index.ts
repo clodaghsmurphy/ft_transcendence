@@ -20,6 +20,7 @@ export interface Login
   payload: any;
 }
 
+
 export interface Logout
 {
   type: ActionKind.Logout;
@@ -71,6 +72,7 @@ export const initialState:State = {
           user: null
         };
       }
+   
       default:
         return state;
     }
