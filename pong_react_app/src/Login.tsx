@@ -6,7 +6,7 @@ import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
 import { Link, Navigate } from 'react-router-dom'
 import { useCallback, useState } from 'react';
-import api_keys from './api_cred'
+import api_keys from './api_keys'
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import { AuthContext } from './App';
@@ -32,77 +32,43 @@ function Login ()
 	const { state,  dispatch } = useContext(AuthContext);
 	const [ data, setData ] = useState<Data>( {errorMessage: "", isLoading: false});
 
-	useEffect(() => {
-		const url = window.location.href;
-		
-		if (url.includes("?code"))
-		{
-			const code = new URLSearchParams(location.search).get('code');
-			const ustate = new URLSearchParams(location.search).get('state');
+
+	async function getPayload () 
+	{
+		const { data } = await axios.get('http://localhost:3042/auth/profile');
+			console.log(data);
+			console.log(data.name);
+			dispatch(
+				{
+					type: ActionKind.Login,
+					payload: { user:{ login:data.name, id:data.id, avatar:data.avatar}, isLoggedIn: true}
+				}
+			)
+			localStorage.setItem("isLoggedIn", 'true');
 			
-			console.log('code = ' + code);
-			const requestToken = {
-				grant_type:'authorization_code', 
-				client_id:api_keys.client_id,
-				client_secret:api_keys.secret,
-				code:code,
-				redirect_uri:'http://localhost:8080/login',
-				state:ustate
-			}
-			console.dir(requestToken);
-			axios.post("https://api.intra.42.fr/oauth/token", requestToken)
-				.then(response => {
-					const access_token:string = response.data.access_token;
-					console.log('access token : ' + access_token);
-					const res =  axios.get('https://api.intra.42.fr/v2/me',
-					{
-						headers : {
-							'Authorization': `Bearer ${access_token}`
-						}
-					})
-					.then(res => 
-					{
-						const userData ={
-							name:res.data.login,
-							avatar:res.data.image.link
-						}
-						dispatch(
-							{
-								type: ActionKind.Login,
-								payload: { user :{login: res.data.login, id:res.data.id, avatar:res.data.image.link}, isLoggedIn: true}
-							}
-						)
-						console.log('state logged = ' + state.isLoggedIn);
-						axios.post('/api/user/create', userData);
-						console.log(res.data);
-						console.log(res.data.id);
-						console.log(res.data.login);
-						console.log(res.data.email);
-						console.log(res.data.image.link);
-					})
-				})
-				.catch(error =>{
-					console.log('Error:', error);
-				})
+			console.log(localStorage.getItem('user'));
+			console.log(localStorage.getItem("isLoggedIn"));
+	}
+	useEffect( () => {
+		const url = window.location.href;
+		console.log('in use effects ' + url);
+		
+		if (url.includes("?access_token"))
+		{
+			const token = new URLSearchParams(location.search).get('access_token')!;
+			console.log(token);
+			localStorage.setItem("token", token);
+			axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+			getPayload();
 		}
 		
 	}, [state, dispatch, data] ); 
 	
 
-	const handleLogin = () =>
+	const handleLogin = async () =>
 	{
-		const login:loginData = { 
-			authorizeUrl: "https://api.intra.42.fr/oauth/authorize",
-			clientID: api_keys.client_id,
-			redirectUri: encodeURIComponent("http://localhost:8080/login"),
-			scope: 'public',
-			state: nanoid(16)
-		}
-		const authUrl:string = `https://api.intra.42.fr/oauth/authorize?client_id=${login.clientID}&redirect_uri=${login.redirectUri}&scope=${login.scope}&state=${login.state}&response_type=code`
-		setAuthUrl(authUrl);
-		window.location.href = authUrl;
-		setData({ ...data, errorMessage: " "})
-
+		window.location.href = 'http://localhost:3042/auth/42/login';
+		setData({ ...data, errorMessage: " "});
 		
 	}
 

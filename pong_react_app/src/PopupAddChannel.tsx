@@ -64,8 +64,9 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 	function ValidateChan() {
 		if (!inputRef.current || inputRef.current.value == '')
 			return ;
+		const chan_name = inputRef.current!.value;
 		let chan: ChannelPost = {
-			name: inputRef.current!.value,
+			name: chan_name,
 			username: current_user.name,
 			members: selected,
 			op: [current_user.name],
@@ -73,14 +74,35 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 			messages: [],
 			curr_uid: 0,
 		}
-		console.log(JSON.stringify(chan));
 		inputRef.current!.value = '';
 		setSelected([current_user.name]);
+		console.log(JSON.stringify(chan))
 		fetch('/api/channel/create', {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify(chan),
 		})
+			.then(response => {
+				response.json()
+					.then(data => {
+						if (data.status < 400 || data.status > 499) {
+							let index = chan.members!.indexOf(current_user.name);
+							chan.members!.splice(index, 1);
+							chan.members!.filter(mb => mb != null)
+							console.log(JSON.stringify({
+								name: chan_name,
+								username: "adben-mc",
+							}));
+							fetch('/api/channel/join', {
+								method: 'POST',
+								headers: {'Content-Type': 'application/json'},
+								body: JSON.stringify({
+									name: chan_name,
+									username: "adben-mc",
+								}),
+							})
+						}
+					})
+			})
 	}
 
 	return (

@@ -16,16 +16,11 @@ import plus_sign from './media/white_plus.png'
 import { SearchBar } from './SearchBar'
 import User, { error_user, name_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
-import { api_get_all_users } from './API'
 import PopupAddChannel from './PopupAddChannel'
-// import axios from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
 
-
 type User_message = {user: User, message: string}
-type Group_message = {name: string, message: string}
-type Group_user_data = {user: User, status: number, is_op: boolean}
 
 function chat_button(name: string, message: string, img: string, fnc: (chan: Channel | User) => void, param: Channel | User) {
 	return (
@@ -97,12 +92,12 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 
 		let message_text: string = (
 			target_message.type == BAN ||
-			target_message.type == INVITE ||
 			target_message.type == KICK ?
 			target_message.name + target_message.text :
 			target_message.text
 		)
-
+		if (target_message.type)
+			message_text = target_message.name + " sent an invite"
 		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
 	}
 	ret.push(PopupAddChannel(every_user, current_user))
@@ -112,9 +107,8 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 function Chat()
 {
 	let [all_users, set_all_users] = useState([] as User[])
-	let all_channels: Channel[] = sample_channel_data()
-
-	let current_user: User = all_users[2]
+	let [all_channels, set_all_channels] = useState([] as Channel[])
+	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as Channel)
 	let [chanOfUser, setChanOfUser] = useState(names_to_channel(all_channels, typeof current_user === 'undefined' ? [] : current_user.channels))
 
@@ -129,14 +123,21 @@ function Chat()
 			response.json()
 				.then(data => {
 					set_all_users(data as User[])
-					const cur_usr = (data as User[])[2]
-					setChanOfUser(names_to_channel(all_channels, typeof cur_usr.avatar === 'undefined' ? [] : cur_usr.channels))
-					// setLoading(false);
+					set_current_user(data[2] as User) // A changer par jsp quoi
 				})
-		})
-	  }, []);
+			})
 
-
+		fetch('/api/channel/info')
+			.then((response) => {
+				response.json()
+				.then(data => {
+				set_all_channels(data as Channel[])
+				setChanOfUser(names_to_channel(all_channels,
+					typeof current_user.channels === 'undefined' ? [] : current_user.channels))
+				})
+			})
+	}, []);
+	
 	let message_user_data: User_message[] = [
 		{
 			user: all_users[0],
@@ -155,12 +156,6 @@ function Chat()
 			"message": "je speedrun le TC",
 		}
 	];
-
-	function doesNothing(str: string): MouseEventHandler<HTMLButtonElement> | undefined {
-		console.log("Tried to open a chat between " + current_user.name +
-			" and " + str)
-		return ;
-	}
 
 	function changeChannelOrDm(param: Channel | User): void {
 		if (typeof (param as Channel).op !== 'undefined')

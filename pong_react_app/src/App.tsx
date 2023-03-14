@@ -6,14 +6,17 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 import './App.css';
 import Dashboard from './Dashboard';
-import Main from './Main';
 import Chat from './Chat';
+import Friends from './Friends';
 import Login from './Login';
 import CallBack from './CallBack';
+import Stats from './stats';
 import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './ProtectedRoute'
 import { ProtectedRouteProps } from './ProtectedRoute';
+import JWTverify from './JWTverify';
+import { PromptContextValue, PromptContext, defaultValue } from './store/reducer/Prompt/PromptContext';
 
 type StateContext = {
   state: State;
@@ -30,18 +33,23 @@ function App() {
     authPath: '/login',
   };
   
+  const [prompt, setPrompt] = useState<PromptContextValue>(defaultValue);
 
   return (
     <AuthContext.Provider value={ { state, dispatch } }>
     <Router>
+      <PromptContext.Provider value={[prompt, setPrompt]}>
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/login/callback" element={<CallBack />}/>
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
-        <Route path='/main' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Main /> } /> } />
-        <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat /> } /> } />
-	  </Routes>
+        <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
+        <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
+        <Route path='/friends' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Friends /> } /> } />
+    </Routes>
+    </PromptContext.Provider>
+    <JWTverify />
     </Router>
     </AuthContext.Provider>
   );

@@ -8,6 +8,9 @@ export class UserCreateDto {
 	@IsString()
 	@IsNotEmpty()
 	avatar: string;
+
+	@IsNotEmpty()
+	id: number;
 }
 
 export class UserUpdateDto {
@@ -19,6 +22,9 @@ export class UserUpdateDto {
 	@IsString()
 	@IsNotEmpty()
 	avatar: string;
+
+	@IsNotEmpty()
+	id: number;
 
 	@IsOptional()
 	@IsArray()

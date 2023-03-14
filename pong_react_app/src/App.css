@@ -14,7 +14,6 @@
   overflow: hidden;
   width: 100%;
   scrollbar-width: thin;         
-  scrollbar-color: blue orange; 
 }
 
 /* ::-webkit-scrollbar {

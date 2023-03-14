@@ -41,10 +41,10 @@ function NavBar()
             <img src={logo} />
         </div>
         <ul className="nav-list" ref={navLink}>
-            <Link to="/main" className='navlink'>Home</Link>
-            <li className='navlink' >Stats</li>
+            <Link to="/dashboard" className='navlink'>Home</Link>
+            <Link to="/stats" className='navlink' >Stats</Link>
             <Link to="/chat" className='navlink'>Chat</Link>
-            <li className='navlink'>Friends</li>
+            <li className='navlink-logout' onClick={ handleLogout}>Logout</li>
         </ul>
         <div className="nav-user" id="nav-user">
             <AiOutlineLogout className="logout-btn" onClick={ handleLogout}/>
@@ -52,7 +52,7 @@ function NavBar()
                 <img src={state.user.avatar} />
                 
             </div>
-            <p className='userName' > Welcome clmurphy !</p>
+            <p className='userName' > Welcome {state.user.login} !</p>
            
         </div>
         <button className="nav-btn nav-close-btn" onClick={() => showNavbar()}>
