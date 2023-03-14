@@ -19,7 +19,7 @@ RUN npm install --save-dev @types/passport-jwt
 RUN npm install passport-jwt
 RUN npm i -D @types/express-session
 RUN npm install  --save-dev @types/otplib
-RUN npm install qrcode
+RUN npm install qrcode --save
 
 EXPOSE 3042
 

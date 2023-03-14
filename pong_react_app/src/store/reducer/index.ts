@@ -43,7 +43,7 @@ export type user =
 
 export const initialState:State = {
     isLoggedIn: localStorage.getItem("isLoggedIn")! ,
-    user: { login: 'clmurphy', id: '1', avatar: 'https://cdn.intra.42.fr/users/b055b9ed5ffb394bcd9f0da75db1879a/clmurphy.jpg'},
+    user: JSON.parse(localStorage.getItem('user')!) ,
     client_id: process.env.REACT_APP_CLIENT_ID!,
     redirect_uri: process.env.REACT_APP_REDIRECT_URI!,
     client_secret: process.env.REACT_APP_CLIENT_SECRET!,
@@ -53,8 +53,9 @@ export const initialState:State = {
   export const reducer = (state:State, action:Action) => {
     switch (action.type) {
       case "LOGIN": {
+
         localStorage.setItem("isLoggedIn", JSON.stringify(action.payload.isLoggedIn))
-        localStorage.setItem("user", JSON.stringify(action.payload.user))
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
         return {
           ...state,
           isLoggedIn: action.payload.isLoggedIn,

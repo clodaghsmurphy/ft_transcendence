@@ -202,11 +202,10 @@
 	font-size: .9em;
 	overflow: visible;
 	z-index: 3;
-	height: 7vh;
-	justify-content: space-between;
+	height: 10vh;
 	color: white;
 	border-radius: 1em;
-	background-color: rgba(240, 248, 255, 0.163);
+	background-color: rgba(17, 11, 49, 0.897);
 	padding: 0;
 	text-align: center;
 	flex-direction: column;
@@ -223,7 +222,7 @@
 	cursor: pointer;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	flex:50%;
+	flex:30%;
 	width: 100%;
 	margin: 0.5em 0;
 	border-radius: inherit;

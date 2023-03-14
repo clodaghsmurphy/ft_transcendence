@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom'
 import User, { name_to_user } from "./User";
 import Popup from 'reactjs-popup';
 import { usePrompt } from "./usePrompt";
+import EnableTwoFAuth from "./EnableTWoFAuth";
 
 
 function Stats()
@@ -98,7 +99,7 @@ function Stats()
 								<ul className="options-list">
 									<li className="options-list-item" onClick={changePhoto}>Change photo</li >
 									<li className="options-list-item" onClick={changeName}>Change Name</li >
-								
+									<EnableTwoFAuth />
 									
 								</ul> ) : null}
 								
