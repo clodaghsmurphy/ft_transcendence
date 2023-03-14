@@ -48,7 +48,7 @@ function StatsFriends(every_user: User[], current_user: User): JSX.Element {
 	if (typeof current_user === 'undefined' || typeof every_user[0] === 'undefined')
 		return <div key={uuidv4()}/>
 
-	let friends = every_user.filter(usr => current_user.friend_users.includes(usr.name));
+	let friends = every_user.filter(usr => current_user.friend_users.includes(usr.id));
 
 	for (const usr of friends) {
 		let tmp = friendsBlocks;

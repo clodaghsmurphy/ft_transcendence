@@ -7,18 +7,19 @@ export const BAN = 2
 export const INVITE = 3
 
 export interface MessageData {
-	text: string;
-	uid: number;
-	name: string;
+	text: string,
+	uid: number,
+	sender_name: string,
+	sender_id: number,
 	type: number,
-	from: string
+	from: string,
 } 
 
 export type Channel = {
 	name: string,
-	members: string[],
-	op: string[],
-	banned: string[],
+	members: number[],
+	op: number[],
+	banned: number[],
 	messages: MessageData[],
 	curr_uid: number,
 }
@@ -39,32 +40,36 @@ export function basic_channel(): Channel {
 export function sample_channel_data(): Channel[] {
 	let chan_1: Channel = {
 		name: "Transcendence",
-		members: ["adben-mc", "clmurphy", "nguiard", "ple-lez"],
-		op: ["adben-mc", "clmurphy", "nguiard", "ple-lez"],
+		members: [1, 2, 3, 4],
+		op: [1, 2, 3, 4],
 		banned: [],
 		messages: [{
-				name: "clmurphy",
+				sender_name: "clmurphy",
+				sender_id: 2,
 				text: "Je pars au ski",
 				type: NORMAL,
 				uid: 0,
 				from: "Transcendence"
 			},
 			{
-				name: "adben-mc",
+				sender_name: "adben-mc",
+				sender_id: 1,
 				text: "Moi aussi",
 				type: NORMAL,
 				uid: 1,
 				from: "Transcendence"
 			},
 			{
-				name: "ple-lez",
+				sender_name: "ple-lez",
+				sender_id: 4,
 				text: "Pas nous",
 				type: NORMAL,
 				uid: 2,
 				from: "Transcendence"
 			},
 			{
-				name: "nguiard",
+				sender_name: "nguiard",
+				sender_id: 3,
 				text: "Ouais...",
 				type: NORMAL,
 				uid: 3,
@@ -75,32 +80,36 @@ export function sample_channel_data(): Channel[] {
 	}
 	let chan_2: Channel = {
 		name: "Raclette",
-		members: ["nguiard", "ple-lez", "adben-mc"],
-		op: ["nguiard"],
-		banned: ["clmurphy"],
+		members: [3, 4, 1],
+		op: [3],
+		banned: [2],
 		messages: [{
-			name: "nguiard",
+			sender_id: 3,
+			sender_name: "nguiard",
 			text: "Raclette?",
 			type: NORMAL,
 			uid: 0,
 			from: "Raclette"
 		},
 		{
-			name: "clmurphy",
+			sender_id: 2,
+			sender_name: "clmurphy",
 			text: "Je peux venir?",
 			type: NORMAL,
 			uid: 1,
 			from: "Raclette"
 		},
 		{
-			name: "ple-lez",
+			sender_id: 4,
+			sender_name: "ple-lez",
 			text: "non",
 			type: NORMAL,
 			uid: 2,
 			from: "Raclette"
 		},
 		{
-			name: "nguiard",
+			sender_id: 3,
+			sender_name: "nguiard",
 			text: " has banned clmurphy",
 			type: BAN,
 			uid: 3,
@@ -111,39 +120,44 @@ export function sample_channel_data(): Channel[] {
 	}
 	let chan_3: Channel = {
 		name: "Illuminatis",
-		members: ["adben-mc", "clmurphy"],
-		op: ["adben-mc", "clmurphy"],
-		banned: [ "nguiard", "ple-lez"],
+		members: [1, 2],
+		op: [1, 2],
+		banned: [ 3, 4],
 		messages: [{
-			name: "clmurphy",
+			sender_id: 2,
+			sender_name: "clmurphy",
 			text: " has banned nguiard",
 			type: BAN,
 			uid: 0,
 			from: "Illuminatis"
 		},
 		{
-			name: "clmurphy",
+			sender_id: 2,
+			sender_name: "clmurphy",
 			text: " has kicked ple-lez",
 			type: KICK,
 			uid: 1,
 			from: "Illuminatis"
 		},
 		{
-			name: "clmurphy",
+			sender_id: 2,
+			sender_name: "clmurphy",
 			text: "ils ont ose me ban d'une raclette",
 			type: NORMAL,
 			uid: 2,
 			from: "Illuminatis"
 		},
 		{
-			name: "adben-mc",
+			sender_id: 1,
+			sender_name: "adben-mc",
 			text: "On vas conquerir le monde",
 			type: NORMAL,
 			uid: 3,
 			from: "Illuminatis"
 		},
 		{
-			name: "clmurphy",
+			sender_id: 2,
+			sender_name: "clmurphy",
 			text: "/game/6",
 			type: INVITE,
 			uid: 4,
@@ -157,8 +171,8 @@ export function sample_channel_data(): Channel[] {
 export function createChannel(c_name: string, creator: User): [Channel, boolean] {
 	const new_chan = {
 		name: c_name,
-		members: [creator.name],
-		op: [creator.name],
+		members: [creator.id],
+		op: [creator.id],
 		banned: [],
 		messages: [],
 		curr_uid: 0,
@@ -167,8 +181,8 @@ export function createChannel(c_name: string, creator: User): [Channel, boolean]
 	return	[new_chan, true]
 }
 
-export function banFromChan(chan: Channel, current: User, target: string): boolean {
-	if (chan.op.includes(current.name)) {
+export function banFromChan(chan: Channel, current: User, target: number): boolean {
+	if (chan.op.includes(current.id)) {
 		if (chan.op.includes(target)) {
 			return false
 		}
@@ -183,8 +197,8 @@ export function banFromChan(chan: Channel, current: User, target: string): boole
 	return false
 }
 
-export function kickFromChan(chan: Channel, current: User, target: string): boolean {
-	if (chan.op.includes(current.name)) {
+export function kickFromChan(chan: Channel, current: User, target: number): boolean {
+	if (chan.op.includes(current.id)) {
 		if (chan.op.includes(target)) {
 			return false
 		}
@@ -198,8 +212,8 @@ export function kickFromChan(chan: Channel, current: User, target: string): bool
 	return false
 }
 
-export function giveOperator(chan: Channel, current: User, target: string): boolean {
-	if (chan.op.includes(current.name)) {
+export function giveOperator(chan: Channel, current: User, target: number): boolean {
+	if (chan.op.includes(current.id)) {
 		if (chan.op.includes(target)) {
 			return true
 		}
@@ -211,7 +225,7 @@ export function giveOperator(chan: Channel, current: User, target: string): bool
 }
 
 function sendMessage(chan: Channel, current: User, msg: MessageData): boolean {
-	if (chan.members.includes(current.name) && !(chan.banned.includes(current.name))) {
+	if (chan.members.includes(current.id) && !(chan.banned.includes(current.id))) {
 		chan.messages = [
 			{
 				...msg,
@@ -228,7 +242,8 @@ function sendMessage(chan: Channel, current: User, msg: MessageData): boolean {
 
 export function sendToChan(chan: Channel, current: User, msg: "string"): boolean {
 	const new_message: MessageData = {
-		name: current.name,
+		sender_id: current.id,
+		sender_name: current.name,
 		uid: 0,
 		text: msg,
 		type: NORMAL,

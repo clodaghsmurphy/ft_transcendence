@@ -5,19 +5,12 @@ import Messages from './Messages'
 import nathan from './media/nguiard.jpg'
 import { Avatar } from '@mui/material'
 import { useState } from 'react'
-import User, { avatarOf, name_to_user, sample_user_data } from './User'
-import { BAN, INVITE, KICK } from './Channels'
+import User, { avatarOf, id_to_user, sample_user_data } from './User'
+import { MessageData, BAN, INVITE, KICK } from './Channels'
 import ProtectedRoute from './ProtectedRoute'
 import { Link } from 'react-router-dom'
 
 const { v4: uuidv4 } = require('uuid');
-
-interface MessageData {
-	text: string;
-	uid: number;
-	name: string;
-	type: number;
-} 
 
 function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX.Element
 {
@@ -35,18 +28,18 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 
 	// Si le sender a ete ban par le curr_user
 	if (msg.type !== BAN && msg.type !== KICK &&
-		curr_user.blocked_users.includes(msg.name))
+		curr_user.blocked_users.includes(msg.sender_id))
 		return <div key={uuidv4()}></div>;
 	
 	if (msg.type === INVITE) {
 		return InviteMessage(every_user, msg, curr_user)
 	}
 
-	const messageClass = msg.name == curr_user.name ? "sender message-wrapper" : "message-wrapper"
+	const messageClass = msg.sender_id == curr_user.id ? "sender message-wrapper" : "message-wrapper"
 	return (
 		<div className={messageClass} key={uuidv4()}>
 			<div className="message-avatar" key={uuidv4()}>
-				<img src={avatarOf(every_user, msg.name)} alt={msg.name} key={uuidv4()}
+				<img src={avatarOf(every_user, msg.sender_id)} alt={msg.sender_name} key={uuidv4()}
 					style={{
 						'minWidth': '3rem',
 						'minHeight': '3rem',
@@ -59,7 +52,7 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 					}}>
 				</img>
 				<div className="message-header" key={uuidv4()}>
-					<span key={uuidv4()}>{msg.name}</span>
+					<span key={uuidv4()}>{msg.sender_name}</span>
 				</div>
 			</div>
 				<div className="message-body" key={uuidv4()}>
@@ -70,7 +63,7 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 }
 
 function BannedMessage(msg: MessageData): JSX.Element {
-	let txt = "--- " + msg.name + msg.text + " ---"
+	let txt = "--- " + msg.sender_name + msg.text + " ---"
 	
 	return (
 		<div className='ban-message' key={uuidv4()}>
@@ -80,7 +73,7 @@ function BannedMessage(msg: MessageData): JSX.Element {
 }
 
 function KickMessage(msg: MessageData): JSX.Element {
-	let txt = "--- " + msg.name + msg.text + " ---"
+	let txt = "--- " + msg.sender_name + msg.text + " ---"
 	
 	return (
 		<div className='kick-message' key={uuidv4()}>
@@ -90,12 +83,12 @@ function KickMessage(msg: MessageData): JSX.Element {
 }
 
 function InviteMessage(every_user: User[], msg: MessageData, curr_user: User) {
-	const messageClass = msg.name == curr_user.name ? "sender message-wrapper" : "message-wrapper"
+	const messageClass = msg.sender_id == curr_user.id ? "sender message-wrapper" : "message-wrapper"
 
 	return (
 		<div className={messageClass} key={uuidv4()}>
 			<div className="message-avatar" key={uuidv4()}>
-				<img src={avatarOf(every_user, msg.name)} alt={msg.name} key={uuidv4()}
+				<img src={avatarOf(every_user, msg.sender_id)} alt={msg.sender_name} key={uuidv4()}
 					style={{
 						'minWidth': '3rem',
 						'minHeight': '3rem',
@@ -108,13 +101,13 @@ function InviteMessage(every_user: User[], msg: MessageData, curr_user: User) {
 					}}>
 				</img>
 				<div className="message-header" key={uuidv4()}>
-					<span key={uuidv4()}>{msg.name}</span>
+					<span key={uuidv4()}>{msg.sender_id}</span>
 				</div>
 			</div>
 				<Link to={msg.text} className="message-body-link" key={uuidv4()}
 				style={{
 				}}>
-					<div>{msg.name + " has invited you to join a game! Click on this message to join."}</div>
+					<div>{msg.sender_name + " has invited you to join a game! Click on this message to join."}</div>
 				</Link>
 		</div>	
 	)

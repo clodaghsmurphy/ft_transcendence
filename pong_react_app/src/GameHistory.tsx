@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import gameAvatar from './media/nguiard.jpg';
 import { TbUserSearch } from "react-icons/tb";
-import User, { User_last_game, name_to_user } from "./User";
+import User, { User_last_game, id_to_user } from "./User";
 const { v4: uuidv4 } = require('uuid');
 
 
 function OneGame(game: User_last_game, current_user: User, every_user: User[]): JSX.Element {
 
-	let opp = typeof game.opponnent === 'string' ?
-			name_to_user(every_user, game.opponnent) : game.opponnent;
+	let opp = typeof game.opponnent === "number" ?
+			id_to_user(every_user, game.opponnent) : game.opponnent;
 	let score = game.score;
 	let len = score.length.toString();
 	let color = game.has_won ? "#00c000" : "#d00000"
