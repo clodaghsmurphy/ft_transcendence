@@ -76,16 +76,13 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post('validate')
     async validate(@Req() req : Request, @Res() res : Response){
-        console.log(req.user.id);    
+        console.log(req);    
         console.log(req.body);
         const totp = req.body.totp;
-        const user = this.userService.userExists(parseInt(req.user.id));
-        if (!user)
-            throw new UnauthorizedException();
-        try {
-            const isValid
-        }
-        const verifeid = authenticator.
+        //const user = this.userService.userExists(parseInt(req.user.id));
+        //if (!user)
+            //throw new UnauthorizedException();
+    
         return res.status(200).json({ msg: 'ok'});
     }
  
