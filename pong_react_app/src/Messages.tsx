@@ -9,6 +9,7 @@ import ChatMessage from './ChatMessage'
 import Chat from './Chat'
 import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
+import { DirectMessage } from './DirectMessage'
 
 const { v4: uuidv4 } = require('uuid');
 
