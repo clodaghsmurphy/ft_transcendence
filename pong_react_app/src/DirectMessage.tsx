@@ -1,5 +1,6 @@
 import React from 'react'
 import { MessageData, NORMAL } from './Channels'
+import User from './User'
 
 export type DirectMessage = {
 	users: number[], // Tableau avec les id des deux participants
@@ -165,10 +166,49 @@ export function sample_DM_data(): DirectMessage[] {
 		},
 	]}
 
+	let dm_nathan_nathan: DirectMessage = {
+		users: [94596, 3],
+		messages: [{
+			from: 'DirectMessage',
+			sender_id: 94596,
+			sender_name: 'nguiard',
+			text: 'test',
+			type: NORMAL,
+			uid: 0,
+		}, {
+			from: 'DirectMessage',
+			sender_id: 3,
+			sender_name: 'nguiard',
+			text: 'test2',
+			type: NORMAL,
+			uid: 1,
+		}, {
+			from: 'DirectMessage',
+			sender_id: 94596,
+			sender_name: 'nguiard',
+			text: 'tututut',
+			type: NORMAL,
+			uid: 2,
+		}, {
+			from: 'DirectMessage',
+			sender_id: 3,
+			sender_name: 'nguiard',
+			text: 'YASGDUASDYH',
+			type: NORMAL,
+			uid: 3,
+		},
+	]}
+
 	return [dm_adam_clodagh, dm_adam_nathan,
-		dm_adam_pierre, dm_clodagh_nathan, dm_nathan_pierre];
+		dm_adam_pierre, dm_clodagh_nathan, dm_nathan_pierre, dm_nathan_nathan];
 }
 
-export function dm_of_user(user_id: number): DirectMessage[] {
-	return(sample_DM_data().filter((dm) => dm.users.includes(user_id)));
+export function dm_of_user(user: User): DirectMessage[] {
+	return(sample_DM_data().filter((dm) => dm.users.includes(user.id)));
+}
+
+export function dm_betweeen_two_users(usr1: User, usr2: User): DirectMessage {
+	return(sample_DM_data().find((dm) =>
+		dm.users.includes(usr1.id) && dm.users.includes(usr2.id)
+	) as DirectMessage)
 }

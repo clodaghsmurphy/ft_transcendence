@@ -4,14 +4,24 @@ import { Avatar, ButtonGroup } from '@mui/material'
 import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
+import { DirectMessage } from './DirectMessage';
 
 const { v4: uuidv4 } = require('uuid');
 
-export function user_in_group(every_user: User[], current_user: User, chan: Channel): JSX.Element[] {
+export function user_in_group(every_user: User[], current_user: User, chan: Channel | DirectMessage): JSX.Element[] {
 	let ret: JSX.Element[] = []
 
-	if (typeof current_user === 'undefined' || typeof chan.op === 'undefined' || chan.members.length === 0)
+	if (typeof current_user === 'undefined' ||
+		(typeof (chan as Channel).members === 'undefined' &&
+		typeof (chan as DirectMessage).users === 'undefined'))
 		return [<div key={uuidv4()} className='no-users'>No user found</div>]
+
+
+	if (typeof (chan as DirectMessage).users !== 'undefined') {
+		return user_in_dm(every_user, current_user, chan as DirectMessage);
+	}
+
+	chan = chan as Channel
 
 	const curr_is_op = chan.op.includes(current_user.id)
 
@@ -21,6 +31,17 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 				ret.push(button_op(id_to_user(every_user, user), chan.op.includes(user)))
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), chan.op.includes(user)))
+		}
+	}
+	return ret
+}
+
+function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage): JSX.Element[] {
+	let ret: JSX.Element[] = []
+
+	for (const user of dm.users) {
+		if (user != current_user.id) {
+			ret.push(button_not_op(id_to_user(every_user, user), false))
 		}
 	}
 	return ret
