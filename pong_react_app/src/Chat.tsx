@@ -20,6 +20,7 @@ import PopupAddChannel from './PopupAddChannel'
 import io from 'socket.io-client'
 import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
 import { AuthContext } from './App'
+import PopupAddDirect from './PopupAddDirect'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -50,12 +51,12 @@ function users_message(message_data: DirectMessage[], all_users: User[],
 	let ret: JSX.Element[] = [];
 
 	if (message_data.length === 0) {
-		return [add_dm()]
+		return [PopupAddDirect(all_users, current_user)]
 	}
 
 	for (const dm of message_data) {
 		if (typeof dm === 'undefined' || typeof dm.users === 'undefined')
-			return [add_dm()]
+			return [PopupAddDirect(all_users, current_user)]
 		let user = id_to_user(all_users, dm.users[0]);
 		if (user.id == current_user.id) {
 			user = id_to_user(all_users, dm.users[1]);
@@ -66,7 +67,7 @@ function users_message(message_data: DirectMessage[], all_users: User[],
 		ret.push(chat_button(user.name, dm.messages[dm.messages.length - 1].text,
 			user.avatar, click_handler, direct));
 	}
-	ret.push(add_dm())
+	ret.push(PopupAddDirect(all_users, current_user))
 	return ret;
 }
 
@@ -83,7 +84,7 @@ export function add_group(): JSX.Element {
 	);
 }
 
-function add_dm(): JSX.Element {
+export function add_dm(): JSX.Element {
 	return (
 		<div className='chat-button-wrapper' key={uuidv4()}>
 			<button className='chat-button'>
@@ -196,9 +197,7 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{
-					Messages(current_chan as Channel, all_users, current_user)
-				}
+				{Messages(current_chan as Channel, all_users, current_user)}
 			</div>
 
             <div className="group-members">
