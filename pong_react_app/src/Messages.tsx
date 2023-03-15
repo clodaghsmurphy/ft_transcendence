@@ -84,4 +84,8 @@ function Messages(chan: Channel, users: User[], current_user: User)
 	);
 }
 
+export function ShowDirectMessage(): JSX.Element {
+	return <div></div>
+}
+
 export default Messages
