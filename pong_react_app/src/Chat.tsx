@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react'
+import React, { MouseEventHandler, useEffect, useState, useContext } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -18,10 +18,10 @@ import User, { error_user, id_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
 import io from 'socket.io-client'
+import { sample_DM_data, DirectMessage, dm_of_user } from './DirectMessage'
+import { AuthContext } from './App'
 
 const { v4: uuidv4 } = require('uuid');
-
-type User_message = {user: User, message: string}
 
 function chat_button(name: string, message: string, img: string, fnc: (chan: Channel | User) => void, param: Channel | User) {
 	return (
@@ -42,17 +42,25 @@ function chat_button(name: string, message: string, img: string, fnc: (chan: Cha
 	);
 }
 
-function users_message(message_data: User_message[], click_handler: (param: Channel | User) => void) {
+function users_message(message_data: DirectMessage[], all_users: User[],
+		current_user: User, click_handler: (param: Channel | User) => void)
+{
 	let ret: JSX.Element[] = [];
 
 	if (message_data.length === 0) {
-		return <></>
+		return [add_dm()]
 	}
 
-	for (const data of message_data) {
-		if (typeof data === 'undefined' || typeof data.user === 'undefined')
-			return <></>
-		ret.push(chat_button(data.user.name, data.message, data.user.avatar, click_handler, data.user));
+	for (const dm of message_data) {
+		if (typeof dm === 'undefined' || typeof dm.users === 'undefined')
+			return [add_dm()]
+		let user = id_to_user(all_users, dm.users[0]);
+		if (user.id == current_user.id) {
+			user = id_to_user(all_users, dm.users[1]);
+		}
+
+		ret.push(chat_button(user.name, dm.messages[dm.messages.length - 1].text,
+			user.avatar, click_handler, user));
 	}
 	ret.push(add_dm())
 	return ret;
@@ -107,11 +115,13 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 
 function Chat()
 {
+	const { state, dispatch } = useContext(AuthContext);
 	let [all_users, set_all_users] = useState([] as User[])
 	let [all_channels, set_all_channels] = useState([] as Channel[])
 	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as Channel)
 	let [chanOfUser, setChanOfUser] = useState(names_to_channel(all_channels, typeof current_user === 'undefined' ? [] : current_user.channels))
+	let direct_messages = dm_of_user(current_user.id);
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -124,7 +134,7 @@ function Chat()
 			response.json()
 				.then(data => {
 					set_all_users(data as User[])
-					set_current_user(data[2] as User) // A changer par jsp quoi
+					set_current_user(id_to_user(data as User[], Number(state.user.id))) // A changer par jsp quoi
 				})
 			})
 
@@ -134,34 +144,17 @@ function Chat()
 				.then(data => {
 				set_all_channels(data as Channel[])
 				setChanOfUser(names_to_channel(all_channels,
-					typeof current_user.channels === 'undefined' ? [] : current_user.channels))
+					typeof current_user.channels === 'undefined' ? []
+					: current_user.channels))
 				})
 			})
 	}, []);
-	
-	let message_user_data: User_message[] = [
-		{
-			user: id_to_user(all_users, 1),
-			"message": "18h == matin",
-		},
-		{
-			user: id_to_user(all_users, 2),
-			"message": "webserv > irc",
-		},
-		{
-			user: id_to_user(all_users, 3),
-			"message": "jsp quoi dire",
-		},
-		{
-			user: id_to_user(all_users, 4),
-			"message": "je speedrun le TC",
-		}
-	];
 
 	function changeChannelOrDm(param: Channel | User): void {
 		if (typeof (param as Channel).op !== 'undefined')
 			set_current_chan(param as Channel)
-		/// else changer le DM
+		if (typeof (param as Channel).messages !== 'undefined')
+			set_current_user(param as User)
 	}
 
 	return (	
@@ -183,7 +176,7 @@ function Chat()
 					<div className='lists'>
 						<h1>User messages</h1>
 						<div className='lists-holder'>
-							{users_message(message_user_data, changeChannelOrDm)}
+							{users_message(direct_messages, all_users, current_user, changeChannelOrDm)}
 						</div>
 						<div className='channels-holder'></div>
 					</div>

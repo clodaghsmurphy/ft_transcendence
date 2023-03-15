@@ -7,35 +7,24 @@ import { Channel, MessageData } from './Channels'
 
 const { v4: uuidv4 } = require('uuid');
 
-type ChannelPost = {
-	name: string,
-	username: string,
-	members: string[] | null,
-	op: string[] | null,
-	messages: MessageData[] | null,
-	banned: string[] | null,
-	curr_uid: number | null,
-}
-
 export default function PopupAddChannel(every_users: User[], current_user: User) {
-	let [selected, setSelected] = useState([] as string[]);
+	let [selected, setSelected] = useState([] as number[]);
 	let inputRef = useRef<HTMLInputElement | null>(null);
 	if (typeof current_user === 'undefined')
 		return <div key={uuidv4()}></div>
-	else if (selected.includes('') && !selected.includes(current_user.name)){
+	else if (!selected.includes(current_user.id)){
 		let tmp = selected
-		tmp.splice(tmp.indexOf(''), 1);
-		tmp.push(current_user.name)
+		tmp.push(current_user.id)
 		setSelected(tmp);
 	}
 
-	function clickCheckbox(name: string) {
-		if (selected.includes(name))
-			selected.splice(selected.indexOf(name), 1);
+	function clickCheckbox(id: number) {
+		if (selected.includes(id))
+			selected.splice(selected.indexOf(id), 1);
 		else
 		{
 			let tmp = selected;
-			tmp.push(name);
+			tmp.push(id);
 			setSelected(tmp);
 		}
 	}
@@ -51,7 +40,7 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 					<input type="checkbox" style={{
 						display: 'flex',
 						flex: '0 0 42px',
-					}} onChange={() => clickCheckbox(user.name)}/>
+					}} onChange={() => clickCheckbox(user.id)}/>
 				</div>
 			)
 		}
@@ -62,45 +51,36 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 		if (!inputRef.current || inputRef.current.value == '')
 			return ;
 		const chan_name = inputRef.current!.value;
-		let chan: ChannelPost = {
-			name: chan_name,
-			username: current_user.name,
-			members: selected,
-			op: [current_user.name],
-			banned: [],
-			messages: [],
-			curr_uid: 0,
-		}
 		inputRef.current!.value = '';
-		setSelected([current_user.name]);
-		console.log(JSON.stringify(chan))
+		setSelected([current_user.id]);
 		fetch('/api/channel/create', {
 			method: 'POST',
+			body: JSON.stringify({
+				name: chan_name,
+				user_id: current_user.id,
+			}),
 			headers: {'Content-Type': 'application/json'},
 		})
-			.then(response => {
-				response.json()
-					.then(data => {
-						if (data.status < 400 || data.status > 499) {
-							let index = chan.members!.indexOf(current_user.name);
-							chan.members!.splice(index, 1);
-							chan.members!.filter(mb => mb != null)
-							console.log(JSON.stringify({
-								name: chan_name,
-								username: "adben-mc",
-							}));
-							console.log(data);
+		.then(response => {
+			response.json()
+				.then(data => {
+					if (typeof data.status === 'undefined') {
+						for (const usr of selected) {
+							if (usr === current_user.id || typeof usr === 'undefined')
+								continue;
+							console.log("Adding", usr)
 							fetch('/api/channel/join', {
 								method: 'POST',
-								headers: {'Content-Type': 'application/json'},
 								body: JSON.stringify({
 									name: chan_name,
-									username: "adben-mc",
+									user_id: usr,
 								}),
+								headers: {'Content-Type': 'application/json'},
 							})
 						}
-					})
-			})
+					}
+				})
+		})
 	}
 
 	return (
