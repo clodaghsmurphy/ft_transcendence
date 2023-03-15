@@ -44,7 +44,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 100%;
+	width: 97vw;
 	left: -10px;
 	border-radius: 1em;
 	height: 10vh;
@@ -55,7 +55,6 @@
 	border: solid 1px;
 	border-color: #7070a535;
 	box-shadow: #7070a560 0px 5px 15px;
-	margin-left: 0.75vw;
 }
 
 
@@ -69,7 +68,7 @@
 	position: absolute;
 	left: 45%;
 	flex-direction: column;
-	width: 10%;
+	width: calc(1em + 10vw);
 	bottom: 0vh;
 }
 .profile-sub-header img{
@@ -107,7 +106,8 @@
 .profile-game-stats
 {
 	display: flex;
-	font-size: 1vw;
+	font-size: calc(.5em + 1vw);
+	padding: 2vw;
 	flex-direction: row;
 	justify-content: space-around;
 	align-items: center;
@@ -132,6 +132,19 @@
 	display: flex;
 	flex-direction: row;
 	flex-basis: 65%;
+}
+
+@media only screen and (max-width: 1000px)
+{
+	.sub-stats{
+		flex-direction: column;
+		display: inline-block;
+	}
+
+	.ftlogo
+	{
+		display: none;
+	}
 }
 
 .info-card
@@ -201,10 +214,11 @@
 {
 	display: flex;
 	overflow: visible!important;
-	font-size: 1vw;
+	font-size: calc(.25em + 1vw);
 	overflow: visible;
 	z-index: 3;
-	height: 10vh;
+	height: 15vh;
+	width: 15vw;
 	color: white;
 	border-radius: 1em;
 	background-color: rgba(17, 11, 49, 0.897);
@@ -214,6 +228,7 @@
 	list-style: none;
 	position: absolute;
 	top: 5vh;
+	right: 5vw;
 	border: solid 1px;
 	border-color: #7070a535;
 	box-shadow: #7070a560 0px 5px 15px;
