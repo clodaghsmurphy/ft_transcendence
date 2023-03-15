@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useEffect, useState, useContext } from 'react'
 import NavBar from './NavBar'
-import Messages, { ShowDirectMessage } from './Messages'
+import Messages from './Messages'
 import './Dashboard.css'
 import './Chat.css'
 import adam from './media/adben-mc.jpg'
