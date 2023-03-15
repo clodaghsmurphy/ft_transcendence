@@ -11,13 +11,19 @@ export type State = {
 
 export enum ActionKind {
   Login = "LOGIN",
-  Logout = "LOGOUT"
+  Logout = "LOGOUT",
+  nameUpdate = "NAME_UPDATE"
 }
 
 export interface Login
 {
   type: ActionKind.Login;
   payload: any;
+}
+
+export interface nameUpdate {
+  type: ActionKind.nameUpdate;
+  payload: string;
 }
 
 
@@ -71,6 +77,17 @@ export const initialState:State = {
           isLoggedIn: false,
           user: null
         };
+      }
+      case "NAME_UPDATE": {
+        console.log('in dispatch and paload is');
+        console.log(action.payload);
+        console.log(action.payload.isLoggedIn);
+        console.log(state);
+        localStorage.setItem('user', JSON.stringify(action.payload))
+        return {
+          ...state,
+          login:action.payload.user,
+        }
       }
    
       default:

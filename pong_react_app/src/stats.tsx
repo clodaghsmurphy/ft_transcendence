@@ -15,6 +15,7 @@ import User, { id_to_user } from "./User";
 import Popup from 'reactjs-popup';
 import { usePrompt } from "./usePrompt";
 import EnableTwoFAuth from "./EnableTWoFAuth";
+import ChangeName from "./changeName";
 
 
 function Stats()
@@ -94,11 +95,11 @@ function Stats()
 						</div>
 						<div className='right-options'>
 							<div className="drop-down" >
-								<BsFillGearFill style={ {color: 'white', height: '3vh'} } onClick={handleOpen}/>
+									<BsFillGearFill style={{ color: 'white', height: 'calc(1em + 1vw)'} } onClick={handleOpen}/>
 								{ open ? (
 								<ul className="options-list">
 									<li className="options-list-item" onClick={changePhoto}>Change photo</li >
-									<li className="options-list-item" onClick={changeName}>Change Name</li >
+									<ChangeName />
 									<EnableTwoFAuth />
 									
 								</ul> ) : null}

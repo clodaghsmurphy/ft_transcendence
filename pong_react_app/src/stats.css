@@ -217,8 +217,8 @@
 	font-size: calc(.25em + 1vw);
 	overflow: visible;
 	z-index: 3;
-	height: 15vh;
-	width: 15vw;
+	height: 25vh;
+	width: 20vw;
 	color: white;
 	border-radius: 1em;
 	background-color: rgba(17, 11, 49, 0.897);
@@ -237,6 +237,10 @@
 .options-list-item
 {
 	cursor: pointer;
+	flex-wrap: wrap;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	flex:30%;
@@ -403,7 +407,59 @@
 	right: 25%;
 	top: 5vh;
 	height: 60vh;
-	width: 50vh;
+	width: 40vw;
+  }
+
+  .SmallPopUp
+  {
+	display: flex;
+	border: solid 1px white;
+	box-shadow: 0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+	color: white;
+	background-color: rgb(17, 11, 49);
+	align-items: center;
+	position: fixed;
+	flex-direction: column;
+	justify-content: space-between;
+	border-radius: 1em;
+	right: 25%;
+	top: 40%;
+	height: 30vh;
+	border: solid 1px;
+		border-color: #7070a535;
+		box-shadow: #7070a560 0px 5px 15px 9999px;
+	width: 35vw;
+  }
+
+  .SmallPopUp input 
+  {
+	flex: 10%;
+	width: 50%;
+	border: solid 1px rgba(255, 255, 255, 0.288);
+	color: white;
+	height: 5vh;
+	background-color: rgba(255, 255, 255, 0.062);
+	border-radius: 1em;
+  }
+
+  .popup-header
+  {
+	flex: 10%;
+	font-size: calc(1em + 1.2vw);
+	border-bottom: solid 1px white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 1vw;
+  }
+
+  .popup-input
+  {
+	flex: 20%;
+	width: 70%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
   }
 
 
@@ -445,7 +501,60 @@
 
   .buttons
   {
+	flex: 30%;
 	display: flex;
+	padding: 1vw;
+	margin: 1vw;
 	flex-direction: row;
-	justify-content: space-between;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.submit-popup
+{
+	display: flex;
+	font-size: 1.7vw;
+	justify-content: center;
+	align-items: center;
+	border-radius: 1em;
+	height: 80%;
+	width: 12vw;
+	color: white;
+	background-color: #881DAB;
+	border: solid 1px white;
+}
+
+.submit-popup:hover
+{
+	background-color: transparent;
+	cursor: pointer;
+	border: solid 1px #881DAB;
+	color: white;
+	transform: scale(1.05);
+}
+
+.cancel-popup
+{
+	display: flex;
+	cursor: pointer;
+	font-size: 1.7vw;
+	border: solid 1px;
+		border-color: #7070a535;
+		box-shadow: #7070a560 0px 5px 15px;
+	justify-content: center;
+	align-items: center;
+	width: 12vw;
+	border-radius: 1em;
+	height: 80%;
+	background-color: transparent;
+	color: white;
+	border: solid 1px white;
+
+}
+
+.cancel-popup:hover
+{
+	transform: scale(1.05);
+	border: solid 1px #881DAB;
+	
 }
