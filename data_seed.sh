@@ -71,26 +71,26 @@ curl -H 'Content-Type: application/json' \
 echo "\n\nCreating Messages\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "sender_id": 4, uid": 0, "text": "Hello channel world" }' \
+	-d '{ "sender_id": 4, "sender_name": "ple-lez", "uid": 0, "text": "Hello channel world" }' \
 	-X POST \
 	localhost:3042/channel/chan/message
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "sender_id": 2, uid": 1, "text": "Lorem ipsum" }' \
+	-d '{ "sender_id": 2, "sender_name": "nguiard", "uid": 1, "text": "Lorem ipsum" }' \
 	-X POST \
 	localhost:3042/channel/chan/message
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "sender_id": 1, "uid": 0, "text": "Another channel" }' \
+	-d '{ "sender_id": 1, "sender_name": "clmurphy", "uid": 0, "text": "Another channel" }' \
 	-X POST \
 	localhost:3042/channel/supergroupe/message
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "sender_id": 2, uid": 2, "text": "Back to first one" }' \
+	-d '{ "sender_id": 2, "sender_name": "nguiard", "uid": 2, "text": "Back to first one" }' \
 	-X POST \
 	localhost:3042/channel/chan/message
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "sender_id": 3, "uid": 1, "text": "And another user" }' \
+	-d '{ "sender_id": 3, "sender_name": "adben-mc", "uid": 1, "text": "And another user" }' \
 	-X POST \
 	localhost:3042/channel/supergroupe/message
