@@ -27,13 +27,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
 
-	// @SubscribeMessage('create')
-	// async handleCreation(@MessageBody() dto: ChannelCreateDto): Promise<Channel> {
-	// 	const channel = await this.channelService.create(dto);
-	// 	this.logger.log(`Created new channel: ${channel}`);
-	// 	return channel;
-	// }
-
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket) {
 		await this.channelService.join(dto);
