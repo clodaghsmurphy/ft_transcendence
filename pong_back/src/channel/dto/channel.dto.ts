@@ -29,5 +29,4 @@ export class MessageCreateDto {
 	@IsString()
 	@IsNotEmpty()
 	sender_name: string;
-
 }
