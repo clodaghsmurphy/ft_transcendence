@@ -1,10 +1,12 @@
-import { HttpException, Logger, UsePipes, ValidationPipe } from "@nestjs/common";
+import { HttpException, Logger, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
+import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
 import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
 
+@UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	private logger = new Logger(ChannelGateway.name);
@@ -39,7 +41,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		}
 	}
 
-	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('message')
 	async handleMessage(@MessageBody('channel') channel: string, @MessageBody('data') dto: MessageCreateDto) {
 		try {
