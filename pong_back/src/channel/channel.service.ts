@@ -8,14 +8,20 @@ import * as bcrypt from 'bcrypt';
 export class ChannelService {
 	constructor (private prisma: PrismaService) {}
 
-	async getAll(): Promise<Channel[]> {
-		return await this.prisma.channel.findMany();
+	async getAll(): Promise<unknown[]> {
+		const channels: Channel[] = await this.prisma.channel.findMany();
+
+		return channels.map((channel) => this.returnInfo(channel));
 	}
 
-	async get(channelName: string) : Promise<Channel> {
-		return await this.prisma.channel.findUnique({
+	async get(channelName: string) : Promise<unknown> {
+		await this.checkChannel(channelName);
+
+		const channel: Channel = await this.prisma.channel.findUnique({
 			where: { name: channelName },
 		});
+
+		return this.returnInfo(channel);
 	}
 
 	async getInfo(channelName: string, attribute: string) {
@@ -27,7 +33,7 @@ export class ChannelService {
 		return {attribute: channel[attribute]};
 	}
 
-	async create(dto: ChannelCreateDto) : Promise<Channel> {
+	async create(dto: ChannelCreateDto) : Promise<unknown> {
 		await this.checkUser(dto.user_id);
 
 		try {
@@ -44,9 +50,11 @@ export class ChannelService {
 				data['password'] = hash;
 			}
 
-			return await this.prisma.channel.create({
+			const channel: Channel = await this.prisma.channel.create({
 				data: data,
 			});
+
+			return this.returnInfo(channel);
 		} catch (e) {
 			if (e.code == 'P2002') {
 				throw new HttpException({
@@ -58,7 +66,7 @@ export class ChannelService {
 		}
 	}
 
-	async join(dto: ChannelJoinDto) : Promise<Channel> {
+	async join(dto: ChannelJoinDto) : Promise<unknown> {
 		await this.checkUser(dto.user_id);
 		await this.checkChannel(dto.name);
 
@@ -82,12 +90,14 @@ export class ChannelService {
 			}, HttpStatus.BAD_REQUEST);
 		}
 
-		return await this.prisma.channel.update({
+		const channel: Channel = await this.prisma.channel.update({
 			where: {name: dto.name},
 			data: {
 				members: {push: dto.user_id}
 			},
 		});
+
+		return this.returnInfo(channel);
 	}
 
 	async getAllMessages(channelName: string) : Promise<Message[]> {
@@ -155,5 +165,17 @@ export class ChannelService {
 			return false;
 
 		return await bcrypt.compare(dto.password, channel.password);
+	}
+
+	returnInfo(channel: Channel) {
+		return {
+			name: channel.name,
+			members: channel.members,
+			operators: channel.operators,
+			blocked: channel.blocked,
+			messages: channel.messages,
+			curr_uid: channel.curr_uid,
+			password: (channel.password === null ? false : true),
+		};
 	}
 }

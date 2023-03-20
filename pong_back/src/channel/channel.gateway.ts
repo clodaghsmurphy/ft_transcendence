@@ -35,19 +35,29 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		try {
 			await this.channelService.join(dto);
 			client.join(dto.name);
-			this.io.in(dto.name).emit('join', dto);
+			this.io.in(dto.name).emit('join', {name: dto.name, user: dto.user_id});
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
 	@SubscribeMessage('message')
-	async handleMessage(@MessageBody('channel') channel: string, @MessageBody('data') dto: MessageCreateDto) {
+	async handleMessage(
+		@MessageBody('channel') channel: string,
+		@MessageBody('data') dto: MessageCreateDto,
+		@ConnectedSocket() client: Socket)
+	{
+		this.checkUser(client, channel);
 		try {
 			const message = await this.channelService.postMessage(channel, dto);
 			this.io.in(channel).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
+	}
+
+	checkUser(client: Socket, channel: string) {
+		if (!client.rooms.has(channel))
+			throw new WsException(`error: client hasnt joined room ${channel}`);
 	}
 }
