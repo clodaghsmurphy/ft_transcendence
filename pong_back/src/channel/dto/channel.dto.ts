@@ -14,7 +14,6 @@ export class ChannelCreateDto {
 	@IsNumber({}, {each: true})
 	users_ids: number[];
 
-
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()

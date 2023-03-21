@@ -178,14 +178,9 @@ export class ChannelService {
 	}
 
 	returnInfo(channel: Channel) {
-		return {
-			name: channel.name,
-			members: channel.members,
-			operators: channel.operators,
-			blocked: channel.blocked,
-			messages: channel.messages,
-			curr_uid: channel.curr_uid,
-			password: (channel.password === null ? false : true),
-		};
+		let data: any = channel;
+
+		data.password = (channel.password === null ? false : true);
+		return data;
 	}
 }
