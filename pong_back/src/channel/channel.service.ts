@@ -3,10 +3,11 @@ import { Channel, Message } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
 import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
 import * as bcrypt from 'bcrypt';
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class ChannelService {
-	constructor (private prisma: PrismaService) {}
+	constructor (private prisma: PrismaService, private userService: UserService) {}
 
 	async getAll(): Promise<unknown[]> {
 		const channels: Channel[] = await this.prisma.channel.findMany();
@@ -54,6 +55,8 @@ export class ChannelService {
 				data: data,
 			});
 
+			this.userService.joinChannel(dto.user_id, dto.name);
+
 			return this.returnInfo(channel);
 		} catch (e) {
 			if (e.code == 'P2002') {
@@ -96,6 +99,7 @@ export class ChannelService {
 				members: {push: dto.user_id}
 			},
 		});
+		this.userService.joinChannel(dto.user_id, dto.name);
 
 		return this.returnInfo(channel);
 	}

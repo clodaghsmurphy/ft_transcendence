@@ -68,6 +68,17 @@ export class UserService {
 		});
 	}
 
+	// This should only be called by channel service
+	// Therefore it assumes user and channel both exists
+	async joinChannel(id: number, channelName: string) {
+		await this.prisma.user.update({
+			where: { id: id },
+			data: {
+				channels: {push: channelName}
+			},
+		});
+	}
+
 	async checkUser(id: number) {
 		if (await this.prisma.user.count({where: {id: id}}) == 0) {
 			throw new HttpException({
