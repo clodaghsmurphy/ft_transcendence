@@ -12,8 +12,7 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 	let ret: JSX.Element[] = []
 
 	if (typeof current_user === 'undefined' ||
-		(typeof (chan as Channel).members === 'undefined' &&
-		typeof (chan as DirectMessage).users === 'undefined'))
+		typeof chan === 'undefined')
 		return [<div key={uuidv4()} className='no-users'>No user found</div>]
 
 

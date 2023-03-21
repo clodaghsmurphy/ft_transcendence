@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo} from 'react'
+import React, { ChangeEvent, useEffect} from 'react'
 import './Dashboard.css'
 import user_pfp from './media/user.png'
 import nathan from './media/nguiard.jpg'
@@ -6,29 +6,35 @@ import clodagh from './media/clmurphy.jpg'
 import { Avatar } from '@mui/material'
 import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
-import Chat from './Chat'
+import Chat, { ChanAndMessage } from './Chat'
 import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
 import { DirectMessage } from './DirectMessage'
 
 const { v4: uuidv4 } = require('uuid');
 
-function Messages(chan: Channel, users: User[], current_user: User)
+function Messages(chan_and_message: ChanAndMessage, users: User[], current_user: User)
 {
 	let is_undefined: boolean = false;
-	let messages: MessageData[] = chan.messages;
-	if (typeof messages === 'undefined') {
+	let chan = chan_and_message.chan;
+	let messages = chan_and_message.msg;
+	if (typeof chan === 'undefined') {
 		messages = []
 		is_undefined = true
+		console.log('TEEEEEEEEEEST', typeof chan, chan)
 	}
-	let [last_chan, setLastChan] = useState(typeof chan.name === 'undefined' ? "" : chan.name)
+	let [last_chan, setLastChan] = useState(typeof chan === 'undefined' ? "" : chan)
 	let [formValue, setFormValue] = useState("");
+	console.log([...messages].reverse())
+	console.log(chan)
 	let [messagesBlocks, setMessagesBlocks] = useState(
 		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
 	);
 
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
+
+	console.log('YAAAAAAAAAAAAAAAAAAAAAAAA')
 
 	if (chan.messages.length === 0)
 		return <div key={"no_messages_key"}>No messages</div>;
