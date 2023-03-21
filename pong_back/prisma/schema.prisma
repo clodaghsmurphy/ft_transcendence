@@ -43,9 +43,12 @@ model Message {
 
 model Channel {
   name String @id
+  password String?
+
   members Int[] @default([])
   operators Int[]
   blocked Int[] @default([])
+
   messages Int[] @default([])
   curr_uid Int @default(0)
 }

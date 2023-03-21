@@ -50,8 +50,12 @@ export function error_user(): User {
 }
 
 export function id_to_user(every_users: User[], target: number): User {
-	return (typeof(every_users.find(usr => usr.id == target)?.id) == 'string' ?
-			every_users.find(usr => usr.id == target) as User : error_user())
+	if (typeof every_users.find === 'undefined')
+		return error_user()
+	let usr = every_users.find((user) => user.id === target)
+	if (typeof usr === 'undefined')
+		return error_user();
+	return usr;
 }
 
 export function sample_user_data(): User[] {

@@ -1,20 +1,27 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Channel, Message } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
-import { ChannelCreateDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ChannelService {
 	constructor (private prisma: PrismaService) {}
 
-	async getAll(): Promise<Channel[]> {
-		return await this.prisma.channel.findMany();
+	async getAll(): Promise<unknown[]> {
+		const channels: Channel[] = await this.prisma.channel.findMany();
+
+		return channels.map((channel) => this.returnInfo(channel));
 	}
 
-	async get(channelName: string) : Promise<Channel> {
-		return await this.prisma.channel.findUnique({
+	async get(channelName: string) : Promise<unknown> {
+		await this.checkChannel(channelName);
+
+		const channel: Channel = await this.prisma.channel.findUnique({
 			where: { name: channelName },
 		});
+
+		return this.returnInfo(channel);
 	}
 
 	async getInfo(channelName: string, attribute: string) {
@@ -26,17 +33,28 @@ export class ChannelService {
 		return {attribute: channel[attribute]};
 	}
 
-	async create(dto: ChannelCreateDto) : Promise<Channel> {
+	async create(dto: ChannelCreateDto) : Promise<unknown> {
 		await this.checkUser(dto.user_id);
 
 		try {
-			return await this.prisma.channel.create({
-				data: {
-					name: dto.name,
-					operators: [dto.user_id],
-					members: [dto.user_id],
-				},
+			let data = {
+				name: dto.name,
+				operators: [dto.user_id],
+				members: [dto.user_id],
+			}
+
+			if (dto.hasOwnProperty('password')) {
+				const salt = await bcrypt.genSalt();
+				const hash = await bcrypt.hash(dto.password, salt);
+
+				data['password'] = hash;
+			}
+
+			const channel: Channel = await this.prisma.channel.create({
+				data: data,
 			});
+
+			return this.returnInfo(channel);
 		} catch (e) {
 			if (e.code == 'P2002') {
 				throw new HttpException({
@@ -48,9 +66,17 @@ export class ChannelService {
 		}
 	}
 
-	async join(dto: ChannelCreateDto) : Promise<Channel> {
+	async join(dto: ChannelJoinDto) : Promise<unknown> {
 		await this.checkUser(dto.user_id);
 		await this.checkChannel(dto.name);
+
+		if (!await this.checkPassword(dto))
+		{
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `Invalid password for channel ${dto.name}`,
+			}, HttpStatus.BAD_REQUEST);
+		}
 
 		// Check that user isn't already joined
 		if (await this.prisma.channel.count({where: {
@@ -64,12 +90,14 @@ export class ChannelService {
 			}, HttpStatus.BAD_REQUEST);
 		}
 
-		return await this.prisma.channel.update({
+		const channel: Channel = await this.prisma.channel.update({
 			where: {name: dto.name},
 			data: {
 				members: {push: dto.user_id}
 			},
 		});
+
+		return this.returnInfo(channel);
 	}
 
 	async getAllMessages(channelName: string) : Promise<Message[]> {
@@ -125,5 +153,29 @@ export class ChannelService {
 				error: `Channel ${channelName} doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	async checkPassword(dto: ChannelJoinDto) {
+		const channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
+
+		if (channel.password === null)
+			return true;
+
+		if (!dto.hasOwnProperty('password'))
+			return false;
+
+		return await bcrypt.compare(dto.password, channel.password);
+	}
+
+	returnInfo(channel: Channel) {
+		return {
+			name: channel.name,
+			members: channel.members,
+			operators: channel.operators,
+			blocked: channel.blocked,
+			messages: channel.messages,
+			curr_uid: channel.curr_uid,
+			password: (channel.password === null ? false : true),
+		};
 	}
 }
