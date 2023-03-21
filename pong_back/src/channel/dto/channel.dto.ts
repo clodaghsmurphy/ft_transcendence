@@ -1,6 +1,27 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
 export class ChannelCreateDto {
+	@IsString()
+	@IsNotEmpty()
+	name: string;
+
+	@IsNumber()
+	@IsNotEmpty()
+	owner_id: number;
+
+	@IsOptional()
+	@IsNumber({}, {each: true})
+	users_ids: number[];
+
+
+	@IsOptional()
+	@IsString()
+	@IsNotEmpty()
+	password: string;
+}
+
+export class ChannelJoinDto {
 	@IsString()
 	@IsNotEmpty()
 	name: string;
@@ -13,9 +34,6 @@ export class ChannelCreateDto {
 	@IsString()
 	@IsNotEmpty()
 	password: string;
-}
-
-export class ChannelJoinDto extends ChannelCreateDto {
 }
 
 export class MessageCreateDto {
