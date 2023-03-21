@@ -59,14 +59,14 @@ curl -H 'Content-Type: application/json' \
 echo "\n\nCreating Channels\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "chan", "user_id": 4 }' \
+	-d '{ "name": "chan", "owner_id": 4, "users_ids": [3] }' \
 	-X POST \
 	localhost:3042/channel/create
 
 echo
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "supergroupe", "user_id": 1, "password": "yolo" }' \
+	-d '{ "name": "supergroupe", "owner_id": 1, "users_ids": [2], "password": "yolo" }' \
 	-X POST \
 	localhost:3042/channel/create
 
