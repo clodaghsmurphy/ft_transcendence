@@ -104,6 +104,12 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Dir
 	for (const chan of chan_data) {
 		let target_message = chan.messages[chan.messages.length - 1]
 
+		if (typeof target_message === 'undefined')
+		{
+			ret.push(chat_button(chan.name, '', group_img, click_handler, chan));
+			continue
+		}
+
 		let message_text: string = (
 			target_message.type == BAN ||
 			target_message.type == KICK ?
@@ -126,6 +132,7 @@ function Chat()
 	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as Channel | DirectMessage)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
+	const socket = io("ws://localhost:8080/api/channel");
 	
 	useEffect(() => {
 		document.title = 'Chat';
@@ -153,22 +160,21 @@ function Chat()
 		
 		if (typeof current_user !== 'undefined'
 		&& typeof all_channels[0] !== 'undefined'
-		&& chanOfUser.length > 0)
+		&& chanOfUser.length == 0)
 		{
 			setChanOfUser(names_to_channel(all_channels, current_user.channels))
-			console.log(chanOfUser)
 		}
 		
 	let direct_messages = dm_of_user(current_user);
 
 	function changeChannelOrDm(param: Channel | DirectMessage): void {
-		if (typeof (param as Channel).op !== 'undefined')
+		if (typeof (param as Channel).operators !== 'undefined')
 			set_current_chan(param as Channel)
 		if (typeof (param as DirectMessage).messages !== 'undefined')
 			set_current_chan(param as DirectMessage)
 	}
 
-	// console.log(current_user);
+	console.log(current_user.id);
 
 	return (	
 		<div className="dashboard">

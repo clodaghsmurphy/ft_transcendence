@@ -573,7 +573,7 @@
 
 .popup-prompt button {
 	display: flex;
-	flex: 1;
+	flex: 2;
 	font-size: 1.25rem;
 	text-align: center;
 	background-color: #cda5d8;
@@ -646,4 +646,20 @@
 
 .message-body-link:link {
 	text-decoration: none;
+}
+
+.hover-cursor:hover {
+	cursor: pointer;
+}
+
+.private-setter {
+	flex: 2;
+	color: black;
+	padding-left: 7px;
+	display: flex;
+	flex-direction: row;
+	border-radius: 5px;
+	background-color: #cda5d8;
+	text-align: center;
+	font-size: 1.25rem;
 }

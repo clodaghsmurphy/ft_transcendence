@@ -23,14 +23,21 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 	chan = chan as Channel
 
-	const curr_is_op = chan.op.includes(current_user.id)
+	if (typeof chan.operators === 'undefined')
+	{
+		console.log('chan.operators is undefined');
+		console.log(chan);
+		return ret
+	}
+
+	const curr_is_op = chan.operators.includes(current_user.id)
 
 	for (const user of chan.members) {
 		if (user != current_user.id) {
-			if (curr_is_op && !chan.op.includes(user))
-				ret.push(button_op(id_to_user(every_user, user), chan.op.includes(user)))
+			if (curr_is_op && !chan.operators.includes(user))
+				ret.push(button_op(id_to_user(every_user, user), chan.operators.includes(user)))
 			else
-				ret.push(button_not_op(id_to_user(every_user, user), chan.op.includes(user)))
+				ret.push(button_not_op(id_to_user(every_user, user), chan.operators.includes(user)))
 		}
 	}
 	return ret
