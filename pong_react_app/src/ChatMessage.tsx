@@ -6,7 +6,7 @@ import nathan from './media/nguiard.jpg'
 import { Avatar } from '@mui/material'
 import { useState } from 'react'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
-import { MessageData, BAN, INVITE, KICK } from './Channels'
+import { MessageData, BAN, INVITE, KICK, Channel } from './Channels'
 import ProtectedRoute from './ProtectedRoute'
 import { Link } from 'react-router-dom'
 
@@ -17,7 +17,6 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 	if (typeof curr_user === 'undefined')
 		return <div key={uuidv4()}/>
 	
-	console.log('message from', msg.sender_name, ':', msg.text);
 
 	if (msg.type === BAN) {
 		return (BannedMessage(msg))

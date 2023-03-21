@@ -79,7 +79,6 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 						for (const usr of selected) {
 							if (usr === current_user.id || typeof usr === 'undefined')
 								continue;
-							console.log("Adding", usr)
 							fetch('/api/channel/join', {
 								method: 'POST',
 								body: ( chan_pass.length > 0 ?

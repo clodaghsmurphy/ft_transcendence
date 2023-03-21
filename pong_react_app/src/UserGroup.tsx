@@ -24,8 +24,6 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 	if (typeof chan.operators === 'undefined')
 	{
-		console.log('chan.operators is undefined');
-		console.log(chan);
 		return ret
 	}
 
