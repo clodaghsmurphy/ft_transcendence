@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { useState, useContext } from 'react'
 import { AuthContext } from './App'
 import { ActionKind } from "./store/reducer"
@@ -18,16 +19,20 @@ const ChangeName = () =>
 	const { state, dispatch } = useContext(AuthContext);
 
 
-	const submitName = () =>
+	const submitName = async () =>
 	{
-		console.log(value)
-		console.log(state.user);
-		state.user.login = value;
+		console.log('in submit');
 		dispatch(
 			{
 				type: ActionKind.nameUpdate,
 				payload: { login:value },
 			})
+		const { data } = await axios.post('http://localhost:3042/user/update', { 
+			id: state.user.id,
+			name: value
+		});
+		console.log(data);
+		setShowName(!showName);
 	}
 
 	return(

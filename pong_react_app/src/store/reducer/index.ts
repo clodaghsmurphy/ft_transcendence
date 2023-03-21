@@ -81,8 +81,6 @@ export const initialState:State = {
       case "NAME_UPDATE": {
         console.log('in dispatch and paload is');
         console.log(action.payload);
-        console.log(action.payload.isLoggedIn);
-        console.log(state);
         localStorage.setItem('user', JSON.stringify(action.payload))
         return {
           ...state,
