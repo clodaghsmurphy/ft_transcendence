@@ -35,13 +35,18 @@ export class ChannelService {
 	}
 
 	async create(dto: ChannelCreateDto) : Promise<unknown> {
-		await this.checkUser(dto.user_id);
+		await this.checkUser(dto.owner_id);
+		for (const user of dto.users_ids) {
+			await this.checkUser(user);
+		}
+
+		dto.users_ids.push(dto.owner_id);
 
 		try {
 			let data = {
 				name: dto.name,
-				operators: [dto.user_id],
-				members: [dto.user_id],
+				operators: [dto.owner_id],
+				members: dto.users_ids,
 			}
 
 			if (dto.hasOwnProperty('password')) {
@@ -55,7 +60,7 @@ export class ChannelService {
 				data: data,
 			});
 
-			this.userService.joinChannel(dto.user_id, dto.name);
+			dto.users_ids.forEach(async(user) => await this.userService.joinChannel(user, dto.name));
 
 			return this.returnInfo(channel);
 		} catch (e) {
@@ -118,6 +123,7 @@ export class ChannelService {
 	}
 
 	async postMessage(channelName: string, dto: MessageCreateDto) : Promise<Message> {
+		await this.checkUser(dto.sender_id);
 		await this.checkChannel(channelName);
 
 		const message = await this.prisma.message.create({
