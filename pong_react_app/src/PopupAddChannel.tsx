@@ -58,7 +58,7 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 		inputRef.current!.value = '';
 		inputRefPassword.current!.value = '';
 		setSelected([current_user.id]);
-		let tmp = selected.filter(usr => typeof usr === 'number')
+		let tmp = selected.filter(usr => typeof usr === 'number' && usr != current_user.id)
 		fetch('/api/channel/create', {
 			method: 'POST',
 			body: ( chan_pass.length > 0 ?
@@ -73,9 +73,9 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 					users_ids: tmp,
 					pass: chan_pass,
 				})),
-			headers: {'Content-Type': 'application/json'},
-		})
-	}
+				headers: {'Content-Type': 'application/json'},
+			})
+		}
 
 	return (
 		<Popup trigger={add_group()} modal nested key={uuidv4()}>
