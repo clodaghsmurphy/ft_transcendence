@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react'
+import React, { MouseEventHandler, useEffect, useState, useContext } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -18,12 +18,15 @@ import User, { error_user, id_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
 import io from 'socket.io-client'
+import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
+import { AuthContext } from './App'
+import PopupAddDirect from './PopupAddDirect'
 
 const { v4: uuidv4 } = require('uuid');
 
-type User_message = {user: User, message: string}
-
-function chat_button(name: string, message: string, img: string, fnc: (chan: Channel | User) => void, param: Channel | User) {
+function chat_button(name: string, message: string, img: string,
+	fnc: (chan: Channel | DirectMessage) => void, param: Channel | DirectMessage)
+{
 	return (
 		<div className='chat-button-wrapper' key={uuidv4()} onClick={() => fnc(param)}>
 			<button className='chat-button'>
@@ -42,19 +45,29 @@ function chat_button(name: string, message: string, img: string, fnc: (chan: Cha
 	);
 }
 
-function users_message(message_data: User_message[], click_handler: (param: Channel | User) => void) {
+function users_message(message_data: DirectMessage[], all_users: User[],
+		current_user: User, click_handler: (param: Channel | DirectMessage) => void)
+{
 	let ret: JSX.Element[] = [];
 
 	if (message_data.length === 0) {
-		return <></>
+		return [PopupAddDirect(all_users, current_user)]
 	}
 
-	for (const data of message_data) {
-		if (typeof data === 'undefined' || typeof data.user === 'undefined')
-			return <></>
-		ret.push(chat_button(data.user.name, data.message, data.user.avatar, click_handler, data.user));
+	for (const dm of message_data) {
+		if (typeof dm === 'undefined' || typeof dm.users === 'undefined')
+			return [PopupAddDirect(all_users, current_user)]
+		let user = id_to_user(all_users, dm.users[0]);
+		if (user.id == current_user.id) {
+			user = id_to_user(all_users, dm.users[1]);
+		}
+
+		let direct = dm_betweeen_two_users(current_user, user);
+
+		ret.push(chat_button(user.name, dm.messages[dm.messages.length - 1].text,
+			user.avatar, click_handler, direct));
 	}
-	ret.push(add_dm())
+	ret.push(PopupAddDirect(all_users, current_user))
 	return ret;
 }
 
@@ -71,7 +84,7 @@ export function add_group(): JSX.Element {
 	);
 }
 
-function add_dm(): JSX.Element {
+export function add_dm(): JSX.Element {
 	return (
 		<div className='chat-button-wrapper' key={uuidv4()}>
 			<button className='chat-button'>
@@ -84,7 +97,7 @@ function add_dm(): JSX.Element {
 	);
 }
 
-function group_message(chan_data: Channel[], click_handler: (chan: Channel | User) => void,
+function group_message(chan_data: Channel[], click_handler: (chan: Channel | DirectMessage) => void,
 	every_user: User[], current_user: User) {
 	let ret: JSX.Element[] = [];
 
@@ -107,12 +120,13 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Use
 
 function Chat()
 {
+	const { state, dispatch } = useContext(AuthContext);
 	let [all_users, set_all_users] = useState([] as User[])
 	let [all_channels, set_all_channels] = useState([] as Channel[])
 	let [current_user, set_current_user] = useState({} as User)
-	let [current_chan, set_current_chan] = useState({} as Channel)
-	let [chanOfUser, setChanOfUser] = useState(names_to_channel(all_channels, typeof current_user === 'undefined' ? [] : current_user.channels))
-
+	let [current_chan, set_current_chan] = useState({} as Channel | DirectMessage)
+	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
+	
 	useEffect(() => {
 		document.title = 'Chat';
 		fetch('/api/user/info', {
@@ -122,47 +136,39 @@ function Chat()
 			}
 		}).then((response) => {
 			response.json()
-				.then(data => {
-					set_all_users(data as User[])
-					set_current_user(data[2] as User) // A changer par jsp quoi
+			.then(data => {
+				set_all_users(data as User[])
+				set_current_user(id_to_user(data as User[], Number(state.user.id))) // A changer par jsp quoi					
 				})
 			})
-
-		fetch('/api/channel/info')
+			
+			fetch('/api/channel/info')
 			.then((response) => {
 				response.json()
 				.then(data => {
-				set_all_channels(data as Channel[])
-				setChanOfUser(names_to_channel(all_channels,
-					typeof current_user.channels === 'undefined' ? [] : current_user.channels))
+					set_all_channels(data as Channel[])
 				})
 			})
-	}, []);
-	
-	let message_user_data: User_message[] = [
+		}, []);
+		
+		if (typeof current_user !== 'undefined'
+		&& typeof all_channels[0] !== 'undefined'
+		&& chanOfUser.length > 0)
 		{
-			user: id_to_user(all_users, 1),
-			"message": "18h == matin",
-		},
-		{
-			user: id_to_user(all_users, 2),
-			"message": "webserv > irc",
-		},
-		{
-			user: id_to_user(all_users, 3),
-			"message": "jsp quoi dire",
-		},
-		{
-			user: id_to_user(all_users, 4),
-			"message": "je speedrun le TC",
+			setChanOfUser(names_to_channel(all_channels, current_user.channels))
+			console.log(chanOfUser)
 		}
-	];
+		
+	let direct_messages = dm_of_user(current_user);
 
-	function changeChannelOrDm(param: Channel | User): void {
+	function changeChannelOrDm(param: Channel | DirectMessage): void {
 		if (typeof (param as Channel).op !== 'undefined')
 			set_current_chan(param as Channel)
-		/// else changer le DM
+		if (typeof (param as DirectMessage).messages !== 'undefined')
+			set_current_chan(param as DirectMessage)
 	}
+
+	// console.log(current_user);
 
 	return (	
 		<div className="dashboard">
@@ -183,7 +189,7 @@ function Chat()
 					<div className='lists'>
 						<h1>User messages</h1>
 						<div className='lists-holder'>
-							{users_message(message_user_data, changeChannelOrDm)}
+							{users_message(direct_messages, all_users, current_user, changeChannelOrDm)}
 						</div>
 						<div className='channels-holder'></div>
 					</div>
@@ -191,14 +197,14 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{Messages(current_chan, all_users, current_user)}
+				{Messages(current_chan as Channel, all_users, current_user)}
 			</div>
 
             <div className="group-members">
 				<h1>Group users</h1>
 				
 				<div className='user-holder'>
-					{user_in_group(all_users, current_user, current_chan)}
+					{user_in_group(all_users, current_user, current_chan as Channel)}
 				</div>
 			</div>
         </main>
