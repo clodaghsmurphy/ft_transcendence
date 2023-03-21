@@ -29,15 +29,16 @@ export class UserUpdateDto {
 	id: number;
 
 	@IsOptional()
-	@IsArray()
+	@IsNumber({}, {each: true})
 	blocked_users: number[];
 
 	@IsOptional()
-	@IsArray()
+	@IsNumber({}, {each: true})
 	friend_users: number[];
 
 	@IsOptional()
 	@IsArray()
+	@IsString({each: true})
 	channels: string[];
 
 	@IsOptional()
