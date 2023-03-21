@@ -43,7 +43,7 @@ function PopUp2FA(props: PopUpProps)
         if(data.msg == "ok")
         {
             console.log('here');
-            state.user.is2FA = true;
+            state.user.otp_enabled = true;
             console.log(state.user);
         }
     }

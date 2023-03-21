@@ -90,7 +90,7 @@ function Stats()
 						<div className="avatar-stats">
 								<img style={{
 								}}src={state.user.avatar} />
-							<span className="user-name">{state.user.login}</span>
+							<span className="user-name">{state.user.name}</span>
 
 						</div>
 						<div className='right-options'>
@@ -105,7 +105,7 @@ function Stats()
 								</ul> ) : null}
 								
 							</div>
-								<Link to={"https://profile.intra.42.fr/users/" + state.user.login} className='ftlogo'>
+								<Link to={"https://profile.intra.42.fr/users/" + state.user.name} className='ftlogo'>
 									<img src={FTlogo} />
 								</Link>
 						</div>

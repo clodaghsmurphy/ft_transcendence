@@ -41,7 +41,7 @@ function Login ()
 			dispatch(
 				{
 					type: ActionKind.Login,
-					payload: { user:{ login:data.name, id:data.id, avatar:data.avatar, is2FA:data.otp_enabled}, isLoggedIn: true}
+					payload: { user:{ name:data.name, id:data.id, avatar:data.avatar, is2FA:data.otp_enabled}, isLoggedIn: true}
 				}
 			)
 			localStorage.setItem("isLoggedIn", 'true');

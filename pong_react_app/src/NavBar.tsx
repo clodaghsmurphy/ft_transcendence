@@ -52,7 +52,7 @@ function NavBar()
                 <img src={state.user.avatar} />
                 
             </div>
-            <p className='userName' > Welcome {state.user.login} !</p>
+            <p className='userName' > Welcome {state.user.name} !</p>
            
         </div>
         <button className="nav-btn nav-close-btn" onClick={() => showNavbar()}>

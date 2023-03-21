@@ -22,16 +22,27 @@ const ChangeName = () =>
 	const submitName = async () =>
 	{
 		console.log('in submit');
+		console.log(value);
+		console.log(state)
 		dispatch(
 			{
 				type: ActionKind.nameUpdate,
 				payload: { login:value },
 			})
 		const { data } = await axios.post('http://localhost:3042/user/update', { 
-			id: state.user.id,
-			name: value
-		});
-		console.log(data);
+				id: state.user.id,
+			name: value,
+			});
+			dispatch(
+				{
+					type: ActionKind.userUpdate,
+					payload: { user:data },
+				}
+			)
+			console.log('datais');
+			console.log(data);
+			console.log('state is ');
+		console.log(state);
 		setShowName(!showName);
 	}
 

@@ -10,14 +10,14 @@ const EnableTwoFAuth = () =>
     const [show, setShow] = useState<boolean>(false);
     const { state,  dispatch } = useContext(AuthContext);
     console.log(state.user);
-    console.log(state.user.is2FA);
+    console.log(state.user.otp_enabled);
     
 
     const enable = async () =>
     {
         setShow(!show);
     }
-    const enabled = state.user.is2FA;
+    const enabled = state.user.otp_enabled;
    
     if (enabled)
     {
