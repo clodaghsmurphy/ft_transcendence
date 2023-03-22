@@ -362,16 +362,16 @@ img {
 .login-button {
   display: flex;
   text-transform: uppercase;
-  font-size: 1em;
+  font-size: calc(.4em + .4vw);
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
   justify-items: center;
   justify-content: center;
   text-align: center;
   align-items: center;
-  height: 5vh;
-  width: 20vh;
-  border-color: #db0eec;
+  flex-basis: 20%;
+  height: 10vh;
+  border-color: transparent;
   box-shadow:
     0 0 1rem #fff,
     0 0 1rem #fff,
@@ -389,8 +389,9 @@ img {
 .login-button button
 {
   background: inherit;
+  border: none;
   color: inherit;
-  font-size: inherit;
+  font-size: calc(.5em + .5vw);
   text-transform: uppercase;
   font-family: 'Poppins', sans-serif;
   list-style: none;

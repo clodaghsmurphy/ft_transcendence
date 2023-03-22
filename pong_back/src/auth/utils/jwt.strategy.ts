@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from 'src/user/user.service';
@@ -22,12 +22,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		const user = await this.userService.userExists(payload.sub);
 		if (!user)
 		{
-			console.log('returning null in jwt strategy')
-			return null;
+			throw new UnauthorizedException('User not found');
 		}
-		return {
-			id: payload.sub,
-			name: payload.name,
-		};
+		return user;
 	}
 }

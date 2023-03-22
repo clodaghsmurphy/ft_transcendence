@@ -14,7 +14,8 @@ export enum ActionKind {
   Login = "LOGIN",
   Logout = "LOGOUT",
   nameUpdate = "NAME_UPDATE",
-  userUpdate = "USER_UPDATE"
+  userUpdate = "USER_UPDATE",
+  enable2fa = "ENABLE_TFA"
 }
 
 export interface Login
@@ -38,6 +39,12 @@ export interface Logout
 {
   type: ActionKind.Logout;
   payload: any;
+}
+
+export interface enable2fa
+{
+  type: ActionKind.enable2fa;
+  payload: boolean;
 }
 
 export type Action =
@@ -68,7 +75,8 @@ export const initialState:State = {
   export const reducer = (state:State, action:Action) => {
     switch (action.type) {
       case "LOGIN": {
-
+        console.log('in login and payload is');
+        console.log(action.payload);
         localStorage.setItem("isLoggedIn", JSON.stringify(action.payload.isLoggedIn))
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         return {
@@ -106,6 +114,7 @@ export const initialState:State = {
           user: action.payload.user,
         }
       }
+ 
    
       default:
         return state;

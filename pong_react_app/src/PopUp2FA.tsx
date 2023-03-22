@@ -1,8 +1,11 @@
 import react from 'react'
 import axios from 'axios'
+import { AxiosResponse, AxiosError } from 'axios'
 import { useEffect, useState, useContext } from 'react';
 import './stats.css';
 import { AuthContext } from './App';
+import { ActionKind } from "./store/reducer";
+
 
 interface PopUpProps
 {
@@ -15,16 +18,11 @@ function PopUp2FA(props: PopUpProps)
     const { state,  dispatch } = useContext(AuthContext);
     const [imageSrc, setImageSrc] = useState("");
     const [value, setValue] = useState("");
-    console.log(axios.defaults.headers.common);
 
     useEffect(() => {
         async function fetchQR()
         {
-            console.log('in use effects pop up');
-            console.log('headers');
-            const response = await axios.get('http://localhost:3042/auth/generate');
-            console.log('after response');
-            console.log(response);
+            const response = await axios.get('http://localhost:3042/auth/generate');  
             setImageSrc(response.data.code)
         }
         fetchQR();
@@ -33,19 +31,19 @@ function PopUp2FA(props: PopUpProps)
     const handleSubmit = async () =>
     {
         console.log('in handle sucmit');
-        const {data} = await axios.post('http://localhost:3042/auth/validate',
-        {
-            totp: value,
-        })
-        console.log('data is ');
-        console.log(data);
-    
-        if(data.msg == "ok")
-        {
-            console.log('here');
-            state.user.otp_enabled = true;
-            console.log(state.user);
-        }
+        axios.post(`http://${window.location.hostname}:8080/api/auth/validate`, {totp: value})
+        .then(function (res:AxiosResponse) {
+            console.dir(res)
+            dispatch({
+                type: ActionKind.userUpdate,
+                payload:{ user:{ name:res.data.name, id:res.data.id, avatar:res.data.avatar, otp_enabled:res.data.otp_enabled}} 
+                })
+            alert('2FA enabled !');
+            props.setShow(!props.show);
+    })
+        .catch((error:AxiosError) => console.log('ERROR ' + error))
+        console.log('after post')
+
     }
     return (
         <div className="TwoFactorPopUp">

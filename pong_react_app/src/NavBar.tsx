@@ -2,7 +2,8 @@ import React from 'react'
 import './Dashboard.css'
 import logo from './media/pong-logo.svg'
 import user_pfp from './media/user.png'
-
+import axios from 'axios';
+import {AxiosResponse, AxiosError} from 'axios'
 
 import { Link } from 'react-router-dom'
 import  {useState, useContext } from 'react'
@@ -26,12 +27,16 @@ function NavBar()
         navLink.current?.classList.toggle("nav-list-visible")
     }
 
-    const handleLogout = () => {
+     const handleLogout = async() => {
+        console.log('logout');
+         axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
+        .then((res:AxiosResponse) => console.log("res : " + res))
+
         dispatch ({
             type: ActionKind.Logout
         });
         localStorage.clear();
-        window.location.pathname = "/login";
+        //window.location.pathname = "/login";
     }
 
     return (
