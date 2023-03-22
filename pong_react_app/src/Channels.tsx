@@ -18,7 +18,7 @@ export interface MessageData {
 export type Channel = {
 	name: string,
 	members: number[],
-	op: number[],
+	operators: number[],
 	banned: number[],
 	messages: MessageData[],
 	curr_uid: number,
@@ -29,7 +29,7 @@ export function basic_channel(): Channel {
 		{
 			name: "DO NOT USE THIS",
 			members: [],
-			op: [],
+			operators: [],
 			banned: [],
 			messages: [],
 			curr_uid: 0,
@@ -41,7 +41,7 @@ export function sample_channel_data(): Channel[] {
 	let chan_1: Channel = {
 		name: "Transcendence",
 		members: [1, 2, 3, 4],
-		op: [1, 2, 3, 4],
+		operators: [1, 2, 3, 4],
 		banned: [],
 		messages: [{
 				sender_name: "clmurphy",
@@ -81,7 +81,7 @@ export function sample_channel_data(): Channel[] {
 	let chan_2: Channel = {
 		name: "Raclette",
 		members: [3, 4, 1],
-		op: [3],
+		operators: [3],
 		banned: [2],
 		messages: [{
 			sender_id: 3,
@@ -121,7 +121,7 @@ export function sample_channel_data(): Channel[] {
 	let chan_3: Channel = {
 		name: "Illuminatis",
 		members: [1, 2],
-		op: [1, 2],
+		operators: [1, 2],
 		banned: [ 3, 4],
 		messages: [{
 			sender_id: 2,
@@ -172,7 +172,7 @@ export function createChannel(c_name: string, creator: User): [Channel, boolean]
 	const new_chan = {
 		name: c_name,
 		members: [creator.id],
-		op: [creator.id],
+		operators: [creator.id],
 		banned: [],
 		messages: [],
 		curr_uid: 0,
@@ -182,8 +182,8 @@ export function createChannel(c_name: string, creator: User): [Channel, boolean]
 }
 
 export function banFromChan(chan: Channel, current: User, target: number): boolean {
-	if (chan.op.includes(current.id)) {
-		if (chan.op.includes(target)) {
+	if (chan.operators.includes(current.id)) {
+		if (chan.operators.includes(target)) {
 			return false
 		}
 		let index = chan.members.indexOf(target)
@@ -198,8 +198,8 @@ export function banFromChan(chan: Channel, current: User, target: number): boole
 }
 
 export function kickFromChan(chan: Channel, current: User, target: number): boolean {
-	if (chan.op.includes(current.id)) {
-		if (chan.op.includes(target)) {
+	if (chan.operators.includes(current.id)) {
+		if (chan.operators.includes(target)) {
 			return false
 		}
 		let index = chan.members.indexOf(target)
@@ -213,11 +213,11 @@ export function kickFromChan(chan: Channel, current: User, target: number): bool
 }
 
 export function giveOperator(chan: Channel, current: User, target: number): boolean {
-	if (chan.op.includes(current.id)) {
-		if (chan.op.includes(target)) {
+	if (chan.operators.includes(current.id)) {
+		if (chan.operators.includes(target)) {
 			return true
 		}
-		chan.op.push(target)
+		chan.operators.push(target)
 		// post le op
 		return true
 	}

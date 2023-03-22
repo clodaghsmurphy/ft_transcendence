@@ -14,7 +14,7 @@ function MainChat ()
             <div className="chat-title">
             </div>
             <div className="chat-box">
-                {Messages(sample_channel_data()[0], sample_user_data(), sample_user_data()[1])}
+                {/* {Messages(sample_channel_data()[0], sample_user_data(), sample_user_data()[1])} */}
             </div>
          
            

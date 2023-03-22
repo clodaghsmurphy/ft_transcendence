@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo} from 'react'
+import React, { ChangeEvent, useEffect} from 'react'
 import './Dashboard.css'
 import user_pfp from './media/user.png'
 import nathan from './media/nguiard.jpg'
@@ -6,23 +6,25 @@ import clodagh from './media/clmurphy.jpg'
 import { Avatar } from '@mui/material'
 import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
-import Chat from './Chat'
+import Chat, { ChanAndMessage } from './Chat'
 import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
 import { DirectMessage } from './DirectMessage'
 
 const { v4: uuidv4 } = require('uuid');
 
-function Messages(chan: Channel, users: User[], current_user: User)
+function Messages(chan_and_message: ChanAndMessage, users: User[], current_user: User)
 {
 	let is_undefined: boolean = false;
-	let messages: MessageData[] = chan.messages;
-	if (typeof messages === 'undefined') {
+	let chan = chan_and_message.chan;
+	let messages = chan_and_message.msg;
+	if (typeof chan === 'undefined') {
 		messages = []
 		is_undefined = true
 	}
-	let [last_chan, setLastChan] = useState(typeof chan.name === 'undefined' ? "" : chan.name)
+	let [last_chan, setLastChan] = useState(typeof chan === 'undefined' ? "" : chan.name)
 	let [formValue, setFormValue] = useState("");
+
 	let [messagesBlocks, setMessagesBlocks] = useState(
 		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
 	);
@@ -31,9 +33,31 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		return <div className='no-messages'>Please select a channel</div>
 
 	if (chan.messages.length === 0)
-		return <div key={"no_messages_key"}>No messages</div>;
+		return (<div style={{
+			'display': 'flex',
+			'flexDirection': 'column',
+			'justifyContent': 'space-between',
+			'height': '100%',
+		}} key={"Message-ret-a"+uuidv4()}>
+			<div className='no-messages' key="Message-ret-b"
+				style={{
+					marginTop: 'auto',
+					marginBottom: 'auto'
+				}}>
+				No messages
+			</div>
+			<form className="message-box" key="Message-ret-c">
+				<input type="text" className="message-input"
+					placeholder="Type message..." value={ formValue }
+					onChange={e => setFormValue(e.target.value)} autoFocus
+					key="will_never_change"/>
+				<div className="button-submit" key="Message-ret-d">
+					<button type="submit" onClick={(event) => sendMessageOnClick(event, messagesBlocks)} key="Message-ret-e">Send</button>
+				</div>
+			</form>
+		</div>);
 
-	if (messagesBlocks.length === 0 || last_chan != chan.name) // si c'est vide il faut l'update
+	if ((messagesBlocks.length === 0 && messages.length > 0) || last_chan != chan.name) // si c'est vide il faut l'update
 	{
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 		setLastChan(chan.name);
@@ -52,11 +76,26 @@ function Messages(chan: Channel, users: User[], current_user: User)
 		}
 		if (formValue.length !== 0)
 		{
+			console.log('sending to', chan.name)
 			let tmp = msg
 			tmp.unshift(ChatMessage(users, test, current_user))
 			setMessagesBlocks(tmp);
-			chan.curr_uid += 1
-			//post update chan
+			console.log({ 
+				sender_id: current_user.id,
+				sender_name: current_user.name,
+				uid: chan.curr_uid + 1,
+				text: formValue,
+			})
+			fetch('/api/channel/' + chan.name + '/message/', {
+				method: 'POST',
+				body: JSON.stringify({ 
+					sender_id: current_user.id,
+					sender_name: current_user.name,
+					uid: chan.curr_uid + 1,
+					text: formValue,
+				}),
+				headers: {'Content-Type': 'application/json'}
+			})
 			setFormValue('');
 		}
 	}
