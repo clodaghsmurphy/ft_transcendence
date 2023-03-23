@@ -7,6 +7,7 @@ import { Jwt2faAuthGuard } from "src/auth/utils/Jwt2faGuard";
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from "./user.service";
 import { Multer } from 'multer'
+import { SharpPipe } from "./utils/sharp.pipe";
 
 @Controller('user')
 export class UserController {
@@ -42,18 +43,12 @@ export class UserController {
 	@Post('upload')
 	@UseGuards(Jwt2faAuthGuard)
 	@UseInterceptors(FileInterceptor('file'))
-	uploadFile(@UploadedFile(
-		new ParseFilePipe({
-			validators: [
-
-			]
-		})
-	) file: Express.Multer.File)
+	uploadFile(@UploadedFile(SharpPipe) file: Express.Multer.File)
 	{
 		console.log('in upload');
-		console.log(file);
-		
+		console.log(file);	
 	}
+	
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {
 			throw new HttpException({
