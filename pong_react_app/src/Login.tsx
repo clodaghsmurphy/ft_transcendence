@@ -6,7 +6,6 @@ import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
 import { Link, Navigate } from 'react-router-dom'
 import { useCallback, useState } from 'react';
-import api_keys from './api_keys'
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import { AuthContext } from './App';
@@ -35,7 +34,7 @@ function Login ()
 
 	async function getPayload () 
 	{
-		const { data } = await axios.get('http://localhost:3042/auth/profile');
+		const { data } = await axios.get(`http://${window.location.hostname}:8080/api/auth/profile`);
 		console.log('data is')
 		console.log(data);
 			console.log(data.name);
@@ -46,7 +45,6 @@ function Login ()
 				}
 			)
 			localStorage.setItem("isLoggedIn", 'true');
-			
 			console.log(localStorage.getItem('user'));
 			console.log(localStorage.getItem("isLoggedIn"));
 	}

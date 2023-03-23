@@ -15,7 +15,8 @@ import User, { id_to_user } from "./User";
 import Popup from 'reactjs-popup';
 import { usePrompt } from "./usePrompt";
 import EnableTwoFAuth from "./EnableTWoFAuth";
-import ChangeName from "./changeName";
+import ChangeName from "./ChangeName";
+import ChangePhoto from "./ChangePhoto";
 
 
 function Stats()
@@ -45,23 +46,6 @@ function Stats()
 	{
 		setOpen(!open);
 	};
-
-	const changePhoto = () =>
-	{
-
-	}
-	const {triggerPrompt } = usePrompt();
-
-	const changeName = () =>
-	{
-
-		triggerPrompt({
-			title: "Name change",
-			text: "Please enter a new name",
-			isInput: true,
-			onSubmit: (input: string) => console.log(input)
-		})
-	}
 
 	return(
 			<>
@@ -98,7 +82,7 @@ function Stats()
 									<BsFillGearFill style={{ color: 'white', height: 'calc(1em + 1vw)'} } onClick={handleOpen}/>
 								{ open ? (
 								<ul className="options-list">
-									<li className="options-list-item" onClick={changePhoto}>Change photo</li >
+									<ChangePhoto />
 									<ChangeName />
 									<EnableTwoFAuth />
 									

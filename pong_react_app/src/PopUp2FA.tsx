@@ -18,19 +18,21 @@ function PopUp2FA(props: PopUpProps)
     const { state,  dispatch } = useContext(AuthContext);
     const [imageSrc, setImageSrc] = useState("");
     const [value, setValue] = useState("");
+    const [error, setError] = useState("");
 
     useEffect(() => {
         async function fetchQR()
         {
-            const response = await axios.get('http://localhost:3042/auth/generate');  
-            setImageSrc(response.data.code)
+            axios.get(`http://${window.location.hostname}:8080/api/auth/generate`)
+            .then((response:AxiosResponse) => setImageSrc(response.data.code))
+            .catch((e:AxiosError) => console.log(e))  
+            
         }
         fetchQR();
     }, []);
 
     const handleSubmit = async () =>
     {
-        console.log('in handle sucmit');
         axios.post(`http://${window.location.hostname}:8080/api/auth/validate`, {totp: value})
         .then(function (res:AxiosResponse) {
             console.dir(res)
@@ -41,9 +43,12 @@ function PopUp2FA(props: PopUpProps)
             alert('2FA enabled !');
             props.setShow(!props.show);
     })
-        .catch((error:AxiosError) => console.log('ERROR ' + error))
-        console.log('after post')
-
+    .catch(function (error:AxiosError) {
+                
+        if( error.request.status  == 401)
+            setError('Incorrect authentication code');
+               
+    });  
     }
     return (
         <div className="TwoFactorPopUp">
@@ -61,6 +66,7 @@ function PopUp2FA(props: PopUpProps)
             <div className="QRcode">
                 <img src={imageSrc} alt="QR code" />
             </div>
+            { error ? <div>{error}</div> : null }
             <div> Code alternative here</div>
             <div>Enter authorization code here
                 <input type="text" value={value} onChange={(e:React.FormEvent<HTMLInputElement>) => {setValue(e.currentTarget.value)}}/>
