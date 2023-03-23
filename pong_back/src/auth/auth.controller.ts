@@ -35,7 +35,7 @@ export class AuthController {
     }
 
     @Post('logout')
-    @UseGuards(Jwt2faAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async handleLogout(@Req () req, @UserEntity() user) {
         console.log('in logout');
         await this.userService.checkUser(user.id);
@@ -72,7 +72,7 @@ export class AuthController {
     
     }
 
-    @UseGuards(Jwt2faAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Get('profile')
     getProfile(@Request() req) {
         console.log('in profile');
@@ -80,7 +80,7 @@ export class AuthController {
         return this.userService.get(req.user.id);
     }
 
-    @UseGuards(Jwt2faAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Get('generate')
     async generate(@Req() req, @Res() res: Response)
     {
@@ -108,7 +108,7 @@ export class AuthController {
         return {code};
     }
 
-    @UseGuards(Jwt2faAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Post('validate')
     async validate(@Body() body:any, @Req() req ){
         const token = body.totp;
@@ -166,7 +166,7 @@ export class AuthController {
     }
 
     @Post('disable2fa')
-    @UseGuards(Jwt2faAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async disable(@Request() request, @Body() body)
     {
         const user = await this.userService.userExists(request.user.id);

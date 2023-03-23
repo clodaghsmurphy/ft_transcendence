@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 
 @Injectable()
-export class Jwt2faAuthGuard extends AuthGuard('jwt')
+export class Jwt2faAuthGuard extends AuthGuard('jwt-2fa')
 {
     
 }
