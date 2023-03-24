@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState, useContext } from 'react'
+import React, { MouseEventHandler, useEffect, useState, useContext, useCallback, useRef } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
@@ -141,11 +141,22 @@ function Chat()
 	let [all_users, set_all_users] = useState([] as User[])
 	let [all_channels, set_all_channels] = useState([] as Channel[])
 	let [current_user, set_current_user] = useState({} as User)
-	let [current_chan, set_current_chan] = useState({} as ChanAndMessage | DirectMessage)
-	let [current_messages, set_current_messages] = useState([] as MessageData[])
+	let [current_chan, set_current_chan] = useState(({nimp: []} as any) as ChanAndMessage | DirectMessage)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
+	let curr_chan_ref = useRef(current_chan);
+	curr_chan_ref.current = current_chan
 	// const socket = io("ws://localhost:8080/api/channel");
 	
+	const handleMessage = useCallback((param: any) => {
+		console.log('inside handleMessage:', current_chan);
+		let new_messages = (curr_chan_ref.current as ChanAndMessage).msg;
+		new_messages.push(param as MessageData);
+
+		set_current_chan({...curr_chan_ref.current, msg: new_messages});
+		console.log('inside handleMessage after update:', curr_chan_ref.current);
+	}, [current_chan, set_current_chan]);
+	  
+
 	useEffect(() => {
 		document.title = 'Chat';
 		fetch('/api/user/info', {
@@ -158,27 +169,32 @@ function Chat()
 			.then(data => {
 				set_all_users(data as User[])
 				set_current_user(id_to_user(data as User[], Number(state.user.id)))
-				})
 			})
-			
-			fetch('/api/channel/info')
-			.then((response) => {
-				response.json()
-				.then(data => {
-					set_all_channels(data as Channel[])
-				})
+		})
+		
+		fetch('/api/channel/info')
+		.then((response) => {
+			response.json()
+			.then(data => {
+				set_all_channels(data as Channel[])
 			})
+		})
+
+		socket.on('join', (data: any) => {
+			console.log(data)
+		})
+
+		socket.on('message', handleMessage)
 	}, []);
+	
+	
+	console.log('current chan', current_chan);
+	
+	// function test(param: any) {
 
-	socket.on('join', (data: any) => {
-		console.log(data)
-	})
+	// }
 
-	socket.on('message', (data: any) => {
-		let tmp = current_messages;
-		tmp.push(data as MessageData);
-		set_current_messages(tmp);
-	})
+	
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'
@@ -192,7 +208,7 @@ function Chat()
 	function changeChannelOrDm(param: Channel | DirectMessage): void {
 		if (typeof (param as Channel).operators !== 'undefined')
 		{
-			if (typeof (current_chan as ChanAndMessage).chan !== 'undefined') {
+			if (typeof (current_chan as ChanAndMessage).chan !== 'undefined'){
 				socket.emit('leave', {
 					name: (current_chan as ChanAndMessage).chan.name,
 					user_id: current_user.id,
@@ -209,12 +225,19 @@ function Chat()
 				chan: param as Channel,
 				msg: [],
 			})
-			set_current_messages([])
+			console.log('changed current_chan to:', {
+				chan: param as Channel,
+				msg: [],
+			})
 			fetch('/api/channel/' + (param as Channel).name + '/messages/')
 				.then(response => {
 					response.json()
 						.then(data => {
 							set_current_chan({
+								chan: param as Channel,
+								msg: data as MessageData[],
+							})
+							console.log('changed current chan to:', {
 								chan: param as Channel,
 								msg: data as MessageData[],
 							})
