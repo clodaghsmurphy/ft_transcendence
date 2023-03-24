@@ -37,7 +37,7 @@ function Dashboard()
                                 <img src={state.user.avatar} />
                             </div>
                             <div className="player-info">
-                                <span className="player-name">{state.user.login}</span>
+                                <span className="player-name">{state.user.name}</span>
                                 <span className="player-level">LVL 12</span>
                             </div>
                         </div>

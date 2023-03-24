@@ -15,6 +15,8 @@ import User, { id_to_user } from "./User";
 import Popup from 'reactjs-popup';
 import { usePrompt } from "./usePrompt";
 import EnableTwoFAuth from "./EnableTWoFAuth";
+import ChangeName from "./ChangeName";
+import ChangePhoto from "./ChangePhoto";
 
 
 function Stats()
@@ -45,23 +47,6 @@ function Stats()
 		setOpen(!open);
 	};
 
-	const changePhoto = () =>
-	{
-
-	}
-	const {triggerPrompt } = usePrompt();
-
-	const changeName = () =>
-	{
-
-		triggerPrompt({
-			title: "Name change",
-			text: "Please enter a new name",
-			isInput: true,
-			onSubmit: (input: string) => console.log(input)
-		})
-	}
-
 	return(
 			<>
 				<NavBar />
@@ -89,22 +74,22 @@ function Stats()
 						<div className="avatar-stats">
 								<img style={{
 								}}src={state.user.avatar} />
-							<span className="user-name">{state.user.login}</span>
+							<span className="user-name">{state.user.name}</span>
 
 						</div>
 						<div className='right-options'>
 							<div className="drop-down" >
-								<BsFillGearFill style={ {color: 'white', height: '3vh'} } onClick={handleOpen}/>
+									<BsFillGearFill style={{ color: 'white', height: 'calc(1em + 1vw)'} } onClick={handleOpen}/>
 								{ open ? (
 								<ul className="options-list">
-									<li className="options-list-item" onClick={changePhoto}>Change photo</li >
-									<li className="options-list-item" onClick={changeName}>Change Name</li >
+									<ChangePhoto />
+									<ChangeName />
 									<EnableTwoFAuth />
 									
 								</ul> ) : null}
 								
 							</div>
-								<Link to={"https://profile.intra.42.fr/users/" + state.user.login} className='ftlogo'>
+								<Link to={"https://profile.intra.42.fr/users/" + state.user.name} className='ftlogo'>
 									<img src={FTlogo} />
 								</Link>
 						</div>

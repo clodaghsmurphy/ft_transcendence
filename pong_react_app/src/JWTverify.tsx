@@ -22,9 +22,7 @@ function JWTverfiy()
     } 
 
     useEffect(() => {
-        console.log( 'auth verfiy and jwt token');
         const token = localStorage.getItem('token');
-        console.log(token);
         if (token)
         {
             const decodedJwt = parseJwt(token);

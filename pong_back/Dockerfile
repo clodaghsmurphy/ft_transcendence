@@ -15,6 +15,9 @@ RUN npm install passport-jwt
 RUN npm i -D @types/express-session
 RUN npm install  --save-dev @types/otplib
 RUN npm install qrcode --save
+RUN npm install --save @types/multer
+RUN npm install npm install sharp
+RUN  npm install passport-2fa-totp
 
 COPY . .
 

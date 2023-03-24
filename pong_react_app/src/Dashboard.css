@@ -255,9 +255,10 @@
         margin: .5em;
         padding: .5em;
         flex:1;
+        white-space: pre-wrap;
         align-self: flex-end;
         justify-self: flex-end;
-        font-size: .5em;
+        font-size: 1.2vw;
         color:white; 
     }
 
