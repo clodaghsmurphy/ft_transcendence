@@ -22,6 +22,7 @@ export type Channel = {
 	banned: number[],
 	messages: MessageData[],
 	curr_uid: number,
+	password: boolean,
 }
 
 export function basic_channel(): Channel {
@@ -33,6 +34,7 @@ export function basic_channel(): Channel {
 			banned: [],
 			messages: [],
 			curr_uid: 0,
+			password: false,
 		}
 	)
 }
@@ -77,6 +79,7 @@ export function sample_channel_data(): Channel[] {
 			},
 		],
 		curr_uid: 3,
+		password: false,
 	}
 	let chan_2: Channel = {
 		name: "Raclette",
@@ -116,6 +119,7 @@ export function sample_channel_data(): Channel[] {
 			from: "Raclette"
 		},
 		],
+		password: false,
 		curr_uid: 3,
 	}
 	let chan_3: Channel = {
@@ -163,6 +167,7 @@ export function sample_channel_data(): Channel[] {
 			uid: 4,
 			from: "Illuminatis"
 		},],
+		password: false,
 		curr_uid: 3,
 	}
 	return [chan_1, chan_2, chan_3]
@@ -175,6 +180,7 @@ export function createChannel(c_name: string, creator: User): [Channel, boolean]
 		operators: [creator.id],
 		banned: [],
 		messages: [],
+		password: false,
 		curr_uid: 0,
 	}
 	// post le chan

@@ -29,6 +29,12 @@ export type ChanAndMessage = {
 	msg: MessageData[],
 }
 
+export const socket = io(`http://${window.location.hostname}:8080/channel`)
+
+socket.on('connect', () => {
+	console.log('CONNECTED', socket.connected)
+})
+
 function chat_button(name: string, message: string, img: string,
 	fnc: (chan: Channel | DirectMessage) => void, param: Channel | DirectMessage)
 {
@@ -162,20 +168,43 @@ function Chat()
 					set_all_channels(data as Channel[])
 				})
 			})
-		}, []);
-		
-		if (typeof current_user !== 'undefined'
-		&& typeof all_channels[0] !== 'undefined'
-		&& chanOfUser.length == 0)
-		{
-			setChanOfUser(names_to_channel(all_channels, current_user.channels))
-		}
-		
+	}, []);
+
+	socket.on('join', (data: any) => {
+		console.log(data)
+	})
+
+	socket.on('message', (data: any) => {
+		let tmp = current_messages;
+		tmp.push(data as MessageData);
+		set_current_messages(tmp);
+	})
+
+	if (typeof current_user.channels !== 'undefined'
+	&& typeof all_channels[0] !== 'undefined'
+	&& (chanOfUser.length == 0 && current_user.channels.length > 0))
+	{
+		setChanOfUser(names_to_channel(all_channels, current_user.channels))
+	}
+
 	let direct_messages = dm_of_user(current_user);
 
 	function changeChannelOrDm(param: Channel | DirectMessage): void {
 		if (typeof (param as Channel).operators !== 'undefined')
 		{
+			if (typeof (current_chan as ChanAndMessage).chan !== 'undefined') {
+				socket.emit('leave', {
+					name: (current_chan as ChanAndMessage).chan.name,
+					user_id: current_user.id,
+				})
+			}
+
+			console.log('Tried to join')
+			socket.emit('join', {
+				name: (param as Channel).name,
+				user_id: current_user.id,
+			});
+
 			set_current_chan({
 				chan: param as Channel,
 				msg: [],
