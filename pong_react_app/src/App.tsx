@@ -9,8 +9,7 @@ import Dashboard from './Dashboard';
 import Chat from './Chat';
 import Login from './Login';
 import LoginTfa from './LoginTfa';
-import CallBack from './CallBack';
-import Stats from './stats';
+import Stats from './Stats';
 import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './ProtectedRoute'
@@ -43,7 +42,6 @@ function App() {
         <Route path="/" element={<Home />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/2fa" element={<LoginTfa />}/>
-        <Route path="/login/callback" element={<CallBack />}/>
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />

@@ -61,7 +61,6 @@ function LoginTfa()
                 localStorage.setItem("token", token);
 			    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
                 getPayload();
-                console.dir(response);
 
             })
             .catch(function (error:AxiosError) {

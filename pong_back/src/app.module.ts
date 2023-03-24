@@ -6,8 +6,21 @@ import { ConfigModule } from '@nestjs/config';
 import { ChannelModule } from './channel/channel.module';
 import { Ft_Strategy } from './auth/utils/42.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { MulterModule } from '@nestjs/platform-express'
+import { memoryStorage} from 'multer'
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true}), UserModule, PrismaModule, ChannelModule, AuthModule, PassportModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true}), 
+    UserModule, 
+    PrismaModule,
+    ChannelModule, 
+    AuthModule, 
+    PassportModule,
+    MulterModule.register(
+      {
+        storage: memoryStorage(),
+      }
+    )
+    ],
 })
 export class AppModule {}

@@ -1,6 +1,13 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from "@nestjs/common";
+import { Body, UseGuards, Controller, Get, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
+import { UploadedFile, UseInterceptors, ParseFilePipe } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express'
 import { UserCreateDto, UserUpdateDto } from "./dto";
+import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
+import { AuthGuard } from '@nestjs/passport';
 import { UserService } from "./user.service";
+import { Multer } from 'multer'
+import { SharpPipe } from "./utils/sharp.pipe";
 
 @Controller('user')
 export class UserController {
@@ -29,8 +36,18 @@ export class UserController {
 	}
 
 	@Post('update')
+	@UseGuards(JwtAuthGuard)
 	updateUser(@Body() dto: UserUpdateDto) {
 		return this.userService.update(dto);
+	}
+
+	@Post('upload')
+	@UseGuards(JwtAuthGuard)
+	@UseInterceptors(FileInterceptor('file'))
+	uploadFile(@UploadedFile(SharpPipe) file: Express.Multer.File)
+	{
+		console.log('in upload');
+		console.log(file);	
 	}
 
 	checkId(id: string) {
