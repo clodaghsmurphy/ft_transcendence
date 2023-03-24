@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
 
 @Controller('channel')
 export class ChannelController {
@@ -29,6 +29,11 @@ export class ChannelController {
 	@Post('join')
 	joinChannel(@Body() dto: ChannelJoinDto) {
 		return this.channelService.join(dto);
+	}
+
+	@Post('leave')
+	leaveChannel(@Body() dto: ChannelLeaveDto) {
+		return this.channelService.leave(dto);
 	}
 
 	@Get(':name/messages')
