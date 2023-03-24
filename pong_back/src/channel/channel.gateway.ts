@@ -4,7 +4,7 @@ import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -29,15 +29,28 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
 
-	@UsePipes(new ValidationPipe({whitelist: true}))
+	// @UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket) {
+		if (client.rooms.has(dto.name))
+			throw new WsException(`error: client has already joined room ${dto.name}`);
+
 		try {
 			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
 			client.join(dto.name);
 			this.io.in(dto.name).emit('join', {name: dto.name, user: dto.user_id});
 		} catch (e) {
-			this.logger.log(e);
+			throw new WsException(e);
+		}
+	}
+
+	@SubscribeMessage('leave')
+	async handleLeave(@MessageBody() dto: ChannelLeaveDto, @ConnectedSocket() client: Socket) {
+		try {
+			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
+			this.logger.log(`Client ${dto.user_id} has left ${dto.name}`);
+			this.io.in(dto.name).emit('leave', dto);
+		} catch (e) {
 			throw new WsException(e);
 		}
 	}
