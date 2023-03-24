@@ -19,7 +19,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.logger.log('Websocket gateway initialized.');
 	}
 
-	handleConnection(client: Socket, ...args: any[]) {
+	handleConnection(client: Socket) {
 		this.logger.log(`New client with id: ${client.id} connected.`);
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
@@ -33,25 +33,24 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket) {
 		try {
-			await this.channelService.join(dto);
+			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
 			client.join(dto.name);
 			this.io.in(dto.name).emit('join', {name: dto.name, user: dto.user_id});
 		} catch (e) {
+			this.logger.log(e);
 			throw new WsException(e);
 		}
 	}
 
 	@SubscribeMessage('message')
-	async handleMessage(
-		@MessageBody('channel') channel: string,
-		@MessageBody('data') dto: MessageCreateDto,
-		@ConnectedSocket() client: Socket)
+	async handleMessage(@MessageBody() dto: MessageCreateDto, @ConnectedSocket() client: Socket)
 	{
-		this.checkUser(client, channel);
+		this.checkUser(client, dto.name);
 		try {
-			const message = await this.channelService.postMessage(channel, dto);
-			this.io.in(channel).emit('message', message);
+			const message = await this.channelService.postMessage(dto);
+			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
+			this.logger.log(e);
 			throw new WsException(e);
 		}
 	}

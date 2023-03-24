@@ -36,6 +36,10 @@ export class ChannelJoinDto {
 }
 
 export class MessageCreateDto {
+	@IsString()
+	@IsNotEmpty()
+	name: string;
+
 	@IsNumber()
 	@IsNotEmpty()
 	uid: number;
