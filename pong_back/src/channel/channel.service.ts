@@ -52,14 +52,12 @@ export class ChannelService {
 			if (dto.hasOwnProperty('password')) {
 				const salt = await bcrypt.genSalt();
 				const hash = await bcrypt.hash(dto.password, salt);
-
 				data['password'] = hash;
 			}
 
 			const channel: Channel = await this.prisma.channel.create({
 				data: data,
 			});
-
 			dto.users_ids.forEach(async(user) => await this.userService.joinChannel(user, dto.name));
 
 			return this.returnInfo(channel);
@@ -122,9 +120,8 @@ export class ChannelService {
 		});
 	}
 
-	async postMessage(channelName: string, dto: MessageCreateDto) : Promise<Message> {
-		await this.checkUser(dto.sender_id);
-		await this.checkChannel(channelName);
+	async postMessage(dto: MessageCreateDto) : Promise<Message> {
+		await this.checkUserInChannel(dto.sender_id, dto.name);
 
 		const message = await this.prisma.message.create({
 			data: {
@@ -132,12 +129,12 @@ export class ChannelService {
 				text: dto.text,
 				sender_name: dto.sender_name,
 				sender_id: dto.sender_id,
-				channel: channelName,
+				channel: dto.name,
 				type: 0,
 			},
 		});
 		await this.prisma.channel.update({
-			where: {name: channelName},
+			where: {name: dto.name},
 			data: {
 				messages: {push: message.id},
 			},
@@ -161,6 +158,22 @@ export class ChannelService {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `Channel ${channelName} doesn't exist`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	async checkUserInChannel(userId: number, channelName: string) {
+		await this.checkUser(userId);
+		await this.checkChannel(channelName);
+
+		if (await this.prisma.channel.count({where: {
+			name: channelName,
+			members: {has: userId}
+		}}) == 0)
+		{
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${userId} has not joined channel ${channelName}`,
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}
