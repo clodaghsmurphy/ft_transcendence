@@ -84,7 +84,6 @@ export class AuthController {
     @Get('generate')
     async generate(@Req() req, @Res() res: Response)
     {
-        
         const user = await this.userService.userExists(parseInt(req.user.id));
         if (!user)
             throw new UnauthorizedException();
