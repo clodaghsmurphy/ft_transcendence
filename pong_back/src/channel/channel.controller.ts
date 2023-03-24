@@ -30,15 +30,15 @@ export class ChannelController {
 	joinChannel(@Body() dto: ChannelJoinDto) {
 		return this.channelService.join(dto);
 	}
-	
+
 	@Get(':name/messages')
 	getAllMessages(@Param() params) {
 		return this.channelService.getAllMessages(params.name);
 	}
 
 	// Temporary Route to test channel messages
-	@Post(':name/message')
-	postMessage(@Param() params, @Body() dto: MessageCreateDto) {
-		return this.channelService.postMessage(params.name, dto);
-	}
+	// @Post(':name/message')
+	// postMessage(@Param() params, @Body() dto: MessageCreateDto) {
+	// 	return this.channelService.postMessage(params.name, dto);
+	// }
 }
