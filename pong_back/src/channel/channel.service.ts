@@ -3,10 +3,11 @@ import { Channel, Message } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
 import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
 import * as bcrypt from 'bcrypt';
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class ChannelService {
-	constructor (private prisma: PrismaService) {}
+	constructor (private prisma: PrismaService, private userService: UserService) {}
 
 	async getAll(): Promise<unknown[]> {
 		const channels: Channel[] = await this.prisma.channel.findMany();
@@ -34,13 +35,18 @@ export class ChannelService {
 	}
 
 	async create(dto: ChannelCreateDto) : Promise<unknown> {
-		await this.checkUser(dto.user_id);
+		await this.checkUser(dto.owner_id);
+		for (const user of dto.users_ids) {
+			await this.checkUser(user);
+		}
+
+		dto.users_ids.push(dto.owner_id);
 
 		try {
 			let data = {
 				name: dto.name,
-				operators: [dto.user_id],
-				members: [dto.user_id],
+				operators: [dto.owner_id],
+				members: dto.users_ids,
 			}
 
 			if (dto.hasOwnProperty('password')) {
@@ -53,6 +59,8 @@ export class ChannelService {
 			const channel: Channel = await this.prisma.channel.create({
 				data: data,
 			});
+
+			dto.users_ids.forEach(async(user) => await this.userService.joinChannel(user, dto.name));
 
 			return this.returnInfo(channel);
 		} catch (e) {
@@ -96,6 +104,7 @@ export class ChannelService {
 				members: {push: dto.user_id}
 			},
 		});
+		this.userService.joinChannel(dto.user_id, dto.name);
 
 		return this.returnInfo(channel);
 	}
@@ -114,6 +123,7 @@ export class ChannelService {
 	}
 
 	async postMessage(channelName: string, dto: MessageCreateDto) : Promise<Message> {
+		await this.checkUser(dto.sender_id);
 		await this.checkChannel(channelName);
 
 		const message = await this.prisma.message.create({
@@ -168,14 +178,9 @@ export class ChannelService {
 	}
 
 	returnInfo(channel: Channel) {
-		return {
-			name: channel.name,
-			members: channel.members,
-			operators: channel.operators,
-			blocked: channel.blocked,
-			messages: channel.messages,
-			curr_uid: channel.curr_uid,
-			password: (channel.password === null ? false : true),
-		};
+		let data: any = channel;
+
+		data.password = (channel.password === null ? false : true);
+		return data;
 	}
 }

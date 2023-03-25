@@ -12,8 +12,7 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 	let ret: JSX.Element[] = []
 
 	if (typeof current_user === 'undefined' ||
-		(typeof (chan as Channel).members === 'undefined' &&
-		typeof (chan as DirectMessage).users === 'undefined'))
+		typeof chan === 'undefined')
 		return [<div key={uuidv4()} className='no-users'>No user found</div>]
 
 
@@ -23,14 +22,19 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 	chan = chan as Channel
 
-	const curr_is_op = chan.op.includes(current_user.id)
+	if (typeof chan.operators === 'undefined')
+	{
+		return ret
+	}
+
+	const curr_is_op = chan.operators.includes(current_user.id)
 
 	for (const user of chan.members) {
 		if (user != current_user.id) {
-			if (curr_is_op && !chan.op.includes(user))
-				ret.push(button_op(id_to_user(every_user, user), chan.op.includes(user)))
+			if (curr_is_op && !chan.operators.includes(user))
+				ret.push(button_op(id_to_user(every_user, user), chan.operators.includes(user)))
 			else
-				ret.push(button_not_op(id_to_user(every_user, user), chan.op.includes(user)))
+				ret.push(button_not_op(id_to_user(every_user, user), chan.operators.includes(user)))
 		}
 	}
 	return ret

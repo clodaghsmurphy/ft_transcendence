@@ -1,6 +1,7 @@
 import { Session, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { urlencoded, json } from 'express';
 import * as session from 'express-session';
 import * as passport from 'passport'
 declare const module: any;
@@ -19,6 +20,8 @@ async function bootstrap() {
   );
 
   app.use(passport.initialize());
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
   app.use(passport.session());
   await app.listen(3042);
 

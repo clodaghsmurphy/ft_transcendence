@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 
 export type State = {
     isLoggedIn: string,
@@ -12,7 +13,9 @@ export type State = {
 export enum ActionKind {
   Login = "LOGIN",
   Logout = "LOGOUT",
-  nameUpdate = "NAME_UPDATE"
+  nameUpdate = "NAME_UPDATE",
+  userUpdate = "USER_UPDATE",
+  enable2fa = "ENABLE_TFA"
 }
 
 export interface Login
@@ -26,11 +29,22 @@ export interface nameUpdate {
   payload: string;
 }
 
+export interface userUpdate {
+  type: ActionKind.userUpdate;
+  payload: user;
+}
+
 
 export interface Logout
 {
   type: ActionKind.Logout;
   payload: any;
+}
+
+export interface enable2fa
+{
+  type: ActionKind.enable2fa;
+  payload: boolean;
 }
 
 export type Action =
@@ -42,10 +56,10 @@ export type Action =
 
 export type user = 
 {
-  login:string;
+  name:string;
   id: string;
   avatar: string;
-  is2FA: boolean;
+  otp_enabled: boolean;
 
 }
 
@@ -61,7 +75,8 @@ export const initialState:State = {
   export const reducer = (state:State, action:Action) => {
     switch (action.type) {
       case "LOGIN": {
-
+        console.log('in login and payload is');
+        console.log(action.payload);
         localStorage.setItem("isLoggedIn", JSON.stringify(action.payload.isLoggedIn))
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         return {
@@ -79,14 +94,27 @@ export const initialState:State = {
         };
       }
       case "NAME_UPDATE": {
-        console.log('in dispatch and paload is');
+        console.log('in dispatch and payload is');
         console.log(action.payload);
-        localStorage.setItem('user', JSON.stringify(action.payload))
+       
+  
+        console.log(state);
         return {
           ...state,
-          login:action.payload.user,
+          login:action.payload.login,
         }
       }
+      case "USER_UPDATE": {
+        console.log('in user update');
+        console.log(action.payload.user);
+        console.log(action.payload.user.name)
+			  localStorage.setItem('user', JSON.stringify(action.payload.user))
+        return {
+          ...state,
+          user: action.payload.user,
+        }
+      }
+ 
    
       default:
         return state;

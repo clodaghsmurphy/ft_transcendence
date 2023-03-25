@@ -6,7 +6,6 @@ import { randomBytes } from "crypto"
 import { nanoid } from 'nanoid'
 import { Link, Navigate } from 'react-router-dom'
 import { useCallback, useState } from 'react';
-import api_keys from './api_keys'
 import ball from './media/Ball.svg';
 import paddle from './media/Paddle.svg'
 import { AuthContext } from './App';
@@ -35,28 +34,27 @@ function Login ()
 
 	async function getPayload () 
 	{
-		const { data } = await axios.get('http://localhost:3042/auth/profile');
-			console.log(data);
+		const { data } = await axios.get(`http://${window.location.hostname}:8080/api/auth/profile`);
+		console.log('data is')
+		console.log(data);
 			console.log(data.name);
 			dispatch(
 				{
 					type: ActionKind.Login,
-					payload: { user:{ login:data.name, id:data.id, avatar:data.avatar, is2FA:data.otp_enabled}, isLoggedIn: true}
+					payload: { user:{ name:data.name, id:data.id, avatar:data.avatar, otp_enabled:data.otp_enabled}, isLoggedIn: true}
 				}
 			)
 			localStorage.setItem("isLoggedIn", 'true');
-			
 			console.log(localStorage.getItem('user'));
 			console.log(localStorage.getItem("isLoggedIn"));
 	}
+	
 	useEffect( () => {
 		const url = window.location.href;
-		console.log('in use effects ' + url);
 		
 		if (url.includes("?access_token"))
 		{
 			const token = new URLSearchParams(location.search).get('access_token')!;
-			console.log(token);
 			localStorage.setItem("token", token);
 			axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 			getPayload();

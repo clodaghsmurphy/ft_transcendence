@@ -9,7 +9,9 @@ const { v4: uuidv4 } = require('uuid');
 
 export default function PopupAddChannel(every_users: User[], current_user: User) {
 	let [selected, setSelected] = useState([] as number[]);
+	let privateRef = useRef<HTMLInputElement | null>(null);
 	let inputRef = useRef<HTMLInputElement | null>(null);
+	let inputRefPassword = useRef<HTMLInputElement | null>(null);
 	if (typeof current_user === 'undefined')
 		return <div key={uuidv4()}></div>
 	else if (!selected.includes(current_user.id)){
@@ -40,7 +42,8 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 					<input type="checkbox" style={{
 						display: 'flex',
 						flex: '0 0 42px',
-					}} onChange={() => clickCheckbox(user.id)}/>
+					}} onChange={() => clickCheckbox(user.id)}
+					className='hover-cursor'/>
 				</div>
 			)
 		}
@@ -51,14 +54,22 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 		if (!inputRef.current || inputRef.current.value == '')
 			return ;
 		const chan_name = inputRef.current!.value;
+		const chan_pass = inputRefPassword.current!.value;
 		inputRef.current!.value = '';
+		inputRefPassword.current!.value = '';
 		setSelected([current_user.id]);
 		fetch('/api/channel/create', {
 			method: 'POST',
-			body: JSON.stringify({
-				name: chan_name,
-				user_id: current_user.id,
-			}),
+			body: ( chan_pass.length > 0 ?
+				JSON.stringify({
+					name: chan_name,
+					user_id: current_user.id,
+				}) :
+				JSON.stringify({
+					name: chan_name,
+					user_id: current_user.id,
+					pass: chan_pass,
+				})),
 			headers: {'Content-Type': 'application/json'},
 		})
 		.then(response => {
@@ -68,13 +79,18 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 						for (const usr of selected) {
 							if (usr === current_user.id || typeof usr === 'undefined')
 								continue;
-							console.log("Adding", usr)
 							fetch('/api/channel/join', {
 								method: 'POST',
-								body: JSON.stringify({
-									name: chan_name,
-									user_id: usr,
-								}),
+								body: ( chan_pass.length > 0 ?
+									JSON.stringify({
+										name: chan_name,
+										user_id: usr,
+									}) :
+									JSON.stringify({
+										name: chan_name,
+										user_id: usr,
+										pass: chan_pass,
+									})),
 								headers: {'Content-Type': 'application/json'},
 							})
 						}
@@ -87,7 +103,8 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 		<Popup trigger={add_group()} modal nested key={uuidv4()}>
 			<h1>Add users:</h1>
 			<div className='popup-user-container'>
-				{basic_users(every_users.filter(usr => usr.name != current_user.name))}
+				{basic_users(every_users.filter(usr => 
+						usr.name != current_user.name))}
 			</div>
 			
 			<div className='bar' style={{
@@ -98,8 +115,22 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 			}}></div>
 
 			<div className='popup-prompt'>
-				<input ref={inputRef} type='text'></input>
-				<button onClick={() => ValidateChan()}>Create</button>
+				<input ref={inputRef} type='text' placeholder='Name'></input>
+				<button onClick={() => ValidateChan()}
+				className='hover-cursor'>Create</button>
+			</div>
+			<div className='popup-prompt'>
+				<input ref={inputRefPassword} type='password'
+				placeholder='Password'></input>
+				<div className='private-setter'>
+					Private:
+					<input type='checkbox'
+						ref={privateRef}
+						style={{
+							alignSelf: 'flex-end'
+						}}
+					></input>
+				</div>
 			</div>
 		</Popup>
 	)
