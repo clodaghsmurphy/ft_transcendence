@@ -5,6 +5,7 @@ import { useEffect, useState, useContext } from 'react';
 import './stats.css';
 import { AuthContext } from './App';
 import { ActionKind } from "./store/reducer";
+import { OTPinput } from './OTPinput';
 
 
 interface PopUpProps
@@ -50,6 +51,8 @@ function PopUp2FA(props: PopUpProps)
                
     });  
     }
+
+    const onChange = (input:string) => setValue(input)
     return (
         <div className="TwoFactorPopUp">
            
@@ -67,13 +70,12 @@ function PopUp2FA(props: PopUpProps)
                 <img src={imageSrc} alt="QR code" />
             </div>
             { error ? <div>{error}</div> : null }
-            <div> Code alternative here</div>
-            <div>Enter authorization code here
-                <input type="text" value={value} onChange={(e:React.FormEvent<HTMLInputElement>) => {setValue(e.currentTarget.value)}}/>
+            <div className='qr-input'>
+                <OTPinput value={value} valueLength={6} onChange={onChange}/>
             </div>
             <div className="buttons">
-                <button onClick={() => { props.setShow(!props.show)}}>Close</button>
-                <button type="submit" onClick={handleSubmit}>Verfiy</button>
+                <button className='cancel-popup' onClick={() => { props.setShow(!props.show)}}>Close</button>
+                <button className='submit-popup' type="submit" onClick={handleSubmit}>Verfiy</button>
             </div>
         </div>
     );

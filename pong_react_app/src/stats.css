@@ -400,14 +400,19 @@
   .TwoFactorPopUp
   {
 	display: flex;
+	color: white;
+	background-color: rgb(17, 11, 49);
 	align-items: center;
 	position: fixed;
 	flex-direction: column;
-	background-color: white;
+	border: solid 1px white;
+	border-radius: 1em;
+	box-shadow: 0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+	justify-content: space-between;
 	right: 25%;
 	top: 5vh;
-	height: 60vh;
-	width: 40vw;
+	height: 80vh;
+	width: 50vw;
   }
 
   .SmallPopUp
@@ -442,6 +447,24 @@
 	border-radius: 1em;
   }
 
+  .qr-input
+  {
+	display: flex;
+		flex: 30%;
+	
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-around;
+		width: 80%;
+  }
+
+  .qr-input input  {
+			height: 100%;
+			padding: 1vw;
+		
+			border-radius: 1em;
+  }
+
   .popup-header
   {
 	flex: 10%;
@@ -467,7 +490,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	flex:30%;
+	margin: 1vh;
+	flex:50%;
 	border-radius: 0!important;
 	overflow: visible!important;
 	height: 50%;
@@ -482,8 +506,12 @@
   .instructions {
 	display: flex;
 	flex-direction: column;
+	overflow: visible;
+	margin-bottom: 1vw;
+	margin-top: 1vw;
+		align-items: center;
+		justify-content: space-around;
 	flex: 20%;
-	background-color: red;
 
   }
 
@@ -493,7 +521,7 @@
   }
 
   .instructions li{
-	text-align: left;
+	text-align: center;
 	font-size: 1vw;
 	line-break: auto;
 	list-style: decimal;
@@ -517,7 +545,7 @@
 	justify-content: center;
 	align-items: center;
 	border-radius: 1em;
-	height: 80%;
+	height: 5vh;
 	width: 12vw;
 	color: white;
 	background-color: #881DAB;
@@ -545,7 +573,7 @@
 	align-items: center;
 	width: 12vw;
 	border-radius: 1em;
-	height: 80%;
+	height: 5vh;
 	background-color: transparent;
 	color: white;
 	border: solid 1px white;
