@@ -94,24 +94,24 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	function emit_kick() {
 		socket.emit('kick', {
 			chan: chan.name,
-			sender: current_user.id,
-			target: user.id,
+			user_id: current_user.id,
+			target_id: user.id,
 		})
 	}
 
 	function emit_ban() {
 		socket.emit('ban', {
 			chan: chan.name,
-			sender: current_user.id,
-			target: user.id,
+			user_id: current_user.id,
+			target_id: user.id,
 		})
 	}
 
 	function emit_mute() {
 		socket.emit('mute', {
 			chan: chan.name,
-			sender: current_user.id,
-			target: user.id,
+			user_id: current_user.id,
+			target_id: user.id,
 			duration: '01:00',
 			// duration: time_input.current!.value
 		})
