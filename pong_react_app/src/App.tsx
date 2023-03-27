@@ -10,6 +10,7 @@ import Chat from './Chat';
 import Login from './Login';
 import LoginTfa from './LoginTfa';
 import Stats from './Stats';
+import Game from './Game';
 import { Navigate } from 'react-router-dom'
 import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './ProtectedRoute'
@@ -45,6 +46,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
+        <Route path='/adam' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Game />} />} />
     </Routes>
     </PromptContext.Provider>
     <JWTverify />
