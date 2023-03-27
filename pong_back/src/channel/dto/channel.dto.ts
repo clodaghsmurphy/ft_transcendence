@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from "class-validator";
 
 export class ChannelCreateDto {
 	@IsString()
@@ -49,6 +49,13 @@ export class ChannelKickDto extends ChannelLeaveDto {
 	@IsNumber()
 	@IsNotEmpty()
 	target_id: number;
+}
+
+export class UserMuteDto extends ChannelKickDto {
+	@IsNumber()
+	@IsNotEmpty()
+	@Min(1)
+	mute_duration: number;
 }
 
 export class MessageCreateDto {

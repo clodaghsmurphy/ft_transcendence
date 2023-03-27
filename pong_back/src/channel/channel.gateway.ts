@@ -4,7 +4,7 @@ import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MessageCreateDto, UserMuteDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -66,7 +66,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.checkOperator(dto.user_id, dto.name);
 			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
 
-			this.io.in(dto.name).emit('kick', {name: dto.name, user: dto.user_id, target: dto.target_id});
+			this.io.in(dto.name).emit('kick', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
 		} catch (e) {
 			throw new WsException(e);
 		}
@@ -81,7 +81,25 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			this.logger.log(e);
-			client.leave(dto.name);
+			throw new WsException(e);
+		}
+	}
+
+	@SubscribeMessage('mute')
+	async handleMute(@MessageBody() dto: UserMuteDto, @ConnectedSocket() client: Socket)
+	{
+		this.checkUser(client, dto.name);
+		try {
+			await this.channelService.checkOperator(dto.user_id, dto.name);
+			await this.channelService.mute(dto);
+
+			this.io.in(dto.name).emit('mute', {
+				name: dto.name,
+				user_id: dto.user_id,
+				target_id: dto.target_id,
+				mute_duration: dto.mute_duration,
+			});
+		} catch (e) {
 			throw new WsException(e);
 		}
 	}
