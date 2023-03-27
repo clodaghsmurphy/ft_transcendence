@@ -72,31 +72,15 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 	function sendMessageOnClick(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
 	{
 		e.preventDefault();
-		let test = { 
-			text: formValue,
-			uid:  chan.curr_uid + 1,
-			sender_name: current_user.name,
-			sender_id: current_user.id,
-			from: chan.name,
-			type: NORMAL
-		}
 		if (formValue.length !== 0)
 		{
-			// let tmp = msg
-			// tmp.unshift(ChatMessage(users, test, current_user))
-			// setMessagesBlocks(tmp);
-			// console.log({ 
-			// 	sender_id: current_user.id,
-			// 	sender_name: current_user.name,
-			// 	uid: chan.curr_uid + 1,
-			// 	text: formValue,
-			// })
 			socket.emit('message', {
 				name: chan.name,
 				sender_id: current_user.id,
 				sender_name: current_user.name,
 				uid: chan.curr_uid + 1,
 				text: formValue,
+				type: NORMAL,
 			})
 			setFormValue('');
 		}

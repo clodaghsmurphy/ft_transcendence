@@ -114,7 +114,7 @@ export class ChannelService {
 			where: {name: dto.name},
 			data: {
 				members: {set: channel.members.filter((id) => id !== dto.user_id)},
-				operators: {set: channel.members.filter((id) => id !== dto.user_id)},
+				operators: {set: channel.operators.filter((id) => id !== dto.user_id)},
 			},
 		});
 

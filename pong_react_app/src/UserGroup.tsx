@@ -93,7 +93,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 
 	function emit_kick() {
 		socket.emit('kick', {
-			chan: chan.name,
+			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
 		})
@@ -101,19 +101,21 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 
 	function emit_ban() {
 		socket.emit('ban', {
-			chan: chan.name,
+			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
 		})
 	}
 
 	function emit_mute() {
+		let date = new Date();
+		
+		date.setHours(date.getHours() + 1)
 		socket.emit('mute', {
-			chan: chan.name,
+			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
-			duration: '01:00',
-			// duration: time_input.current!.value
+			duration: date,
 		})
 	}
 
@@ -145,7 +147,10 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 						"flexDirection": "row",
 						"alignItems": "center"
 					}}>
-						<button id='kick-button'>Kick</button>
+						<button id='kick-button'
+							onClick={() => emit_kick()}>
+								Kick
+						</button>
 						<button id='ban-button'>Ban</button>
 					</div>
 					<div style={{

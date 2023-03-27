@@ -9,6 +9,7 @@ export const INVITE = 3
 export interface MessageData {
 	text: string,
 	uid: number,
+	id: number,
 	sender_name: string,
 	sender_id: number,
 	type: number,
@@ -50,6 +51,7 @@ export function sample_channel_data(): Channel[] {
 				sender_id: 2,
 				text: "Je pars au ski",
 				type: NORMAL,
+				id: 0,
 				uid: 0,
 				from: "Transcendence"
 			},
@@ -58,6 +60,7 @@ export function sample_channel_data(): Channel[] {
 				sender_id: 1,
 				text: "Moi aussi",
 				type: NORMAL,
+				id: 0,
 				uid: 1,
 				from: "Transcendence"
 			},
@@ -66,6 +69,7 @@ export function sample_channel_data(): Channel[] {
 				sender_id: 4,
 				text: "Pas nous",
 				type: NORMAL,
+				id: 0,
 				uid: 2,
 				from: "Transcendence"
 			},
@@ -74,6 +78,7 @@ export function sample_channel_data(): Channel[] {
 				sender_id: 3,
 				text: "Ouais...",
 				type: NORMAL,
+				id: 0,
 				uid: 3,
 				from: "Transcendence"
 			},
@@ -91,6 +96,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "nguiard",
 			text: "Raclette?",
 			type: NORMAL,
+			id: 0,
 			uid: 0,
 			from: "Raclette"
 		},
@@ -100,6 +106,7 @@ export function sample_channel_data(): Channel[] {
 			text: "Je peux venir?",
 			type: NORMAL,
 			uid: 1,
+			id: 1,
 			from: "Raclette"
 		},
 		{
@@ -107,6 +114,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "ple-lez",
 			text: "non",
 			type: NORMAL,
+			id: 1,
 			uid: 2,
 			from: "Raclette"
 		},
@@ -115,6 +123,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "nguiard",
 			text: " has banned clmurphy",
 			type: BAN,
+			id: 1,
 			uid: 3,
 			from: "Raclette"
 		},
@@ -132,6 +141,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "clmurphy",
 			text: " has banned nguiard",
 			type: BAN,
+			id: 1,
 			uid: 0,
 			from: "Illuminatis"
 		},
@@ -140,6 +150,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "clmurphy",
 			text: " has kicked ple-lez",
 			type: KICK,
+			id: 1,
 			uid: 1,
 			from: "Illuminatis"
 		},
@@ -148,6 +159,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "clmurphy",
 			text: "ils ont ose me ban d'une raclette",
 			type: NORMAL,
+			id: 1,
 			uid: 2,
 			from: "Illuminatis"
 		},
@@ -156,6 +168,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "adben-mc",
 			text: "On vas conquerir le monde",
 			type: NORMAL,
+			id: 1,
 			uid: 3,
 			from: "Illuminatis"
 		},
@@ -164,6 +177,7 @@ export function sample_channel_data(): Channel[] {
 			sender_name: "clmurphy",
 			text: "/game/6",
 			type: INVITE,
+			id: 1,
 			uid: 4,
 			from: "Illuminatis"
 		},],
@@ -253,6 +267,7 @@ export function sendToChan(chan: Channel, current: User, msg: "string"): boolean
 		uid: 0,
 		text: msg,
 		type: NORMAL,
+		id: chan.curr_uid + 1,
 		from: chan.name,
 	}
 	return sendMessage(chan, current, new_message)

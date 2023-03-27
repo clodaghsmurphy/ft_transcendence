@@ -127,7 +127,7 @@ function group_message(chan_data: Channel[], click_handler: (chan: Channel | Dir
 			target_message.sender_name + target_message.text :
 			target_message.text
 		)
-		if (target_message.type)
+		if (target_message.type === INVITE)
 			message_text = target_message.sender_name + " sent an invite"
 		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
 	}
@@ -143,19 +143,6 @@ function Chat()
 	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as ChanAndMessage | DirectMessage)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
-	let curr_chan_ref = useRef(current_chan);
-	curr_chan_ref.current = current_chan
-	// const socket = io("ws://localhost:8080/api/channel");
-	
-	const handleMessage = useCallback((param: any) => {
-		console.log('inside handleMessage:', current_chan);
-		let new_messages = (curr_chan_ref.current as ChanAndMessage).msg;
-		new_messages.push(param as MessageData);
-
-		set_current_chan({...curr_chan_ref.current, msg: new_messages});
-		console.log('inside handleMessage after update:', curr_chan_ref.current);
-	}, [current_chan, set_current_chan]);
-	  
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -180,12 +167,62 @@ function Chat()
 			})
 		})
 
-		// socket.on('join', (data: any) => {
-		// 	console.log(data)
-		// })
+	}, []);
+
+	let old_message_handler = (truc: any) => {};
+
+	useEffect(() => {
+		socket.removeListener('message')
+		const handleMessage = (param: any) => {
+			if (typeof (current_chan as ChanAndMessage).msg === 'undefined')
+				return;
+
+			let new_messages = (current_chan as ChanAndMessage).msg;
+	
+			set_current_chan((current_chan: ChanAndMessage | DirectMessage) => ({
+				...current_chan,
+				msg: [...(current_chan as ChanAndMessage).msg, param]
+			}));
+		}
+
+		old_message_handler = handleMessage
 
 		socket.on('message', handleMessage)
-	}, []);
+	}, [current_chan, set_current_chan])
+
+	let handleKick = (data: any) => {}
+
+	useEffect(() => {
+		socket.removeListener('kick', handleKick)
+		console.log('in useEffect of handle kick')
+		handleKick = (data: any) => {
+			console.log('inside handleKick:', data)
+			if (data.user === current_user.id) {
+				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
+				let target = id_to_user(all_users, data.target_id).name;
+				let kick_message = " has kicked " + target
+				socket.emit('message', {
+					name: data.name,
+					sender_id: current_user.id,
+					sender_name: current_user.name,
+					uid: chan.curr_uid + 1,
+					text: kick_message,
+					type: KICK,
+				})
+			}
+			else {
+				socket.emit('message', {
+					name: data.name,
+					sender_id: current_user.id,
+					sender_name: current_user.name,
+					uid: 0,
+					text: 'dummy message for deconnection',
+				})
+			}
+		}
+
+		socket.on('kick', handleKick)
+	}, [all_channels, set_all_channels])
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'
@@ -232,7 +269,7 @@ function Chat()
 
 	// console.log(current_user.id);
 
-	return (	
+	return (
 		<div className="dashboard">
         <NavBar /> 
         <main className="page-wrapper">
