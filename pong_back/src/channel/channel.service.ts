@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Channel, Message } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
-import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { UserService } from "src/user/user.service";
 
@@ -46,6 +46,7 @@ export class ChannelService {
 			let data = {
 				name: dto.name,
 				operators: [dto.owner_id],
+				owner: dto.owner_id,
 				members: dto.users_ids,
 			}
 
@@ -55,11 +56,8 @@ export class ChannelService {
 				data['password'] = hash;
 			}
 
-			const channel: Channel = await this.prisma.channel.create({
-				data: data,
-			});
+			const channel: Channel = await this.prisma.channel.create({data: data});
 			dto.users_ids.forEach(async(user) => await this.userService.joinChannel(user, dto.name));
-
 			return this.returnInfo(channel);
 		} catch (e) {
 			if (e.code == 'P2002') {
@@ -105,6 +103,22 @@ export class ChannelService {
 		this.userService.joinChannel(dto.user_id, dto.name);
 
 		return this.returnInfo(channel);
+	}
+
+	async leave(dto: ChannelLeaveDto) : Promise<unknown> {
+		await this.checkUserInChannel(dto.user_id, dto.name);
+
+		const channel: Channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
+
+		const updateChannel: Channel = await this.prisma.channel.update({
+			where: {name: dto.name},
+			data: {
+				members: {set: channel.members.filter((id) => id !== dto.user_id)},
+				operators: {set: channel.members.filter((id) => id !== dto.user_id)},
+			},
+		});
+
+		return this.returnInfo(updateChannel);
 	}
 
 	async getAllMessages(channelName: string) : Promise<Message[]> {
@@ -174,6 +188,21 @@ export class ChannelService {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `User ${userId} has not joined channel ${channelName}`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	async checkOperator(userId: number, channelName: string) {
+		await this.checkUser(userId);
+
+		if (await this.prisma.channel.count({where: {
+			name: channelName,
+			operators: {has: userId}
+		}}) == 0)
+		{
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${userId} isn't an operator of channel ${channelName},`
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}
