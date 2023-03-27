@@ -108,14 +108,19 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_mute() {
-		let date = new Date();
-		
-		date.setHours(date.getHours() + 1)
+		console.log({
+			name: chan.name,
+			user_id: current_user.id,
+			target_id: user.id,
+			mute_duration: 15,
+		})
 		socket.emit('mute', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
-			duration: date,
+			mute_duration: 15,
+		}, (response: any) => {
+			console.log(response)
 		})
 	}
 
@@ -160,7 +165,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 						paddingTop: '5px',
 					}}>
 						<button id='mute-button'
-						onClick={() => console.log('test')}>
+						onClick={() => emit_mute()}>
 							Mute
 						</button>
 						<input type='text'

@@ -4,7 +4,8 @@ import User from './User'
 export const NORMAL = 0
 export const KICK = 1
 export const BAN = 2
-export const INVITE = 3
+export const MUTE = 3
+export const INVITE = 4
 
 export interface MessageData {
 	text: string,

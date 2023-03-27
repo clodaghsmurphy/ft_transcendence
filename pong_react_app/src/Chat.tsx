@@ -15,7 +15,7 @@ import { user_in_group } from './UserGroup'
 import plus_sign from './media/white_plus.png'
 import { SearchBar } from './SearchBar'
 import User, { error_user, id_to_user, sample_user_data } from './User'
-import { BAN, Channel, INVITE, KICK, MessageData, basic_channel, names_to_channel, sample_channel_data } from './Channels'
+import { BAN, Channel, INVITE, KICK, MUTE, MessageData, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
 import io from 'socket.io-client'
 import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
@@ -177,8 +177,6 @@ function Chat()
 			if (typeof (current_chan as ChanAndMessage).msg === 'undefined')
 				return;
 
-			let new_messages = (current_chan as ChanAndMessage).msg;
-	
 			set_current_chan((current_chan: ChanAndMessage | DirectMessage) => ({
 				...current_chan,
 				msg: [...(current_chan as ChanAndMessage).msg, param]
@@ -192,6 +190,7 @@ function Chat()
 
 	useEffect(() => {
 		socket.removeListener('kick')
+		socket.removeListener('mute')
 		console.log('in useEffect of handle kick')
 		const handleKick = (data: any) => {
 			console.log('inside handleKick:', data)
@@ -219,7 +218,25 @@ function Chat()
 			}
 		}
 
+		const handleMute = (data: any) => {
+			console.log('recieved the mute')
+			if (data.user === current_user.id) {
+				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
+				let target = id_to_user(all_users, data.target_id).name;
+				let kick_message = " has muted " + target + " for " + data.mute_duration
+				socket.emit('message', {
+					name: data.name,
+					sender_id: current_user.id,
+					sender_name: current_user.name,
+					uid: chan.curr_uid + 1,
+					text: kick_message,
+					type: MUTE,
+				})
+			}
+		}
+
 		socket.on('kick', handleKick)
+		socket.on('mute', handleMute)
 	}, [all_channels, set_all_channels])
 
 	if (typeof current_user.channels !== 'undefined'
@@ -264,8 +281,6 @@ function Chat()
 		if (typeof (param as DirectMessage).messages !== 'undefined')
 			set_current_chan(param as DirectMessage)
 	}
-
-	// console.log(current_user.id);
 
 	return (
 		<div className="dashboard">
