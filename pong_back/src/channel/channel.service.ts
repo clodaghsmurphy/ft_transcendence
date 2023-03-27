@@ -192,6 +192,21 @@ export class ChannelService {
 		}
 	}
 
+	async checkOperator(userId: number, channelName: string) {
+		await this.checkUser(userId);
+
+		if (await this.prisma.channel.count({where: {
+			name: channelName,
+			operators: {has: userId}
+		}}) == 0)
+		{
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${userId} isn't an operator of channel ${channelName},`
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	async checkPassword(dto: ChannelJoinDto) {
 		const channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
 

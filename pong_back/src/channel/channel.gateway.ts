@@ -50,7 +50,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
 		try {
 			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
-			this.io.in(dto.name).emit('leave', dto);
+			this.io.in(dto.name).emit('leave', {name: dto.name, user: dto.user_id});
 			client.leave(dto.name);
 		} catch (e) {
 			client.leave(dto.name);
@@ -60,6 +60,16 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
 	@SubscribeMessage('kick')
 	async handleKick(@MessageBody() dto: ChannelKickDto, @ConnectedSocket() client: Socket) {
+		this.checkUser(client, dto.name);
+
+		try {
+			await this.channelService.checkOperator(dto.user_id, dto.name);
+			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
+
+			this.io.in(dto.name).emit('kick', {name: dto.name, user: dto.user_id, target: dto.target_id});
+		} catch (e) {
+			throw new WsException(e);
+		}
 	}
 
 	@SubscribeMessage('message')
