@@ -6,7 +6,7 @@ import clodagh from './media/clmurphy.jpg'
 import { Avatar } from '@mui/material'
 import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
-import Chat, { ChanAndMessage } from './Chat'
+import Chat, { ChanAndMessage, socket } from './Chat'
 import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
 import { DirectMessage } from './DirectMessage'
@@ -39,6 +39,12 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 			'justifyContent': 'space-between',
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
+			<div className='channel-header'>
+				{chan.name}
+				<div>
+					
+				</div>
+			</div>
 			<div className='no-messages' key="Message-ret-b"
 				style={{
 					marginTop: 'auto',
@@ -57,7 +63,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 			</form>
 		</div>);
 
-	if ((messagesBlocks.length === 0 && messages.length > 0) || last_chan != chan.name) // si c'est vide il faut l'update
+	if (last_chan != chan.name || messagesBlocks.length < messages.length) // si c'est vide il faut l'update
 	{
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 		setLastChan(chan.name);
@@ -76,25 +82,21 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 		}
 		if (formValue.length !== 0)
 		{
-			console.log('sending to', chan.name)
-			let tmp = msg
-			tmp.unshift(ChatMessage(users, test, current_user))
-			setMessagesBlocks(tmp);
-			console.log({ 
+			// let tmp = msg
+			// tmp.unshift(ChatMessage(users, test, current_user))
+			// setMessagesBlocks(tmp);
+			// console.log({ 
+			// 	sender_id: current_user.id,
+			// 	sender_name: current_user.name,
+			// 	uid: chan.curr_uid + 1,
+			// 	text: formValue,
+			// })
+			socket.emit('message', {
+				name: chan.name,
 				sender_id: current_user.id,
 				sender_name: current_user.name,
 				uid: chan.curr_uid + 1,
 				text: formValue,
-			})
-			fetch('/api/channel/' + chan.name + '/message/', {
-				method: 'POST',
-				body: JSON.stringify({ 
-					sender_id: current_user.id,
-					sender_name: current_user.name,
-					uid: chan.curr_uid + 1,
-					text: formValue,
-				}),
-				headers: {'Content-Type': 'application/json'}
 			})
 			setFormValue('');
 		}
@@ -107,13 +109,19 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 			'justifyContent': 'space-between',
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
+			<div className='channel-header'>
+				{chan.name}
+				<div>
+					
+				</div>
+			</div>
 			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}
 			</div>
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input"
 					placeholder="Type message..." value={ formValue }
-					onChange={e => setFormValue(e.target.value)} autoFocus
+					onChange={(e) => setFormValue(e.target.value)} autoFocus
 					key="will_never_change"/>
 				<div className="button-submit" key="Message-ret-d">
 					<button type="submit" onClick={(event) => sendMessageOnClick(event, messagesBlocks)} key="Message-ret-e">Send</button>

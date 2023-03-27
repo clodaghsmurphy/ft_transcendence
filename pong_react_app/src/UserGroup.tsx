@@ -1,10 +1,11 @@
 import Button from '@mui/material/Button'
-import React from 'react'
+import React, { useRef } from 'react'
 import { Avatar, ButtonGroup } from '@mui/material'
 import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
 import { DirectMessage } from './DirectMessage';
+import { socket } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -32,7 +33,7 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 	for (const user of chan.members) {
 		if (user != current_user.id) {
 			if (curr_is_op && !chan.operators.includes(user))
-				ret.push(button_op(id_to_user(every_user, user), chan.operators.includes(user)))
+				ret.push(Button_op(id_to_user(every_user, user), chan.operators.includes(user), current_user, chan))
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), chan.operators.includes(user)))
 		}
@@ -87,7 +88,35 @@ function button_not_op(user: User, is_op: boolean): JSX.Element {
 	);
 }
 
-function button_op(user: User, is_op: boolean): JSX.Element {
+function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel): JSX.Element {
+	// let time_input = useRef<HTMLInputElement | null>(null)
+
+	function emit_kick() {
+		socket.emit('kick', {
+			chan: chan.name,
+			sender: current_user.id,
+			target: user.id,
+		})
+	}
+
+	function emit_ban() {
+		socket.emit('ban', {
+			chan: chan.name,
+			sender: current_user.id,
+			target: user.id,
+		})
+	}
+
+	function emit_mute() {
+		socket.emit('mute', {
+			chan: chan.name,
+			sender: current_user.id,
+			target: user.id,
+			duration: '01:00',
+			// duration: time_input.current!.value
+		})
+	}
+
 	return (
 		<div className='group-members-button-wrapper' key={uuidv4()}>
 			<div className='group-members-button'>
@@ -99,7 +128,7 @@ function button_op(user: User, is_op: boolean): JSX.Element {
 					"flexDirection": "column",
 					"margin": "0",
 					"alignItems": "center",
-					paddingTop: "1rem"
+					paddingTop: "0.5rem"
 				}}>
 					<div className='group-members-button-text'>
 						<Link to={"/stats/" + user.name}
@@ -118,6 +147,27 @@ function button_op(user: User, is_op: boolean): JSX.Element {
 					}}>
 						<button id='kick-button'>Kick</button>
 						<button id='ban-button'>Ban</button>
+					</div>
+					<div style={{
+						"display": "flex",
+						"flexDirection": "row",
+						"alignItems": "center",
+						paddingTop: '5px',
+					}}>
+						<button id='mute-button'
+						onClick={() => console.log('test')}>
+							Mute
+						</button>
+						<input type='text'
+						name='time'
+						style={{
+							width:'50%',
+							marginTop: 'auto',
+							marginBottom: 'auto',
+							border: '0px',
+							borderRadius: '3px',
+							flex: '1',
+						}}></input>
 					</div>
 				</div>
 			</div>
