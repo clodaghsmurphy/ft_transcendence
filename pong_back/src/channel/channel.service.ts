@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Channel, Message } from '@prisma/client';
+import { Channel, Message, MuteInfo } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto, UserMuteDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { UserService } from "src/user/user.service";
+import { info } from "console";
 
 @Injectable()
 export class ChannelService {
@@ -114,11 +115,39 @@ export class ChannelService {
 			where: {name: dto.name},
 			data: {
 				members: {set: channel.members.filter((id) => id !== dto.user_id)},
-				operators: {set: channel.members.filter((id) => id !== dto.user_id)},
+				operators: {set: channel.operators.filter((id) => id !== dto.user_id)},
 			},
 		});
 
 		return this.returnInfo(updateChannel);
+	}
+
+	async mute(dto: UserMuteDto) {
+		await this.checkUserInChannel(dto.target_id, dto.name);
+
+		const muteTime = new Date();
+		muteTime.setSeconds(muteTime.getSeconds() + dto.mute_duration);
+
+		const muteInfo: MuteInfo = await this.prisma.muteInfo.create({
+			data: {
+				userId: dto.target_id,
+				muteTime: muteTime,
+				channel: {
+					connect: {name: dto.name},
+				}
+			},
+		});
+
+		await this.prisma.channel.update({
+			where: {name: dto.name},
+			data: {
+				mutedUsers: {
+					connect: {id: muteInfo.id},
+				}
+			}
+		});
+
+		return dto;
 	}
 
 	async getAllMessages(channelName: string) : Promise<Message[]> {
@@ -134,8 +163,8 @@ export class ChannelService {
 		});
 	}
 
-	async postMessage(dto: MessageCreateDto) : Promise<Message> {
-		await this.checkUserInChannel(dto.sender_id, dto.name);
+	async postMessage(dto: MessageCreateDto) {
+		await this.checkIsMuted(dto);
 
 		const message = await this.prisma.message.create({
 			data: {
@@ -155,6 +184,7 @@ export class ChannelService {
 		});
 		return message;
 	}
+
 
 	async checkUser(id: number) {
 		if (await this.prisma.user.count({where: {id: id}}) == 0)
@@ -202,9 +232,40 @@ export class ChannelService {
 		{
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: `User ${userId} isn't an operator of channel ${channelName},`
+				error: `User ${userId} isn't an operator of channel ${channelName}`
 			}, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	async checkIsMuted(dto: MessageCreateDto) {
+		await this.checkUserInChannel(dto.sender_id, dto.name);
+
+		const channel = await this.prisma.channel.findUnique({
+			where: {name: dto.name},
+			include: {mutedUsers: true},
+		});
+
+		const mutedUser = channel.mutedUsers.find((info) => info.userId === dto.sender_id);
+		if (!mutedUser)
+			return ;
+
+		const now = new Date();
+		if (now > mutedUser.muteTime) {
+			await this.prisma.muteInfo.delete({where: {id: mutedUser.id}});
+			// await this.prisma.channel.update({
+			// 	where: {name: dto.name},
+			// 	data: {
+			// 		mutedUsers: {
+			// 			disconnect: {id: mutedUser.id}
+			// 		}
+			// 	}
+			// });
+			return ;
+		}
+		throw new HttpException({
+			status: HttpStatus.BAD_REQUEST,
+			error: `User ${dto.sender_id} is still muted from channel ${dto.name} until ${mutedUser.muteTime}`
+		}, HttpStatus.BAD_REQUEST);
 	}
 
 	async checkPassword(dto: ChannelJoinDto) {
