@@ -190,12 +190,10 @@ function Chat()
 		socket.on('message', handleMessage)
 	}, [current_chan, set_current_chan])
 
-	let handleKick = (data: any) => {}
-
 	useEffect(() => {
-		socket.removeListener('kick', handleKick)
+		socket.removeListener('kick')
 		console.log('in useEffect of handle kick')
-		handleKick = (data: any) => {
+		const handleKick = (data: any) => {
 			console.log('inside handleKick:', data)
 			if (data.user === current_user.id) {
 				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
