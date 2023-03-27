@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Todo: find a way to share the User class between front and back
 model User {
   name String
   id Int @id
@@ -42,6 +41,14 @@ model Message {
   channel String
 }
 
+model MuteInfo {
+  id Int @id @default(autoincrement())
+  userId Int
+  muteTime DateTime
+  channelName String
+  channel Channel @relation("MutedChannel", fields: [channelName], references: [name])
+}
+
 model Channel {
   name String @id
   password String?
@@ -49,7 +56,10 @@ model Channel {
   members Int[] @default([])
   operators Int[]
   blocked Int[] @default([])
+  owner Int
 
   messages Int[] @default([])
   curr_uid Int @default(0)
+
+  mutedUsers MuteInfo[] @relation("MutedChannel")
 }
