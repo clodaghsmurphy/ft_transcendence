@@ -40,10 +40,4 @@ export class ChannelController {
 	getAllMessages(@Param() params) {
 		return this.channelService.getAllMessages(params.name);
 	}
-
-	// Temporary Route to test channel messages
-	// @Post(':name/message')
-	// postMessage(@Param() params, @Body() dto: MessageCreateDto) {
-	// 	return this.channelService.postMessage(params.name, dto);
-	// }
 }

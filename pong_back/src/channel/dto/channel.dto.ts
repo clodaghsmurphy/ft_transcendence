@@ -35,14 +35,13 @@ export class ChannelJoinDto {
 	password: string;
 }
 
-export class ChannelLeaveDto {
-	@IsString()
-	@IsNotEmpty()
-	name: string;
+export class ChannelLeaveDto extends ChannelJoinDto {
+}
 
+export class ChannelKickDto extends ChannelLeaveDto {
 	@IsNumber()
 	@IsNotEmpty()
-	user_id: number;
+	target_id: number;
 }
 
 export class MessageCreateDto {
@@ -66,3 +65,4 @@ export class MessageCreateDto {
 	@IsNotEmpty()
 	sender_name: string;
 }
+

@@ -4,7 +4,7 @@ import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -29,7 +29,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
 
-	// @UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket) {
 		if (client.rooms.has(dto.name))
@@ -40,19 +39,27 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			client.join(dto.name);
 			this.io.in(dto.name).emit('join', {name: dto.name, user: dto.user_id});
 		} catch (e) {
+			client.leave(dto.name);
 			throw new WsException(e);
 		}
 	}
 
 	@SubscribeMessage('leave')
 	async handleLeave(@MessageBody() dto: ChannelLeaveDto, @ConnectedSocket() client: Socket) {
+		this.checkUser(client, dto.name);
+
 		try {
 			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
-			this.logger.log(`Client ${dto.user_id} has left ${dto.name}`);
 			this.io.in(dto.name).emit('leave', dto);
+			client.leave(dto.name);
 		} catch (e) {
+			client.leave(dto.name);
 			throw new WsException(e);
 		}
+	}
+
+	@SubscribeMessage('kick')
+	async handleKick(@MessageBody() dto: ChannelKickDto, @ConnectedSocket() client: Socket) {
 	}
 
 	@SubscribeMessage('message')
@@ -64,6 +71,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			this.logger.log(e);
+			client.leave(dto.name);
 			throw new WsException(e);
 		}
 	}

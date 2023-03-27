@@ -46,6 +46,7 @@ export class ChannelService {
 			let data = {
 				name: dto.name,
 				operators: [dto.owner_id],
+				owner: dto.owner_id,
 				members: dto.users_ids,
 			}
 
@@ -55,11 +56,8 @@ export class ChannelService {
 				data['password'] = hash;
 			}
 
-			const channel: Channel = await this.prisma.channel.create({
-				data: data,
-			});
+			const channel: Channel = await this.prisma.channel.create({data: data});
 			dto.users_ids.forEach(async(user) => await this.userService.joinChannel(user, dto.name));
-
 			return this.returnInfo(channel);
 		} catch (e) {
 			if (e.code == 'P2002') {
