@@ -48,6 +48,7 @@ model Channel {
   members Int[] @default([])
   operators Int[]
   blocked Int[] @default([])
+  owner Int
 
   messages Int[] @default([])
   curr_uid Int @default(0)

@@ -4,7 +4,7 @@ import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -29,15 +29,45 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
 
-	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket) {
+		if (client.rooms.has(dto.name))
+			throw new WsException(`error: client has already joined room ${dto.name}`);
+
 		try {
 			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
 			client.join(dto.name);
 			this.io.in(dto.name).emit('join', {name: dto.name, user: dto.user_id});
 		} catch (e) {
-			this.logger.log(e);
+			client.leave(dto.name);
+			throw new WsException(e);
+		}
+	}
+
+	@SubscribeMessage('leave')
+	async handleLeave(@MessageBody() dto: ChannelLeaveDto, @ConnectedSocket() client: Socket) {
+		this.checkUser(client, dto.name);
+
+		try {
+			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
+			this.io.in(dto.name).emit('leave', {name: dto.name, user: dto.user_id});
+			client.leave(dto.name);
+		} catch (e) {
+			client.leave(dto.name);
+			throw new WsException(e);
+		}
+	}
+
+	@SubscribeMessage('kick')
+	async handleKick(@MessageBody() dto: ChannelKickDto, @ConnectedSocket() client: Socket) {
+		this.checkUser(client, dto.name);
+
+		try {
+			await this.channelService.checkOperator(dto.user_id, dto.name);
+			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
+
+			this.io.in(dto.name).emit('kick', {name: dto.name, user: dto.user_id, target: dto.target_id});
+		} catch (e) {
 			throw new WsException(e);
 		}
 	}
@@ -51,6 +81,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			this.logger.log(e);
+			client.leave(dto.name);
 			throw new WsException(e);
 		}
 	}
