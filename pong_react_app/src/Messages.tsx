@@ -15,7 +15,6 @@ const { v4: uuidv4 } = require('uuid');
 
 function Messages(chan_and_message: ChanAndMessage, users: User[], current_user: User)
 {
-	console.log('INSIDE Message:', chan_and_message)
 	let is_undefined: boolean = false;
 	let chan = chan_and_message.chan;
 	let messages = chan_and_message.msg;
@@ -64,11 +63,8 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 			</form>
 		</div>);
 
-	if ((messagesBlocks.length === 0 && messages.length > 0) ||
-		last_chan != chan.name ||
-		messagesBlocks.length < messages.length) // si c'est vide il faut l'update
+	if (last_chan != chan.name || messagesBlocks.length < messages.length) // si c'est vide il faut l'update
 	{
-		console.log('CHANGING MESSAGES BLOKKS')
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 		setLastChan(chan.name);
 	}

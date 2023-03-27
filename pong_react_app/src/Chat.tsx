@@ -141,7 +141,7 @@ function Chat()
 	let [all_users, set_all_users] = useState([] as User[])
 	let [all_channels, set_all_channels] = useState([] as Channel[])
 	let [current_user, set_current_user] = useState({} as User)
-	let [current_chan, set_current_chan] = useState(({nimp: []} as any) as ChanAndMessage | DirectMessage)
+	let [current_chan, set_current_chan] = useState({} as ChanAndMessage | DirectMessage)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
 	let curr_chan_ref = useRef(current_chan);
 	curr_chan_ref.current = current_chan
@@ -180,21 +180,12 @@ function Chat()
 			})
 		})
 
-		socket.on('join', (data: any) => {
-			console.log(data)
-		})
+		// socket.on('join', (data: any) => {
+		// 	console.log(data)
+		// })
 
 		socket.on('message', handleMessage)
 	}, []);
-	
-	
-	console.log('current chan', current_chan);
-	
-	// function test(param: any) {
-
-	// }
-
-	
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'
@@ -215,7 +206,6 @@ function Chat()
 				})
 			}
 
-			console.log('Tried to join')
 			socket.emit('join', {
 				name: (param as Channel).name,
 				user_id: current_user.id,
@@ -225,19 +215,11 @@ function Chat()
 				chan: param as Channel,
 				msg: [],
 			})
-			console.log('changed current_chan to:', {
-				chan: param as Channel,
-				msg: [],
-			})
 			fetch('/api/channel/' + (param as Channel).name + '/messages/')
 				.then(response => {
 					response.json()
 						.then(data => {
 							set_current_chan({
-								chan: param as Channel,
-								msg: data as MessageData[],
-							})
-							console.log('changed current chan to:', {
 								chan: param as Channel,
 								msg: data as MessageData[],
 							})
