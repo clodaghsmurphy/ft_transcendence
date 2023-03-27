@@ -12,27 +12,26 @@ function ChangePhoto() {
 	const [value, setValue] = useState("");
     const [error, setError] = useState("");
 	const { state, dispatch } = useContext(AuthContext);
+    const [imageBlob, setImageBlob] = useState<Blob | null>(null);
 
 
     const setImage = async (path: string) => {
-        path = "." + path;
-        state.user.avatar = path; 
-         dispatch(
-            {
-                type: ActionKind.userUpdate,
-                payload: { user:state.user },
-            }
-        )
+        
+        //     {
+        //         type: ActionKind.userUpdate,
+        //         payload: { user:state.user },
+        //     }
+        // )
         console.log(state.user.avatar)
     }
 
     const submitPhoto = async (event: React.FormEvent<HTMLFormElement>) =>
     {
-        console.log('in submit');
-        console.log(file);
         event.preventDefault();
         if (!file)
             return ;
+        console.log(file);
+      
         const formData = new FormData();
         formData.append('file', file);
         axios.post(`http://${window.location.hostname}:8080/api/user/upload`
@@ -41,15 +40,12 @@ function ChangePhoto() {
             'Content-Type' : 'multipart/form-data'
         }}
         )
-        .then(function(res:AxiosResponse) {
-         console.dir(res);
-         setError('');
-        setShowPhoto(!showPhoto);
-        setImage(res.data.avatar);
+        .then(async function (res:AxiosResponse) {
+            console.dir(res);
+            setError('');
+            setShowPhoto(!showPhoto);
             
         
-        console.log(state.user.avatar);
-
         })
         .catch(function (error:AxiosError) 
         {

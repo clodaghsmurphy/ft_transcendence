@@ -38,7 +38,7 @@ export class UserController {
 	}
 
 	@Post('create')
-	//protect this
+	//delete this
 	createUser(@Body() dto: UserCreateDto) {
 		return this.userService.create(dto);
 	}
@@ -56,18 +56,36 @@ export class UserController {
 	{
 		try 
 		{
+			const Filepath = path.join('/app', '/uploads', file)
 			const updateUser = await this.prisma.user.update({
 				where: {id: user.id},
-				data: { avatar: path.join('/uploads', file) },
-			});
-			console.log(path.join('/uploads', file));
-			res.send(updateUser);
+				data: { avatar: Filepath },
+			});		
+			return Filepath;
 		}
 		catch(e)
 		{
 			throw new UnauthorizedException();
 		}
 	}
+
+	@Post('download/:cdn')
+	downlaod(@Param('cdn') param){
+		this.userService.downloadImage(param);
+	}
+
+	@Get('image/:id')
+	async getImage(@Param('id') param, @Res() res)
+	{
+		console.log(param);
+		const user = await this.userService.userExists(parseInt(param));
+		console.log(user.avatar);
+		const imagePath = user.avatar;
+		const image = fs.readFileSync(imagePath);
+		res.writeHead(200, {'Content-Type': 'image/jpeg' });
+		res.end(image, 'binary');
+	}
+
 
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {

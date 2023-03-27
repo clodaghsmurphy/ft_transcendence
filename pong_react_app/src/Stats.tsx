@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import NavBar from "./NavBar"; 
 import './stats.css';
 import user_photo from './media/user.png';
@@ -17,6 +17,9 @@ import { usePrompt } from "./usePrompt";
 import EnableTwoFAuth from "./EnableTWoFAuth";
 import ChangeName from "./ChangeName";
 import ChangePhoto from "./ChangePhoto";
+import { blob } from "stream/consumers";
+import test from './media/nguiard.jpg'
+
 
 
 function Stats()
@@ -25,6 +28,7 @@ function Stats()
 	const { state, dispatch } = useContext(AuthContext);
 	let [current_user, set_current_user] = useState({} as User);
 	let [all_users, set_all_users] = useState([] as User[]);
+	//const [img, setImg] = useState<string | undefined >();
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -46,9 +50,27 @@ function Stats()
 	{
 		setOpen(!open);
 	};
-	const img = state.user.avatar;
+
+	// const fetchImage = async () => {
+	// 	const res = await fetch('./media/nguiard.jpg');
+	// 	console.log(res);
+	// 	const imageBlob = await res.blob();
+	// 	console.log(imageBlob);
+	// 	const imageObjectURL = URL.createObjectURL(imageBlob);
+	// 	setImg(imageObjectURL);
+	// 	console.log(img);
+	// 	//setImg(imageObjectURL);
+
+	// }
+	const img = 'http://localhost:3042/user/image/94551'
+	// useEffect(() => {
+	// 	console.log('in use effects');
+	// 	fetchImage();
+	// }, [])
+
 	return(
 			<>
+			<Suspense>
 				<NavBar />
 			<div className="stats-page">
 				<div className="stats">
@@ -118,6 +140,7 @@ function Stats()
 					</div>
 				</div>
 			</div>
+		</Suspense>
 		</>
 	);
 }

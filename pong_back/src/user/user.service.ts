@@ -1,12 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Res } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreateDto, UserUpdateDto } from "./dto";
+import * as path from 'path';
+import * as fs from 'fs';
+import { HttpService} from '@nestjs/common'
 
 @Injectable()
 export class UserService {
-	constructor(private prisma: PrismaService) {
+	constructor(private prisma: PrismaService,
+		private readonly httpService: HttpService) {
 	}
 
 	async getAll(): Promise<User[]> {
@@ -39,8 +43,28 @@ export class UserService {
 		return { attribute: user[attribute] };
 	}
 
+	async downloadImage(cdn:string): Promise<string>
+	{
+		const split = cdn.split('/');
+		const name = split[split.length -1];
+		const writer = fs.createWriteStream(path.join('/app', 'uploads', name));
+
+        const response = await this.httpService.axiosRef({
+            url: cdn,
+            method: 'GET',
+            responseType: 'stream',
+        });
+
+        response.data.pipe(writer);
+        return new Promise((resolve, reject) => {
+            writer.on('finish', resolve);
+            writer.on('error', reject);
+        });
+	}
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
+			const res = this.downloadImage(dto.avatar);
+			console.log(res);
 			return await this.prisma.user.create({
 				data: {
 					name: dto.name,

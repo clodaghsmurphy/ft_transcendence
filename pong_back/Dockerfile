@@ -19,6 +19,8 @@ RUN npm install qrcode --save
 RUN npm install --save @types/multer
 RUN npm install npm install sharp
 RUN  npm install passport-2fa-totp
+RUN npm i --save @nestjs/axios 
+
 
 COPY . .
 

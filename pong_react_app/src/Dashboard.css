@@ -99,6 +99,7 @@
 
     .navlink {
         cursor: pointer;
+        overflow: visible;
         justify-self: center;
         margin: 0 2em;
         letter-spacing: 0.2em;
@@ -108,7 +109,7 @@
         text-decoration: none;
         color: white;
         margin-top: 1.5rem;
-        font-size: .55em;
+        font-size: calc(.3em + .8vw);
         font-weight: 800;
         border-radius: 1em;
     }
@@ -217,7 +218,8 @@
             text-decoration: none;
             color: white;
             margin-top: 1.5rem;
-            font-size: .55em;
+            font-size: calc(.3em + .8vw);
+            overflow: visible;
             font-weight: 800;
             border-radius: 1em;
         }

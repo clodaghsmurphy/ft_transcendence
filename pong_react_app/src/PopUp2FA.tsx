@@ -5,7 +5,7 @@ import { useEffect, useState, useContext } from 'react';
 import './stats.css';
 import { AuthContext } from './App';
 import { ActionKind } from "./store/reducer";
-import { OTPinput } from './OTPinput';
+import OtpInput from './OtpInput'
 
 
 interface PopUpProps
@@ -59,11 +59,11 @@ function PopUp2FA(props: PopUpProps)
             <div className="instructions">
                 <div className="pop-up-title">Enable 2FA</div>
                 <div>
-                    <ul>
+                    <ol style={ { 'padding': 0} }>
                     <li>Scan qr code in google authneticator app on your phone</li>
                     <li>Scan using google authenticator chrome extension</li>
                         <li>Nest you will receive a code, please enter it below</li>
-                    </ul>
+                    </ol>
                 </div>
             </div>
             <div className="QRcode">
@@ -71,7 +71,7 @@ function PopUp2FA(props: PopUpProps)
             </div>
             { error ? <div>{error}</div> : null }
             <div className='qr-input'>
-                <OTPinput value={value} valueLength={6} onChange={onChange}/>
+                <OtpInput value={value} valueLength={6} onChange={onChange}/>
             </div>
             <div className="buttons">
                 <button className='cancel-popup' onClick={() => { props.setShow(!props.show)}}>Close</button>

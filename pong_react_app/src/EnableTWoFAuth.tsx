@@ -11,9 +11,6 @@ const EnableTwoFAuth = () =>
     const [show, setShow] = useState<boolean>(false);
     const { state,  dispatch } = useContext(AuthContext);
     const [ enabled, setEnabled] = useState<boolean>(state.user.otp_enabled)
-    console.log(state.user);
-    console.log(state.user.otp_enabled);
-    
 
     const enable = async () =>
     {
