@@ -22,6 +22,7 @@ services:
     volumes:
       - './pong_react_app:/app'
       - '/app/node_modules'
+      - uploads:/app/src/uploads
     build:
       context: ${PWD}/pong_react_app
       dockerfile: Dockerfile
@@ -41,6 +42,10 @@ services:
     build:
       context: ${PWD}/pong_back
       dockerfile: Dockerfile
+    volumes:
+      - './pong_back:/app'
+      - '/app/node_modules'
+      - uploads:/app/uploads
     env_file:
       - .env
       - ${PWD}/pong_back/.env
@@ -78,6 +83,12 @@ volumes:
       o: bind
       device: ${PWD}/pong_react_app
   pg-data:
+  uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/uploads
 
 networks:
   pong:

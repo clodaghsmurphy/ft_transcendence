@@ -7,6 +7,7 @@ COPY package*.json ./
 RUN npm ci
 
 RUN npm install --save @nestjs/passport passport passport-local
+RUN mkdir -p uploads && chmod 777 uploads
 RUN npm install passport-42
 RUN  npm i express-session
 RUN npm install --save @nestjs/jwt passport-jwt

@@ -9,7 +9,7 @@ COPY package-lock.json /app/package-lock.json
 #COPY src /app/public
 #COPY . /app
 
-RUN pwd
+RUN mkdir -p uploads
 
 RUN npm install -g npm
 RUN npm install react-scripts -g 

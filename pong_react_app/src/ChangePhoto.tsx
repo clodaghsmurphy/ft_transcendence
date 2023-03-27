@@ -2,7 +2,8 @@ import React from 'react';
 import { useState, useContext, useEffect } from 'react'
 import { AuthContext } from './App';
 import axios from 'axios';
-import { AxiosResponse, AxiosError} from 'axios'
+import { AxiosResponse, AxiosError} from 'axios';
+import { ActionKind } from "./store/reducer"
 
 
 function ChangePhoto() {
@@ -11,6 +12,19 @@ function ChangePhoto() {
 	const [value, setValue] = useState("");
     const [error, setError] = useState("");
 	const { state, dispatch } = useContext(AuthContext);
+
+
+    const setImage = async (path: string) => {
+        path = "." + path;
+        state.user.avatar = path; 
+         dispatch(
+            {
+                type: ActionKind.userUpdate,
+                payload: { user:state.user },
+            }
+        )
+        console.log(state.user.avatar)
+    }
 
     const submitPhoto = async (event: React.FormEvent<HTMLFormElement>) =>
     {
@@ -27,14 +41,26 @@ function ChangePhoto() {
             'Content-Type' : 'multipart/form-data'
         }}
         )
-        .then((res:AxiosResponse) => console.log("RES : " + res.data))
+        .then(function(res:AxiosResponse) {
+         console.dir(res);
+         setError('');
+        setShowPhoto(!showPhoto);
+        setImage(res.data.avatar);
+            
+        
+        console.log(state.user.avatar);
+
+        })
         .catch(function (error:AxiosError) 
         {
             if(error.response && error.response.status == 413)
                 setError('File too large, image must be under 2MB');
+            console.log('error : ' + error)
+
         })
-        setShowPhoto(!showPhoto);
     }
+
+   
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.currentTarget.files)

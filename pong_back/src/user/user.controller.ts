@@ -1,5 +1,5 @@
-import { Body, UseGuards, Controller, Get, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
-import { UploadedFile, UseInterceptors, ParseFilePipe } from '@nestjs/common';
+import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
+import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express'
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -8,10 +8,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserService } from "./user.service";
 import { Multer } from 'multer'
 import { SharpPipe } from "./utils/sharp.pipe";
+import * as path from 'path';
+import * as fs from 'fs';
+import { UserEntity } from "./utils/user.decorator";
+import { PrismaService } from "src/prisma/prisma.service";
+import { User} from '@prisma/client';
+
+
 
 @Controller('user')
 export class UserController {
-	constructor(private userService: UserService) {}
+	constructor(private userService: UserService, private prisma: PrismaService	) {}
 
 	@Get('info')
 	getAllUsers() {
@@ -31,6 +38,7 @@ export class UserController {
 	}
 
 	@Post('create')
+	//protect this
 	createUser(@Body() dto: UserCreateDto) {
 		return this.userService.create(dto);
 	}
@@ -44,10 +52,21 @@ export class UserController {
 	@Post('upload')
 	@UseGuards(JwtAuthGuard)
 	@UseInterceptors(FileInterceptor('file'))
-	uploadFile(@UploadedFile(SharpPipe) file: Express.Multer.File)
+	async uploadFile(@UploadedFile(SharpPipe) file: string, @Res() res, @UserEntity() user)
 	{
-		console.log('in upload');
-		console.log(file);	
+		try 
+		{
+			const updateUser = await this.prisma.user.update({
+				where: {id: user.id},
+				data: { avatar: path.join('/uploads', file) },
+			});
+			console.log(path.join('/uploads', file));
+			res.send(updateUser);
+		}
+		catch(e)
+		{
+			throw new UnauthorizedException();
+		}
 	}
 
 	checkId(id: string) {

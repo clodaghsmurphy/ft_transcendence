@@ -46,7 +46,7 @@ function Stats()
 	{
 		setOpen(!open);
 	};
-
+	const img = state.user.avatar;
 	return(
 			<>
 				<NavBar />
@@ -73,7 +73,7 @@ function Stats()
 						</ul>
 						<div className="avatar-stats">
 								<img style={{
-								}}src={state.user.avatar} />
+								}}src={img} />
 							<span className="user-name">{state.user.name}</span>
 
 						</div>
