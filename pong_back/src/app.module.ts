@@ -8,7 +8,7 @@ import { Ft_Strategy } from './auth/utils/42.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { MulterModule } from '@nestjs/platform-express'
 import { memoryStorage} from 'multer';
-import { HttpModule } from '@nestjs/common'
+import { HttpModule } from '@nestjs/axios'
 
 
 @Module({

@@ -26,7 +26,9 @@ export type OTPProps={
 		}
 
 		val = isDigit ? val : ' ';
-		const newValue = value.substring(0, idx) + val + value.substring(idx + 1);
+		let newValue = value.substring(0, idx) + val + value.substring(idx + 1);
+		if (newValue.length > 6)
+			newValue = newValue.substring(0, 6);
 		onChange(newValue);
 		if (!isDigit)
 			return ;

@@ -62,7 +62,7 @@ function Stats()
 	// 	//setImg(imageObjectURL);
 
 	// }
-	const img = 'http://localhost:3042/user/image/94551'
+	
 	// useEffect(() => {
 	// 	console.log('in use effects');
 	// 	fetchImage();
@@ -95,7 +95,7 @@ function Stats()
 						</ul>
 						<div className="avatar-stats">
 								<img style={{
-								}}src={img} />
+								}}src={state.user.avatar} />
 							<span className="user-name">{state.user.name}</span>
 
 						</div>

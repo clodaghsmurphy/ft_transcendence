@@ -39,7 +39,7 @@ function PopUp2FA(props: PopUpProps)
             console.dir(res)
             dispatch({
                 type: ActionKind.userUpdate,
-                payload:{ user:{ name:res.data.name, id:res.data.id, avatar:res.data.avatar, otp_enabled:res.data.otp_enabled}} 
+                payload:{ user:{ name:res.data.name, id:res.data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${res.data.id}`, otp_enabled:res.data.otp_enabled}} 
                 })
             alert('2FA enabled !');
             props.setShow(!props.show);
@@ -69,7 +69,7 @@ function PopUp2FA(props: PopUpProps)
             <div className="QRcode">
                 <img src={imageSrc} alt="QR code" />
             </div>
-            { error ? <div>{error}</div> : null }
+            { error ? <div style={{'color': 'red', 'overflow' : 'visible', 'flexBasis': '6vh'}}>{error}</div> : null }
             <div className='qr-input'>
                 <OtpInput value={value} valueLength={6} onChange={onChange}/>
             </div>

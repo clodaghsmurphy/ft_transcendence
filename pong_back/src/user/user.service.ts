@@ -5,7 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreateDto, UserUpdateDto } from "./dto";
 import * as path from 'path';
 import * as fs from 'fs';
-import { HttpService} from '@nestjs/common'
+import { HttpService} from '@nestjs/axios'
 
 @Injectable()
 export class UserService {
@@ -47,7 +47,8 @@ export class UserService {
 	{
 		const split = cdn.split('/');
 		const name = split[split.length -1];
-		const writer = fs.createWriteStream(path.join('/app', 'uploads', name));
+		const pathname = path.join('/app', 'uploads', name)
+		const writer = fs.createWriteStream(pathname);
 
         const response = await this.httpService.axiosRef({
             url: cdn,
@@ -56,15 +57,12 @@ export class UserService {
         });
 
         response.data.pipe(writer);
-        return new Promise((resolve, reject) => {
-            writer.on('finish', resolve);
-            writer.on('error', reject);
-        });
+        return pathname;
 	}
+
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
-			const res = this.downloadImage(dto.avatar);
-			console.log(res);
+			
 			return await this.prisma.user.create({
 				data: {
 					name: dto.name,

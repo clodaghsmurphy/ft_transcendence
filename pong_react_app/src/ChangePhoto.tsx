@@ -41,11 +41,11 @@ function ChangePhoto() {
         }}
         )
         .then(async function (res:AxiosResponse) {
-            console.dir(res);
-            setError('');
+            console.dir('in then');
             setShowPhoto(!showPhoto);
+            window.location.reload();
+            setError('');
             
-        
         })
         .catch(function (error:AxiosError) 
         {
@@ -54,6 +54,7 @@ function ChangePhoto() {
             console.log('error : ' + error)
 
         })
+        
     }
 
    

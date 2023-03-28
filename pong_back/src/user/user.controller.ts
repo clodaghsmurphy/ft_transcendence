@@ -54,14 +54,17 @@ export class UserController {
 	@UseInterceptors(FileInterceptor('file'))
 	async uploadFile(@UploadedFile(SharpPipe) file: string, @Res() res, @UserEntity() user)
 	{
+		console.log('in puload annd file is'  + file);
 		try 
 		{
 			const Filepath = path.join('/app', '/uploads', file)
 			const updateUser = await this.prisma.user.update({
 				where: {id: user.id},
 				data: { avatar: Filepath },
-			});		
-			return Filepath;
+			});	
+			console.log(updateUser);
+			console.log(Filepath);
+			return res.send(Filepath);
 		}
 		catch(e)
 		{
@@ -69,16 +72,16 @@ export class UserController {
 		}
 	}
 
-	@Post('download/:cdn')
-	downlaod(@Param('cdn') param){
-		this.userService.downloadImage(param);
-	}
-
 	@Get('image/:id')
 	async getImage(@Param('id') param, @Res() res)
 	{
 		console.log(param);
 		const user = await this.userService.userExists(parseInt(param));
+		if (!user)
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User doesn't exist`,
+			}, HttpStatus.BAD_REQUEST);
 		console.log(user.avatar);
 		const imagePath = user.avatar;
 		const image = fs.readFileSync(imagePath);

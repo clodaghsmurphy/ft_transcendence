@@ -90,7 +90,7 @@ export class AuthController {
         const secret = await user.otp_base32 || authenticator.generateSecret();
         console.log('secret is' );
         console.log(secret);
-        const otpauth_url = authenticator.keyuri(req.user.id, 'transcendence', secret);
+        const otpauth_url = await user.otp_auth_url || authenticator.keyuri(req.user.id, 'transcendence', secret);
         const response = {
             secret: secret,
             uri: otpauth_url,
