@@ -76,9 +76,4 @@ export class MessageCreateDto {
 	@IsNumber()
 	@IsNotEmpty()
 	sender_id: number;
-
-	@IsString()
-	@IsNotEmpty()
-	sender_name: string;
 }
-

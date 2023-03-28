@@ -34,10 +34,9 @@ model Message {
   id Int @id @default(autoincrement())
   uid Int
   text String
-  sender_name String
   sender_id Int
+  name String
   type Int
-  channel String
 }
 
 model MuteInfo {

@@ -5,6 +5,7 @@ import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
 import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserMuteDto } from "./dto";
+import { MessageType } from "./types/message.type";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -66,8 +67,19 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.checkOperator(dto.user_id, dto.name);
 			await this.channelService.checkIsNotOwner(dto.target_id, dto.name);
 			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
+			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
 
+			const message = {
+				sender_id: dto.user_id,
+				text: ` has kicked ${targetName["attribute"]}`,
+				type: MessageType.Kick,
+				uid: 0,
+				name: dto.name,
+			};
+
+			this.channelService.postMessage(message);
 			this.io.in(dto.name).emit('kick', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
+			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
@@ -77,7 +89,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 	async handleMessage(@MessageBody() dto: MessageCreateDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
 		try {
-			const message = await this.channelService.postMessage(dto);
+			const messageData = {
+				name: dto.name,
+				sender_id: dto.sender_id,
+				uid: dto.uid,
+				text: dto.text,
+				type: MessageType.Normal,
+			};
+			const message = await this.channelService.postMessage(messageData);
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			this.logger.log(e);
