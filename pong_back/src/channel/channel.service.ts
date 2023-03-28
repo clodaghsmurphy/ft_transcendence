@@ -5,6 +5,7 @@ import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MakeOpDto, MessageCr
 import * as bcrypt from 'bcrypt';
 import { UserService } from "src/user/user.service";
 import { info } from "console";
+import { MessageType } from "./types/message.type";
 
 @Injectable()
 export class ChannelService {
@@ -184,21 +185,13 @@ export class ChannelService {
 		});
 	}
 
-	async postMessage(dto: MessageCreateDto) {
-		await this.checkIsMuted(dto);
+	async postMessage(messageData) {
+		if (messageData.type === MessageType.Normal)
+			await this.checkIsMuted(messageData);
 
-		const message = await this.prisma.message.create({
-			data: {
-				uid: dto.uid,
-				text: dto.text,
-				sender_name: dto.sender_name,
-				sender_id: dto.sender_id,
-				channel: dto.name,
-				type: 0,
-			},
-		});
+		const message = await this.prisma.message.create({data: messageData});
 		await this.prisma.channel.update({
-			where: {name: dto.name},
+			where: {name: messageData.name},
 			data: {
 				messages: {push: message.id},
 			},
@@ -308,6 +301,10 @@ export class ChannelService {
 			return false;
 
 		return await bcrypt.compare(dto.password, channel.password);
+	}
+
+	async getUserInfo(userId: number, attribute: string) {
+		return this.userService.getInfo(userId, attribute);
 	}
 
 	returnInfo(channel: Channel) {
