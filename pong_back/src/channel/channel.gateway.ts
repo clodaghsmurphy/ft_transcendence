@@ -4,7 +4,7 @@ import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MessageCreateDto, UserMuteDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserMuteDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -73,8 +73,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 	}
 
 	@SubscribeMessage('message')
-	async handleMessage(@MessageBody() dto: MessageCreateDto, @ConnectedSocket() client: Socket)
-	{
+	async handleMessage(@MessageBody() dto: MessageCreateDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
 		try {
 			const message = await this.channelService.postMessage(dto);
@@ -86,8 +85,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 	}
 
 	@SubscribeMessage('mute')
-	async handleMute(@MessageBody() dto: UserMuteDto, @ConnectedSocket() client: Socket)
-	{
+	async handleMute(@MessageBody() dto: UserMuteDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
 		try {
 			await this.channelService.checkOperator(dto.user_id, dto.name);
@@ -99,6 +97,19 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				target_id: dto.target_id,
 				mute_duration: dto.mute_duration,
 			});
+		} catch (e) {
+			throw new WsException(e);
+		}
+	}
+
+	@SubscribeMessage('makeop')
+	async handleMakeOp(@MessageBody() dto: MakeOpDto, @ConnectedSocket() client: Socket) {
+		this.checkUser(client, dto.name);
+		try {
+			await this.channelService.checkOperator(dto.user_id, dto.name);
+			await this.channelService.makeOp(dto);
+
+			this.io.in(dto.name).emit('makeop', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
 		} catch (e) {
 			throw new WsException(e);
 		}

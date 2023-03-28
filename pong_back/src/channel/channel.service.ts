@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Channel, Message, MuteInfo } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto, UserMuteDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserMuteDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { UserService } from "src/user/user.service";
 import { info } from "console";
@@ -123,7 +123,7 @@ export class ChannelService {
 	}
 
 	async mute(dto: UserMuteDto) {
-		await this.checkUserInChannel(dto.target_id, dto.name);
+		await this.checkIsNotOwner(dto.target_id, dto.name);
 
 		const muteTime = new Date();
 		muteTime.setSeconds(muteTime.getSeconds() + dto.mute_duration);
@@ -148,6 +148,23 @@ export class ChannelService {
 		});
 
 		return dto;
+	}
+
+	async makeOp(dto: MakeOpDto) {
+		await this.checkUserInChannel(dto.target_id, dto.name);
+
+		if (await this.prisma.channel.count({where: {
+			name: dto.name,
+			operators: {has: dto.target_id}
+		}}) !== 0)
+			return ;
+
+		await this.prisma.channel.update({
+			where: {name: dto.name},
+			data: {
+				operators: {push: dto.target_id}
+			}
+		});
 	}
 
 	async getAllMessages(channelName: string) : Promise<Message[]> {
@@ -233,6 +250,19 @@ export class ChannelService {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `User ${userId} isn't an operator of channel ${channelName}`
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	async checkIsNotOwner(userId: number, channelName: string) {
+		await this.checkUserInChannel(userId, channelName);
+
+		const channel: Channel = await this.prisma.channel.findUnique({where: {name: channelName}});
+
+		if (channel.owner == userId) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `Target ${userId} is the owner of channel ${channelName}`
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}
