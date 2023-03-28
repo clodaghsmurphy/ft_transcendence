@@ -35,6 +35,8 @@ export class ChannelJoinDto {
 	password: string;
 }
 
+export class ChannelPasswordDto extends ChannelJoinDto {}
+
 export class ChannelLeaveDto {
 	@IsString()
 	@IsNotEmpty()
