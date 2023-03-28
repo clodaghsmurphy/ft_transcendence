@@ -64,6 +64,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
 		try {
 			await this.channelService.checkOperator(dto.user_id, dto.name);
+			await this.channelService.checkIsNotOwner(dto.target_id, dto.name);
 			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
 
 			this.io.in(dto.name).emit('kick', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});

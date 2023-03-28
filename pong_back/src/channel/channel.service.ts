@@ -156,8 +156,12 @@ export class ChannelService {
 		if (await this.prisma.channel.count({where: {
 			name: dto.name,
 			operators: {has: dto.target_id}
-		}}) !== 0)
-			return ;
+		}}) !== 0) {
+			throw new HttpException({
+				error: `User ${dto.target_id} is already an operator`,
+				status: HttpStatus.BAD_REQUEST,
+			}, HttpStatus.BAD_REQUEST);
+		}
 
 		await this.prisma.channel.update({
 			where: {name: dto.name},
@@ -270,26 +274,22 @@ export class ChannelService {
 	async checkIsMuted(dto: MessageCreateDto) {
 		await this.checkUserInChannel(dto.sender_id, dto.name);
 
-		const channel = await this.prisma.channel.findUnique({
-			where: {name: dto.name},
-			include: {mutedUsers: true},
-		});
+		const mutedUser = await this.prisma.muteInfo.findFirst({
+			where: {
+				userId: dto.sender_id,
+				channelName: dto.name,
+			},
+			orderBy: {
+				muteTime: 'desc',
+			}
+		})
 
-		const mutedUser = channel.mutedUsers.find((info) => info.userId === dto.sender_id);
 		if (!mutedUser)
 			return ;
 
 		const now = new Date();
 		if (now > mutedUser.muteTime) {
 			await this.prisma.muteInfo.delete({where: {id: mutedUser.id}});
-			// await this.prisma.channel.update({
-			// 	where: {name: dto.name},
-			// 	data: {
-			// 		mutedUsers: {
-			// 			disconnect: {id: mutedUser.id}
-			// 		}
-			// 	}
-			// });
 			return ;
 		}
 		throw new HttpException({
