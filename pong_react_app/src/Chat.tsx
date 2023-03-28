@@ -258,6 +258,16 @@ function Chat()
 						.then((data) => {
 							set_all_channels((prev: Channel[]) => [...prev, data])
 							setChanOfUser((prev: Channel[]) => [...prev, data])
+							fetch('/api/channel/' + data.name + '/messages/')
+								.then(response => {
+									response.json()
+										.then(msg_data => {
+											set_current_chan({
+												chan: data as Channel,
+												msg: msg_data,
+											})
+										})
+								})
 						})
 				})
 			}

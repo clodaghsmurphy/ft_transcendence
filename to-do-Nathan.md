@@ -8,6 +8,7 @@
   - [ ] CSS
   - [ ] POST
 - [ ] Browse channels
+- [ ] Messages rendered even if there was no messages on the channel
 - [ ] Kick
 - [ ] Ban
 - [ ] Mute
