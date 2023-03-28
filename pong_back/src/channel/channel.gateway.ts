@@ -4,7 +4,7 @@ import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserMuteDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
 import { MessageType } from "./types/message.type";
 
 @UseFilters(new BadRequestFilter())
@@ -67,8 +67,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.checkOperator(dto.user_id, dto.name);
 			await this.channelService.checkIsNotOwner(dto.target_id, dto.name);
 			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
-			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
 
+			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
 			const message = {
 				sender_id: dto.user_id,
 				text: ` has kicked ${targetName["attribute"]}`,
@@ -111,12 +111,43 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.checkOperator(dto.user_id, dto.name);
 			await this.channelService.mute(dto);
 
+			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
+			const message = {
+				sender_id: dto.user_id,
+				text: ` has muted ${targetName["attribute"]} for ${dto.mute_duration} seconds`,
+				type: MessageType.Mute,
+				uid: 0,
+				name: dto.name,
+			};
+
 			this.io.in(dto.name).emit('mute', {
 				name: dto.name,
 				user_id: dto.user_id,
 				target_id: dto.target_id,
 				mute_duration: dto.mute_duration,
 			});
+			this.io.in(dto.name).emit('message', message);
+		} catch (e) {
+			throw new WsException(e);
+		}
+	}
+
+	@SubscribeMessage('ban')
+	async handleBan(@MessageBody() dto: UserBanDto, @ConnectedSocket() client: Socket) {
+		this.checkUser(client, dto.name);
+		try {
+			await this.channelService.checkOperator(dto.user_id, dto.name);
+			await this.channelService.ban(dto);
+
+			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
+			const message = {
+				sender_id: dto.user_id,
+				text: ` has banned ${targetName["attribute"]}`,
+				type: MessageType.Ban,
+				uid: 0,
+				name: dto.name,
+			};
+			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
