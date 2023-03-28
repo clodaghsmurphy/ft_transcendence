@@ -51,10 +51,14 @@ export class ChannelKickDto extends ChannelLeaveDto {
 	target_id: number;
 }
 
-export class UserMuteDto extends ChannelKickDto {
+export class MakeOpDto extends ChannelKickDto {}
+
+export class UserBanDto extends ChannelKickDto {}
+
+export class UserMuteDto extends UserBanDto {
 	@IsNumber()
 	@IsNotEmpty()
-	@Min(1)
+	@Min(2)
 	mute_duration: number;
 }
 
@@ -74,9 +78,4 @@ export class MessageCreateDto {
 	@IsNumber()
 	@IsNotEmpty()
 	sender_id: number;
-
-	@IsString()
-	@IsNotEmpty()
-	sender_name: string;
 }
-

@@ -33,7 +33,7 @@ const ChangeName = () =>
 			dispatch(
 				{
 					type: ActionKind.userUpdate,
-					payload: { user:data },
+					payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true},
 				}
 			)
 			console.log('datais');

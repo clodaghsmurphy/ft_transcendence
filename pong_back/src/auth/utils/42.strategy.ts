@@ -23,10 +23,10 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
         const userData = {
             name: profile.username,
             id: parseInt(profile.id),
-            avatar: profile._json.image.link
+            avatar: await this.userService.downloadImage(profile._json.image.link)
         }
         console.log('in validate 42 and sending id : ');
-        console.log(userData.id);
+        console.log(userData.avatar);
         const user = await this.userService.userExists(userData.id);
         if (!user)
             return await this.userService.create(userData);

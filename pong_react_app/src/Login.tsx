@@ -41,7 +41,7 @@ function Login ()
 			dispatch(
 				{
 					type: ActionKind.Login,
-					payload: { user:{ name:data.name, id:data.id, avatar:data.avatar, otp_enabled:data.otp_enabled}, isLoggedIn: true}
+					payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true}
 				}
 			)
 			localStorage.setItem("isLoggedIn", 'true');
@@ -65,6 +65,7 @@ function Login ()
 
 	const handleLogin = async () =>
 	{
+		console.log('in hadnle login');
 		window.location.href = 'http://localhost:3042/auth/42/login';
 		setData({ ...data, errorMessage: " "});
 		
