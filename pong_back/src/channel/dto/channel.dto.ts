@@ -56,7 +56,7 @@ export class MakeOpDto extends ChannelKickDto {}
 export class UserMuteDto extends ChannelKickDto {
 	@IsNumber()
 	@IsNotEmpty()
-	@Min(1)
+	@Min(2)
 	mute_duration: number;
 }
 

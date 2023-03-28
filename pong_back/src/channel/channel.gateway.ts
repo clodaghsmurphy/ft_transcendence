@@ -67,8 +67,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.checkOperator(dto.user_id, dto.name);
 			await this.channelService.checkIsNotOwner(dto.target_id, dto.name);
 			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
-			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
 
+			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
 			const message = {
 				sender_id: dto.user_id,
 				text: ` has kicked ${targetName["attribute"]}`,
@@ -111,12 +111,22 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.checkOperator(dto.user_id, dto.name);
 			await this.channelService.mute(dto);
 
+			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
+			const message = {
+				sender_id: dto.user_id,
+				text: ` has muted ${targetName["attribute"]} for ${dto.mute_duration} seconds`,
+				type: MessageType.Mute,
+				uid: 0,
+				name: dto.name,
+			};
+
 			this.io.in(dto.name).emit('mute', {
 				name: dto.name,
 				user_id: dto.user_id,
 				target_id: dto.target_id,
 				mute_duration: dto.mute_duration,
 			});
+			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
