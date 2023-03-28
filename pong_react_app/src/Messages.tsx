@@ -32,7 +32,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
 
-	if (chan.messages.length === 0)
+	if (messages.length === 0)
 		return (<div style={{
 			'display': 'flex',
 			'flexDirection': 'column',
