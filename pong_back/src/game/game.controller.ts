@@ -5,4 +5,10 @@ import { GameCreateDto, GameJoinDto, GameLeaveDto, MovementDto } from "./dto";
 @Controller('game')
 export class GameController {
 	constructor (private gameService: GameService) {}
+
+	@Post('create')
+	createGame(@Body() dto: GameCreateDto) {
+		return this.gameService.create(dto);
+	}
+
 }

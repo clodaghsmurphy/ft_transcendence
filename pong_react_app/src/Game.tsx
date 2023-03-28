@@ -16,10 +16,10 @@ const socket: Socket = io(`http://${window.location.hostname}:8080/game`);
 socket.on("connect", () => {
   console.log("CONNECTED to Game", socket.connected);
 });
+console.log(socket);
 socket.on("connect_error", (err:any) => {
 	console.log(`connect_error due to ${err.message}`);
   });
-console.log(socket);
 
 function Game() {
 	
