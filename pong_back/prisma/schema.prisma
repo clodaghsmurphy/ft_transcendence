@@ -34,10 +34,9 @@ model Message {
   id Int @id @default(autoincrement())
   uid Int
   text String
-  sender_name String
   sender_id Int
+  name String
   type Int
-  channel String
 }
 
 model MuteInfo {
@@ -54,7 +53,7 @@ model Channel {
 
   members Int[] @default([])
   operators Int[]
-  blocked Int[] @default([])
+  banned Int[] @default([])
   owner Int
 
   messages Int[] @default([])

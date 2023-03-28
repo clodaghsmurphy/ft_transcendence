@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Channel, Message, MuteInfo } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserMuteDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { UserService } from "src/user/user.service";
 import { info } from "console";
+import { MessageType } from "./types/message.type";
 
 @Injectable()
 export class ChannelService {
@@ -72,28 +73,7 @@ export class ChannelService {
 	}
 
 	async join(dto: ChannelJoinDto) : Promise<unknown> {
-		await this.checkUser(dto.user_id);
-		await this.checkChannel(dto.name);
-
-		if (!await this.checkPassword(dto))
-		{
-			throw new HttpException({
-				status: HttpStatus.BAD_REQUEST,
-				error: `Invalid password for channel ${dto.name}`,
-			}, HttpStatus.BAD_REQUEST);
-		}
-
-		// Check that user isn't already joined
-		if (await this.prisma.channel.count({where: {
-				name: dto.name,
-				members: {has: dto.user_id}
-			}}) > 0)
-		{
-			throw new HttpException({
-				status: HttpStatus.BAD_REQUEST,
-				error: `User ${dto.user_id} has already joined channel ${dto.name}`,
-			}, HttpStatus.BAD_REQUEST);
-		}
+		await this.checkCanJoin(dto);
 
 		const channel: Channel = await this.prisma.channel.update({
 			where: {name: dto.name},
@@ -150,6 +130,18 @@ export class ChannelService {
 		return dto;
 	}
 
+	async ban(dto: UserBanDto) {
+		await this.checkIsNotOwner(dto.target_id, dto.name);
+
+		await this.prisma.channel.update({
+			where: {name: dto.name},
+			data: {
+				banned: {push: dto.target_id}
+			}
+		});
+		this.leave({name: dto.name, user_id: dto.target_id});
+	}
+
 	async makeOp(dto: MakeOpDto) {
 		await this.checkUserInChannel(dto.target_id, dto.name);
 
@@ -184,21 +176,13 @@ export class ChannelService {
 		});
 	}
 
-	async postMessage(dto: MessageCreateDto) {
-		await this.checkIsMuted(dto);
+	async postMessage(messageData) {
+		if (messageData.type === MessageType.Normal)
+			await this.checkIsMuted(messageData);
 
-		const message = await this.prisma.message.create({
-			data: {
-				uid: dto.uid,
-				text: dto.text,
-				sender_name: dto.sender_name,
-				sender_id: dto.sender_id,
-				channel: dto.name,
-				type: 0,
-			},
-		});
+		const message = await this.prisma.message.create({data: messageData});
 		await this.prisma.channel.update({
-			where: {name: dto.name},
+			where: {name: messageData.name},
 			data: {
 				messages: {push: message.id},
 			},
@@ -271,6 +255,41 @@ export class ChannelService {
 		}
 	}
 
+	async checkCanJoin(dto: ChannelJoinDto) {
+		await this.checkUser(dto.user_id);
+		await this.checkChannel(dto.name);
+
+		const channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
+
+		// Check that user isn't banned from channel
+		if (channel.banned.find((id) => id === dto.user_id)) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${dto.user_id} is banned from channel ${dto.name}`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+
+		// Check that password is correct
+		if (channel.password !== null && (!dto.hasOwnProperty('password') || !bcrypt.compare(dto.password, channel.password))) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `Invalid password for channel ${dto.name}`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+
+		// Check that user isn't already joined
+		if (await this.prisma.channel.count({where: {
+				name: dto.name,
+				members: {has: dto.user_id}
+			}}) > 0)
+		{
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${dto.user_id} has already joined channel ${dto.name}`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	async checkIsMuted(dto: MessageCreateDto) {
 		await this.checkUserInChannel(dto.sender_id, dto.name);
 
@@ -298,16 +317,8 @@ export class ChannelService {
 		}, HttpStatus.BAD_REQUEST);
 	}
 
-	async checkPassword(dto: ChannelJoinDto) {
-		const channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
-
-		if (channel.password === null)
-			return true;
-
-		if (!dto.hasOwnProperty('password'))
-			return false;
-
-		return await bcrypt.compare(dto.password, channel.password);
+	async getUserInfo(userId: number, attribute: string) {
+		return this.userService.getInfo(userId, attribute);
 	}
 
 	returnInfo(channel: Channel) {
