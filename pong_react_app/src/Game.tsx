@@ -2,22 +2,27 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import User from './User'
 import NavBar from './NavBar'
-import io from 'socket.io-client'
+import { io, Socket } from 'socket.io-client';
 import './Game.css'
-
-const { v4: uuidv4 } = require('uuid');
 
 const BALL_SIZE = 10;
 const BALL_SPEED = 10;
 const PADDLE_HEIGHT = 80;
 const PADDLE_SPEED = 20;
 
+const { v4: uuidv4 } = require('uuid');
+
+const socket: Socket = io(`http://${window.location.hostname}:8080/game`);
+socket.on("connect", () => {
+  console.log("CONNECTED to Game", socket.connected);
+});
+socket.on("connect_error", (err:any) => {
+	console.log(`connect_error due to ${err.message}`);
+  });
+console.log(socket);
+
 function Game() {
-	const socket = useRef(io(`http://localhost:8080/adam`)).current;
-	socket.on('connect', () => {
-		console.log('Connecté');
-		// Vous pouvez émettre ou recevoir des événements ici
-	  });
+	
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "ArrowUp") {

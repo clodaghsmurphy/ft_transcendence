@@ -46,7 +46,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
-        <Route path='/adam' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Game />} />} />
+        <Route path='/game' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Game />} />} />
     </Routes>
     </PromptContext.Provider>
     <JWTverify />
