@@ -108,27 +108,30 @@ export function add_dm(): JSX.Element {
 	);
 }
 
-function group_message(chan_data: Channel[], click_handler: (chan: Channel | DirectMessage) => void,
-	every_user: User[], current_user: User) {
+function group_message(chan_data: Channel[],
+	click_handler: (chan: Channel | DirectMessage) => void,
+	every_user: User[], current_user: User)
+{
 	let ret: JSX.Element[] = [];
 
 	for (const chan of chan_data) {
 		let target_message = chan.messages[chan.messages.length - 1]
-
+		
 		if (typeof target_message === 'undefined')
 		{
 			ret.push(chat_button(chan.name, '', group_img, click_handler, chan));
 			continue
 		}
+		let sender: User = id_to_user(every_user, target_message.id)
 
 		let message_text: string = (
 			target_message.type == BAN ||
 			target_message.type == KICK ?
-			target_message.sender_name + target_message.text :
+			sender.name + target_message.text :
 			target_message.text
 		)
 		if (target_message.type === INVITE)
-			message_text = target_message.sender_name + " sent an invite"
+			message_text = sender.name + " sent an invite"
 		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
 	}
 	ret.push(PopupAddChannel(every_user, current_user))
@@ -189,23 +192,30 @@ function Chat()
 	}, [current_chan, set_current_chan])
 
 	useEffect(() => {
+		// on removeListener pour eviter d'avour plusieurs listening d'event
 		socket.removeListener('kick')
 		socket.removeListener('mute')
+		socket.removeListener('join')
+
 		console.log('in useEffect of handle kick')
+
 		const handleKick = (data: any) => {
 			console.log('inside handleKick:', data)
-			if (data.user === current_user.id) {
-				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
-				let target = id_to_user(all_users, data.target_id).name;
-				let kick_message = " has kicked " + target
-				socket.emit('message', {
-					name: data.name,
-					sender_id: current_user.id,
-					sender_name: current_user.name,
-					uid: chan.curr_uid + 1,
-					text: kick_message,
-					type: KICK,
-				})
+			if (data.user_id === current_user.id) {
+				// let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
+				// let target = id_to_user(all_users, data.target_id).name;
+				// let kick_message = " has kicked " + target
+				// socket.emit('message', {
+				// 	name: data.name,
+				// 	sender_id: current_user.id,
+				// 	sender_name: current_user.name,
+				// 	uid: chan.curr_uid + 1,
+				// 	text: kick_message,
+				// 	type: KICK,
+				// })
+				
+				/*	PLUS RIEN A FAIRE PUISQUE LE BACK
+					VAS GERER LES MESSAGES MAINTENANT	*/
 			}
 			else {
 				socket.emit('message', {
@@ -235,6 +245,25 @@ function Chat()
 			}
 		}
 
+		const handleJoin = (data: any) => {
+			console.log('recieved join ' + data.name)
+			let chan_name = data.name;
+			if (typeof all_channels.find((chan: Channel) => 
+					chan.name === chan_name
+				) === 'undefined')
+			{
+				fetch('/api/channel/info/' + chan_name)
+				.then((response) => {
+					response.json()
+						.then((data) => {
+							set_all_channels((prev: Channel[]) => [...prev, data])
+							setChanOfUser((prev: Channel[]) => [...prev, data])
+						})
+				})
+			}
+		}
+
+		socket.on('join', handleJoin)
 		socket.on('kick', handleKick)
 		socket.on('mute', handleMute)
 	}, [all_channels, set_all_channels])

@@ -13,7 +13,6 @@ export function sample_DM_data(): DirectMessage[] {
 		messages: [{
 			from: 'DirectMessage',
 			sender_id: 2,
-			sender_name: 'clmurphy',
 			text: 'Je suis partie au ski tu viens?',
 			type: NORMAL,
 			id: 1,
@@ -21,7 +20,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 1,
-			sender_name: 'adben-mc',
 			text: 'Non je suis deja partit la semaine derniere :/',
 			type: NORMAL,
 			id: 1,
@@ -29,7 +27,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 2,
-			sender_name: 'clmurphy',
 			text: 'Ah oui merde... La prochaine fois!',
 			type: NORMAL,
 			id: 1,
@@ -42,7 +39,6 @@ export function sample_DM_data(): DirectMessage[] {
 		messages: [{
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'Je suis un oiseau bleu',
 			type: NORMAL,
 			id: 1,
@@ -50,7 +46,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 1,
-			sender_name: 'adben-mc',
 			text: 'qu\'est ce que tu dis?',
 			type: NORMAL,
 			id: 1,
@@ -58,7 +53,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'cui cui',
 			type: NORMAL,
 			id: 1,
@@ -71,7 +65,6 @@ export function sample_DM_data(): DirectMessage[] {
 		messages: [{
 			from: 'DirectMessage',
 			sender_id: 1,
-			sender_name: 'adben-mc',
 			text: 'Je crois que nathan deviens fou',
 			type: NORMAL,
 			id: 1,
@@ -79,7 +72,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 4,
-			sender_name: 'ple-lez',
 			text: 'ah bon?',
 			type: NORMAL,
 			id: 1,
@@ -87,7 +79,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 1,
-			sender_name: 'adben-mc',
 			text: 'Il fais des bruis d\'oiseau en dm',
 			type: NORMAL,
 			id: 1,
@@ -95,7 +86,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 4,
-			sender_name: 'ple-lez',
 			text: 'wtf je vais voir ca',
 			type: NORMAL,
 			id: 1,
@@ -108,7 +98,6 @@ export function sample_DM_data(): DirectMessage[] {
 		messages: [{
 			from: 'DirectMessage',
 			sender_id: 2,
-			sender_name: 'clmurphy',
 			text: 'Fais tes attaques de GDC',
 			type: NORMAL,
 			id: 1,
@@ -116,7 +105,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'cui cui cui',
 			type: NORMAL,
 			id: 1,
@@ -124,7 +112,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 2,
-			sender_name: 'clmurphy',
 			text: '???',
 			type: NORMAL,
 			id: 1,
@@ -132,7 +119,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'cui',
 			type: NORMAL,
 			id: 1,
@@ -140,7 +126,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'cui cui cui',
 			type: NORMAL,
 			id: 1,
@@ -153,7 +138,6 @@ export function sample_DM_data(): DirectMessage[] {
 		messages: [{
 			from: 'DirectMessage',
 			sender_id: 4,
-			sender_name: 'ple-lez',
 			text: 'Ca va nathan?',
 			type: NORMAL,
 			id: 1,
@@ -161,7 +145,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'cui cui cui! cui cui...',
 			type: NORMAL,
 			id: 1,
@@ -169,7 +152,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 4,
-			sender_name: 'ple-lez',
 			text: 'heuuu...',
 			type: NORMAL,
 			id: 1,
@@ -177,7 +159,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'cui >:(',
 			type: NORMAL,
 			id: 1,
@@ -190,7 +171,6 @@ export function sample_DM_data(): DirectMessage[] {
 		messages: [{
 			from: 'DirectMessage',
 			sender_id: 94596,
-			sender_name: 'nguiard',
 			text: 'test',
 			type: NORMAL,
 			id: 1,
@@ -198,7 +178,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'test2',
 			type: NORMAL,
 			uid: 1,
@@ -206,7 +185,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 94596,
-			sender_name: 'nguiard',
 			text: 'tututut',
 			type: NORMAL,
 			id: 1,
@@ -214,7 +192,6 @@ export function sample_DM_data(): DirectMessage[] {
 		}, {
 			from: 'DirectMessage',
 			sender_id: 3,
-			sender_name: 'nguiard',
 			text: 'YASGDUASDYH',
 			type: NORMAL,
 			id: 1,

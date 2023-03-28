@@ -11,7 +11,6 @@ export interface MessageData {
 	text: string,
 	uid: number,
 	id: number,
-	sender_name: string,
 	sender_id: number,
 	type: number,
 	from: string,
@@ -48,7 +47,6 @@ export function sample_channel_data(): Channel[] {
 		operators: [1, 2, 3, 4],
 		banned: [],
 		messages: [{
-				sender_name: "clmurphy",
 				sender_id: 2,
 				text: "Je pars au ski",
 				type: NORMAL,
@@ -57,7 +55,6 @@ export function sample_channel_data(): Channel[] {
 				from: "Transcendence"
 			},
 			{
-				sender_name: "adben-mc",
 				sender_id: 1,
 				text: "Moi aussi",
 				type: NORMAL,
@@ -66,7 +63,6 @@ export function sample_channel_data(): Channel[] {
 				from: "Transcendence"
 			},
 			{
-				sender_name: "ple-lez",
 				sender_id: 4,
 				text: "Pas nous",
 				type: NORMAL,
@@ -75,7 +71,6 @@ export function sample_channel_data(): Channel[] {
 				from: "Transcendence"
 			},
 			{
-				sender_name: "nguiard",
 				sender_id: 3,
 				text: "Ouais...",
 				type: NORMAL,
@@ -94,7 +89,6 @@ export function sample_channel_data(): Channel[] {
 		banned: [2],
 		messages: [{
 			sender_id: 3,
-			sender_name: "nguiard",
 			text: "Raclette?",
 			type: NORMAL,
 			id: 0,
@@ -103,7 +97,6 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			sender_id: 2,
-			sender_name: "clmurphy",
 			text: "Je peux venir?",
 			type: NORMAL,
 			uid: 1,
@@ -112,7 +105,6 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			sender_id: 4,
-			sender_name: "ple-lez",
 			text: "non",
 			type: NORMAL,
 			id: 1,
@@ -121,7 +113,6 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			sender_id: 3,
-			sender_name: "nguiard",
 			text: " has banned clmurphy",
 			type: BAN,
 			id: 1,
@@ -139,7 +130,6 @@ export function sample_channel_data(): Channel[] {
 		banned: [ 3, 4],
 		messages: [{
 			sender_id: 2,
-			sender_name: "clmurphy",
 			text: " has banned nguiard",
 			type: BAN,
 			id: 1,
@@ -148,7 +138,6 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			sender_id: 2,
-			sender_name: "clmurphy",
 			text: " has kicked ple-lez",
 			type: KICK,
 			id: 1,
@@ -157,7 +146,6 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			sender_id: 2,
-			sender_name: "clmurphy",
 			text: "ils ont ose me ban d'une raclette",
 			type: NORMAL,
 			id: 1,
@@ -166,7 +154,6 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			sender_id: 1,
-			sender_name: "adben-mc",
 			text: "On vas conquerir le monde",
 			type: NORMAL,
 			id: 1,
@@ -175,7 +162,6 @@ export function sample_channel_data(): Channel[] {
 		},
 		{
 			sender_id: 2,
-			sender_name: "clmurphy",
 			text: "/game/6",
 			type: INVITE,
 			id: 1,
@@ -264,7 +250,6 @@ function sendMessage(chan: Channel, current: User, msg: MessageData): boolean {
 export function sendToChan(chan: Channel, current: User, msg: "string"): boolean {
 	const new_message: MessageData = {
 		sender_id: current.id,
-		sender_name: current.name,
 		uid: 0,
 		text: msg,
 		type: NORMAL,
