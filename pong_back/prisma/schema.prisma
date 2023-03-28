@@ -53,7 +53,7 @@ model Channel {
 
   members Int[] @default([])
   operators Int[]
-  blocked Int[] @default([])
+  banned Int[] @default([])
   owner Int
 
   messages Int[] @default([])

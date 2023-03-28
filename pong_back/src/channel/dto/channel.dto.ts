@@ -53,7 +53,9 @@ export class ChannelKickDto extends ChannelLeaveDto {
 
 export class MakeOpDto extends ChannelKickDto {}
 
-export class UserMuteDto extends ChannelKickDto {
+export class UserBanDto extends ChannelKickDto {}
+
+export class UserMuteDto extends UserBanDto {
 	@IsNumber()
 	@IsNotEmpty()
 	@Min(2)
