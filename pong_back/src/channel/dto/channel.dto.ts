@@ -51,6 +51,8 @@ export class ChannelKickDto extends ChannelLeaveDto {
 	target_id: number;
 }
 
+export class MakeOpDto extends ChannelKickDto {}
+
 export class UserMuteDto extends ChannelKickDto {
 	@IsNumber()
 	@IsNotEmpty()
