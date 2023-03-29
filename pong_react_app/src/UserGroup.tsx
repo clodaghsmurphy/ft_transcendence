@@ -53,11 +53,6 @@ function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage): 
 }
 
 function button_not_op(user: User, is_op: boolean): JSX.Element {	
-	let pastille: JSX.Element
-
-	pastille = <div className='pastille'></div>
-	if (!is_op)
-		pastille = <></>
 	return (
 		<div className='group-members-button-wrapper' key={uuidv4()}>
 			<div className='group-members-button'>
@@ -113,8 +108,14 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 			user_id: current_user.id,
 			target_id: user.id,
 			mute_duration: 15,
-		}, (response: any) => {
-			console.log(response)
+		})
+	}
+
+	function emit_makeop() {
+		socket.emit('makeop', {
+			name: chan.name,
+			user_id: current_user.id,
+			target_id: user.id,
 		})
 	}
 
@@ -150,7 +151,10 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 							onClick={() => emit_kick()}>
 								Kick
 						</button>
-						<button id='ban-button'>Ban</button>
+						<button id='ban-button'
+							onClick={() => emit_ban()}>
+								Ban
+						</button>
 					</div>
 					<div style={{
 						"display": "flex",
@@ -159,19 +163,13 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 						paddingTop: '5px',
 					}}>
 						<button id='mute-button'
-						onClick={() => emit_mute()}>
-							Mute
+							onClick={() => emit_mute()}>
+								Mute
 						</button>
-						<input type='text'
-						name='time'
-						style={{
-							width:'50%',
-							marginTop: 'auto',
-							marginBottom: 'auto',
-							border: '0px',
-							borderRadius: '3px',
-							flex: '1',
-						}}></input>
+						<button id='makeop-button'
+							onClick={() => emit_makeop()}>
+								OP
+						</button>
 					</div>
 				</div>
 			</div>

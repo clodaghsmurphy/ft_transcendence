@@ -80,7 +80,6 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 				sender_name: current_user.name,
 				uid: chan.curr_uid + 1,
 				text: formValue,
-				type: NORMAL,
 			})
 			setFormValue('');
 		}
