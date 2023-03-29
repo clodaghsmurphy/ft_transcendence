@@ -64,13 +64,16 @@ export const initialState:State = {
     user: JSON.parse(localStorage.getItem('user')!) ,
   };
   
-  export const reducer = (state:State, action:Action) => {
+  export const reducer = (state:State, action:Action) => { // {type, payload: { isLoggedIn, user }}
     switch (action.type) {
       case "LOGIN": {
         console.log('in login and payload is');
         console.log(action.payload);
         localStorage.setItem("isLoggedIn", JSON.stringify(action.payload.isLoggedIn))
         localStorage.setItem("user", JSON.stringify(action.payload.user));
+        // state.isLoggedIn = ddd
+        // state.user = xxxx
+        // return state
         return {
           ...state,
           isLoggedIn: action.payload.isLoggedIn,

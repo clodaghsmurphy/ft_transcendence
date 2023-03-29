@@ -9,7 +9,6 @@ import { useState, useContext } from "react";
 import { AuthContext } from "./App";
 import GameHistory from './GameHistory';
 import StatsAchievements from './Achievements';
-import StatsFriends from "./StatsFriends";
 import { Link } from 'react-router-dom'
 import User, { id_to_user } from "./User";
 import Popup from 'reactjs-popup';
@@ -18,8 +17,11 @@ import EnableTwoFAuth from "./EnableTWoFAuth";
 import ChangeName from "./ChangeName";
 import ChangePhoto from "./ChangePhoto";
 import { blob } from "stream/consumers";
-import test from './media/nguiard.jpg'
+import test from './media/nguiard.jpg';
+import ProfileStats from "./ProfileStats";
 
+
+import Friends from "./Friends";
 
 
 function Stats()
@@ -28,7 +30,6 @@ function Stats()
 	const { state, dispatch } = useContext(AuthContext);
 	let [current_user, set_current_user] = useState({} as User);
 	let [all_users, set_all_users] = useState([] as User[]);
-	//const [img, setImg] = useState<string | undefined >();
 
 	useEffect(() => {
 		document.title = 'Chat';
@@ -51,22 +52,6 @@ function Stats()
 		setOpen(!open);
 	};
 
-	// const fetchImage = async () => {
-	// 	const res = await fetch('./media/nguiard.jpg');
-	// 	console.log(res);
-	// 	const imageBlob = await res.blob();
-	// 	console.log(imageBlob);
-	// 	const imageObjectURL = URL.createObjectURL(imageBlob);
-	// 	setImg(imageObjectURL);
-	// 	console.log(img);
-	// 	//setImg(imageObjectURL);
-
-	// }
-	
-	// useEffect(() => {
-	// 	console.log('in use effects');
-	// 	fetchImage();
-	// }, [])
 
 	return(
 			<>
@@ -76,23 +61,8 @@ function Stats()
 				<div className="stats">
 					<div className="profile-header">
 						<div className="profile-sub-header" >
-						<ul className="profile-game-stats">
-								<li>
-									<span style={{color: "#7070a5",
-								fontSize: '.9em'}} >Total games</span>
-									<span>13</span>	
-								</li>
-								<li>
-									<span style={{ color: "#7070a5",
-										fontSize: '.9em' }}>Wins</span>
-									<span>85%</span>
-								</li>
-								<li>
-									<span style={{ color: "#7070a5",
-										fontSize: '.9em' }}>Loss</span>
-									<span>15%</span>
-								</li>
-						</ul>
+							<ProfileStats />
+						
 						<div className="avatar-stats">
 								<img style={{
 								}}src={state.user.avatar} />
@@ -131,12 +101,8 @@ function Stats()
 							</header>
 							{StatsAchievements(current_user)}
 						</div>
-						<div className="info-card game-history">
-							<header>
-								<h1>Friends</h1>
-							</header>
-							{StatsFriends(all_users, current_user)}
-						</div>
+						<Friends />
+						
 					</div>
 				</div>
 			</div>

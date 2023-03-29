@@ -3,7 +3,7 @@
 echo "Creating Users\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "clmurphy", "avatar": "media/clmurphy.jpg", "id" : 1 }' \
+	-d '{ "name": "clmurphy", "avatar": "media/clmurphy.jpg", "id" :  94551 }' \
 	-X POST \
 	localhost:3042/user/create
 

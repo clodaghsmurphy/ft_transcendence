@@ -89,7 +89,54 @@ export class UserController {
 		res.end(image, 'binary');
 	}
 
+	@Get('friends')
+	@UseGuards(JwtAuthGuard)
+	async getFriends(@UserEntity() userEntity)
+	{
+		const user = await this.userService.userExists(userEntity.id);
+		if (!user)
+			throw new UnauthorizedException();
+		return user.friend_users;
+	}
 
+	@Get('friends-search')
+	@UseGuards(JwtAuthGuard)
+	async friendsList(@UserEntity() userEntity, @Body() body, @Res() res)
+	{
+		const user = await this.userService.userExists(userEntity.id);
+		if (!user)
+			throw  new UnauthorizedException();
+		console.log(body);
+		const result = await this.prisma.user.findMany({
+			where: {
+				name: {
+					contains: body.data,
+					mode: 'insensitive'
+					}
+				},
+			select: {
+				name: true,
+				avatar: true,
+				id: true,
+			}
+		})
+		res.send(result);
+
+	}
+
+	@Get('users')
+	@UseGuards(JwtAuthGuard)
+	async getUsers(@Res() res)
+	{
+		const result = await this.prisma.user.findMany({
+			select: {
+				name:true,
+				id:true,
+				avatar:true,
+			}
+		})
+		res.send(result);
+	}
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {
 			throw new HttpException({

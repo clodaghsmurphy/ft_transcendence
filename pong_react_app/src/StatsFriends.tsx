@@ -7,6 +7,8 @@ import { CgProfile } from "react-icons/cg";
 import { Link } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import User from "./User";
+import axios, { AxiosError } from 'axios'
+
 const { v4: uuidv4 } = require('uuid');
 
 function FriendButton(target: User): JSX.Element {
@@ -42,13 +44,18 @@ function FriendButton(target: User): JSX.Element {
 	);
 }
 
-function StatsFriends(every_user: User[], current_user: User): JSX.Element {
-	let [friendsBlocks, setFriendsBlocks] = useState([] as JSX.Element[])
+function StatsFriends(): JSX.Element {
+	let [friendsBlocks, setFriendsBlocks] = useState([] as JSX.Element[]);
+	let [ friends, setFriends ] = useState([]);
 
-	if (typeof current_user === 'undefined' || typeof every_user[0] === 'undefined')
-		return <div key={uuidv4()}/>
-
-	let friends = every_user.filter(usr => current_user.friend_users.includes(usr.id));
+	const getFriends = async () =>
+	{
+		try {
+			let friendsRes = await axios.get(`http://${window.location.hostname}:8080/api/user/friends`);
+			setFriends(friendsRes.data);
+		}
+		catch(error:any) { console.log(error) };
+	}
 
 	for (const usr of friends) {
 		let tmp = friendsBlocks;
@@ -58,6 +65,7 @@ function StatsFriends(every_user: User[], current_user: User): JSX.Element {
 
 	return (
 		<div className="info-body">
+			
 			{friendsBlocks}
 		</div>
 	);
