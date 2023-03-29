@@ -271,7 +271,7 @@
 	flex-direction: column;
 	flex-grow: 1;
 	flex-shrink: 1;
-    height: 100%;
+    height: calc(100% - 64px);
     background-color: #2E2E2E;
 	margin-bottom: 5%;
 }
@@ -306,6 +306,10 @@
 	margin-top: 5%;
 	margin-left: 9%;
 	min-height: 2rem;
+
+	flex-basis: 71px;
+	flex-grow: 0;
+	flex-shrink: 0;
 }
 
 .group-members-button-wrapper {
@@ -437,6 +441,7 @@
 	margin-right: 5%;
 	gap: 5px;
 	overflow-y: scroll;
+	flex: 1;
 }
 
 .is_op {
@@ -754,4 +759,47 @@
 .invite-button:hover {
 	cursor: pointer;
 	opacity: 0.7;
+}
+
+.input-password {
+	border-radius: 3px;
+	margin-top: 5px;
+}
+
+.change-password-holder {
+	flex-grow: 0;
+	flex-basis: 80px;
+	flex-shrink: 0;
+}
+
+.pastille-ok {
+	background-color: #c0e085;
+	color: black;
+	border: 0px;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	min-width: 25px;
+	min-height: 25px;
+	max-width: 25px;
+	max-height: 25px;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.pastille-clear {
+	background-color: #e08a85;
+	color: black;
+	border: 0px;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	min-width: 25px;
+	min-height: 25px;
+	max-width: 25px;
+	max-height: 25px;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
 }

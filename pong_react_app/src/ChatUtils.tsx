@@ -5,6 +5,8 @@ import PopupAddDirect from "./PopupAddDirect";
 import User, { id_to_user } from "./User";
 import plus_sign from './media/white_plus.png'
 import group_img from './media/group.png'
+import { useRef } from 'react'
+import { ChanAndMessage, socket_chat } from "./Chat";
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -95,4 +97,59 @@ export function group_message(chan_data: Channel[],
 	}
 	ret.push(PopupAddChannel(every_user, current_user))
 	return ret;
+}
+
+
+export function Password(current_user: User, current_chan: ChanAndMessage | DirectMessage): JSX.Element {
+	let pass_ref = useRef<HTMLInputElement | null>(null)
+
+	if (typeof (current_chan as ChanAndMessage).chan === 'undefined')
+		return <div key={uuidv4()}></div>
+
+	if ((current_chan as ChanAndMessage).chan.owner !== current_user.id)
+		return <div key={uuidv4()}></div>
+
+	function changePassword() {
+		socket_chat.emit('password', {
+			user_id: current_user.id,
+			password: pass_ref.current!.value,
+		})
+		pass_ref.current!.value = ''
+	}
+
+	function clearPassword() {
+		socket_chat.emit('password', {
+			user_id: current_user.id,
+			password: '',
+		})
+	}
+
+	return (
+		<div className='change-password-holder'>
+			<div className='bar'/>
+			<h3 style={{
+				textAlign: 'center',
+				color: 'white'
+			}}>Change password:</h3>
+			<div style={{
+				display: 'flex',
+				flexDirection: 'row',
+			}}>
+				<input 
+					type='text'
+					placeholder='password'
+					className='input-password'
+					ref={pass_ref}
+				/>
+				<button className='pastille-ok'
+					onClick={() => changePassword()}>
+						✓
+				</button>
+				<button className='pastille-clear'
+					onClick={() => clearPassword()}>
+						🗑
+				</button>
+			</div>
+		</div>
+	)
 }

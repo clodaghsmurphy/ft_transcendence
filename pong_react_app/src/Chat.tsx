@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
 import { AuthContext } from './App'
 import PopupAddDirect from './PopupAddDirect'
-import { group_message, users_message } from './ChatUtils'
+import { group_message, Password, users_message } from './ChatUtils'
 
 export type ChanAndMessage = {
 	chan: Channel,
@@ -23,6 +23,10 @@ export const socket_chat = io(`http://${window.location.hostname}:8080/channel`)
 
 socket_chat.on('connect', () => {
 	console.log('CONNECTED', socket_chat.connected)
+})
+
+socket_chat.on('password', (data: any) => {
+	console.log('PASSWORD CHANGED', data)
 })
 
 function Chat()
@@ -327,6 +331,8 @@ function Chat()
 				<div className='user-holder'>
 					{user_in_group(all_users, current_user, (current_chan as ChanAndMessage).chan)}
 				</div>
+
+				{Password(current_user, current_chan)}
 			</div>
         </main>
         </div>
