@@ -254,7 +254,8 @@ function Chat()
 	function changeChannelOrDm(param: Channel | DirectMessage): void {
 		if (typeof (param as Channel).operators !== 'undefined')
 		{
-			if (typeof (current_chan as ChanAndMessage).chan !== 'undefined'){
+			if (typeof (current_chan as ChanAndMessage).chan !== 'undefined' &&
+				(current_chan as ChanAndMessage).chan.name !== (param as Channel).name) {
 				socket_chat.emit('leave', {
 					name: (current_chan as ChanAndMessage).chan.name,
 					user_id: current_user.id,
@@ -264,6 +265,8 @@ function Chat()
 			socket_chat.emit('join', {
 				name: (param as Channel).name,
 				user_id: current_user.id,
+			}, (data: any) => {
+				console.log('emitted join, ret:', data)
 			});
 
 			set_current_chan({

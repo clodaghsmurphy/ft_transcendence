@@ -30,8 +30,6 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 	const curr_is_op = chan.operators.includes(current_user.id)
 
-	console.log(chan)
-
 	for (const user of chan.members) {
 		const target_is_op = chan.operators.includes(user)
 		const target_is_owner = chan.owner === user

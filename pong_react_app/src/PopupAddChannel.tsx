@@ -84,9 +84,7 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 						socket_chat.emit('join', {
 							name: chan_name,
 							user_id: current_user.id,
-						}, (data_socket: any) => {
-								console.log(data_socket)
-							})
+						})
 					})
 			})
 		}
