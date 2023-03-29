@@ -1,5 +1,5 @@
-import { Body, UseGuards, Controller, Get, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
-import { UploadedFile, UseInterceptors, ParseFilePipe } from '@nestjs/common';
+import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
+import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express'
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -8,10 +8,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserService } from "./user.service";
 import { Multer } from 'multer'
 import { SharpPipe } from "./utils/sharp.pipe";
+import * as path from 'path';
+import * as fs from 'fs';
+import { UserEntity } from "./utils/user.decorator";
+import { PrismaService } from "src/prisma/prisma.service";
+import { User} from '@prisma/client';
+
+
 
 @Controller('user')
 export class UserController {
-	constructor(private userService: UserService) {}
+	constructor(private userService: UserService, private prisma: PrismaService	) {}
 
 	@Get('info')
 	getAllUsers() {
@@ -31,6 +38,7 @@ export class UserController {
 	}
 
 	@Post('create')
+	//delete this
 	createUser(@Body() dto: UserCreateDto) {
 		return this.userService.create(dto);
 	}
@@ -44,11 +52,43 @@ export class UserController {
 	@Post('upload')
 	@UseGuards(JwtAuthGuard)
 	@UseInterceptors(FileInterceptor('file'))
-	uploadFile(@UploadedFile(SharpPipe) file: Express.Multer.File)
+	async uploadFile(@UploadedFile(SharpPipe) file: string, @Res() res, @UserEntity() user)
 	{
-		console.log('in upload');
-		console.log(file);	
+		console.log('in puload annd file is'  + file);
+		try 
+		{
+			const Filepath = path.join('/app', '/uploads', file)
+			const updateUser = await this.prisma.user.update({
+				where: {id: user.id},
+				data: { avatar: Filepath },
+			});	
+			console.log(updateUser);
+			console.log(Filepath);
+			return res.send(Filepath);
+		}
+		catch(e)
+		{
+			throw new UnauthorizedException();
+		}
 	}
+
+	@Get('image/:id')
+	async getImage(@Param('id') param, @Res() res)
+	{
+		console.log(param);
+		const user = await this.userService.userExists(parseInt(param));
+		if (!user)
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User doesn't exist`,
+			}, HttpStatus.BAD_REQUEST);
+		console.log(user.avatar);
+		const imagePath = user.avatar;
+		const image = fs.readFileSync(imagePath);
+		res.writeHead(200, {'Content-Type': 'image/jpeg' });
+		res.end(image, 'binary');
+	}
+
 
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {

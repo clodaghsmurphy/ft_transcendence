@@ -3,8 +3,11 @@ import { useLocation } from 'react-router-dom'
 import axios from "axios";
 import { AxiosResponse, AxiosError } from 'axios';
 import { AuthContext } from './App';
-import {  Navigate } from 'react-router-dom'
-import { ActionKind } from "./store/reducer"
+import {  Navigate } from 'react-router-dom';
+import { ActionKind } from "./store/reducer";
+import ball from './media/Ball.svg';
+import paddle from './media/Paddle.svg'
+import OtpInput from './OtpInput';
 
 
 function LoginTfa()
@@ -26,7 +29,7 @@ function LoginTfa()
 			dispatch(
 				{
 					type: ActionKind.Login,
-					payload: { user:{ name:data.name, id:data.id, avatar:data.avatar, otp_enabled:data.otp_enabled}, isLoggedIn: true}
+					payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true}
 				}
 			)
             console.log(state);
@@ -75,15 +78,39 @@ function LoginTfa()
      {
          return <Navigate to="/dashboard" />;
      }
+
+     const onChange = (input:string) => setValue(input)
     return (
-        <div>
-            <div>Please enter 2fa code</div>
-            <form onSubmit={handleSubmit}>
-                {error ? <div>Incorrect password</div> : null}
-                <input type="text" value={value} onChange={(e:React.FormEvent<HTMLInputElement>) => setValue(e.currentTarget.value)}/>
-                <input type="submit" />
-            </form>
-        </div>
+      
+            <main>
+			<div className="horizon">
+				<div className="paddle" id="paddle1">
+					<img src={paddle} />
+				</div>
+				<div className="paddle" id="paddle2">
+					<img src={paddle} />
+				</div>
+				<div className="ball">
+					<img src={ball} />;
+				</div>
+                <div className='login-two-factor'>
+                    <div className='pop-up-title'>Please enter 2fa code</div>
+                            <form onSubmit={handleSubmit} style={{'display' : 'flex', 'flexDirection': 'column', 'justifyContent': 'center', 'alignItems': 'center'}} >
+                                
+                                 {error ? <div style={{'textAlign' : 'center', 'color' : 'red' }}>Incorrect password</div> : null}
+                                <div style={{'display' : 'flex', 'flexDirection': 'row'}}>
+                                    <OtpInput value={value} valueLength={6} onChange={onChange}/>
+                                </div>
+                                <button className='submit-popup' type="submit" >Verfiy</button>
+                            </form>
+                    </div>
+                </div>
+			<div className="horizon-divide"></div>
+			<div className="floor"></div>
+
+		</main>
+            
+        
     )
 }
 

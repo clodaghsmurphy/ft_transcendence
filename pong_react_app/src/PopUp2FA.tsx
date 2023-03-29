@@ -5,6 +5,7 @@ import { useEffect, useState, useContext } from 'react';
 import './stats.css';
 import { AuthContext } from './App';
 import { ActionKind } from "./store/reducer";
+import OtpInput from './OtpInput'
 
 
 interface PopUpProps
@@ -38,7 +39,7 @@ function PopUp2FA(props: PopUpProps)
             console.dir(res)
             dispatch({
                 type: ActionKind.userUpdate,
-                payload:{ user:{ name:res.data.name, id:res.data.id, avatar:res.data.avatar, otp_enabled:res.data.otp_enabled}} 
+                payload:{ user:{ name:res.data.name, id:res.data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${res.data.id}`, otp_enabled:res.data.otp_enabled}} 
                 })
             alert('2FA enabled !');
             props.setShow(!props.show);
@@ -50,30 +51,31 @@ function PopUp2FA(props: PopUpProps)
                
     });  
     }
+
+    const onChange = (input:string) => setValue(input)
     return (
         <div className="TwoFactorPopUp">
            
             <div className="instructions">
                 <div className="pop-up-title">Enable 2FA</div>
                 <div>
-                    <ul>
+                    <ol style={ { 'padding': 0} }>
                     <li>Scan qr code in google authneticator app on your phone</li>
                     <li>Scan using google authenticator chrome extension</li>
                         <li>Nest you will receive a code, please enter it below</li>
-                    </ul>
+                    </ol>
                 </div>
             </div>
             <div className="QRcode">
                 <img src={imageSrc} alt="QR code" />
             </div>
-            { error ? <div>{error}</div> : null }
-            <div> Code alternative here</div>
-            <div>Enter authorization code here
-                <input type="text" value={value} onChange={(e:React.FormEvent<HTMLInputElement>) => {setValue(e.currentTarget.value)}}/>
+            { error ? <div style={{'color': 'red', 'overflow' : 'visible', 'flexBasis': '6vh'}}>{error}</div> : null }
+            <div className='qr-input'>
+                <OtpInput value={value} valueLength={6} onChange={onChange}/>
             </div>
             <div className="buttons">
-                <button onClick={() => { props.setShow(!props.show)}}>Close</button>
-                <button type="submit" onClick={handleSubmit}>Verfiy</button>
+                <button className='cancel-popup' onClick={() => { props.setShow(!props.show)}}>Close</button>
+                <button className='submit-popup' type="submit" onClick={handleSubmit}>Verfiy</button>
             </div>
         </div>
     );

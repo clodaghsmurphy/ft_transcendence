@@ -2,7 +2,8 @@ import React from 'react';
 import { useState, useContext, useEffect } from 'react'
 import { AuthContext } from './App';
 import axios from 'axios';
-import { AxiosResponse, AxiosError} from 'axios'
+import { AxiosResponse, AxiosError} from 'axios';
+import { ActionKind } from "./store/reducer"
 
 
 function ChangePhoto() {
@@ -11,14 +12,26 @@ function ChangePhoto() {
 	const [value, setValue] = useState("");
     const [error, setError] = useState("");
 	const { state, dispatch } = useContext(AuthContext);
+    const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+
+
+    const setImage = async (path: string) => {
+        
+        //     {
+        //         type: ActionKind.userUpdate,
+        //         payload: { user:state.user },
+        //     }
+        // )
+        console.log(state.user.avatar)
+    }
 
     const submitPhoto = async (event: React.FormEvent<HTMLFormElement>) =>
     {
-        console.log('in submit');
-        console.log(file);
         event.preventDefault();
         if (!file)
             return ;
+        console.log(file);
+      
         const formData = new FormData();
         formData.append('file', file);
         axios.post(`http://${window.location.hostname}:8080/api/user/upload`
@@ -27,14 +40,24 @@ function ChangePhoto() {
             'Content-Type' : 'multipart/form-data'
         }}
         )
-        .then((res:AxiosResponse) => console.log("RES : " + res.data))
+        .then(async function (res:AxiosResponse) {
+            console.dir('in then');
+            setShowPhoto(!showPhoto);
+            window.location.reload();
+            setError('');
+            
+        })
         .catch(function (error:AxiosError) 
         {
             if(error.response && error.response.status == 413)
                 setError('File too large, image must be under 2MB');
+            console.log('error : ' + error)
+
         })
-        setShowPhoto(!showPhoto);
+        
     }
+
+   
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.currentTarget.files)

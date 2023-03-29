@@ -299,7 +299,7 @@ img {
 
 .horizon-divide {
   height: 10px;
-  z-index: 1;
+  z-index: 0;
   justify-content: end;
   background: #db0eec;
   box-shadow:

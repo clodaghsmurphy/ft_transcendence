@@ -11,9 +11,6 @@ const EnableTwoFAuth = () =>
     const [show, setShow] = useState<boolean>(false);
     const { state,  dispatch } = useContext(AuthContext);
     const [ enabled, setEnabled] = useState<boolean>(state.user.otp_enabled)
-    console.log(state.user);
-    console.log(state.user.otp_enabled);
-    
 
     const enable = async () =>
     {
@@ -31,7 +28,7 @@ const EnableTwoFAuth = () =>
         .then(function (res:AxiosResponse) {
             dispatch({
                 type: ActionKind.userUpdate,
-                payload:{ user:{ name:res.data.name, id:res.data.id, avatar:res.data.avatar, otp_enabled:res.data.otp_enabled}} 
+                payload:{ user:{ name:res.data.name, id:res.data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${res.data.id}`, otp_enabled:res.data.otp_enabled}} 
                 })
             alert('2FA disabled ')
             })

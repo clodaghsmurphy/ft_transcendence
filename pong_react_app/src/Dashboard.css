@@ -99,6 +99,7 @@
 
     .navlink {
         cursor: pointer;
+        overflow: visible;
         justify-self: center;
         margin: 0 2em;
         letter-spacing: 0.2em;
@@ -108,7 +109,7 @@
         text-decoration: none;
         color: white;
         margin-top: 1.5rem;
-        font-size: .55em;
+        font-size: calc(.3em + .8vw);
         font-weight: 800;
         border-radius: 1em;
     }
@@ -217,7 +218,8 @@
             text-decoration: none;
             color: white;
             margin-top: 1.5rem;
-            font-size: .55em;
+            font-size: calc(.3em + .8vw);
+            overflow: visible;
             font-weight: 800;
             border-radius: 1em;
         }
@@ -716,6 +718,24 @@
         border: none;
         text-transform: uppercase;
 
+    }
+
+    .login-two-factor{
+        display: flex;
+        padding: 0;
+        z-index: 1;
+        color: white;
+        background-color: rgb(17, 11, 49);
+        align-items: center;
+        flex-direction: column;
+        border: solid 1px white;
+        border-radius: 1em;
+        box-shadow: 0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+        justify-content: space-around;
+        height: 30vh;
+        width: 300px;
+        top: 20%;
+        left: 50%;
     }
 
 
