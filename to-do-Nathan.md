@@ -9,8 +9,8 @@
   - [ ] POST
 - [ ] Browse channels
 - [x] Messages rendered even if there was no messages on the channel
-- [ ] Kick
+- [x] Kick
 - [ ] Ban
 - [ ] Mute
   - [ ] CSS
-  - [ ] emit
+  - [x] emit

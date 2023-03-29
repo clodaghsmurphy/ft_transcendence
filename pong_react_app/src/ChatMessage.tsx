@@ -6,7 +6,7 @@ import nathan from './media/nguiard.jpg'
 import { Avatar } from '@mui/material'
 import { useState } from 'react'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
-import { MessageData, BAN, INVITE, KICK, Channel } from './Channels'
+import { MessageData, BAN, INVITE, KICK, Channel, MUTE } from './Channels'
 import ProtectedRoute from './ProtectedRoute'
 import { Link } from 'react-router-dom'
 
@@ -26,6 +26,10 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 
 	if (msg.type === KICK) {
 		return (KickMessage(msg, sender_name))
+	}
+
+	if (msg.type === MUTE) {
+		return (MuteMessage(msg, sender_name))
 	}
 
 	// Si le sender a ete ban par le curr_user
@@ -80,6 +84,16 @@ function KickMessage(msg: MessageData, sender_name: string): JSX.Element {
 	
 	return (
 		<div className='kick-message' key={uuidv4()}>
+			{txt}
+		</div>
+	)
+}
+
+function MuteMessage(msg: MessageData, sender_name: string): JSX.Element {
+	let txt = "--- " + sender_name + msg.text + " ---"
+	
+	return (
+		<div className='mute-message' key={uuidv4()}>
 			{txt}
 		</div>
 	)

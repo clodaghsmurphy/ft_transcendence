@@ -108,12 +108,6 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_mute() {
-		console.log({
-			name: chan.name,
-			user_id: current_user.id,
-			target_id: user.id,
-			mute_duration: 15,
-		})
 		socket.emit('mute', {
 			name: chan.name,
 			user_id: current_user.id,

@@ -35,7 +35,7 @@ socket.on('connect', () => {
 	console.log('CONNECTED', socket.connected)
 })
 
-function chat_button(name: string, message: string, img: string,
+function chat_button(name: string, img: string,
 	fnc: (chan: Channel | DirectMessage) => void, param: Channel | DirectMessage)
 {
 	return (
@@ -47,10 +47,14 @@ function chat_button(name: string, message: string, img: string,
 						'aspectRatio': '1 / 1', 'paddingLeft': '0px',
 						'paddingRight': '0px'}}>
 				</img>
-				<div>
-					<h2>{name}</h2>
-					<div>{message}</div>
-				</div>
+					<h2 style={{
+						marginTop: 'auto',
+						marginBottom: 'auto',
+						fontSize: '1.5rem',
+						height: '2.25rem',
+					}}>
+						{name}
+					</h2>
 			</button>
 		</div>
 	);
@@ -75,8 +79,7 @@ function users_message(message_data: DirectMessage[], all_users: User[],
 
 		let direct = dm_betweeen_two_users(current_user, user);
 
-		ret.push(chat_button(user.name, dm.messages[dm.messages.length - 1].text,
-			user.avatar, click_handler, direct));
+		ret.push(chat_button(user.name, user.avatar, click_handler, direct));
 	}
 	ret.push(PopupAddDirect(all_users, current_user))
 	return ret;
@@ -115,24 +118,7 @@ function group_message(chan_data: Channel[],
 	let ret: JSX.Element[] = [];
 
 	for (const chan of chan_data) {
-		let target_message = chan.messages[chan.messages.length - 1]
-		
-		if (typeof target_message === 'undefined')
-		{
-			ret.push(chat_button(chan.name, '', group_img, click_handler, chan));
-			continue
-		}
-		let sender: User = id_to_user(every_user, target_message.id)
-
-		let message_text: string = (
-			target_message.type == BAN ||
-			target_message.type == KICK ?
-			sender.name + target_message.text :
-			target_message.text
-		)
-		if (target_message.type === INVITE)
-			message_text = sender.name + " sent an invite"
-		ret.push(chat_button(chan.name, message_text, group_img, click_handler, chan));
+		ret.push(chat_button(chan.name, group_img, click_handler, chan));
 	}
 	ret.push(PopupAddChannel(every_user, current_user))
 	return ret;
