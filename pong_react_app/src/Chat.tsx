@@ -14,8 +14,6 @@ import { AuthContext } from './App'
 import PopupAddDirect from './PopupAddDirect'
 import { group_message, users_message } from './ChatUtils'
 
-const { v4: uuidv4 } = require('uuid');
-
 export type ChanAndMessage = {
 	chan: Channel,
 	msg: MessageData[],
