@@ -41,11 +41,21 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
 			<div className='channel-header'>
-				{chan.name}
-				<div>
-					
+			<button className='invite-button'>
+					invite
+				</button>
+				<div style={{
+					flex: '8',
+					textAlign: 'center',
+				}}>
+					{chan.name}
 				</div>
+				<button className='leave-button'
+					onClick={() => leave(chan.name)}>
+					leave
+				</button>
 			</div>
+			
 			<div className='no-messages' key="Message-ret-b"
 				style={{
 					marginTop: 'auto',
