@@ -13,7 +13,8 @@ import { DirectMessage } from './DirectMessage'
 
 const { v4: uuidv4 } = require('uuid');
 
-function Messages(chan_and_message: ChanAndMessage, users: User[], current_user: User)
+function Messages(chan_and_message: ChanAndMessage, users: User[],
+				current_user: User, set_current_chan: (arg: any) => void)
 {
 	let is_undefined: boolean = false;
 	let chan = chan_and_message.chan;
@@ -85,6 +86,25 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 		}
 	}
 
+	function leave(name: string) {
+		fetch('/api/channel/leave', {
+			method: 'POST',
+			body: JSON.stringify({
+				name: name,
+				user_id: current_user.id,
+			}),
+			headers: {'Content-Type': 'application/json'},
+		})
+			.then(response => {
+				response.json()
+					.then(data => {
+						if (typeof data.status === 'undefined') {
+							set_current_chan({});
+						}
+					})
+			})
+	}
+
 	return (
 		<div style={{
 			'display': 'flex',
@@ -92,15 +112,27 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 			'justifyContent': 'space-between',
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
+
 			<div className='channel-header'>
-				{chan.name}
-				<div>
-					
+			<button className='invite-button'>
+					invite
+				</button>
+				<div style={{
+					flex: '8',
+					textAlign: 'center',
+				}}>
+					{chan.name}
 				</div>
+				<button className='leave-button'
+					onClick={() => leave(chan.name)}>
+					leave
+				</button>
 			</div>
+
 			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}
 			</div>
+
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input"
 					placeholder="Type message..." value={ formValue }
