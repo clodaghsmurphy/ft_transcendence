@@ -8,19 +8,19 @@ export class DmService {
 	constructor (private prisma: PrismaService, private userService: UserService) {}
 
 	async get(dto: DmGetDto) {
-		await this.checkUser(dto.user1);
-		await this.checkUser(dto.user2);
+		await this.checkUser(dto.sender_id);
+		await this.checkUser(dto.receiver_id);
 
 		return await this.prisma.privateMessage.findMany({
 			where: {
 				OR: [
 					{
-						sender_id: dto.user1,
-						receiver_id: dto.user2,
+						sender_id: dto.sender_id,
+						receiver_id: dto.receiver_id,
 					},
 					{
-						sender_id: dto.user2,
-						receiver_id: dto.user2,
+						sender_id: dto.receiver_id,
+						receiver_id: dto.sender_id,
 					}
 				]
 			},
@@ -38,6 +38,7 @@ export class DmService {
 				receiver: {connect: {id: dto.receiver_id}},
 			}
 		});
+		return message;
 	}
 
 	async checkUser(id: number) {

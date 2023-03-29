@@ -28,7 +28,7 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket) {
-		const roomName: string = this.getRoomName(dto.user1, dto.user2);
+		const roomName: string = this.getRoomName(dto.sender_id, dto.receiver_id);
 
 		if (client.rooms.has(roomName))
 			throw new WsException(`error: client has already joined this room`);
