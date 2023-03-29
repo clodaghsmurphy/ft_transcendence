@@ -3,17 +3,9 @@ import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
 import './Chat.css'
-import adam from './media/adben-mc.jpg'
-import pierre from './media/ple-lez.jpg'
-import clodagh from './media/clmurphy.jpg'
-import nathan from './media/nguiard.jpg'
 import group_img from './media/group.png'
-import test_img	from './media/test.jpg'
-import Button from '@mui/material/Button'
-import { Avatar } from '@mui/material'
 import { user_in_group } from './UserGroup'
 import plus_sign from './media/white_plus.png'
-import { SearchBar } from './SearchBar'
 import User, { error_user, id_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, MUTE, MessageData, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
@@ -158,8 +150,6 @@ function Chat()
 
 	}, []);
 
-	let old_message_handler = (truc: any) => {};
-
 	useEffect(() => {
 		socket.removeListener('message')
 		const handleMessage = (param: any) => {
@@ -172,47 +162,15 @@ function Chat()
 			}));
 		}
 
-		old_message_handler = handleMessage
-
 		socket.on('message', handleMessage)
 	}, [current_chan, set_current_chan])
 
 	useEffect(() => {
 		// on removeListener pour eviter d'avour plusieurs listening d'event
-		socket.removeListener('kick')
 		socket.removeListener('mute')
 		socket.removeListener('join')
 
-		console.log('in useEffect of handle kick')
-
-		const handleKick = (data: any) => {
-			console.log('inside handleKick:', data)
-			if (data.user_id === current_user.id) {
-				// let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
-				// let target = id_to_user(all_users, data.target_id).name;
-				// let kick_message = " has kicked " + target
-				// socket.emit('message', {
-				// 	name: data.name,
-				// 	sender_id: current_user.id,
-				// 	sender_name: current_user.name,
-				// 	uid: chan.curr_uid + 1,
-				// 	text: kick_message,
-				// 	type: KICK,
-				// })
-				
-				/*	PLUS RIEN A FAIRE PUISQUE LE BACK
-					VAS GERER LES MESSAGES MAINTENANT	*/
-			}
-			else {
-				socket.emit('message', {
-					name: data.name,
-					sender_id: current_user.id,
-					sender_name: current_user.name,
-					uid: 0,
-					text: 'dummy message for deconnection',
-				})
-			}
-		}
+		console.log('in useEffect of handle mute / join')
 
 		const handleMute = (data: any) => {
 			console.log('recieved the mute')
@@ -260,9 +218,83 @@ function Chat()
 		}
 
 		socket.on('join', handleJoin)
-		socket.on('kick', handleKick)
 		socket.on('mute', handleMute)
 	}, [all_channels, set_all_channels])
+
+	useEffect(() => {
+		socket.removeListener('makeop')
+
+		const handleMakeop = (data: any) => {
+			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
+				...prev,
+				chan: {
+					...(prev as ChanAndMessage).chan,
+					operators: [...(prev as ChanAndMessage).chan.operators, data.target_id],
+				}
+			}))
+		}
+
+		socket.on('makeop', handleMakeop)
+	}, [current_chan, set_current_chan])
+
+	useEffect(() => {
+		socket.removeListener('kick')
+		socket.removeListener('ban')
+
+		const handleKick = (data: any) => {
+			console.log('inside handleKick:', data)
+			if (data.user_id !== current_user.id) {
+				socket.emit('message', {
+					name: data.name,
+					sender_id: current_user.id,
+					sender_name: current_user.name,
+					uid: 0,
+					text: 'dummy message for deconnection',
+				})
+			}
+			/* ^ a virer quand le back sera sur JWT 
+				A changer de useEffect quand il n'y aura
+				plus a envoyer de messages					*/
+			
+				set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
+					...prev,
+					chan: {
+						...(prev as ChanAndMessage).chan,
+						members: (prev as ChanAndMessage).chan.members
+							.filter((user: number) => user !== data.target_id)
+					}
+				}))
+		}
+
+		const handleBan = (data: any) => {
+			console.log('inside handleban:', data)
+			if (data.user_id !== current_user.id) {
+				socket.emit('message', {
+					name: data.name,
+					sender_id: current_user.id,
+					sender_name: current_user.name,
+					uid: 0,
+					text: 'dummy message for deconnection',
+				})
+			}
+			/* ^ a virer quand le back sera sur JWT 
+				A changer de useEffect quand il n'y aura
+				plus a envoyer de messages					*/
+			
+				set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
+					...prev,
+					chan: {
+						...(prev as ChanAndMessage).chan,
+						members: (prev as ChanAndMessage).chan.members
+							.filter((user: number) => user !== data.target_id),
+						banned: [...(prev as ChanAndMessage).chan.banned, data.target_id],
+					}
+				}))
+		}
+
+		socket.on('ban', handleKick)
+		socket.on('kick', handleBan)
+	}, [current_chan, set_current_chan, current_user, set_current_user])
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'

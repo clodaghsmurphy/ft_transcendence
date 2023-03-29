@@ -24,6 +24,7 @@ export type Channel = {
 	messages: MessageData[],
 	curr_uid: number,
 	password: boolean,
+	owner: number,
 }
 
 export function basic_channel(): Channel {
@@ -36,6 +37,7 @@ export function basic_channel(): Channel {
 			messages: [],
 			curr_uid: 0,
 			password: false,
+			owner: -1,
 		}
 	)
 }
@@ -43,6 +45,7 @@ export function basic_channel(): Channel {
 export function sample_channel_data(): Channel[] {
 	let chan_1: Channel = {
 		name: "Transcendence",
+		owner: 2,
 		members: [1, 2, 3, 4],
 		operators: [1, 2, 3, 4],
 		banned: [],
@@ -84,6 +87,7 @@ export function sample_channel_data(): Channel[] {
 	}
 	let chan_2: Channel = {
 		name: "Raclette",
+		owner: 3,
 		members: [3, 4, 1],
 		operators: [3],
 		banned: [2],
@@ -124,6 +128,7 @@ export function sample_channel_data(): Channel[] {
 		curr_uid: 3,
 	}
 	let chan_3: Channel = {
+		owner: 2,
 		name: "Illuminatis",
 		members: [1, 2],
 		operators: [1, 2],
@@ -172,91 +177,6 @@ export function sample_channel_data(): Channel[] {
 		curr_uid: 3,
 	}
 	return [chan_1, chan_2, chan_3]
-}
-
-export function createChannel(c_name: string, creator: User): [Channel, boolean] {
-	const new_chan = {
-		name: c_name,
-		members: [creator.id],
-		operators: [creator.id],
-		banned: [],
-		messages: [],
-		password: false,
-		curr_uid: 0,
-	}
-	// post le chan
-	return	[new_chan, true]
-}
-
-export function banFromChan(chan: Channel, current: User, target: number): boolean {
-	if (chan.operators.includes(current.id)) {
-		if (chan.operators.includes(target)) {
-			return false
-		}
-		let index = chan.members.indexOf(target)
-		if (index > -1) {
-			chan.members.splice(index, 1)
-			chan.banned.push(target)
-		}
-		// post le bannissement
-		return true
-	}
-	return false
-}
-
-export function kickFromChan(chan: Channel, current: User, target: number): boolean {
-	if (chan.operators.includes(current.id)) {
-		if (chan.operators.includes(target)) {
-			return false
-		}
-		let index = chan.members.indexOf(target)
-		if (index > -1) {
-			chan.members.splice(index, 1)
-		}
-		// post le kick
-		return true
-	}
-	return false
-}
-
-export function giveOperator(chan: Channel, current: User, target: number): boolean {
-	if (chan.operators.includes(current.id)) {
-		if (chan.operators.includes(target)) {
-			return true
-		}
-		chan.operators.push(target)
-		// post le op
-		return true
-	}
-	return false
-}
-
-function sendMessage(chan: Channel, current: User, msg: MessageData): boolean {
-	if (chan.members.includes(current.id) && !(chan.banned.includes(current.id))) {
-		chan.messages = [
-			{
-				...msg,
-				uid: chan.curr_uid,
-			},
-			...chan.messages,
-		]
-		chan.curr_uid += 1
-		// post le nv message
-		return true
-	}
-	return false
-}
-
-export function sendToChan(chan: Channel, current: User, msg: "string"): boolean {
-	const new_message: MessageData = {
-		sender_id: current.id,
-		uid: 0,
-		text: msg,
-		type: NORMAL,
-		id: chan.curr_uid + 1,
-		from: chan.name,
-	}
-	return sendMessage(chan, current, new_message)
 }
 
 export function names_to_channel(every_channels: Channel[], asked_channels: string[]): Channel[] {
