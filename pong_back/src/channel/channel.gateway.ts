@@ -4,7 +4,7 @@ import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, ChannelPasswordDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
 import { MessageType } from "./types/message.type";
 
 @UseFilters(new BadRequestFilter())
@@ -120,6 +120,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				name: dto.name,
 			};
 
+			this.channelService.postMessage(message);
 			this.io.in(dto.name).emit('mute', {
 				name: dto.name,
 				user_id: dto.user_id,
@@ -147,6 +148,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				uid: 0,
 				name: dto.name,
 			};
+
+			this.channelService.postMessage(message);
+			this.io.in(dto.name).emit('ban', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
@@ -161,6 +165,19 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.makeOp(dto);
 
 			this.io.in(dto.name).emit('makeop', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
+		} catch (e) {
+			throw new WsException(e);
+		}
+	}
+
+	@SubscribeMessage('password')
+	async handlePasswordChange(@MessageBody() dto: ChannelPasswordDto, @ConnectedSocket() client: Socket) {
+		this.checkUser(client, dto.name);
+		try {
+			await this.channelService.checkIsOwner(dto.user_id, dto.name);
+			await this.channelService.changePassword(dto);
+
+			this.io.in(dto.name).emit('password');
 		} catch (e) {
 			throw new WsException(e);
 		}
