@@ -391,6 +391,20 @@
 	cursor: pointer;
 }
 
+#makeop-button {
+	background-color: #73c8e2;
+	color: black;
+	border: none;
+	border-radius: 5px;
+	flex: 0 0;
+	flex-basis: 40%;
+}
+
+#makeop-button:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
 #ban-button {
 	background-color: #e08a85;
 	color: black;
@@ -603,6 +617,7 @@
 	text-transform: lowercase;
 	background-color: #e08a85;
 	height: 1.5rem;
+	min-height: 1.5rem;
 	width: 100%;
 	text-align: center;
 	border-bottom: #2E2E2E solid 1px;
@@ -614,6 +629,19 @@
 	text-transform: lowercase;
 	background-color: #e0be85;
 	height: 1.5rem;
+	min-height: 1.5rem;
+	width: 100%;
+	text-align: center;
+	border-bottom: #2E2E2E solid 1px;
+}
+
+.mute-message {
+	color:#2E2E2E;
+	font-style: italic;
+	text-transform: lowercase;
+	background-color: #c0e085;
+	height: 1.5rem;
+	min-height: 1.5rem;
 	width: 100%;
 	text-align: center;
 	border-bottom: #2E2E2E solid 1px;

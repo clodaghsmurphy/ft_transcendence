@@ -31,8 +31,11 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 	const curr_is_op = chan.operators.includes(current_user.id)
 
 	for (const user of chan.members) {
+		const target_is_op = chan.operators.includes(user)
+		const target_is_owner = chan.owner === user
+
 		if (user != current_user.id) {
-			if (curr_is_op && !chan.operators.includes(user))
+			if (curr_is_op && !target_is_owner)
 				ret.push(Button_op(id_to_user(every_user, user), chan.operators.includes(user), current_user, chan))
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), chan.operators.includes(user)))
@@ -53,11 +56,6 @@ function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage): 
 }
 
 function button_not_op(user: User, is_op: boolean): JSX.Element {	
-	let pastille: JSX.Element
-
-	pastille = <div className='pastille'></div>
-	if (!is_op)
-		pastille = <></>
 	return (
 		<div className='group-members-button-wrapper' key={uuidv4()}>
 			<div className='group-members-button'>
@@ -93,27 +91,34 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 
 	function emit_kick() {
 		socket.emit('kick', {
-			chan: chan.name,
-			sender: current_user.id,
-			target: user.id,
+			name: chan.name,
+			user_id: current_user.id,
+			target_id: user.id,
 		})
 	}
 
 	function emit_ban() {
 		socket.emit('ban', {
-			chan: chan.name,
-			sender: current_user.id,
-			target: user.id,
+			name: chan.name,
+			user_id: current_user.id,
+			target_id: user.id,
 		})
 	}
 
 	function emit_mute() {
 		socket.emit('mute', {
-			chan: chan.name,
-			sender: current_user.id,
-			target: user.id,
-			duration: '01:00',
-			// duration: time_input.current!.value
+			name: chan.name,
+			user_id: current_user.id,
+			target_id: user.id,
+			mute_duration: 15,
+		})
+	}
+
+	function emit_makeop() {
+		socket.emit('makeop', {
+			name: chan.name,
+			user_id: current_user.id,
+			target_id: user.id,
 		})
 	}
 
@@ -145,8 +150,14 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 						"flexDirection": "row",
 						"alignItems": "center"
 					}}>
-						<button id='kick-button'>Kick</button>
-						<button id='ban-button'>Ban</button>
+						<button id='kick-button'
+							onClick={() => emit_kick()}>
+								Kick
+						</button>
+						<button id='ban-button'
+							onClick={() => emit_ban()}>
+								Ban
+						</button>
 					</div>
 					<div style={{
 						"display": "flex",
@@ -155,19 +166,13 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 						paddingTop: '5px',
 					}}>
 						<button id='mute-button'
-						onClick={() => console.log('test')}>
-							Mute
+							onClick={() => emit_mute()}>
+								Mute
 						</button>
-						<input type='text'
-						name='time'
-						style={{
-							width:'50%',
-							marginTop: 'auto',
-							marginBottom: 'auto',
-							border: '0px',
-							borderRadius: '3px',
-							flex: '1',
-						}}></input>
+						<button id='makeop-button'
+							onClick={() => emit_makeop()}>
+								OP
+						</button>
 					</div>
 				</div>
 			</div>
