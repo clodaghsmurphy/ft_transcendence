@@ -5,7 +5,7 @@ import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
 import { DirectMessage } from './DirectMessage';
-import { socket } from './Chat';
+import { socket_chat } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -36,9 +36,9 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 		if (user != current_user.id) {
 			if (curr_is_op && !target_is_owner)
-				ret.push(Button_op(id_to_user(every_user, user), chan.operators.includes(user), current_user, chan))
+				ret.push(Button_op(id_to_user(every_user, user), target_is_op, current_user, chan))
 			else
-				ret.push(button_not_op(id_to_user(every_user, user), chan.operators.includes(user)))
+				ret.push(button_not_op(id_to_user(every_user, user), target_is_op))
 		}
 	}
 	return ret
@@ -90,7 +90,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	// let time_input = useRef<HTMLInputElement | null>(null)
 
 	function emit_kick() {
-		socket.emit('kick', {
+		socket_chat.emit('kick', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -98,7 +98,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_ban() {
-		socket.emit('ban', {
+		socket_chat.emit('ban', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -106,7 +106,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_mute() {
-		socket.emit('mute', {
+		socket_chat.emit('mute', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -115,7 +115,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_makeop() {
-		socket.emit('makeop', {
+		socket_chat.emit('makeop', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -138,9 +138,11 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 					<div className='group-members-button-text'>
 						<Link to={"/stats/" + user.name}
 							className='group-member-button-link'
-							style={is_op ? {} : {
-								"textAlign": "center",
-								"width": "100%"
+							style={is_op ? {
+								color: 'yellow',
+							} : {
+								"width": "100%",
+								"color": 'white',
 							}}>
 							{user.name}
 						</Link>
