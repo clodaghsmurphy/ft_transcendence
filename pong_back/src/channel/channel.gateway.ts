@@ -120,6 +120,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				name: dto.name,
 			};
 
+			this.channelService.postMessage(message);
 			this.io.in(dto.name).emit('mute', {
 				name: dto.name,
 				user_id: dto.user_id,
@@ -147,6 +148,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				uid: 0,
 				name: dto.name,
 			};
+
+			this.channelService.postMessage(message);
+			this.io.in(dto.name).emit('ban', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);

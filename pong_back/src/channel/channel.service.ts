@@ -79,10 +79,12 @@ export class ChannelService {
 			hash = await bcrypt.hash(dto.password, salt);
 		}
 
-		await this.prisma.channel.update({
+		const updatedChannel: Channel = await this.prisma.channel.update({
 			where: {name: dto.name},
 			data: {password: hash}
 		});
+
+		return updatedChannel;
 	}
 
 	async join(dto: ChannelJoinDto) : Promise<unknown> {
@@ -295,7 +297,7 @@ export class ChannelService {
 		}
 
 		// Check that password is correct
-		if (channel.password !== null && (!dto.hasOwnProperty('password') || !bcrypt.compare(dto.password, channel.password))) {
+		if (channel.password !== null && (!dto.hasOwnProperty('password') || !(await bcrypt.compare(dto.password, channel.password)))) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `Invalid password for channel ${dto.name}`,
