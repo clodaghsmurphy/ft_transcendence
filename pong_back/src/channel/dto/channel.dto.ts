@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from "class-validator";
 
 export class ChannelCreateDto {
 	@IsString()
@@ -18,6 +18,11 @@ export class ChannelCreateDto {
 	@IsString()
 	@IsNotEmpty()
 	password: string;
+
+	@IsOptional()
+	@IsBoolean()
+	@IsNotEmpty()
+	is_public: boolean;
 }
 
 export class ChannelJoinDto {

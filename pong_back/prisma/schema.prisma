@@ -50,6 +50,7 @@ model MuteInfo {
 
 model Channel {
   name String @id
+  is_public Boolean
   password String?
 
   members Int[] @default([])
