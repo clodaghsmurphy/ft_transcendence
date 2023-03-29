@@ -30,15 +30,17 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 	const curr_is_op = chan.operators.includes(current_user.id)
 
+	console.log(chan)
+
 	for (const user of chan.members) {
 		const target_is_op = chan.operators.includes(user)
 		const target_is_owner = chan.owner === user
 
 		if (user != current_user.id) {
 			if (curr_is_op && !target_is_owner)
-				ret.push(Button_op(id_to_user(every_user, user), chan.operators.includes(user), current_user, chan))
+				ret.push(Button_op(id_to_user(every_user, user), target_is_op, current_user, chan))
 			else
-				ret.push(button_not_op(id_to_user(every_user, user), chan.operators.includes(user)))
+				ret.push(button_not_op(id_to_user(every_user, user), target_is_op))
 		}
 	}
 	return ret
@@ -138,9 +140,11 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 					<div className='group-members-button-text'>
 						<Link to={"/stats/" + user.name}
 							className='group-member-button-link'
-							style={is_op ? {} : {
-								"textAlign": "center",
-								"width": "100%"
+							style={is_op ? {
+								color: 'yellow',
+							} : {
+								"width": "100%",
+								"color": 'white',
 							}}>
 							{user.name}
 						</Link>
