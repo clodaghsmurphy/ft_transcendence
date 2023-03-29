@@ -14,12 +14,17 @@ model User {
   name String
   id Int @id
   avatar String
+
   blocked_users Int[] @default([])
   friend_users Int[] @default([])
   channels String[] @default([])
+
   connected Boolean @default(true)
   in_game Boolean @default(false)
   game_id Int?
+
+  messages_sent PrivateMessage[] @relation("SentMessages")
+  messages_received PrivateMessage[] @relation("ReceivedMessages")
 
   otp_enabled Boolean @default(false)
   otp_verified Boolean @default(false)
@@ -38,6 +43,16 @@ model Message {
   sender_id Int
   name String
   type Int
+}
+
+model PrivateMessage {
+  id Int @id @default(autoincrement())
+  created_at DateTime @default(now())
+  text String
+  sender_id Int
+  receiver_id Int
+  sender User @relation("SentMessages", fields: [sender_id], references: [id])
+  receiver User @relation("ReceivedMessages", fields: [receiver_id], references: [id])
 }
 
 model MuteInfo {
