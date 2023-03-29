@@ -31,8 +31,11 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 	const curr_is_op = chan.operators.includes(current_user.id)
 
 	for (const user of chan.members) {
+		const target_is_op = chan.operators.includes(user)
+		const target_is_owner = chan.owner === user
+
 		if (user != current_user.id) {
-			if (curr_is_op && !chan.operators.includes(user))
+			if (curr_is_op && !target_is_owner)
 				ret.push(Button_op(id_to_user(every_user, user), chan.operators.includes(user), current_user, chan))
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), chan.operators.includes(user)))

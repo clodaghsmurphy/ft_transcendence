@@ -256,14 +256,31 @@ function Chat()
 				A changer de useEffect quand il n'y aura
 				plus a envoyer de messages					*/
 			
-				set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
-					...prev,
-					chan: {
-						...(prev as ChanAndMessage).chan,
-						members: (prev as ChanAndMessage).chan.members
-							.filter((user: number) => user !== data.target_id)
-					}
-				}))
+			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
+				...prev,
+				chan: {
+					...(prev as ChanAndMessage).chan,
+					members: (prev as ChanAndMessage).chan.members
+						.filter((user: number) => user !== data.target_id)
+				}
+			}))
+
+			let tmp_chan = all_channels.find((c: Channel) => c.name === data.name)
+
+			if (typeof tmp_chan === 'undefined')
+				return;	
+
+			(tmp_chan as Channel).members = (tmp_chan as Channel).members.filter((user: number) => 
+				user !== data.target_id
+			)
+
+			set_all_channels((prev: Channel[]) => {
+				let ret = prev.filter((c: Channel) => 
+					c.name !== data.name
+				)
+				ret.push((tmp_chan as Channel))
+				return ret;
+			})
 		}
 
 		const handleBan = (data: any) => {
@@ -281,20 +298,40 @@ function Chat()
 				A changer de useEffect quand il n'y aura
 				plus a envoyer de messages					*/
 			
-				set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
-					...prev,
-					chan: {
-						...(prev as ChanAndMessage).chan,
-						members: (prev as ChanAndMessage).chan.members
-							.filter((user: number) => user !== data.target_id),
-						banned: [...(prev as ChanAndMessage).chan.banned, data.target_id],
-					}
-				}))
+			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
+				...prev,
+				chan: {
+					...(prev as ChanAndMessage).chan,
+					members: (prev as ChanAndMessage).chan.members
+						.filter((user: number) => user !== data.target_id),
+					banned: [...(prev as ChanAndMessage).chan.banned, data.target_id],
+				}
+			}))
+
+			let tmp_chan = all_channels.find((c: Channel) => c.name === data.name)
+
+			if (typeof tmp_chan === 'undefined')
+				return;	
+
+			(tmp_chan as Channel).members = (tmp_chan as Channel).members.filter((user: number) => 
+				user !== data.target_id
+			);
+			(tmp_chan as Channel).banned.push(data.target_id)
+
+			set_all_channels((prev: Channel[]) => {
+				let ret = prev.filter((c: Channel) => 
+					c.name !== data.name
+				)
+				ret.push((tmp_chan as Channel))
+				return ret;
+			})
 		}
 
-		socket.on('ban', handleKick)
-		socket.on('kick', handleBan)
-	}, [current_chan, set_current_chan, current_user, set_current_user])
+		socket.on('kick', handleKick)
+		socket.on('ban', handleBan)
+	}, [current_chan, set_current_chan,
+		current_user, set_current_user,
+		all_channels, set_all_channels])
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'
