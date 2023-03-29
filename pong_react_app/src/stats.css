@@ -68,8 +68,8 @@
 	position: absolute;
 	left: 45%;
 	flex-direction: column;
-	height: calc(80px + 1vw);
-	width:calc(80px + 1vw);
+	width:10vw;
+	min-width: 70px;
 	bottom: 0vh;
 }
 .profile-sub-header img{
@@ -99,7 +99,7 @@
 	color: white;
 	overflow: visible!important;
 	font-weight: 900;
-	font-size: 1.2vi;
+	font-size: 1em;
 	font-family: 'Poppins', sans-serif;
 	text-align: center;
 }
@@ -413,7 +413,6 @@
 	justify-content: space-between;
 	top: 20%;
 	left: 30%;;
-	height: 450px;
 	width: 50vw;
   }
 
