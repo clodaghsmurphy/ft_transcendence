@@ -50,7 +50,11 @@ export class ChannelService {
 				operators: [dto.owner_id],
 				owner: dto.owner_id,
 				members: dto.users_ids,
+				is_public: true,
 			}
+
+			if (dto.hasOwnProperty('is_public') && dto.is_public === false)
+				data.is_public = false;
 
 			if (dto.hasOwnProperty('password')) {
 				const salt = await bcrypt.genSalt();
@@ -287,6 +291,13 @@ export class ChannelService {
 		await this.checkChannel(dto.name);
 
 		const channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
+
+		if (channel.is_public === false) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `Channel ${dto.name} is private`,
+			}, HttpStatus.BAD_REQUEST);
+		}
 
 		// Check that user isn't banned from channel
 		if (channel.banned.find((id) => id === dto.user_id)) {
