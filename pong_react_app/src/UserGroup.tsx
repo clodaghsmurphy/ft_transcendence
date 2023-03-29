@@ -5,7 +5,7 @@ import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
 import { DirectMessage } from './DirectMessage';
-import { socket } from './Chat';
+import { socket_chat } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -92,7 +92,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	// let time_input = useRef<HTMLInputElement | null>(null)
 
 	function emit_kick() {
-		socket.emit('kick', {
+		socket_chat.emit('kick', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -100,7 +100,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_ban() {
-		socket.emit('ban', {
+		socket_chat.emit('ban', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -108,7 +108,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_mute() {
-		socket.emit('mute', {
+		socket_chat.emit('mute', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -117,7 +117,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_makeop() {
-		socket.emit('makeop', {
+		socket_chat.emit('makeop', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,

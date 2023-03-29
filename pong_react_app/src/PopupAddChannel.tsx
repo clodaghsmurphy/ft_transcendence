@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import Popup from 'reactjs-popup'
-import { add_group, socket } from './Chat'
+import { add_group } from './ChatUtils'
+import { socket_chat } from './Chat'
 import User from './User'
 import Checkbox from '@mui/material/Checkbox'
 import { Channel, MessageData } from './Channels'
@@ -80,7 +81,7 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 				response.json()
 					.then(data => {
 						console.log('data fetch')
-						socket.emit('join', {
+						socket_chat.emit('join', {
 							name: chan_name,
 							user_id: current_user.id,
 						}, (data_socket: any) => {

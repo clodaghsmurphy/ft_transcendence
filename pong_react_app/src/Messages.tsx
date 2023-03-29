@@ -6,7 +6,7 @@ import clodagh from './media/clmurphy.jpg'
 import { Avatar } from '@mui/material'
 import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
-import Chat, { ChanAndMessage, socket } from './Chat'
+import Chat, { ChanAndMessage, socket_chat } from './Chat'
 import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
 import { DirectMessage } from './DirectMessage'
@@ -74,7 +74,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 		e.preventDefault();
 		if (formValue.length !== 0)
 		{
-			socket.emit('message', {
+			socket_chat.emit('message', {
 				name: chan.name,
 				sender_id: current_user.id,
 				sender_name: current_user.name,

@@ -5,7 +5,6 @@ import './Dashboard.css'
 import './Chat.css'
 import group_img from './media/group.png'
 import { user_in_group } from './UserGroup'
-import plus_sign from './media/white_plus.png'
 import User, { error_user, id_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, MUTE, MessageData, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
@@ -13,6 +12,7 @@ import io from 'socket.io-client'
 import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
 import { AuthContext } from './App'
 import PopupAddDirect from './PopupAddDirect'
+import { group_message, users_message } from './ChatUtils'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -21,100 +21,11 @@ export type ChanAndMessage = {
 	msg: MessageData[],
 }
 
-export const socket = io(`http://${window.location.hostname}:8080/channel`)
+export const socket_chat = io(`http://${window.location.hostname}:8080/channel`)
 
-socket.on('connect', () => {
-	console.log('CONNECTED', socket.connected)
+socket_chat.on('connect', () => {
+	console.log('CONNECTED', socket_chat.connected)
 })
-
-function chat_button(name: string, img: string,
-	fnc: (chan: Channel | DirectMessage) => void, param: Channel | DirectMessage)
-{
-	return (
-		<div className='chat-button-wrapper' key={uuidv4()} onClick={() => fnc(param)}>
-			<button className='chat-button'>
-				<img src={img} alt={name}
-					style={{'width': '45px', 'height': '45px',
-						'maxWidth': '45px', 'maxHeight': '45px',
-						'aspectRatio': '1 / 1', 'paddingLeft': '0px',
-						'paddingRight': '0px'}}>
-				</img>
-					<h2 style={{
-						marginTop: 'auto',
-						marginBottom: 'auto',
-						fontSize: '1.5rem',
-						height: '2.25rem',
-					}}>
-						{name}
-					</h2>
-			</button>
-		</div>
-	);
-}
-
-function users_message(message_data: DirectMessage[], all_users: User[],
-		current_user: User, click_handler: (param: Channel | DirectMessage) => void)
-{
-	let ret: JSX.Element[] = [];
-
-	if (message_data.length === 0) {
-		return [PopupAddDirect(all_users, current_user)]
-	}
-
-	for (const dm of message_data) {
-		if (typeof dm === 'undefined' || typeof dm.users === 'undefined')
-			return [PopupAddDirect(all_users, current_user)]
-		let user = id_to_user(all_users, dm.users[0]);
-		if (user.id == current_user.id) {
-			user = id_to_user(all_users, dm.users[1]);
-		}
-
-		let direct = dm_betweeen_two_users(current_user, user);
-
-		ret.push(chat_button(user.name, user.avatar, click_handler, direct));
-	}
-	ret.push(PopupAddDirect(all_users, current_user))
-	return ret;
-}
-
-export function add_group(): JSX.Element {
-	return (
-		<div className='chat-button-wrapper' key={uuidv4()}>
-			<button className='chat-button'>
-				<div className='group-add'>
-					<img src={plus_sign} alt='plus'/>
-					<h1>Add a group</h1>
-				</div>
-			</button>
-		</div>
-	);
-}
-
-export function add_dm(): JSX.Element {
-	return (
-		<div className='chat-button-wrapper' key={uuidv4()}>
-			<button className='chat-button'>
-				<div className='group-add'>
-					<img src={plus_sign} alt='plus'/>
-					<h1>Add a DM</h1>
-				</div>
-			</button>
-		</div>
-	);
-}
-
-function group_message(chan_data: Channel[],
-	click_handler: (chan: Channel | DirectMessage) => void,
-	every_user: User[], current_user: User)
-{
-	let ret: JSX.Element[] = [];
-
-	for (const chan of chan_data) {
-		ret.push(chat_button(chan.name, group_img, click_handler, chan));
-	}
-	ret.push(PopupAddChannel(every_user, current_user))
-	return ret;
-}
 
 function Chat()
 {
@@ -151,7 +62,7 @@ function Chat()
 	}, []);
 
 	useEffect(() => {
-		socket.removeListener('message')
+		socket_chat.removeListener('message')
 		const handleMessage = (param: any) => {
 			if (typeof (current_chan as ChanAndMessage).msg === 'undefined')
 				return;
@@ -162,13 +73,13 @@ function Chat()
 			}));
 		}
 
-		socket.on('message', handleMessage)
+		socket_chat.on('message', handleMessage)
 	}, [current_chan, set_current_chan])
 
 	useEffect(() => {
 		// on removeListener pour eviter d'avour plusieurs listening d'event
-		socket.removeListener('mute')
-		socket.removeListener('join')
+		socket_chat.removeListener('mute')
+		socket_chat.removeListener('join')
 
 		console.log('in useEffect of handle mute / join')
 
@@ -178,7 +89,7 @@ function Chat()
 				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
 				let target = id_to_user(all_users, data.target_id).name;
 				let kick_message = " has muted " + target + " for " + data.mute_duration
-				socket.emit('message', {
+				socket_chat.emit('message', {
 					name: data.name,
 					sender_id: current_user.id,
 					sender_name: current_user.name,
@@ -217,12 +128,12 @@ function Chat()
 			}
 		}
 
-		socket.on('join', handleJoin)
-		socket.on('mute', handleMute)
+		socket_chat.on('join', handleJoin)
+		socket_chat.on('mute', handleMute)
 	}, [all_channels, set_all_channels])
 
 	useEffect(() => {
-		socket.removeListener('makeop')
+		socket_chat.removeListener('makeop')
 
 		const handleMakeop = (data: any) => {
 			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
@@ -234,17 +145,17 @@ function Chat()
 			}))
 		}
 
-		socket.on('makeop', handleMakeop)
+		socket_chat.on('makeop', handleMakeop)
 	}, [current_chan, set_current_chan])
 
 	useEffect(() => {
-		socket.removeListener('kick')
-		socket.removeListener('ban')
+		socket_chat.removeListener('kick')
+		socket_chat.removeListener('ban')
 
 		const handleKick = (data: any) => {
 			console.log('inside handleKick:', data)
 			if (data.user_id !== current_user.id) {
-				socket.emit('message', {
+				socket_chat.emit('message', {
 					name: data.name,
 					sender_id: current_user.id,
 					sender_name: current_user.name,
@@ -286,7 +197,7 @@ function Chat()
 		const handleBan = (data: any) => {
 			console.log('inside handleban:', data)
 			if (data.user_id !== current_user.id) {
-				socket.emit('message', {
+				socket_chat.emit('message', {
 					name: data.name,
 					sender_id: current_user.id,
 					sender_name: current_user.name,
@@ -327,8 +238,8 @@ function Chat()
 			})
 		}
 
-		socket.on('kick', handleKick)
-		socket.on('ban', handleBan)
+		socket_chat.on('kick', handleKick)
+		socket_chat.on('ban', handleBan)
 	}, [current_chan, set_current_chan,
 		current_user, set_current_user,
 		all_channels, set_all_channels])
@@ -346,13 +257,13 @@ function Chat()
 		if (typeof (param as Channel).operators !== 'undefined')
 		{
 			if (typeof (current_chan as ChanAndMessage).chan !== 'undefined'){
-				socket.emit('leave', {
+				socket_chat.emit('leave', {
 					name: (current_chan as ChanAndMessage).chan.name,
 					user_id: current_user.id,
 				})
 			}
 
-			socket.emit('join', {
+			socket_chat.emit('join', {
 				name: (param as Channel).name,
 				user_id: current_user.id,
 			});
