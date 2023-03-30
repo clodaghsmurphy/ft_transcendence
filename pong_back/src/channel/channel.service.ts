@@ -117,6 +117,7 @@ export class ChannelService {
 				operators: {set: channel.operators.filter((id) => id !== dto.user_id)},
 			},
 		});
+		this.userService.leaveChannel(dto.user_id, dto.name);
 
 		return this.returnInfo(updateChannel);
 	}
