@@ -1,9 +1,11 @@
-import { Logger } from "@nestjs/common";
+import { Logger, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket, Namespace } from "socket.io";
+import { BadRequestFilter } from "./dm.filters";
 import { DmService } from "./dm.service";
 import { DmCreateDto, DmJoinDto } from "./dto";
 
+@UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'dm'})
 export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	private logger = new Logger(DmGateway.name);
@@ -26,6 +28,7 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 		this.logger.log(`Number of connection: ${this.io.sockets.size}`);
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket) {
 		const roomName: string = this.getRoomName(dto.sender_id, dto.receiver_id);
@@ -42,18 +45,14 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('message')
 	async handleMessage(@MessageBody() dto: DmCreateDto, @ConnectedSocket() client: Socket) {
 		const roomName: string = this.getRoomName(dto.sender_id, dto.receiver_id);
 		this.checkUser(client, roomName);
 
 		try {
-			const messageData = {
-				text: dto.text,
-				sender_id: dto.sender_id,
-				receiver_id: dto.receiver_id
-			};
-			const message = await this.dmService.post(messageData);
+			const message = await this.dmService.post(dto);
 			this.io.in(roomName).emit('message', message);
 		} catch (e) {
 			this.logger.log(e);

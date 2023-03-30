@@ -30,6 +30,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket) {
 		if (client.rooms.has(dto.name))
@@ -38,20 +39,21 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		try {
 			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
 			client.join(dto.name);
-			this.io.in(dto.name).emit('join', {name: dto.name, user: dto.user_id});
+			this.io.in(dto.name).emit('join', dto);
 		} catch (e) {
 			client.leave(dto.name);
 			throw new WsException(e);
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('leave')
 	async handleLeave(@MessageBody() dto: ChannelLeaveDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
 
 		try {
 			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
-			this.io.in(dto.name).emit('leave', {name: dto.name, user: dto.user_id});
+			this.io.in(dto.name).emit('leave', dto);
 			client.leave(dto.name);
 		} catch (e) {
 			client.leave(dto.name);
@@ -59,6 +61,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('kick')
 	async handleKick(@MessageBody() dto: ChannelKickDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
@@ -78,13 +81,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			};
 
 			this.channelService.postMessage(message);
-			this.io.in(dto.name).emit('kick', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
+			this.io.in(dto.name).emit('kick', dto);
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('message')
 	async handleMessage(@MessageBody() dto: MessageCreateDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
@@ -104,6 +108,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('mute')
 	async handleMute(@MessageBody() dto: UserMuteDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
@@ -121,18 +126,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			};
 
 			this.channelService.postMessage(message);
-			this.io.in(dto.name).emit('mute', {
-				name: dto.name,
-				user_id: dto.user_id,
-				target_id: dto.target_id,
-				mute_duration: dto.mute_duration,
-			});
+			this.io.in(dto.name).emit('mute', dto);
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('ban')
 	async handleBan(@MessageBody() dto: UserBanDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
@@ -150,13 +151,14 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			};
 
 			this.channelService.postMessage(message);
-			this.io.in(dto.name).emit('ban', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
+			this.io.in(dto.name).emit('ban', dto);
 			this.io.in(dto.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('makeop')
 	async handleMakeOp(@MessageBody() dto: MakeOpDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
@@ -164,12 +166,13 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.checkOperator(dto.user_id, dto.name);
 			await this.channelService.makeOp(dto);
 
-			this.io.in(dto.name).emit('makeop', {name: dto.name, user_id: dto.user_id, target_id: dto.target_id});
+			this.io.in(dto.name).emit('makeop', dto);
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
+	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('password')
 	async handlePasswordChange(@MessageBody() dto: ChannelPasswordDto, @ConnectedSocket() client: Socket) {
 		this.checkUser(client, dto.name);
