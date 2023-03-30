@@ -1,11 +1,11 @@
 import React from 'react'
 import { useState, useEffect, useMemo } from 'react';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Link } from 'react-router-dom';
 import { RiPingPongLine } from "react-icons/ri";
 import { TiDelete } from "react-icons/ti";
 import { IconContext } from "react-icons";
-import { CgProfile } from "react-icons/cg";
+import { BsPersonAdd } from "react-icons/bs";
 
 type Props = {
 	value:string
@@ -18,68 +18,66 @@ type friendUser = {
 }
 
 function AddFriends(props: Props){
-	let [ friendsSuggestions, setFriendSuggestions ] = useState([] as JSX.Element[]);
+	let [ users, setUsers ] = useState<friendUser[]>([]);
 	
 	const { v4: uuidv4 } = require('uuid');
 
-	function FriendBlock(target: friendUser): JSX.Element {
-		let style_buttons = {
-			"display": "flex",
-			"alignItems": "center",
-		}
+	useEffect( () => {
+		console.log('in use effects')
+		axios.get(`http://${window.location.hostname}:8080/api/user/users`, { data: props.value })
+			.then(function (response:AxiosResponse) {
+				 console.log(response);
+				 setUsers(response.data);
+			})
+			.catch((error: AxiosError) => console.log(error))
+	}, [])
 
-		return (
-			<div className="info-body" key={uuidv4()}>
-				<div className="info-item">
-					<div className="stats-avatar">
-						<img src={target.avatar} />
-					</div>
-					<span className="game-username">{target.name}</span>
-					<IconContext.Provider value={{
-						color: "white",
-					}}>
-						<div className="friends-options">
-							<div style={style_buttons} className="delete">
-								<TiDelete style={{ height: '4vh', cursor: 'pointer' }} />
-							</div>
-							<Link to={"/stats/" + target.name} style={style_buttons} className="friend-profile">
-								<CgProfile style={{ height: '4vh', cursor: 'pointer' }} />
-							</Link>
-						</div>
-					</IconContext.Provider>
-				</div>
-			</div>
-		);
-	}
 
 	useEffect(() => {
 		console.log(props.value);
-		setFriendSuggestions([]);
 		if (props.value)
 		{
 			axios.get(`http://${window.location.hostname}:8080/api/user/friends-search`, { data: props.value })
-			.then((response) => console.log(response))
+			.then((response:AxiosResponse) => console.log(response))
 			.catch((error:AxiosError) => console.log(error))
 		}
 		else
 		{
 			axios.get(`http://${window.location.hostname}:8080/api/user/users`, { data: props.value })
-			.then(function (response) {
+			.then(function (response:AxiosResponse) {
 				 console.log(response);
-				 let tmp = response.data.map()
-				 for(const usr of response.data)
-				 {
-					let tmp = friendsSuggestions;
-					console.log(usr);			
-					tmp.push(FriendBlock(usr));
-				}
+				 if (!users){
+				 	setUsers(response.data);
+				 }
 			})
 			.catch((error: AxiosError) => console.log(error))
 		}
 	}, [props.value])
+
+
+	let style_buttons = {
+		"display": "flex",
+		"alignItems": "center",
+	}
+
 	return (
 		<div className="info-body">
-			{friendsSuggestions}
+			{ users.map(usr =>
+			<div className="info-item">
+					<div className="stats-avatar">
+						<img src={`http://${window.location.hostname}:8080/api/user/image/${usr.id}`}/>
+					</div>
+				<span className="game-username">{usr.name}</span>
+				<IconContext.Provider value={{
+					color: "white",
+				}}>
+					<div className="friends-options">
+						<Link to={"/stats/" + usr.name} style={style_buttons} className="friend-profile">
+							<BsPersonAdd style={{ height: '4vh', cursor: 'pointer' }} />
+						</Link>
+					</div>
+				</IconContext.Provider>
+			</div>)}
 		</div>
 	)
 }

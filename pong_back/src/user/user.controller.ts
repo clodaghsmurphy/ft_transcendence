@@ -84,9 +84,18 @@ export class UserController {
 			}, HttpStatus.BAD_REQUEST);
 		console.log(user.avatar);
 		const imagePath = user.avatar;
-		const image = fs.readFileSync(imagePath);
-		res.writeHead(200, {'Content-Type': 'image/jpeg' });
-		res.end(image, 'binary');
+		if (this.userService.checkIfFileExists(imagePath)){
+			const image = fs.readFileSync(imagePath);
+			res.writeHead(200, {'Content-Type': 'image/jpeg' });
+			res.end(image, 'binary');
+			return;
+		}
+		else{
+			const image = fs.readFileSync('/app/media/norminet.jpeg');
+			res.writeHead(200, {'Content-Type': 'image/jpeg' });
+			res.end(image, 'binary');
+		}
+		
 	}
 
 	@Get('friends')
@@ -120,19 +129,28 @@ export class UserController {
 				id: true,
 			}
 		})
+		console.log(result);
 		res.send(result);
 
 	}
 
 	@Get('users')
 	@UseGuards(JwtAuthGuard)
-	async getUsers(@Res() res)
+	async getUsers(@Res() res, @UserEntity() usr)
 	{
+		this.checkId(usr.id)
+		const excludeid = usr.id!;
 		const result = await this.prisma.user.findMany({
 			select: {
 				name:true,
 				id:true,
 				avatar:true,
+			},
+			where: {
+				NOT: {
+					id: excludeid
+				},
+
 			}
 		})
 		res.send(result);

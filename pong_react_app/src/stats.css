@@ -136,6 +136,7 @@
 {
 	display: flex;
 	flex-direction: row;
+	margin-bottom: 2vh;
 	flex-basis: 65%;
 }
 
@@ -144,17 +145,24 @@
 	.sub-stats{
 		flex-direction: column;
 		display: inline-block;
+		overflow:scroll;
 	}
 
 	.ftlogo
 	{
 		display: none;
 	}
+
+	.info-card{
+		min-height: 200px;
+	}
+
 }
 
 .info-card
 {
 	display: flex;
+	height:90%;
 	align-items: center;
 	border: solid 1px;
 	border-color: #7070a535;
@@ -305,7 +313,7 @@
 .game-username
 {
 	margin: .5vh;
-	font-size: 1vw;
+	font-size: .8em;
 	align-self: center;
 	flex-basis: 25%;
 	flex-shrink: 0;
@@ -366,7 +374,7 @@
 	display: flex;
 	align-items: center;
 	flex-direction: row;
-	flex-basis: 10%;
+	flex-basis: 15%;
 	color: white;
 	background-color: transparent;
 	border-radius: 1em;

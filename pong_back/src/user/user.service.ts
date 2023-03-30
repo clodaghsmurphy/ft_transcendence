@@ -43,6 +43,15 @@ export class UserService {
 		return { attribute: user[attribute] };
 	}
 
+	checkIfFileExists(filePath: string): boolean {
+		try {
+		  fs.accessSync(filePath, fs.constants.F_OK);
+		  return true;
+		} catch (err) {
+		  return false;
+		}
+	  }
+	  
 	async downloadImage(cdn:string): Promise<string>
 	{
 		const split = cdn.split('/');
@@ -109,4 +118,5 @@ export class UserService {
 		}
 	}
 
+	
 }
