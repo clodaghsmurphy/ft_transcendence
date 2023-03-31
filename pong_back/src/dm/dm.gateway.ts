@@ -1,6 +1,7 @@
-import { Logger, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket, Namespace } from "socket.io";
+import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { BadRequestFilter } from "./dm.filters";
 import { DmService } from "./dm.service";
 import { DmCreateDto, DmJoinDto } from "./dto";
