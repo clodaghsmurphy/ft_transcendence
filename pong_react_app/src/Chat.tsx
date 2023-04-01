@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
 import { AuthContext } from './App'
 import PopupAddDirect from './PopupAddDirect'
-import { group_message, Password, users_message } from './ChatUtils'
+import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
 
 export type ChanAndMessage = {
 	chan: Channel,
@@ -83,10 +83,7 @@ function Chat()
 		socket_chat.removeListener('mute')
 		socket_chat.removeListener('join')
 
-		console.log('in useEffect of handle mute / join')
-
 		const handleMute = (data: any) => {
-			console.log('recieved the mute')
 			if (data.user === current_user.id) {
 				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
 				let target = id_to_user(all_users, data.target_id).name;
@@ -103,19 +100,18 @@ function Chat()
 		}
 
 		const handleJoin = (data: any) => {
-			console.log('recieved join ' + data.name)
 			let chan_name = data.name;
 			if (typeof all_channels.find((chan: Channel) => 
 					chan.name === chan_name
 				) === 'undefined')
 			{
-				fetch('/api/channel/info/' + chan_name)
+				fetch('/api/channel/info/' + sanitizeString(chan_name))
 				.then((response) => {
 					response.json()
 						.then((data) => {
 							set_all_channels((prev: Channel[]) => [...prev, data])
 							setChanOfUser((prev: Channel[]) => [...prev, data])
-							fetch('/api/channel/' + data.name + '/messages/')
+							fetch('/api/channel/' + sanitizeString(data.name) + '/messages/')
 								.then(response => {
 									response.json()
 										.then(msg_data => {
@@ -277,7 +273,7 @@ function Chat()
 				chan: param as Channel,
 				msg: [],
 			})
-			fetch('/api/channel/' + (param as Channel).name + '/messages/')
+			fetch('/api/channel/' + sanitizeString((param as Channel).name) + '/messages/')
 				.then(response => {
 					response.json()
 						.then(data => {
