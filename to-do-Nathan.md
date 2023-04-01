@@ -5,8 +5,8 @@
   - [x] CSS
   - [ ] emit
 - [ ] Choose the mute duration
-- [ ] Is-public channel creation working
 
+- [x] Is-public channel creation working
 - [x] Change the password if we are channel owner
   - [x] CSS
   - [x] emit

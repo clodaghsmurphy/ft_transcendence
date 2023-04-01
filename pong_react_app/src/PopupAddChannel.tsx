@@ -67,12 +67,14 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 					name: chan_name,
 					owner_id: current_user.id,
 					users_ids: tmp,
+					is_public: !privateRef.current!.checked,
 				}) :
 				JSON.stringify({
 					name: chan_name,
 					owner_id: current_user.id,
 					users_ids: tmp,
 					pass: chan_pass,
+					is_public: !privateRef.current!.checked,
 				})),
 				headers: {'Content-Type': 'application/json'},
 			})
