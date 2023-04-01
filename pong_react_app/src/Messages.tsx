@@ -6,14 +6,15 @@ import clodagh from './media/clmurphy.jpg'
 import { Avatar } from '@mui/material'
 import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
-import Chat, { ChanAndMessage, socket } from './Chat'
+import Chat, { ChanAndMessage, socket_chat } from './Chat'
 import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
 import User, { avatarOf, id_to_user, sample_user_data } from './User'
 import { DirectMessage } from './DirectMessage'
 
 const { v4: uuidv4 } = require('uuid');
 
-function Messages(chan_and_message: ChanAndMessage, users: User[], current_user: User)
+function Messages(chan_and_message: ChanAndMessage, users: User[],
+				current_user: User, set_current_chan: (arg: any) => void)
 {
 	let is_undefined: boolean = false;
 	let chan = chan_and_message.chan;
@@ -32,7 +33,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
 
-	if (chan.messages.length === 0)
+	if (messages.length === 0)
 		return (<div style={{
 			'display': 'flex',
 			'flexDirection': 'column',
@@ -40,11 +41,21 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
 			<div className='channel-header'>
-				{chan.name}
-				<div>
-					
+			<button className='invite-button'>
+					invite
+				</button>
+				<div style={{
+					flex: '8',
+					textAlign: 'center',
+				}}>
+					{chan.name}
 				</div>
+				<button className='leave-button'
+					onClick={() => leave(chan.name)}>
+					leave
+				</button>
 			</div>
+			
 			<div className='no-messages' key="Message-ret-b"
 				style={{
 					marginTop: 'auto',
@@ -72,26 +83,9 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 	function sendMessageOnClick(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
 	{
 		e.preventDefault();
-		let test = { 
-			text: formValue,
-			uid:  chan.curr_uid + 1,
-			sender_name: current_user.name,
-			sender_id: current_user.id,
-			from: chan.name,
-			type: NORMAL
-		}
 		if (formValue.length !== 0)
 		{
-			// let tmp = msg
-			// tmp.unshift(ChatMessage(users, test, current_user))
-			// setMessagesBlocks(tmp);
-			// console.log({ 
-			// 	sender_id: current_user.id,
-			// 	sender_name: current_user.name,
-			// 	uid: chan.curr_uid + 1,
-			// 	text: formValue,
-			// })
-			socket.emit('message', {
+			socket_chat.emit('message', {
 				name: chan.name,
 				sender_id: current_user.id,
 				sender_name: current_user.name,
@@ -102,6 +96,25 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 		}
 	}
 
+	function leave(name: string) {
+		fetch('/api/channel/leave', {
+			method: 'POST',
+			body: JSON.stringify({
+				name: name,
+				user_id: current_user.id,
+			}),
+			headers: {'Content-Type': 'application/json'},
+		})
+			.then(response => {
+				response.json()
+					.then(data => {
+						if (typeof data.status === 'undefined') {
+							set_current_chan({});
+						}
+					})
+			})
+	}
+
 	return (
 		<div style={{
 			'display': 'flex',
@@ -109,15 +122,27 @@ function Messages(chan_and_message: ChanAndMessage, users: User[], current_user:
 			'justifyContent': 'space-between',
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
+
 			<div className='channel-header'>
-				{chan.name}
-				<div>
-					
+			<button className='invite-button'>
+					invite
+				</button>
+				<div style={{
+					flex: '8',
+					textAlign: 'center',
+				}}>
+					{chan.name}
 				</div>
+				<button className='leave-button'
+					onClick={() => leave(chan.name)}>
+					leave
+				</button>
 			</div>
+
 			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}
 			</div>
+
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input"
 					placeholder="Type message..." value={ formValue }
