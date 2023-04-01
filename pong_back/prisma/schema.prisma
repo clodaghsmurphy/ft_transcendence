@@ -29,8 +29,6 @@ model User {
   otp_enabled Boolean @default(false)
   otp_verified Boolean @default(false)
 
-  otp_ascii String?
-  otp_hex   String?
   //protect otp base fro future api calls
   otp_base32  String?
   otp_auth_url  String?
