@@ -8,6 +8,7 @@ import { jwtConstants } from "../constants";
 export class JwtWsGuard extends AuthGuard('jwt') implements CanActivate {
 	constructor (private jwtService: JwtService) {
 		super();
+		this.jwtService = jwtService;
 	}
 
 	canActivate(context: ExecutionContext):
@@ -17,10 +18,10 @@ export class JwtWsGuard extends AuthGuard('jwt') implements CanActivate {
 			console.log(`authToken: ${authToken}`);
 
 			try {
-				req.user = this.jwtService.verify(authToken, {
-					secret: jwtConstants.secret,
-				});
+				req.user = this.jwtService.verify(authToken, {secret: jwtConstants.secret});
 			} catch (e) {
+				if (e instanceof Error)
+					console.error(`${e.name}: ${e.message}`);
 				return false;
 			}
 			return true;
