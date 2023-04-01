@@ -90,8 +90,8 @@ function Login ()
 					<img src={ball} />;
 				</div>
 				<div className="login-box">
-			<div className="login-button">
-				<button id="42-login" onClick={handleLogin}>
+			<div className="login-button" onClick={handleLogin}>
+				<button id="42-login" >
 					Login via 42
 				</button >
 			</div>
