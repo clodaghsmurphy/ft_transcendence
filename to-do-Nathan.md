@@ -9,7 +9,7 @@
   - [ ] emit
 
 - [x] Leave a channel
-  - [x] CSS
+  - [x] CSS -> Remove the "group message" button of the left channel
   - [x] POST
 - [x] Leave a room (socket)
 - [x] Messages rendered even if there was no messages on the channel
