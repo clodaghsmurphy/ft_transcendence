@@ -1,9 +1,9 @@
 # Chat
 
-- [ ] Browse channels
 - [ ] Invite
   - [x] CSS
   - [ ] emit
+- [ ] Browse channels
 - [ ] Choose the mute duration
 
 - [x] Is-public channel creation working

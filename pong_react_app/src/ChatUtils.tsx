@@ -154,3 +154,12 @@ export function Password(current_user: User, current_chan: ChanAndMessage | Dire
 		</div>
 	)
 }
+
+export function sanitizeString(str: string): string {
+	let sanitizedStr: string = str.replace(/[^\w\s-]/g, "_");
+	
+	sanitizedStr = sanitizedStr.replace(/^_+|_+$/g, "");
+
+	return sanitizedStr;
+}
+  
