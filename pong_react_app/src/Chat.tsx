@@ -322,7 +322,7 @@ function Chat()
 
             <div className="chatbox">
 				{Messages(current_chan as ChanAndMessage,
-					all_users, current_user, set_current_chan)}
+					all_users, current_user, set_current_chan, setChanOfUser)}
 			</div>
 
             <div className="group-members">
