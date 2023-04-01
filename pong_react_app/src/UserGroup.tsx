@@ -14,7 +14,7 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 	if (typeof current_user === 'undefined' ||
 		typeof chan === 'undefined')
-		return [<div key={uuidv4()} className='no-users'>No user found</div>]
+		return [<div key='no-users-in-group' className='no-users'>No user found</div>]
 
 
 	if (typeof (chan as DirectMessage).users !== 'undefined') {
@@ -40,6 +40,9 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), target_is_op))
 		}
+	}
+	if (ret.length === 0) {
+		return [<div key='no-users-in-group' className='no-users'>No users</div>]
 	}
 	return ret
 }
