@@ -29,6 +29,7 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 		this.logger.log(`Number of connection: ${this.io.sockets.size}`);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket) {
