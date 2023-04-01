@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import Popup from 'reactjs-popup'
-import { add_dm } from './Chat'
+import { add_dm } from './ChatUtils'
 import User from './User'
 import Checkbox from '@mui/material/Checkbox'
 import { Channel, MessageData } from './Channels'

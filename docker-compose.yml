@@ -43,8 +43,8 @@ services:
       context: ${PWD}/pong_back
       dockerfile: Dockerfile
     volumes:
-      - './pong_back:/app'
-      - '/app/node_modules'
+      # - './pong_back:/app'
+      # - '/app/node_modules'
       - uploads:/app/uploads
     env_file:
       - .env
@@ -82,13 +82,13 @@ volumes:
       type: none
       o: bind
       device: ${PWD}/pong_react_app
-  pg-data:
   uploads:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${PWD}/uploads
+  pg-data:
 
 networks:
   pong:

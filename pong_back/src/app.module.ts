@@ -10,14 +10,17 @@ import { PassportModule } from '@nestjs/passport';
 import { MulterModule } from '@nestjs/platform-express'
 import { memoryStorage} from 'multer';
 import { HttpModule } from '@nestjs/axios'
+import { DmModule } from './dm/dm.module';
+
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true}), 
-    UserModule, 
+  imports: [ConfigModule.forRoot({ isGlobal: true}),
+    UserModule,
     PrismaModule,
-    ChannelModule, 
+    ChannelModule,
+    DmModule,
+    AuthModule,
     GameModule,
-    AuthModule, 
     PassportModule,
     HttpModule,
     MulterModule.register(

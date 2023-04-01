@@ -62,7 +62,7 @@ export class UserService {
 
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
-			
+
 			return await this.prisma.user.create({
 				data: {
 					name: dto.name,
@@ -97,6 +97,18 @@ export class UserService {
 			data: {
 				channels: {push: channelName}
 			},
+		});
+	}
+
+	// Same here, should only be called by channel
+	async leaveChannel(id: number, channelName: string) {
+		const user: User = await this.prisma.user.findUnique({where: {id: id}});
+
+		await this.prisma.user.update({
+			where: {id: id},
+			data: {
+				channels: {set: user.channels.filter((name) => name !== channelName)}
+			}
 		});
 	}
 
