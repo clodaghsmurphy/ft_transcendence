@@ -81,8 +81,5 @@ model Channel {
 
 model Game {
   id        Int      @id @default(autoincrement())
-  name      String
-  release   DateTime
-  publisher String?
-  rating    Float?
+  members Int[] @default([])
 }

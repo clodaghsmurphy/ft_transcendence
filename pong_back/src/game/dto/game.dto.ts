@@ -31,6 +31,10 @@ export class GameJoinDto {
 	@IsNumber()
 	@IsNotEmpty()
 	user_id: number;
+
+	@IsNumber()
+	@IsNotEmpty()
+	room_id: number;
 }
 
 export class GameLeaveDto {
