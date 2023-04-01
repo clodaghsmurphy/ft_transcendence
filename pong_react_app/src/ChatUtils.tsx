@@ -109,18 +109,19 @@ export function Password(current_user: User, current_chan: ChanAndMessage | Dire
 	if ((current_chan as ChanAndMessage).chan.owner !== current_user.id)
 		return <div key={uuidv4()}></div>
 
-	function changePassword() {
+	function changePassword(name: string) {
 		socket_chat.emit('password', {
+			name: name,
 			user_id: current_user.id,
 			password: pass_ref.current!.value,
 		})
 		pass_ref.current!.value = ''
 	}
 
-	function clearPassword() {
+	function clearPassword(name: string) {
 		socket_chat.emit('password', {
+			name: name,
 			user_id: current_user.id,
-			password: '',
 		})
 	}
 
@@ -142,11 +143,11 @@ export function Password(current_user: User, current_chan: ChanAndMessage | Dire
 					ref={pass_ref}
 				/>
 				<button className='pastille-ok'
-					onClick={() => changePassword()}>
+					onClick={() => changePassword((current_chan as ChanAndMessage).chan.name)}>
 						✓
 				</button>
 				<button className='pastille-clear'
-					onClick={() => clearPassword()}>
+					onClick={() => clearPassword((current_chan as ChanAndMessage).chan.name)}>
 						🗑
 				</button>
 			</div>
