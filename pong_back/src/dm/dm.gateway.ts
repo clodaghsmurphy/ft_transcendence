@@ -1,10 +1,10 @@
 import { Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket, Namespace } from "socket.io";
-import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { BadRequestFilter } from "./dm.filters";
 import { DmService } from "./dm.service";
 import { DmCreateDto, DmJoinDto } from "./dto";
+import { JwtWsGuard } from "src/auth/utils/JwtWsGuard";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'dm'})
@@ -29,7 +29,7 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 		this.logger.log(`Number of connection: ${this.io.sockets.size}`);
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket) {
