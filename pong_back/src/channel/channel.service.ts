@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Channel, Message, MuteInfo } from '@prisma/client';
 import { PrismaService } from "src/prisma/prisma.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, ChannelPasswordDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { UserService } from "src/user/user.service";
 import { info } from "console";
@@ -50,7 +50,11 @@ export class ChannelService {
 				operators: [dto.owner_id],
 				owner: dto.owner_id,
 				members: dto.users_ids,
+				is_public: true,
 			}
+
+			if (dto.hasOwnProperty('is_public') && dto.is_public === false)
+				data.is_public = false;
 
 			if (dto.hasOwnProperty('password')) {
 				const salt = await bcrypt.genSalt();
@@ -70,6 +74,21 @@ export class ChannelService {
 			}
 			throw e;
 		}
+	}
+
+	async changePassword(dto: ChannelPasswordDto) {
+		let hash: string = null;
+		if (dto.hasOwnProperty('password')) {
+			const salt = await bcrypt.genSalt();
+			hash = await bcrypt.hash(dto.password, salt);
+		}
+
+		const updatedChannel: Channel = await this.prisma.channel.update({
+			where: {name: dto.name},
+			data: {password: hash}
+		});
+
+		return updatedChannel;
 	}
 
 	async join(dto: ChannelJoinDto) : Promise<unknown> {
@@ -98,6 +117,7 @@ export class ChannelService {
 				operators: {set: channel.operators.filter((id) => id !== dto.user_id)},
 			},
 		});
+		this.userService.leaveChannel(dto.user_id, dto.name);
 
 		return this.returnInfo(updateChannel);
 	}
@@ -190,7 +210,6 @@ export class ChannelService {
 		return message;
 	}
 
-
 	async checkUser(id: number) {
 		if (await this.prisma.user.count({where: {id: id}}) == 0)
 		{
@@ -242,15 +261,28 @@ export class ChannelService {
 		}
 	}
 
+	async checkIsOwner(userId: number, channelName: string) {
+		await this.checkUserInChannel(userId, channelName);
+
+		const channel: Channel = await this.prisma.channel.findUnique({where: {name: channelName}});
+
+		if (channel.owner !== userId) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${userId} is not the owner of channel ${channelName}`
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	async checkIsNotOwner(userId: number, channelName: string) {
 		await this.checkUserInChannel(userId, channelName);
 
 		const channel: Channel = await this.prisma.channel.findUnique({where: {name: channelName}});
 
-		if (channel.owner == userId) {
+		if (channel.owner === userId) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: `Target ${userId} is the owner of channel ${channelName}`
+				error: `User ${userId} is the owner of channel ${channelName}`
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -261,6 +293,13 @@ export class ChannelService {
 
 		const channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
 
+		if (channel.is_public === false) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `Channel ${dto.name} is private`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+
 		// Check that user isn't banned from channel
 		if (channel.banned.find((id) => id === dto.user_id)) {
 			throw new HttpException({
@@ -270,7 +309,7 @@ export class ChannelService {
 		}
 
 		// Check that password is correct
-		if (channel.password !== null && (!dto.hasOwnProperty('password') || !bcrypt.compare(dto.password, channel.password))) {
+		if (channel.password !== null && (!dto.hasOwnProperty('password') || !(await bcrypt.compare(dto.password, channel.password)))) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `Invalid password for channel ${dto.name}`,

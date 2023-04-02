@@ -8,39 +8,51 @@ import { useState, useContext } from "react";
 import { AuthContext } from "./App";
 import GameHistory from './GameHistory';
 import StatsAchievements from './Achievements';
-import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import User, { id_to_user } from "./User";
 import EnableTwoFAuth from "./EnableTWoFAuth";
 import ChangeName from "./ChangeName";
 import ChangePhoto from "./ChangePhoto";
 import ProfileStats from "./ProfileStats";
-import { ActionKind } from "./store/reducer"
+import axios, { AxiosResponse, AxiosError} from 'axios';
+import { user } from "./store/reducer";
+import { ErrorObject, ActionKind } from "./store/reducer";
+
 
 import Friends from "./Friends";
 
-type Props ={
-	error?:string,
-}
-function Stats(props:Props)
+
+function StatsId()
 {
 	const [open, setOpen] = useState(false);
-	const [error, setError ] = useState('');
 	const { state, dispatch } = useContext(AuthContext);
+	let	[user, setUser] = useState<user>();
+	const [ error, setError] = useState("");
+	const id = useParams();
+	const navigate = useNavigate();
+
 
 	useEffect(() => {
 		document.title = 'Stats';
-		if (state.error)
-		{
-			const error = state.error;
-			setError(error.message)
+		axios.get(`/api/user/info/${id.id}`)
+		.then(function(response:AxiosResponse){
+			console.log(response.data);
+			const res = response.data;
+			 setUser({...user, name:res.name, id:res.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${res.id}`, otp_enabled:res.otp_enabled})
+			 console.log(user)
+		})
+		.catch(function(e:AxiosError) {
+			const errorObj:ErrorObject = {
+				type: 'StatsId',
+				message: e.message,
+			}
 			dispatch({
-				type:ActionKind.errorUpdate,
-				payload: null
+				type: ActionKind.errorUpdate,
+				payload: errorObj
 			})
-		
-		}
+			navigate('/stats')
+		})
 	}, []);
-
-	
 
 	const handleOpen = () =>
 	{
@@ -50,9 +62,9 @@ function Stats(props:Props)
 
 	return(
 			<>
+			{ user &&
 			<Suspense>
 				<NavBar />
-				{error && <div className='error-bar'>{error}</div> }
 			<div className="stats-page">
 				<div className="stats">
 					<div className="profile-header">
@@ -60,8 +72,9 @@ function Stats(props:Props)
 							<ProfileStats />
 						
 						<div className="avatar-stats">
-								<Image id={state.user.id} />
-							<span className="user-name">{state.user.name}</span>
+								<img style={{
+								}}src={user.avatar} />
+							<span className="user-name">{user.name}</span>
 
 						</div>
 						<div className='right-options'>
@@ -76,7 +89,7 @@ function Stats(props:Props)
 								</ul> ) : null}
 								
 							</div>
-								<Link to={"https://profile.intra.42.fr/users/" + state.user.name} className='ftlogo'>
+								<Link to={"https://profile.intra.42.fr/users/" + user.name} className='ftlogo'>
 									<img src={FTlogo} />
 								</Link>
 						</div>
@@ -88,14 +101,12 @@ function Stats(props:Props)
 							<header>
 								<h1>Game History</h1>
 							</header>
-						
 						</div>
 						<div className="info-card friends">
 							<header>
 								<h1>Achievements</h1>
-								{StatsAchievements(state.user)}
 							</header>
-							
+							{StatsAchievements(user)}
 						</div>
 						<Friends />
 						
@@ -103,9 +114,10 @@ function Stats(props:Props)
 				</div>
 			</div>
 		</Suspense>
+		} 
 		</>
 	);
 }
 
 
-export default Stats;
+export default StatsId;

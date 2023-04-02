@@ -14,18 +14,21 @@ model User {
   name String
   id Int @id
   avatar String
+
   blocked_users Int[] @default([])
   friend_users Int[] @default([])
   channels String[] @default([])
+
   connected Boolean @default(true)
   in_game Boolean @default(false)
   game_id Int?
 
+  messages_sent PrivateMessage[] @relation("SentMessages")
+  messages_received PrivateMessage[] @relation("ReceivedMessages")
+
   otp_enabled Boolean @default(false)
   otp_verified Boolean @default(false)
 
-  otp_ascii String?
-  otp_hex   String?
   //protect otp base fro future api calls
   otp_base32  String?
   otp_auth_url  String?
@@ -40,6 +43,16 @@ model Message {
   type Int
 }
 
+model PrivateMessage {
+  id Int @id @default(autoincrement())
+  created_at DateTime @default(now())
+  text String
+  sender_id Int
+  receiver_id Int
+  sender User @relation("SentMessages", fields: [sender_id], references: [id])
+  receiver User @relation("ReceivedMessages", fields: [receiver_id], references: [id])
+}
+
 model MuteInfo {
   id Int @id @default(autoincrement())
   userId Int
@@ -50,6 +63,7 @@ model MuteInfo {
 
 model Channel {
   name String @id
+  is_public Boolean
   password String?
 
   members Int[] @default([])

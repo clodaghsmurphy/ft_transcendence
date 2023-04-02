@@ -3,7 +3,7 @@ import { render } from "react-dom";
 
 import Home from './Home';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-
+import StatsId from './StatsId';
 import './App.css';
 import Dashboard from './Dashboard';
 import Chat from './Chat';
@@ -45,6 +45,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
+        <Route path='/stats/:id' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<StatsId />} />} />
     </Routes>
     </PromptContext.Provider>
     <JWTverify />

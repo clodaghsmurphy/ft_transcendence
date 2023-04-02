@@ -20,15 +20,28 @@ export class UserService {
 	async get(id: number): Promise<User> {
 		await this.checkUser(id);
 
-		return await this.prisma.user.findUnique({
-			where: { id: id },
+		const user=  await this.prisma.user.findUnique({
+			where: { id: id }
 		});
+		if (!user){
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				message: `User ${id} doesn't exist`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+		return user;
 	}
 
 	async userExists(id: number): Promise<User> {
 		const user = await this.prisma.user.findUnique({
 			where: { id: id },
 		});
+		if (!user) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${id} doesn't exist`,
+			}, HttpStatus.BAD_REQUEST);
+		}
 		return user;
 	}
 
@@ -37,6 +50,10 @@ export class UserService {
 
 		const user = await this.prisma.user.findUnique({
 			where: { id: id },
+			select: {
+				otp_base32: false,
+				otp_auth_url: false
+			}
 		});
 		if (user == null)
 			return ;
@@ -71,7 +88,7 @@ export class UserService {
 
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
-			
+
 			return await this.prisma.user.create({
 				data: {
 					name: dto.name,
@@ -106,6 +123,18 @@ export class UserService {
 			data: {
 				channels: {push: channelName}
 			},
+		});
+	}
+
+	// Same here, should only be called by channel
+	async leaveChannel(id: number, channelName: string) {
+		const user: User = await this.prisma.user.findUnique({where: {id: id}});
+
+		await this.prisma.user.update({
+			where: {id: id},
+			data: {
+				channels: {set: user.channels.filter((name) => name !== channelName)}
+			}
 		});
 	}
 
