@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, createParamDecorator } from "@nestjs/common";
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from "rxjs";
@@ -15,7 +15,6 @@ export class JwtWsGuard extends AuthGuard('jwt') implements CanActivate {
 		boolean | Promise<boolean> | Observable<boolean> {
 			const req = context.switchToWs().getClient();
 			const authToken = req.handshake.headers.authorization.split(' ')[1];
-			console.log(`authToken: ${authToken}`);
 
 			try {
 				req.user = this.jwtService.verify(authToken, {secret: jwtConstants.secret});
@@ -27,3 +26,13 @@ export class JwtWsGuard extends AuthGuard('jwt') implements CanActivate {
 			return true;
 	}
 }
+
+export const UserPayload = createParamDecorator(
+	(data: unknown, context: ExecutionContext) => {
+		const jwtService = new JwtService();
+		const req = context.switchToWs().getClient();
+		const authToken = req.handshake.headers.authorization.split(' ')[1];
+
+		return jwtService.decode(authToken);
+	}
+);
