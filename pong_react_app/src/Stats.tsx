@@ -13,6 +13,7 @@ import EnableTwoFAuth from "./EnableTWoFAuth";
 import ChangeName from "./ChangeName";
 import ChangePhoto from "./ChangePhoto";
 import ProfileStats from "./ProfileStats";
+import Image from "./Image";
 import { ActionKind } from "./store/reducer"
 
 import Friends from "./Friends";
@@ -93,8 +94,8 @@ function Stats(props:Props)
 						<div className="info-card friends">
 							<header>
 								<h1>Achievements</h1>
-								{StatsAchievements(state.user)}
 							</header>
+								{StatsAchievements(state.user)}
 							
 						</div>
 						<Friends />

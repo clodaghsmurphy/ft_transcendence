@@ -27,7 +27,6 @@ export class UserController {
 
 	@Get('info/:id')
 	getUser(@Param() params) {
-		this.checkId(params.id);
 		return this.userService.get(parseInt(params.id));
 	}
 
@@ -81,7 +80,7 @@ export class UserController {
 				status: HttpStatus.BAD_REQUEST,
 				error: `User doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
-		const imagePath = user.avatar;
+		const imagePath = user.avatar_path;
 		if (this.userService.checkIfFileExists(imagePath)){
 			const image = fs.readFileSync(imagePath);
 			res.writeHead(200, {'Content-Type': 'image/jpeg' });

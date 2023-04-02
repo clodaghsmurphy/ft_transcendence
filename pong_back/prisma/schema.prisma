@@ -14,6 +14,7 @@ model User {
   name String
   id Int @id
   avatar String
+  avatar_path String
 
   blocked_users Int[] @default([])
   friend_users Int[] @default([])

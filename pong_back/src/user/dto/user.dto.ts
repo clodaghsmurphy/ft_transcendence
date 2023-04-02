@@ -6,8 +6,14 @@ export class UserCreateDto {
 	name: string;
 
 	@IsString()
+	@IsOptional()
 	@IsNotEmpty()
 	avatar: string;
+
+	@IsString()
+	@IsNotEmpty()
+	@IsOptional()
+	avatar_path: string;
 
 	@IsNotEmpty()
 	@IsNumber()
@@ -23,6 +29,11 @@ export class UserUpdateDto {
 	@IsString()
 	@IsNotEmpty()
 	avatar: string;
+
+	@IsString()
+	@IsNotEmpty()
+	@IsOptional()
+	avatar_path: string;
 
 	@IsNotEmpty()
 	@IsNumber()

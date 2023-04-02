@@ -34,7 +34,7 @@ function StatsId()
 
 	useEffect(() => {
 		document.title = 'Stats';
-		axios.get(`/api/user/info/${id.id}`)
+		axios.get(`http://localhost:8080/api/user/info/${id.id}`)
 		.then(function(response:AxiosResponse){
 			console.log(response.data);
 			const res = response.data;
@@ -42,6 +42,7 @@ function StatsId()
 			 console.log(user)
 		})
 		.catch(function(e:AxiosError) {
+			console.log(e);
 			const errorObj:ErrorObject = {
 				type: 'StatsId',
 				message: e.message,
