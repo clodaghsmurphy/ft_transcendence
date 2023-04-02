@@ -11,10 +11,11 @@ type Props = {
 	value:string
 }
 
-type friendUser = {
+export type friendUser = {
 	name:string,
 	id: number,
 	avatar:string
+	game_id?:number
 }
 
 function AddFriends(props: Props){
@@ -37,33 +38,47 @@ function AddFriends(props: Props){
 		console.log(props.value);
 		if (props.value)
 		{
-			axios.get(`http://${window.location.hostname}:8080/api/user/friends-search`, { data: props.value })
-			.then((response:AxiosResponse) => console.log(response))
+			console.log(props.value);
+			axios.post(`http://${window.location.hostname}:8080/api/user/friends-search`, {
+				data: {
+					value: props.value 
+				}
+			})
+			.then(function (response:AxiosResponse) {
+				setUsers(response.data);
+			}) 
 			.catch((error:AxiosError) => console.log(error))
 		}
 		else
 		{
-			axios.get(`http://${window.location.hostname}:8080/api/user/users`, { data: props.value })
+			axios.get(`http://${window.location.hostname}:8080/api/user/users`)
 			.then(function (response:AxiosResponse) {
 				 console.log(response);
-				 if (!users){
-				 	setUsers(response.data);
-				 }
+				setUsers(response.data);	 
 			})
 			.catch((error: AxiosError) => console.log(error))
 		}
 	}, [props.value])
 
+	async function add(id: number) {
+		console.log('in add');
+		axios.post(`http://${window.location.hostname}:8080/api/user/add-friend`, { data: {
+			id:id
+		}})
+		.then((response:AxiosResponse) => console.log(response))
+		.catch((error:AxiosError) => console.log(error))
+	}
 
 	let style_buttons = {
 		"display": "flex",
 		"alignItems": "center",
+		"cursor": 'pointer',
 	}
 
 	return (
 		<div className="info-body">
 			{ users.map(usr =>
-			<div className="info-item">
+			<div className="info-item" key={usr.id}>
 					<div className="stats-avatar">
 						<img src={`http://${window.location.hostname}:8080/api/user/image/${usr.id}`}/>
 					</div>
@@ -72,9 +87,9 @@ function AddFriends(props: Props){
 					color: "white",
 				}}>
 					<div className="friends-options">
-						<Link to={"/stats/" + usr.name} style={style_buttons} className="friend-profile">
+						<div style={style_buttons} className="friend-profile" onClick={() => add(usr.id)}> 
 							<BsPersonAdd style={{ height: '4vh', cursor: 'pointer' }} />
-						</Link>
+						</div>
 					</div>
 				</IconContext.Provider>
 			</div>)}

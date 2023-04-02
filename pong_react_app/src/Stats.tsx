@@ -19,6 +19,7 @@ import ChangePhoto from "./ChangePhoto";
 import { blob } from "stream/consumers";
 import test from './media/nguiard.jpg';
 import ProfileStats from "./ProfileStats";
+import Image from "./Image";
 
 
 import Friends from "./Friends";
@@ -64,8 +65,7 @@ function Stats()
 							<ProfileStats />
 						
 						<div className="avatar-stats">
-								<img style={{
-								}}src={state.user.avatar} />
+								<Image id={state.user.id} />
 							<span className="user-name">{state.user.name}</span>
 
 						</div>

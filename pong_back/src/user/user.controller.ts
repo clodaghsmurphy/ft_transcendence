@@ -75,14 +75,12 @@ export class UserController {
 	@Get('image/:id')
 	async getImage(@Param('id') param, @Res() res)
 	{
-		console.log(param);
 		const user = await this.userService.userExists(parseInt(param));
 		if (!user)
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `User doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
-		console.log(user.avatar);
 		const imagePath = user.avatar;
 		if (this.userService.checkIfFileExists(imagePath)){
 			const image = fs.readFileSync(imagePath);
@@ -100,26 +98,44 @@ export class UserController {
 
 	@Get('friends')
 	@UseGuards(JwtAuthGuard)
-	async getFriends(@UserEntity() userEntity)
+	async getFriends(@UserEntity() userEntity, @Res() res)
 	{
+		console.log('in friends');
 		const user = await this.userService.userExists(userEntity.id);
 		if (!user)
 			throw new UnauthorizedException();
-		return user.friend_users;
+		let user_array : User[] = []
+		for (let i = 0; i < user.friend_users.length; i++){
+			console.log(user.friend_users[i])
+			user_array[i] = await this.userService.userExists(user.friend_users[i]);
+		}
+		res.status(200);
+		res.send(user_array);
+		//return user_array;
 	}
 
-	@Get('friends-search')
+	@Post('friends-search')
 	@UseGuards(JwtAuthGuard)
-	async friendsList(@UserEntity() userEntity, @Body() body, @Res() res)
+	async friendsList(@UserEntity() userEntity, @Body() body, @Req() req, @Res() res)
 	{
 		const user = await this.userService.userExists(userEntity.id);
 		if (!user)
 			throw  new UnauthorizedException();
+		console.log('in friends search');
 		console.log(body);
+		console.log(body.data.value);
 		const result = await this.prisma.user.findMany({
 			where: {
+				id: {
+					notIn: user.friend_users,
+				},
+				NOT: {
+					id: {
+						equals: user.id,
+					}
+				},
 				name: {
-					contains: body.data,
+					startsWith: body.data.value,
 					mode: 'insensitive'
 					}
 				},
@@ -134,12 +150,58 @@ export class UserController {
 
 	}
 
+	@Post('add-friend')
+	@UseGuards(JwtAuthGuard)
+	async AddFriend(@UserEntity() usr, @Body() body, @Res() res)
+	{
+		this.checkId(usr.id);
+		const id = body.data.id;
+		if (usr.blocked_users.indexOf(id) != -1)
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `'user id ${id}' is blocked and cannot be added`,
+			}, HttpStatus.BAD_REQUEST);
+		if (id != usr.id ) {
+			await this.prisma.user.update({
+				where: { id: usr.id },
+				data: {
+					friend_users: { push: id }
+				},
+			});
+			console.log(usr.friend_users);
+			res.status(200);
+			res.send(`${id} added !`)
+		}
+	}
+
+	@Post('delete-friend')
+	@UseGuards(JwtAuthGuard)
+	async deleteFriend(@Res() res, @Body() body, @UserEntity() usr)
+	{
+		this.checkId(usr.id);
+		const friendId = body.id;
+		const user = await this.prisma.user.findUnique({ where: { id: usr.id } });
+		const updatedFriends = user.friend_users.filter(id => id !== friendId);
+		await this.prisma.user.update({
+			where: { id: usr.id },
+			data: { friend_users: updatedFriends },
+		});
+		let user_array: User[] = []
+		for (let i = 0; i < updatedFriends.length; i++) {
+			user_array[i] = await this.userService.userExists(updatedFriends[i]);
+		}
+		res.status(200);
+		res.send(user_array);
+	}
+
 	@Get('users')
 	@UseGuards(JwtAuthGuard)
 	async getUsers(@Res() res, @UserEntity() usr)
 	{
 		this.checkId(usr.id)
 		const excludeid = usr.id!;
+		console.log('in users and id is ' + excludeid);
+		console.log(usr.friend_users);
 		const result = await this.prisma.user.findMany({
 			select: {
 				name:true,
@@ -147,8 +209,13 @@ export class UserController {
 				avatar:true,
 			},
 			where: {
+				id: {
+					notIn: usr.friend_users,
+				},
 				NOT: {
-					id: excludeid
+					id: {
+						equals:excludeid,
+					}
 				},
 
 			}
