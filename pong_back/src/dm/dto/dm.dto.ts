@@ -4,10 +4,6 @@ export class DmGetDto {
 	@IsNumber()
 	@IsNotEmpty()
 	receiver_id: number;
-
-	@IsNumber()
-	@IsNotEmpty()
-	sender_id: number;
 }
 
 export class DmJoinDto extends DmGetDto {

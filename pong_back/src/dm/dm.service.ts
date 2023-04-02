@@ -7,7 +7,7 @@ import { DmCreateDto, DmGetDto } from "./dto";
 export class DmService {
 	constructor (private prisma: PrismaService, private userService: UserService) {}
 
-	async get(dto: DmGetDto) {
+	async get(dto: any) {
 		await this.checkUser(dto.sender_id);
 		await this.checkUser(dto.receiver_id);
 
@@ -30,7 +30,7 @@ export class DmService {
 		});
 	}
 
-	async post(dto: DmCreateDto) {
+	async post(dto: any) {
 		const message = await this.prisma.privateMessage.create({
 			data: {
 				text: dto.text,
