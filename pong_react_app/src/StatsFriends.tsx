@@ -12,13 +12,11 @@ import { friendUser } from "./AddFriends";
 
 const { v4: uuidv4 } = require('uuid');
 
-
 let style_buttons = {
 	"display": "flex",
 	"alignItems": "center",
 }
 function StatsFriends(): JSX.Element {
-	let [friendsBlocks, setFriendsBlocks] = useState([] as JSX.Element[]);
 	let [ friends, setFriends ] = useState<friendUser[]>([]);
 
 	
@@ -29,9 +27,10 @@ function StatsFriends(): JSX.Element {
 	}, [])
 
 	const getFriends = async () => {
-		console.log(axios.defaults.headers.common);
 		axios.get(`http://${window.location.hostname}:8080/api/user/friends`,
-		)
+			{ headers: {
+				Authorization: token,
+			} })
 			.then(function (res: AxiosResponse) {
 				console.log(res)
 				setFriends(res.data)

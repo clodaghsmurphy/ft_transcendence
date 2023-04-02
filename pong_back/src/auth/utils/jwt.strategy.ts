@@ -8,10 +8,11 @@ import { jwtConstants } from '../constants';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor(private userService: UserService) {
+		console.log('here');
 		super({
 		jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-		 ignoreExpiration: false,
-		 secretOrKey: jwtConstants.secret,
+		ignoreExpiration: false,
+		secretOrKey: jwtConstants.secret,
 			})
 	}
 

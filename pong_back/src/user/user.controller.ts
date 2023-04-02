@@ -53,7 +53,6 @@ export class UserController {
 	@UseInterceptors(FileInterceptor('file'))
 	async uploadFile(@UploadedFile(SharpPipe) file: string, @Res() res, @UserEntity() user)
 	{
-		console.log('in puload annd file is'  + file);
 		try 
 		{
 			const Filepath = path.join('/app', '/uploads', file)
@@ -200,7 +199,6 @@ export class UserController {
 		this.checkId(usr.id)
 		const excludeid = usr.id!;
 		console.log('in users and id is ' + excludeid);
-		console.log(usr.friend_users);
 		const result = await this.prisma.user.findMany({
 			select: {
 				name:true,

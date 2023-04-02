@@ -29,10 +29,8 @@ function StatsId()
 	const [open, setOpen] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
 	const [usr, setUser] = useState<user>(emptyUser);
-	const [ error, setError] = useState("");
 	const id = useParams();
 	const navigate = useNavigate();
-	const [ loaded , setLoaded] = useState(false);
 
 
 	useEffect(() => {
@@ -85,7 +83,7 @@ function StatsId()
 						
 						<div className="avatar-stats">
 								<img style={{
-								}}src={usr.avatar} />
+								}}src={usr.avatar} alt="avatar"/>
 							<span className="user-name">{usr.name}</span>
 
 						</div>
@@ -102,7 +100,7 @@ function StatsId()
 								
 							</div>
 								<Link to={"https://profile.intra.42.fr/users/" + usr.name} className='ftlogo'>
-									<img src={FTlogo} />
+									<img src={FTlogo} alt="42 logo"/>
 								</Link>
 						</div>
 					</div>
