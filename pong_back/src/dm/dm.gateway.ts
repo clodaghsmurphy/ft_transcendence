@@ -1,9 +1,10 @@
-import { Logger, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket, Namespace } from "socket.io";
 import { BadRequestFilter } from "./dm.filters";
 import { DmService } from "./dm.service";
 import { DmCreateDto, DmJoinDto } from "./dto";
+import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'dm'})
@@ -28,31 +29,46 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 		this.logger.log(`Number of connection: ${this.io.sockets.size}`);
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
-	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket) {
-		const roomName: string = this.getRoomName(dto.sender_id, dto.receiver_id);
+	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		const data: any = {
+			sender_id: payload.sub,
+			receiver_id: dto.receiver_id,
+		};
 
+		const roomName: string = this.getRoomName(data.sender_id, data.receiver_id);
 		if (client.rooms.has(roomName))
 			throw new WsException(`error: client has already joined this room`);
 
 		try {
+			await this.dmService.checkUser(data.sender_id);
+			await this.dmService.checkUser(data.receiver_id);
+
 			client.join(roomName);
-			this.io.in(roomName).emit('join');
+			this.io.in(roomName).emit('join', data);
 		} catch (e) {
 			client.leave(roomName);
 			throw new WsException(e);
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('message')
-	async handleMessage(@MessageBody() dto: DmCreateDto, @ConnectedSocket() client: Socket) {
-		const roomName: string = this.getRoomName(dto.sender_id, dto.receiver_id);
+	async handleMessage(@MessageBody() dto: DmCreateDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		const data: any = dto;
+		data.sender_id = payload.sub;
+
+		const roomName: string = this.getRoomName(data.sender_id, data.receiver_id);
 		this.checkUser(client, roomName);
 
 		try {
-			const message = await this.dmService.post(dto);
+			await this.dmService.checkUser(data.sender_id);
+			await this.dmService.checkUser(data.receiver_id);
+
+			const message = await this.dmService.post(data);
 			this.io.in(roomName).emit('message', message);
 		} catch (e) {
 			this.logger.log(e);

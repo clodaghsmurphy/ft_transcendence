@@ -1,4 +1,5 @@
-import { Body, Controller, Get } from "@nestjs/common";
+import { Body, Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { DmService } from "./dm.service";
 import { DmGetDto } from "./dto";
 
@@ -6,8 +7,11 @@ import { DmGetDto } from "./dto";
 export class DmController {
 	constructor (private dmService: DmService) {}
 
+	@UseGuards(JwtAuthGuard)
 	@Get()
-	getDms(@Body() dto: DmGetDto) {
-		return this.dmService.get(dto);
+	getDms(@Req() request, @Body() dto: DmGetDto) {
+		const data: any = dto;
+		data.sender_id = request.user.id;
+		return this.dmService.get(data);
 	}
 }

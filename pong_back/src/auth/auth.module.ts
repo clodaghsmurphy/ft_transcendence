@@ -7,13 +7,13 @@ import { PassportModule } from '@nestjs/passport';
 import { Ft_Strategy } from './utils/42.strategy';
 import { JwtStrategy } from './utils/jwt.strategy';
 import { SessionSerializer } from './session.serializer';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 
 
 @Module({
     controllers: [AuthController],
-    providers: [AuthService, Ft_Strategy, SessionSerializer, JwtStrategy],
+    providers: [AuthService, Ft_Strategy, SessionSerializer, JwtStrategy, JwtService],
     imports: [UserModule,
     PassportModule, JwtModule.register(
         {
