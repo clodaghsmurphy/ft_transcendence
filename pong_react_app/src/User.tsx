@@ -1,10 +1,7 @@
-import React from "react";
-
 import adam from './media/adben-mc.jpg'
 import pierre from './media/ple-lez.jpg'
 import clodagh from './media/clmurphy.jpg'
 import nathan from './media/nguiard.jpg'
-import { truncate } from "fs/promises";
 
 export type User_last_game = {
 	has_won: boolean,
@@ -27,8 +24,8 @@ export type User = {
 }
 
 export function avatarOf(every_users: User[], target: number): string {
-	return (typeof(every_users.find(usr => usr.id == target)?.avatar) == 'string' ?
-			every_users.find(usr => usr.id == target)?.avatar as string :
+	return (typeof(every_users.find(usr => usr.id === target)?.avatar) === 'string' ?
+			every_users.find(usr => usr.id === target)?.avatar as string :
 			'./media/default.jpg')
 }
 

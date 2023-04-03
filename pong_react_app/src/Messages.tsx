@@ -1,15 +1,10 @@
-import React, { ChangeEvent, useEffect} from 'react'
+import React from 'react'
+import { useState } from 'react'
 import './Dashboard.css'
-import user_pfp from './media/user.png'
-import nathan from './media/nguiard.jpg'
-import clodagh from './media/clmurphy.jpg'
-import { Avatar } from '@mui/material'
-import { useState, useRef } from 'react'
 import ChatMessage from './ChatMessage'
-import Chat, { ChanAndMessage, socket_chat } from './Chat'
-import { MessageData, Channel, NORMAL, BAN, KICK, INVITE } from './Channels'
-import User, { avatarOf, id_to_user, sample_user_data } from './User'
-import { DirectMessage } from './DirectMessage'
+import { ChanAndMessage, socket_chat } from './Chat'
+import { Channel } from './Channels'
+import User from './User'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -76,7 +71,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 			</form>
 		</div>);
 
-	if (last_chan != chan.name || messagesBlocks.length < messages.length) // si c'est vide il faut l'update
+	if (last_chan !== chan.name || messagesBlocks.length < messages.length) // si c'est vide il faut l'update
 	{
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 		setLastChan(chan.name);

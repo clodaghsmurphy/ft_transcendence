@@ -3,8 +3,6 @@ import Popup from 'reactjs-popup'
 import { add_group, sanitizeString } from './ChatUtils'
 import { socket_chat } from './Chat'
 import User from './User'
-import Checkbox from '@mui/material/Checkbox'
-import { Channel, MessageData } from './Channels'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -52,14 +50,14 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 	}
 
 	function ValidateChan() {
-		if (!inputRef.current || inputRef.current.value == '')
+		if (!inputRef.current || inputRef.current.value === '')
 			return ;
 		const chan_name = sanitizeString(inputRef.current!.value);
 		const chan_pass = inputRefPassword.current!.value;
 		inputRef.current!.value = '';
 		inputRefPassword.current!.value = '';
 		setSelected([current_user.id]);
-		let tmp = selected.filter(usr => typeof usr === 'number' && usr != current_user.id)
+		let tmp = selected.filter(usr => typeof usr === 'number' && usr !== current_user.id)
 		fetch('/api/channel/create', {
 			method: 'POST',
 			body: ( chan_pass.length > 0 ?
@@ -96,7 +94,7 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 			<h1>Add users:</h1>
 			<div className='popup-user-container'>
 				{basic_users(every_users.filter(usr => 
-						usr.name != current_user.name))}
+						usr.name !== current_user.name))}
 			</div>
 			
 			<div className='bar' style={{

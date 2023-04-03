@@ -1,9 +1,6 @@
-import React, { useState, useRef } from 'react'
 import Popup from 'reactjs-popup'
 import { add_dm } from './ChatUtils'
 import User from './User'
-import Checkbox from '@mui/material/Checkbox'
-import { Channel, MessageData } from './Channels'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -34,7 +31,7 @@ export default function PopupAddDirect(every_users: User[], current_user: User) 
 		<Popup trigger={add_dm()} modal nested key={uuidv4()}>
 			<h1>User list:</h1>
 			<div className='popup-user-container'>
-				{basic_users(every_users.filter(usr => usr.name != current_user.name))}
+				{basic_users(every_users.filter(usr => usr.name !== current_user.name))}
 			</div>
 		</Popup>
 	)

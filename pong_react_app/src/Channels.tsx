@@ -1,6 +1,3 @@
-import React from 'react'
-import User from './User'
-
 export const NORMAL = 0
 export const KICK = 1
 export const BAN = 2

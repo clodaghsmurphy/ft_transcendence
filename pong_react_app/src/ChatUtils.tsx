@@ -48,7 +48,7 @@ export function users_message(message_data: DirectMessage[], all_users: User[],
 		if (typeof dm === 'undefined' || typeof dm.users === 'undefined')
 			return [PopupAddDirect(all_users, current_user)]
 		let user = id_to_user(all_users, dm.users[0]);
-		if (user.id == current_user.id) {
+		if (user.id === current_user.id) {
 			user = id_to_user(all_users, dm.users[1]);
 		}
 

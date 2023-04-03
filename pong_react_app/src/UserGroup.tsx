@@ -1,10 +1,8 @@
-import Button from '@mui/material/Button'
-import React, { useRef, useState } from 'react'
-import { Avatar, ButtonGroup } from '@mui/material'
+import React, { useRef } from 'react'
 import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
-import { DirectMessage, dm_of_user } from './DirectMessage';
+import { DirectMessage } from './DirectMessage';
 import { socket_chat } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
@@ -79,7 +77,7 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 		const target_is_op = chan.operators.includes(user)
 		const target_is_owner = chan.owner === user
 
-		if (user != current_user.id) {
+		if (user !== current_user.id) {
 			if (curr_is_op && !target_is_owner)
 				ret.push(Button_op(id_to_user(every_user, user),
 					target_is_op, current_user, chan, emit_mute))
@@ -97,7 +95,7 @@ function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage): 
 	let ret: JSX.Element[] = []
 
 	for (const user of dm.users) {
-		if (user != current_user.id) {
+		if (user !== current_user.id) {
 			ret.push(button_not_op(id_to_user(every_user, user), false))
 		}
 	}
