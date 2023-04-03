@@ -143,11 +143,15 @@ export function Password(current_user: User, current_chan: ChanAndMessage | Dire
 					ref={pass_ref}
 				/>
 				<button className='pastille-ok'
-					onClick={() => changePassword((current_chan as ChanAndMessage).chan.name)}>
+					onClick={() => changePassword(
+						(current_chan as ChanAndMessage).chan.name
+					)}>
 						✓
 				</button>
 				<button className='pastille-clear'
-					onClick={() => clearPassword((current_chan as ChanAndMessage).chan.name)}>
+					onClick={() => clearPassword(
+						(current_chan as ChanAndMessage).chan.name
+					)}>
 						🗑
 				</button>
 			</div>

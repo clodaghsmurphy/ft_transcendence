@@ -4,7 +4,7 @@ import Messages from './Messages'
 import './Dashboard.css'
 import './Chat.css'
 import group_img from './media/group.png'
-import { user_in_group } from './UserGroup'
+import { User_in_group } from './UserGroup'
 import User, { error_user, id_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, MUTE, MessageData, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
@@ -325,7 +325,7 @@ function Chat()
 				<h1>Group users</h1>
 				
 				<div className='user-holder'>
-					{user_in_group(all_users, current_user, (current_chan as ChanAndMessage).chan)}
+					{User_in_group(all_users, current_user, (current_chan as ChanAndMessage).chan)}
 				</div>
 
 				{Password(current_user, current_chan)}
