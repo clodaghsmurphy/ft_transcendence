@@ -59,7 +59,7 @@ export class AuthController {
             });
             return ;
         }
-        console.log('after login')
+        console.log('after login toke is ', token);
         token.then(token => {
             res.redirect(`http://localhost:8080/login?access_token=${token.access_token}`)
         });
