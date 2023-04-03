@@ -3,12 +3,10 @@ import NavBar from "./NavBar";
 import './stats.css';
 import FTlogo from './media/42_Logo.png'
 import { BsFillGearFill } from "react-icons/bs";
-import tron_bg from './media/tron_bg.jpeg'
 import { useState, useContext } from "react";
 import { AuthContext } from "./App";
-import GameHistory from './GameHistory';
 import StatsAchievements from './Achievements';
-import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import EnableTwoFAuth from "./EnableTWoFAuth";
 import ChangeName from "./ChangeName";
 import ChangePhoto from "./ChangePhoto";
@@ -98,7 +96,7 @@ function Stats(props:Props)
 								{StatsAchievements(state.user)}
 							
 						</div>
-						<Friends />
+						<Friends id={state.user.id}/>
 						
 					</div>
 				</div>

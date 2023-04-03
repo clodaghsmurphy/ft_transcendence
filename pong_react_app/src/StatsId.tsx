@@ -1,21 +1,12 @@
 import React, { useEffect, Suspense, useState, useContext } from "react";
-import NavBar from "./NavBar"; 
 import './stats.css';
-import FTlogo from './media/42_Logo.png'
-import { BsFillGearFill } from "react-icons/bs";
 import { AuthContext } from "./App";
-import StatsAchievements from './Achievements';
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import EnableTwoFAuth from "./EnableTWoFAuth";
-import ChangeName from "./ChangeName";
-import ChangePhoto from "./ChangePhoto";
-import ProfileStats from "./ProfileStats";
 import axios, { AxiosResponse, AxiosError} from 'axios';
 import { user } from "./store/reducer";
 import { ErrorObject, ActionKind } from "./store/reducer";
-
-
-import Friends from "./Friends";
+import StatsIdUser from "./StatsIdUser";
+import Loading from "./Loading";
 
 
 function StatsId()
@@ -29,6 +20,7 @@ function StatsId()
 	const [open, setOpen] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
 	const [usr, setUser] = useState<user>(emptyUser);
+	const [ isLoading, SetisLoading] = useState(true);
 	const id = useParams();
 	const navigate = useNavigate();
 
@@ -37,12 +29,11 @@ function StatsId()
 		document.title = 'Stats';
 		axios.get(`http://localhost:8080/api/user/info/${id.id}`)
 		.then(function(response:AxiosResponse){
-			console.log(response.data);
 			 const res = response.data;
 			 const updateValue:user = { name: res.name, id: res.id, avatar: res.avatar, otp_enabled: res.otp_enabled }
-			 console.log(updateValue)
-			 setUser(updateValue)
-			// console.log(user)
+			 console.log('before set suer');
+			setUser(updateValue);
+			SetisLoading(false);
 		})
 		.catch(function(e:AxiosError) {
 			console.log(e);
@@ -58,73 +49,22 @@ function StatsId()
 		})
 	}, []);
 
-
-	useEffect(() => {
-		console.log('user!@', usr);
-		//setLoaded(true);
-	}, [usr]);
-
+	
 	const handleOpen = () =>
 	{
 		setOpen(!open);
 	};
-
-
-	return(
-			<>
-			{ usr &&
-			<Suspense>
-				<NavBar />
-			<div className="stats-page">
-				<div className="stats">
-					<div className="profile-header">
-						<div className="profile-sub-header" >
-							<ProfileStats />
-						
-						<div className="avatar-stats">
-								<img style={{
-								}}src={usr.avatar} alt="avatar"/>
-							<span className="user-name">{usr.name}</span>
-
-						</div>
-						<div className='right-options'>
-							<div className="drop-down" >
-									<BsFillGearFill style={{ color: 'white', height: 'calc(1em + 1vw)'} } onClick={handleOpen}/>
-								{ open ? (
-								<ul className="options-list">
-									<ChangePhoto />
-									<ChangeName />
-									<EnableTwoFAuth />
-									
-								</ul> ) : null}
-								
-							</div>
-								<Link to={"https://profile.intra.42.fr/users/" + usr.name} className='ftlogo'>
-									<img src={FTlogo} alt="42 logo"/>
-								</Link>
-						</div>
-					</div>
-
-					</div>
-					<div className="sub-stats">
-						<div className="info-card game-history">
-							<header>
-								<h1>Game History</h1>
-							</header>
-						</div>
-						<div className="info-card friends">
-							<header>
-								<h1>Achievements</h1>
-							</header>
-							{StatsAchievements(usr)}
-						</div>
-						<Friends />
-						
-					</div>
-				</div>
-			</div>
-		</Suspense>
-		} 
+	
+	console.log(isLoading);
+	// if (usr === emptyUser) {
+	// 	return <div>Loading...</div>;
+	// }
+	
+	return(	
+		<>
+			{ usr !== emptyUser ?
+			<StatsIdUser usr={usr} />
+		: <Loading />} 
 		</>
 	);
 }

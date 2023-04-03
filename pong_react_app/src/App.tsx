@@ -15,6 +15,7 @@ import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './ProtectedRoute'
 import { ProtectedRouteProps } from './ProtectedRoute';
 import JWTverify from './JWTverify';
+import axios from 'axios'
 import { PromptContextValue, PromptContext, defaultValue } from './store/reducer/Prompt/PromptContext';
 
 type StateContext = {
@@ -33,7 +34,6 @@ function App() {
   };
   
   const [prompt, setPrompt] = useState<PromptContextValue>(defaultValue);
-
   return (
     <AuthContext.Provider value={ { state, dispatch } }>
     <Router>

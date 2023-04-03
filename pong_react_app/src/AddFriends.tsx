@@ -1,9 +1,6 @@
 import React from 'react'
 import { useState, useEffect, useMemo } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Link } from 'react-router-dom';
-import { RiPingPongLine } from "react-icons/ri";
-import { TiDelete } from "react-icons/ti";
 import { IconContext } from "react-icons";
 import { BsPersonAdd } from "react-icons/bs";
 
@@ -80,7 +77,7 @@ function AddFriends(props: Props){
 			{ users.map(usr =>
 			<div className="info-item" key={usr.id}>
 					<div className="stats-avatar">
-						<img src={`http://${window.location.hostname}:8080/api/user/image/${usr.id}`}/>
+						<img src={`http://${window.location.hostname}:8080/api/user/image/${usr.id}`} alt="avatar"/>
 					</div>
 				<span className="game-username">{usr.name}</span>
 				<IconContext.Provider value={{

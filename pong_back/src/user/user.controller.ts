@@ -1,5 +1,5 @@
 import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
-import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException } from '@nestjs/common';
+import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express'
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -94,22 +94,25 @@ export class UserController {
 		
 	}
 
-	@Get('friends')
+	@Get('friends/:id')
 	@UseGuards(JwtAuthGuard)
-	async getFriends(@UserEntity() userEntity, @Res() res)
+	async getFriends(@Param('id') id, @UserEntity() userEntity, @Res() res)
 	{
-		console.log('in friends');
-		const user = await this.userService.userExists(userEntity.id);
-		if (!user)
-			throw new UnauthorizedException();
+		const user = await this.userService.userExists(parseInt(id));
+		if (!user) {
+			throw new NotFoundException(`User ID ${id} not found`);
+		}
 		let user_array : User[] = []
 		for (let i = 0; i < user.friend_users.length; i++){
 			console.log(user.friend_users[i])
 			user_array[i] = await this.userService.userExists(user.friend_users[i]);
+			if (!user) {
+				throw new NotFoundException(`User ID ${id} in friend list not found`);
+			}
 		}
 		res.status(200);
 		res.send(user_array);
-		//return user_array;
+		return ;
 	}
 
 	@Post('friends-search')

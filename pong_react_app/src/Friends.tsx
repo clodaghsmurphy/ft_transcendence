@@ -1,21 +1,25 @@
 import React from "react";
-import { BiMessageAltError } from "react-icons/bi";
 import { AiOutlineSearch } from 'react-icons/ai'
-import { VscAdd } from "react-icons/vsc";
-import { FaUserFriends } from "react-icons/fa";
-import { useState, useEffect } from 'react';
+
+import { useState, useContext } from 'react';
 import StatsFriends from "./StatsFriends";
 import AddFriends from "./AddFriends";
 import FriendRequests from "./FriendRequest";
+import { AuthContext } from "./App";
+import FriendsButtons from "./FriendsButtons";
 
-function Friends() {
+type Props ={
+	id: string,
+}
+
+function Friends(props:Props) {
 	const  [ title, setTitle ] = useState('Friends');
 	const [value, setValue] = useState('');
+	const { state, dispatch } = useContext(AuthContext);
 
-	// useEffect(() =>{
-	// 	input.focus()
-	// }, [title])
-
+	const isCurrent = props.id === state.user.id;
+	console.log(isCurrent);
+	console.log(props.id);
 	const inputChange = (e:React.ChangeEvent<HTMLInputElement>) =>
 	{
 		setValue(e.target.value);
@@ -29,18 +33,8 @@ function Friends() {
 				<AiOutlineSearch />
 				<input type='text' placeholder="Search..." autoFocus value={value} onChange={inputChange}/>
 			</div>
-			{title == 'Friends' ? <StatsFriends /> : title == 'Friend Requests' ? <FriendRequests value={value} /> : <AddFriends value={value} />}
-			<footer className='friends-option-bar'>
-				<button className='friends-toggle-button' onClick={() => setTitle('Friends')}>
-					<FaUserFriends />
-				</button>
-				<button className='friends-toggle-button' onClick={() => setTitle('Friend Requests')}>
-					<BiMessageAltError />
-				</button>
-				<button className='friends-toggle-button' onClick={() => setTitle('Add Friends')}>
-					<VscAdd />
-				</button>
-			</footer>
+			{!isCurrent || title === 'Friends' ? <StatsFriends id={props.id}/> : title === 'Blocked Users' ? <FriendRequests value={value} /> : <AddFriends value={value} />}
+			<FriendsButtons setTitle={setTitle} isCurrent={isCurrent}/>
 		</div>
 	);
 }
