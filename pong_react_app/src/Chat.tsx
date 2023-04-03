@@ -4,7 +4,7 @@ import Messages from './Messages'
 import './Dashboard.css'
 import './Chat.css'
 import group_img from './media/group.png'
-import { user_in_group } from './UserGroup'
+import { User_in_group } from './UserGroup'
 import User, { error_user, id_to_user, sample_user_data } from './User'
 import { BAN, Channel, INVITE, KICK, MUTE, MessageData, basic_channel, names_to_channel, sample_channel_data } from './Channels'
 import PopupAddChannel from './PopupAddChannel'
@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
 import { AuthContext } from './App'
 import PopupAddDirect from './PopupAddDirect'
-import { group_message, Password, users_message } from './ChatUtils'
+import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
 
 export type ChanAndMessage = {
 	chan: Channel,
@@ -83,10 +83,7 @@ function Chat()
 		socket_chat.removeListener('mute')
 		socket_chat.removeListener('join')
 
-		console.log('in useEffect of handle mute / join')
-
 		const handleMute = (data: any) => {
-			console.log('recieved the mute')
 			if (data.user === current_user.id) {
 				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
 				let target = id_to_user(all_users, data.target_id).name;
@@ -103,19 +100,18 @@ function Chat()
 		}
 
 		const handleJoin = (data: any) => {
-			console.log('recieved join ' + data.name)
 			let chan_name = data.name;
 			if (typeof all_channels.find((chan: Channel) => 
 					chan.name === chan_name
 				) === 'undefined')
 			{
-				fetch('/api/channel/info/' + chan_name)
+				fetch('/api/channel/info/' + sanitizeString(chan_name))
 				.then((response) => {
 					response.json()
 						.then((data) => {
 							set_all_channels((prev: Channel[]) => [...prev, data])
 							setChanOfUser((prev: Channel[]) => [...prev, data])
-							fetch('/api/channel/' + data.name + '/messages/')
+							fetch('/api/channel/' + sanitizeString(data.name) + '/messages/')
 								.then(response => {
 									response.json()
 										.then(msg_data => {
@@ -277,7 +273,7 @@ function Chat()
 				chan: param as Channel,
 				msg: [],
 			})
-			fetch('/api/channel/' + (param as Channel).name + '/messages/')
+			fetch('/api/channel/' + sanitizeString((param as Channel).name) + '/messages/')
 				.then(response => {
 					response.json()
 						.then(data => {
@@ -322,14 +318,14 @@ function Chat()
 
             <div className="chatbox">
 				{Messages(current_chan as ChanAndMessage,
-					all_users, current_user, set_current_chan)}
+					all_users, current_user, set_current_chan, setChanOfUser)}
 			</div>
 
             <div className="group-members">
 				<h1>Group users</h1>
 				
 				<div className='user-holder'>
-					{user_in_group(all_users, current_user, (current_chan as ChanAndMessage).chan)}
+					{User_in_group(all_users, current_user, (current_chan as ChanAndMessage).chan)}
 				</div>
 
 				{Password(current_user, current_chan)}

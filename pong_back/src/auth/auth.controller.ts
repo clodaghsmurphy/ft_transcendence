@@ -49,7 +49,6 @@ export class AuthController {
     @Get('42/redirect')
     @UseGuards(FT_AuthGuard)
     handleRedirect(@Req() req, @Res() res, @UserEntity() user){
-        console.log(res);
         console.log('in 42 redriect');
         const token =  this.authService.login(res, user);
         if (user.otp_enabled && !user.otp_verified)
@@ -60,7 +59,7 @@ export class AuthController {
             });
             return ;
         }
-        console.log('after login')
+        console.log('after login toke is ', token);
         token.then(token => {
             res.redirect(`http://localhost:8080/login?access_token=${token.access_token}`)
         });

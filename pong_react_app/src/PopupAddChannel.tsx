@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import Popup from 'reactjs-popup'
-import { add_group } from './ChatUtils'
+import { add_group, sanitizeString } from './ChatUtils'
 import { socket_chat } from './Chat'
 import User from './User'
 import Checkbox from '@mui/material/Checkbox'
@@ -54,7 +54,7 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 	function ValidateChan() {
 		if (!inputRef.current || inputRef.current.value == '')
 			return ;
-		const chan_name = inputRef.current!.value;
+		const chan_name = sanitizeString(inputRef.current!.value);
 		const chan_pass = inputRefPassword.current!.value;
 		inputRef.current!.value = '';
 		inputRefPassword.current!.value = '';
@@ -67,12 +67,14 @@ export default function PopupAddChannel(every_users: User[], current_user: User)
 					name: chan_name,
 					owner_id: current_user.id,
 					users_ids: tmp,
+					is_public: !privateRef.current!.checked,
 				}) :
 				JSON.stringify({
 					name: chan_name,
 					owner_id: current_user.id,
 					users_ids: tmp,
 					pass: chan_pass,
+					is_public: !privateRef.current!.checked,
 				})),
 				headers: {'Content-Type': 'application/json'},
 			})
