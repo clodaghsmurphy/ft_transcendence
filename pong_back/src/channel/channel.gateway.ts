@@ -1,4 +1,4 @@
-import { HttpException, Logger, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
+import { HttpException, Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
@@ -6,6 +6,7 @@ import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
 import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, ChannelPasswordDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
 import { MessageType } from "./types/message.type";
+import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -88,14 +89,15 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('message')
-	async handleMessage(@MessageBody() dto: MessageCreateDto, @ConnectedSocket() client: Socket) {
+	async handleMessage(@MessageBody() dto: MessageCreateDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		this.checkUser(client, dto.name);
 		try {
 			const messageData = {
 				name: dto.name,
-				sender_id: dto.sender_id,
+				sender_id: payload.sub,
 				uid: dto.uid,
 				text: dto.text,
 				type: MessageType.Normal,
