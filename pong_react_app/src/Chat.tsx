@@ -1,18 +1,16 @@
-import React, { MouseEventHandler, useEffect, useState, useContext, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import NavBar from './NavBar'
 import Messages from './Messages'
 import './Dashboard.css'
 import './Chat.css'
-import group_img from './media/group.png'
 import { User_in_group } from './UserGroup'
-import User, { error_user, id_to_user, sample_user_data } from './User'
-import { BAN, Channel, INVITE, KICK, MUTE, MessageData, basic_channel, names_to_channel, sample_channel_data } from './Channels'
-import PopupAddChannel from './PopupAddChannel'
+import User, { id_to_user } from './User'
+import { Channel, MUTE, MessageData, names_to_channel } from './Channels'
 import io from 'socket.io-client'
-import { sample_DM_data, DirectMessage, dm_of_user, dm_betweeen_two_users } from './DirectMessage'
+import { DirectMessage, dm_of_user } from './DirectMessage'
 import { AuthContext } from './App'
-import PopupAddDirect from './PopupAddDirect'
 import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
+import PopupJoinChannel from './PopupJoinChannel'
 
 export type ChanAndMessage = {
 	chan: Channel,
@@ -25,12 +23,9 @@ socket_chat.on('connect', () => {
 	console.log('CONNECTED', socket_chat.connected)
 })
 
-socket_chat.on('password', (data: any) => {
-	console.log('PASSWORD CHANGED', data)
-})
-
 function Chat()
 {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { state, dispatch } = useContext(AuthContext);
 	let [all_users, set_all_users] = useState([] as User[])
 	let [all_channels, set_all_channels] = useState([] as Channel[])
@@ -61,7 +56,7 @@ function Chat()
 			})
 		})
 
-	}, []);
+	}, [state.user.id]);
 
 	useEffect(() => {
 		socket_chat.removeListener('message')
@@ -128,7 +123,9 @@ function Chat()
 
 		socket_chat.on('join', handleJoin)
 		socket_chat.on('mute', handleMute)
-	}, [all_channels, set_all_channels])
+	}, [all_channels, set_all_channels,
+		current_user, set_current_user,
+		all_users, set_all_users])
 
 	useEffect(() => {
 		socket_chat.removeListener('makeop')
@@ -244,7 +241,7 @@ function Chat()
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'
-	&& (chanOfUser.length == 0 && current_user.channels.length > 0))
+	&& (chanOfUser.length === 0 && current_user.channels.length > 0))
 	{
 		setChanOfUser(names_to_channel(all_channels, current_user.channels))
 	}
@@ -297,7 +294,15 @@ function Chat()
 
 				<div className='bar'></div>
 					<div className='lists'>
-						<h1>Group chats</h1>
+						<div style={{
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+							height: '64px',
+						}}>
+							<h1>Group chats</h1>
+							{PopupJoinChannel(chanOfUser, current_user)}
+						</div>
 						<div className='lists-holder'>
 							{group_message(chanOfUser,
 								changeChannelOrDm, all_users, current_user)}
