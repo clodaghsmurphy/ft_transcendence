@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Avatar, ButtonGroup } from '@mui/material'
 import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
@@ -12,7 +12,6 @@ const { v4: uuidv4 } = require('uuid');
 export function User_in_group(every_user: User[], current_user: User, chan: Channel | DirectMessage): JSX.Element[] {
 	let ret: JSX.Element[] = []
 	let muteRef = useRef<HTMLInputElement | null>(null)
-
 
 	if (typeof current_user === 'undefined' ||
 		typeof chan === 'undefined')
@@ -28,6 +27,29 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 	if (typeof chan.operators === 'undefined')
 	{
 		return ret
+	}
+
+	function emit_mute(user: User) {
+		let mute_duration: string[] | null = null;
+		if (muteRef.current) {
+			mute_duration = muteRef.current!.value
+			.match(/^\s*(\d+)\s*(s|sec|second|seconds|secondes)?\s*$/i)
+		}
+		if (mute_duration || muteRef.current?.value.length === 0) {
+		let duration: number
+			if (mute_duration)
+				duration = parseInt(mute_duration[0])
+			else
+				duration = NaN
+			if (isNaN(duration))
+				duration = 60
+			socket_chat.emit('mute', {
+				name: (chan as Channel).name,
+				user_id: current_user.id,
+				target_id: user.id,
+				mute_duration: duration,
+			})
+		}
 	}
 
 	const curr_is_op = chan.operators.includes(current_user.id)
@@ -50,7 +72,7 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 					placeholder='Seconds...'
 					style={{
 						marginLeft: '0',
-				}}/> 
+					}}/> 
 		</div>)
 
 	for (const user of chan.members) {
@@ -60,12 +82,12 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 		if (user != current_user.id) {
 			if (curr_is_op && !target_is_owner)
 				ret.push(Button_op(id_to_user(every_user, user),
-					target_is_op, current_user, chan, muteRef))
+					target_is_op, current_user, chan, emit_mute))
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), target_is_op))
 		}
 	}
-	if (ret.length === 0) {
+	if (ret.length === 0 || (ret.length === 1 && curr_is_op)) {
 		return [<div key='no-users-in-group' className='no-users'>No users</div>]
 	}
 	return ret
@@ -114,14 +136,9 @@ function button_not_op(user: User, is_op: boolean): JSX.Element {
 }
 
 function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel,
-	ref: React.MutableRefObject<HTMLInputElement | null>): JSX.Element {
+	fnc: (user: User) => void): JSX.Element {
 
-	let mute_duration: string[] | null = null;
-	if (ref.current) {
-		mute_duration = ref.current!.value
-		.match(/^\s*(\d+)\s*(s|sec|second|seconds)\s*$/i)
-		console.log('YAAAAAAAAAAAAAa')
-	}
+	// console.log('rendering a Button_op', ref.current)
 			
 	function emit_kick() {
 		socket_chat.emit('kick', {
@@ -137,22 +154,6 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 			user_id: current_user.id,
 			target_id: user.id,
 		})
-	}
-
-	function emit_mute() {
-		console.log(mute_duration)
-		if (mute_duration) {
-			let duration = parseInt(mute_duration[0])
-			if (isNaN(duration))
-				duration = 60
-			console.log('duration?', duration)
-			socket_chat.emit('mute', {
-				name: chan.name,
-				user_id: current_user.id,
-				target_id: user.id,
-				mute_duration: duration,
-			})
-		}
 	}
 
 	function emit_makeop() {
@@ -209,7 +210,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 						paddingTop: '5px',
 					}}>
 						<button id='mute-button'
-							onClick={() => emit_mute()}>
+							onClick={() => fnc(user)}>
 								Mute
 						</button>
 						<button id='makeop-button'
