@@ -18,6 +18,7 @@ model User {
   blocked_users Int[] @default([])
   friend_users Int[] @default([])
   channels String[] @default([])
+  //games Int[] @default([])
 
   connected Boolean @default(true)
   in_game Boolean @default(false)

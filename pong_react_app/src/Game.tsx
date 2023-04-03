@@ -51,7 +51,9 @@ function Game() {
 	const connect = () => {
 		const socket = io(`http://${window.location.hostname}:8080/game`);
 		socket.on("connect", () => {
+			console.log("Connected to game");
 			socket.emit("custom_event", {name: "Bob", age:12})
+			console.log(socket);
 		});
 	}
 

@@ -33,14 +33,14 @@ private logger = new Logger(GameGateway.name);
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: GameJoinDto, @ConnectedSocket() client: Socket) {
-		if (client.rooms.has(dto.room_id))
+		if (client.rooms.has(dto.room_id.toString()))
 			throw new WsException(`error: client has already joined room ${dto.room_id}`);
 		try {
 			await this.gameService.checkUserInChannel(dto.user_id, dto.room_id);
-			client.join(dto.room_id);
-			this.io.in(dto.room_id).emit('join', dto);
+			client.join(dto.room_id.toString());
+			this.io.in(dto.room_id.toString()).emit('join', dto);
 		} catch (e) {
-			client.leave(dto.room_id);
+			client.leave(dto.room_id.toString());
 			throw new WsException(e);
 		}
 	}
