@@ -23,8 +23,10 @@ export class AuthService {
                 otp_verified: user.otp_verified,
                 sub: user.id
             };
+			console.log('before jwt service token payload = ', payload);
+			console.log(process.env.JWT_TOKEN);
             return {
-                access_token: this.jwtService.sign(payload),
+                access_token: this.jwtService.sign(payload, {secret: process.env.JWT_TOKEN}),
             }
         }
 
