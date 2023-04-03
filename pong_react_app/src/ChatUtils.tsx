@@ -66,7 +66,7 @@ export function add_group(): JSX.Element {
 			<button className='chat-button'>
 				<div className='group-add'>
 					<img src={plus_sign} alt='plus'/>
-					<h1>Add a group</h1>
+					<h1>Create a group</h1>
 				</div>
 			</button>
 		</div>

@@ -32,7 +32,7 @@ function FriendButton(target: User): JSX.Element {
 						<div style={style_buttons} className="delete">
 							<TiDelete style={{ height: '4vh', cursor: 'pointer'}}/>
 						</div>
-						<Link to={"/stats/" + target.name}style={style_buttons} className="friend-profile">
+						<Link to={"/stats/" + target.id}style={style_buttons} className="friend-profile">
 							<CgProfile style={{ height: '4vh', cursor: 'pointer' }} />
 						</Link>
 					</div>

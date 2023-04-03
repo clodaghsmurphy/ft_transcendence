@@ -119,7 +119,7 @@ function button_not_op(user: User, is_op: boolean): JSX.Element {
 					paddingTop: "2rem"
 				}}>
 					<div className='group-members-button-text'>
-						<Link to={"/stats/" + user.name}
+						<Link to={"/stats/" + user.id}
 							className='group-member-button-link'
 							style={{
 								"textAlign": "center",
@@ -178,7 +178,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 					paddingTop: "0.5rem"
 				}}>
 					<div className='group-members-button-text'>
-						<Link to={"/stats/" + user.name}
+						<Link to={"/stats/" + user.id}
 							className='group-member-button-link'
 							style={is_op ? {
 								color: 'yellow',
