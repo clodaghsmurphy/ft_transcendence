@@ -6,7 +6,7 @@ import User from './User'
 
 const { v4: uuidv4 } = require('uuid');
 
-export default function PopupAddChannel(every_users: User[], current_user: User) {
+export default function PopupCreateChannel(every_users: User[], current_user: User) {
 	let [selected, setSelected] = useState([] as number[]);
 	let privateRef = useRef<HTMLInputElement | null>(null);
 	let inputRef = useRef<HTMLInputElement | null>(null);

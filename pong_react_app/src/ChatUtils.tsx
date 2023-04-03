@@ -1,6 +1,6 @@
 import { Channel } from "./Channels";
 import { DirectMessage, dm_betweeen_two_users } from "./DirectMessage";
-import PopupAddChannel from "./PopupAddChannel";
+import PopupCreateChannel from "./PopupCreateChannel";
 import PopupAddDirect from "./PopupAddDirect";
 import User, { id_to_user } from "./User";
 import plus_sign from './media/white_plus.png'
@@ -95,7 +95,7 @@ export function group_message(chan_data: Channel[],
 	for (const chan of chan_data) {
 		ret.push(chat_button(chan.name, group_img, click_handler, chan));
 	}
-	ret.push(PopupAddChannel(every_user, current_user))
+	ret.push(PopupCreateChannel(every_user, current_user))
 	return ret;
 }
 

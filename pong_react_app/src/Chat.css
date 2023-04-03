@@ -813,3 +813,9 @@
 	opacity: 0.7;
 	cursor: pointer;
 }
+
+.join-channel-button {
+	background-color: #c0e085;
+	border: 0px;
+	border-radius: 3px;
+}

@@ -10,6 +10,7 @@ import io from 'socket.io-client'
 import { DirectMessage, dm_of_user } from './DirectMessage'
 import { AuthContext } from './App'
 import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
+import PopupJoinChannel from './PopupJoinChannel'
 
 export type ChanAndMessage = {
 	chan: Channel,
@@ -24,6 +25,7 @@ socket_chat.on('connect', () => {
 
 function Chat()
 {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { state, dispatch } = useContext(AuthContext);
 	let [all_users, set_all_users] = useState([] as User[])
 	let [all_channels, set_all_channels] = useState([] as Channel[])
@@ -292,7 +294,13 @@ function Chat()
 
 				<div className='bar'></div>
 					<div className='lists'>
-						<h1>Group chats</h1>
+						<div style={{
+							display: 'flex',
+							flexDirection: 'row',
+						}}>
+							<h1>Group chats</h1>
+							{PopupJoinChannel(all_users, current_user)}
+						</div>
 						<div className='lists-holder'>
 							{group_message(chanOfUser,
 								changeChannelOrDm, all_users, current_user)}
