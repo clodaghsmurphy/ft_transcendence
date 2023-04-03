@@ -58,7 +58,7 @@ export class UserController {
 			const Filepath = path.join('/app', '/uploads', file)
 			const updateUser = await this.prisma.user.update({
 				where: {id: user.id},
-				data: { avatar: Filepath },
+				data: { avatar_path: Filepath },
 			});	
 			console.log(updateUser);
 			console.log(Filepath);
