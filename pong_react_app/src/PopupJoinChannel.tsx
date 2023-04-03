@@ -10,7 +10,6 @@ const { v4: uuidv4 } = require('uuid');
 export default function PopupJoinChannel(chanOfUser: Channel[], current_user: User) {
 	let passwordRef = useRef<HTMLInputElement | null>(null)
 	let [channels, setChannels] = useState([] as Channel[])
-	let [loading, setLoading] = useState(true)
 
 	useEffect(() => {
 		fetch('/api/channel/info')
@@ -22,18 +21,61 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 						setChannels(every_chan.filter(c => 
 							!c.members.includes(current_user.id) && c.is_public
 						))
-						setLoading(false)
 					})
 			})
-	}, [current_user])
+	}, [current_user, chanOfUser])
 
-	
+	function click_handler(chan: Channel) {
+		if (chan.password) {
+			if (passwordRef.current?.value.length === 0)
+				return;
+			fetch('/api/channel/join/', {
+				method: 'POST',
+				body: JSON.stringify({
+					name: chan.name,
+					user_id: current_user.id,
+					password: passwordRef.current?.value,
+				}),
+				headers: {'Content-Type': 'application/json'},
+			})
+				.then(response => {
+					response.json()
+						.then(data => 
+							console.log(data)
+						)
+						.catch(err =>
+							console.error(err)
+						)
+				})
+		}
+		else {
+			fetch('/api/channel/join/', {
+				method: 'POST',
+				body: JSON.stringify({
+					name: chan.name,
+					user_id: current_user.id,
+				}),
+				headers: {'Content-Type': 'application/json'},
+			})
+				.then(response => {
+					response.json()
+						.then(data => 
+							console.log(data)
+						)
+						.catch(err =>
+							console.error(err)
+						)
+				})
+		}
+	}
+
 	let jsx_chans: JSX.Element[] = []
 
 	for (const channel of channels) {
 		if (channel.password)
 			jsx_chans.push(
 				<div key={uuidv4()}
+					onClick={() => click_handler(channel)}
 					className='join-channel-password'>
 					<h1>{channel.name}</h1>
 					PASSWORD CHAN
@@ -41,6 +83,7 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 		else
 			jsx_chans.push(
 				<div key={uuidv4()}
+					onClick={() => click_handler(channel)}
 					className='join-channel-normal'>
 					<h1>{channel.name}</h1>
 				</div>);
@@ -51,6 +94,11 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 			<h1>Join channels:</h1>
 			<div className='popup-user-container'>
 				{jsx_chans}
+			</div>
+
+			<div className='popup-prompt'>
+				<input ref={passwordRef} type='password'
+				placeholder='Password'></input>
 			</div>
 		</Popup>
 	)
