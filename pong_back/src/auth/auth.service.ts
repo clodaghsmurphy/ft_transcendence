@@ -18,9 +18,9 @@ export class AuthService {
             console.log(user);
             if (!user)
                 throw new HttpException('Failed to login', HttpStatus.UNAUTHORIZED);
-            const payload = { name: user.name, 
-                otp_enabled: user.otp_enabled, 
-                otp_verified: user.otp_verified, 
+            const payload = { name: user.name,
+                otp_enabled: user.otp_enabled,
+                otp_verified: user.otp_verified,
                 sub: user.id
             };
             return {
@@ -32,18 +32,16 @@ export class AuthService {
             console.log(user);
             if (!user)
                 throw new HttpException('Failed to login', HttpStatus.UNAUTHORIZED);
-            const payload = { name: user.name, 
+            const payload = { name: user.name,
                     otp_enabled: user.otp_enabled,
                     otp_verified: user.otp_verified,
                     sub: user.id
                 };
         }
 
-        async generateOTP(req: Request, res: Response) 
+        async generateOTP(req: Request, res: Response)
         {
-            
-
         }
-    
+
 }
 
