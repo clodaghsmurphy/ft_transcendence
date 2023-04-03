@@ -89,12 +89,17 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 			})
 		}
 
+	let b_users: JSX.Element[] = []
+	if (every_users.length !== 0)
+		b_users = basic_users(every_users.filter(
+			usr => usr.name !== current_user.name
+		))
+	
 	return (
 		<Popup trigger={add_group()} modal nested key={uuidv4()}>
 			<h1>Add users:</h1>
 			<div className='popup-user-container'>
-				{basic_users(every_users.filter(usr => 
-						usr.name !== current_user.name))}
+				{b_users}
 			</div>
 			
 			<div className='bar' style={{
