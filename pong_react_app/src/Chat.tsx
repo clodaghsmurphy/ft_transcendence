@@ -297,9 +297,11 @@ function Chat()
 						<div style={{
 							display: 'flex',
 							flexDirection: 'row',
+							justifyContent: 'space-between',
+							height: '64px',
 						}}>
 							<h1>Group chats</h1>
-							{PopupJoinChannel(all_users, current_user)}
+							{PopupJoinChannel(chanOfUser, current_user)}
 						</div>
 						<div className='lists-holder'>
 							{group_message(chanOfUser,
