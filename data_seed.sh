@@ -3,28 +3,28 @@
 echo "Creating Users\n"
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "clmurphy", "avatar": "media/clmurphy.jpg", "id" : 1 }' \
+	-d '{ "name": "clmurphy", "avatar": "", "id" :  94551 }' \
 	-X POST \
 	localhost:3042/user/create
 
 echo
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "nguiard", "avatar": "media/nguiard.jpg",  "id" : 2 }' \
+	-d '{ "name": "nguiard", "avatar": "https://cdn.intra.42.fr/users/606bb15cacede67bb022361cda169a81/nguiard.jpg",  "id" : 94596 }' \
 	-X POST \
 	localhost:3042/user/create
 
 echo
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "adben-mc", "avatar": "media/adben-mc.jpg", "id" : 3 }' \
+	-d '{ "name": "adben-mc", "avatar": "https://cdn.intra.42.fr/users/40c3eed0c4a3287945f4dcbb038b155b/adben-mc.jpg", "id" : 3 }' \
 	-X POST \
 	localhost:3042/user/create
 
 echo
 
 curl -H 'Content-Type: application/json' \
-	-d '{ "name": "ple-lez", "avatar": "media/ple-lez.jpg", "id" : 4  }' \
+	-d '{ "name": "ple-lez", "avatar": "https://cdn.intra.42.fr/users/6b552059f5c71d3f8e5b66c086e17aea/ple-lez.jpg", "id" : 4  }' \
 	-X POST \
 	localhost:3042/user/create
 

@@ -18,11 +18,13 @@ export class UserService {
 	}
 
 	async get(id: number): Promise<User> {
-		await this.checkUser(id);
-
-		return await this.prisma.user.findUnique({
-			where: { id: id },
+		const user=  await this.prisma.user.findUnique({
+			where: { id: id }
 		});
+		if (!user){
+			throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+		}
+		return user;
 	}
 
 	async userExists(id: number): Promise<User> {
@@ -37,39 +39,59 @@ export class UserService {
 
 		const user = await this.prisma.user.findUnique({
 			where: { id: id },
+			select: {
+				otp_base32: false,
+				otp_auth_url: false
+			}
 		});
 		if (user == null)
 			return ;
 		return { attribute: user[attribute] };
 	}
 
+	checkIfFileExists(filePath: string): boolean {
+		try {
+		  fs.accessSync(filePath, fs.constants.F_OK);
+		  return true;
+		} catch (err) {
+		  return false;
+		}
+	  }
+	  
 	async downloadImage(cdn:string): Promise<string>
 	{
 		const split = cdn.split('/');
 		const name = split[split.length -1];
 		const pathname = path.join('/app', 'uploads', name)
 		const writer = fs.createWriteStream(pathname);
-
-        const response = await this.httpService.axiosRef({
-            url: cdn,
-            method: 'GET',
-            responseType: 'stream',
-        });
-
-        response.data.pipe(writer);
-        return pathname;
+		console.log('in downlaod pathname = ' + pathname);
+		console.log(cdn);
+		try {
+			const response = await this.httpService.axiosRef({
+				url: cdn,
+				method: 'GET',
+				responseType: 'stream',
+			});
+			response.data.pipe(writer);
+			return pathname;
+		} catch (e) {
+			console.log(e);
+		}
+		
+      
 	}
 
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
-
-			return await this.prisma.user.create({
+			const user = await this.prisma.user.create({
 				data: {
 					name: dto.name,
 					id: dto.id,
-					avatar: dto.avatar,
+					avatar: `http://localhost:8080/api/user/image/${dto.id}`,
+					avatar_path: dto.avatar_path ? dto.avatar_path : '/app/media/norminet.jpeg',
 				},
 			});
+			return user;
 		} catch (e) {
 			if (e.code === 'P2002') {
 				throw new HttpException({
@@ -121,4 +143,5 @@ export class UserService {
 		}
 	}
 
+	
 }

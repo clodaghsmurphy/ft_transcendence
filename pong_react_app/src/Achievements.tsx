@@ -22,6 +22,7 @@ import Who_can_stop_you from './media/ach_icons/Who_can_stop_you.png'
 import Zoomer from './media/ach_icons/Zoomer.png'
 import Legend from './media/ach_icons/Legend.png'
 import User from "./User";
+import { user } from "./store/reducer";
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -190,7 +191,7 @@ export function id_to_achievement(id: number): Achievement {
 	return (every_achievements().filter(ach => ach.id == id)[0]);
 }
 
-function AchievementShower(id: number, current_user: User): JSX.Element {
+function AchievementShower(id: number, current_user: user): JSX.Element {
 	let curr = id_to_achievement(id);
 	let score = '0' + " / " + curr.cap
 	let size = score.length.toString();
@@ -216,7 +217,7 @@ function AchievementShower(id: number, current_user: User): JSX.Element {
 	)
 }
 
-function StatsAchievements(current_user: User) {
+function StatsAchievements(current_user: user ) {
 	let every = every_achievements();
 	let [AchBlocks, SetAchBlocks] = useState([] as JSX.Element[]);
 

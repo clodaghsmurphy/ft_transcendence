@@ -1,101 +1,65 @@
 import React, { useEffect, Suspense } from "react";
 import NavBar from "./NavBar"; 
 import './stats.css';
-import user_photo from './media/user.png';
 import FTlogo from './media/42_Logo.png'
 import { BsFillGearFill } from "react-icons/bs";
-import tron_bg from './media/tron_bg.jpeg'
 import { useState, useContext } from "react";
 import { AuthContext } from "./App";
-import GameHistory from './GameHistory';
 import StatsAchievements from './Achievements';
-import StatsFriends from "./StatsFriends";
 import { Link } from 'react-router-dom'
-import User, { id_to_user } from "./User";
-import Popup from 'reactjs-popup';
-import { usePrompt } from "./usePrompt";
 import EnableTwoFAuth from "./EnableTWoFAuth";
 import ChangeName from "./ChangeName";
 import ChangePhoto from "./ChangePhoto";
-import { blob } from "stream/consumers";
-import test from './media/nguiard.jpg'
+import ProfileStats from "./ProfileStats";
+import Image from "./Image";
+import { ActionKind } from "./store/reducer"
 
+import Friends from "./Friends";
 
-
-function Stats()
+type Props ={
+	error?:string,
+}
+function Stats(props:Props)
 {
 	const [open, setOpen] = useState(false);
+	const [error, setError ] = useState('');
 	const { state, dispatch } = useContext(AuthContext);
-	let [current_user, set_current_user] = useState({} as User);
-	let [all_users, set_all_users] = useState([] as User[]);
-	//const [img, setImg] = useState<string | undefined >();
 
 	useEffect(() => {
-		document.title = 'Chat';
-		fetch('/api/user/info', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			}
-		}).then((response) => {
-			response.json()
-				.then(data => {
-					set_all_users(data as User[])
-					set_current_user(id_to_user(all_users, Number(state.user.id))) // A changer par jsp quoi
-				})
+		document.title = 'Stats';
+		if (state.error)
+		{
+			const error = state.error;
+			setError(error.message)
+			dispatch({
+				type:ActionKind.errorUpdate,
+				payload: null
 			})
+		
+		}
 	}, []);
+
+	
 
 	const handleOpen = () =>
 	{
 		setOpen(!open);
 	};
 
-	// const fetchImage = async () => {
-	// 	const res = await fetch('./media/nguiard.jpg');
-	// 	console.log(res);
-	// 	const imageBlob = await res.blob();
-	// 	console.log(imageBlob);
-	// 	const imageObjectURL = URL.createObjectURL(imageBlob);
-	// 	setImg(imageObjectURL);
-	// 	console.log(img);
-	// 	//setImg(imageObjectURL);
-
-	// }
-	
-	// useEffect(() => {
-	// 	console.log('in use effects');
-	// 	fetchImage();
-	// }, [])
 
 	return(
 			<>
 			<Suspense>
 				<NavBar />
+				{error && <div className='error-bar'>{error}</div> }
 			<div className="stats-page">
 				<div className="stats">
 					<div className="profile-header">
 						<div className="profile-sub-header" >
-						<ul className="profile-game-stats">
-								<li>
-									<span style={{color: "#7070a5",
-								fontSize: '.9em'}} >Total games</span>
-									<span>13</span>	
-								</li>
-								<li>
-									<span style={{ color: "#7070a5",
-										fontSize: '.9em' }}>Wins</span>
-									<span>85%</span>
-								</li>
-								<li>
-									<span style={{ color: "#7070a5",
-										fontSize: '.9em' }}>Loss</span>
-									<span>15%</span>
-								</li>
-						</ul>
+							<ProfileStats />
+						
 						<div className="avatar-stats">
-								<img style={{
-								}}src={state.user.avatar} />
+								<Image id={state.user.id} />
 							<span className="user-name">{state.user.name}</span>
 
 						</div>
@@ -123,20 +87,17 @@ function Stats()
 							<header>
 								<h1>Game History</h1>
 							</header>
-							{GameHistory(all_users, current_user)}
+						
 						</div>
 						<div className="info-card friends">
 							<header>
 								<h1>Achievements</h1>
 							</header>
-							{StatsAchievements(current_user)}
+								{StatsAchievements(state.user)}
+							
 						</div>
-						<div className="info-card game-history">
-							<header>
-								<h1>Friends</h1>
-							</header>
-							{StatsFriends(all_users, current_user)}
-						</div>
+						<Friends id={state.user.id}/>
+						
 					</div>
 				</div>
 			</div>
