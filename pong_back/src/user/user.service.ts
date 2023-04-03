@@ -62,10 +62,9 @@ export class UserService {
 	{
 		const split = cdn.split('/');
 		const name = split[split.length -1];
-		const pathname = path.join('/app', 'uploads', name)
+		const pathname = path.join('/app', 'uploads', name);
+		const defaultPath = path.join('/app', 'uploads', 'norminet.jpeg')
 		const writer = fs.createWriteStream(pathname);
-		console.log('in downlaod pathname = ' + pathname);
-		console.log(cdn);
 		try {
 			const response = await this.httpService.axiosRef({
 				url: cdn,
@@ -76,6 +75,7 @@ export class UserService {
 			return pathname;
 		} catch (e) {
 			console.log(e);
+			return defaultPath;
 		}
 		
       
@@ -83,12 +83,13 @@ export class UserService {
 
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
+			const avatarPath = dto.avatar ? null : '/app/media/norminet.jpeg';
 			const user = await this.prisma.user.create({
 				data: {
 					name: dto.name,
 					id: dto.id,
 					avatar: `http://localhost:8080/api/user/image/${dto.id}`,
-					avatar_path: dto.avatar_path ? dto.avatar_path : '/app/media/norminet.jpeg',
+					avatar_path: avatarPath ? avatarPath : await this.downloadImage(dto.avatar),
 				},
 			});
 			return user;
