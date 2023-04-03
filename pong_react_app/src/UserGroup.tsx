@@ -4,13 +4,15 @@ import { Avatar, ButtonGroup } from '@mui/material'
 import User, { id_to_user } from './User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
-import { DirectMessage } from './DirectMessage';
+import { DirectMessage, dm_of_user } from './DirectMessage';
 import { socket_chat } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
 
-export function user_in_group(every_user: User[], current_user: User, chan: Channel | DirectMessage): JSX.Element[] {
+export function User_in_group(every_user: User[], current_user: User, chan: Channel | DirectMessage): JSX.Element[] {
 	let ret: JSX.Element[] = []
+	let muteRef = useRef<HTMLInputElement | null>(null)
+
 
 	if (typeof current_user === 'undefined' ||
 		typeof chan === 'undefined')
@@ -30,13 +32,35 @@ export function user_in_group(every_user: User[], current_user: User, chan: Chan
 
 	const curr_is_op = chan.operators.includes(current_user.id)
 
+	if (curr_is_op)
+		ret.push(<div style={{
+			display: 'flex',
+			flexDirection: 'row',
+			gap: '5px',
+		}} key={uuidv4()}>
+			<h3 style={{
+				flex: '0',
+				minWidth: 'calc(5 * 0.75rem)',
+				marginRight: '0',
+				color: 'white',
+			}}>Mute:</h3>
+			<input ref={muteRef}
+					type='text'
+					className='mute-input'
+					placeholder='Seconds...'
+					style={{
+						marginLeft: '0',
+				}}/> 
+		</div>)
+
 	for (const user of chan.members) {
 		const target_is_op = chan.operators.includes(user)
 		const target_is_owner = chan.owner === user
 
 		if (user != current_user.id) {
 			if (curr_is_op && !target_is_owner)
-				ret.push(Button_op(id_to_user(every_user, user), target_is_op, current_user, chan))
+				ret.push(Button_op(id_to_user(every_user, user),
+					target_is_op, current_user, chan, muteRef))
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), target_is_op))
 		}
@@ -89,9 +113,16 @@ function button_not_op(user: User, is_op: boolean): JSX.Element {
 	);
 }
 
-function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel): JSX.Element {
-	// let time_input = useRef<HTMLInputElement | null>(null)
+function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel,
+	ref: React.MutableRefObject<HTMLInputElement | null>): JSX.Element {
 
+	let mute_duration: string[] | null = null;
+	if (ref.current) {
+		mute_duration = ref.current!.value
+		.match(/^\s*(\d+)\s*(s|sec|second|seconds)\s*$/i)
+		console.log('YAAAAAAAAAAAAAa')
+	}
+			
 	function emit_kick() {
 		socket_chat.emit('kick', {
 			name: chan.name,
@@ -109,12 +140,19 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_mute() {
-		socket_chat.emit('mute', {
-			name: chan.name,
-			user_id: current_user.id,
-			target_id: user.id,
-			mute_duration: 15,
-		})
+		console.log(mute_duration)
+		if (mute_duration) {
+			let duration = parseInt(mute_duration[0])
+			if (isNaN(duration))
+				duration = 60
+			console.log('duration?', duration)
+			socket_chat.emit('mute', {
+				name: chan.name,
+				user_id: current_user.id,
+				target_id: user.id,
+				mute_duration: duration,
+			})
+		}
 	}
 
 	function emit_makeop() {
