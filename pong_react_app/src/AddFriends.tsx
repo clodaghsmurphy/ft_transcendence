@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect, useMemo } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { IconContext } from "react-icons";
-import { BsPersonAdd } from "react-icons/bs";
+import { AiOutlineUserAdd } from "react-icons/ai";
 
 type Props = {
 	value:string
@@ -85,7 +85,7 @@ function AddFriends(props: Props){
 				}}>
 					<div className="friends-options">
 						<div style={style_buttons} className="friend-profile" onClick={() => add(usr.id)}> 
-							<BsPersonAdd style={{ height: '4vh', cursor: 'pointer' }} />
+							<AiOutlineUserAdd style={{ height: '4vh', cursor: 'pointer' }} />
 						</div>
 					</div>
 				</IconContext.Provider>
