@@ -3,8 +3,15 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] Browse channels
+- [ ] CSS -> is_public popupcreate channel
+- [ ] join -> Mauvais mot de passe donne une case vide qui cree des 404
 
+- [x] Leave tous les groupes -> remet des groupes (wtf?)
+- [x] Create -> password pas pris en compte
+- [x] Browse channels
+  - [x] emit
+  - [x] CSS
+  - [x] add to chanOfUser
 - [x] Choose the mute duration
 - [x] Is-public channel creation working
 - [x] Change the password if we are channel owner

@@ -6,6 +6,14 @@ import User from '../utils/User'
 
 const { v4: uuidv4 } = require('uuid');
 
+type ChanPost = {
+	name: string,
+	owner_id: number,
+	users_ids: number[],
+	is_public: boolean,
+	password?: string,
+}
+
 export default function PopupCreateChannel(every_users: User[], current_user: User) {
 	let [selected, setSelected] = useState([] as number[]);
 	let privateRef = useRef<HTMLInputElement | null>(null);
@@ -58,32 +66,33 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 		inputRefPassword.current!.value = '';
 		setSelected([current_user.id]);
 		let tmp = selected.filter(usr => typeof usr === 'number' && usr !== current_user.id)
+		console.log(chan_pass)
+		let body: ChanPost = {
+			name: chan_name,
+			owner_id: current_user.id,
+			users_ids: tmp,
+			is_public: !privateRef.current!.checked,
+		}
+		if (chan_pass?.length > 0) {
+			console.log('inside the chan_pass if')
+			body = {
+				...body,
+				password: chan_pass
+			}
+		}
 		fetch('/api/channel/create', {
-			method: 'POST',
-			body: ( chan_pass.length > 0 ?
-				JSON.stringify({
-					name: chan_name,
-					owner_id: current_user.id,
-					users_ids: tmp,
-					is_public: !privateRef.current!.checked,
-				}) :
-				JSON.stringify({
-					name: chan_name,
-					owner_id: current_user.id,
-					users_ids: tmp,
-					pass: chan_pass,
-					is_public: !privateRef.current!.checked,
-				})),
+				method: 'POST',
+				body: JSON.stringify(body),
 				headers: {'Content-Type': 'application/json'},
 			})
 			.then(response => {
-				console.log('response fetch')
 				response.json()
 					.then(data => {
-						console.log('data fetch')
 						socket_chat.emit('join', {
 							name: chan_name,
 							user_id: current_user.id,
+						}, (data: any) => {
+							console.log('return of emit join:', data)
 						})
 					})
 			})

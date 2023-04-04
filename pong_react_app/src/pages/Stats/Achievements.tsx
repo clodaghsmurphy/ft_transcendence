@@ -23,7 +23,6 @@ import { user } from "../../store/reducer";
 
 const { v4: uuidv4 } = require('uuid');
 
-
 type Achievement = {
 	icon: string,		// Icon of the achievement
 	title: string,		// Title of the achievement

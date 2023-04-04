@@ -17,7 +17,12 @@ export type ChanAndMessage = {
 	msg: MessageData[],
 }
 
-export const socket_chat = io(`http://${window.location.hostname}:8080/channel`)
+export const socket_chat = io(`http://${window.location.hostname}:8080/channel`,
+		{
+			extraHeaders: {
+				Authorization: "Bearer " + localStorage.getItem('token')
+			}
+		})
 
 socket_chat.on('connect', () => {
 	console.log('CONNECTED', socket_chat.connected)
@@ -98,7 +103,7 @@ function Chat()
 			let chan_name = data.name;
 			if (typeof all_channels.find((chan: Channel) => 
 					chan.name === chan_name
-				) === 'undefined')
+				) === 'undefined') // Si le chan existe pas
 			{
 				fetch('/api/channel/info/' + sanitizeString(chan_name))
 				.then((response) => {
@@ -129,7 +134,7 @@ function Chat()
 
 	useEffect(() => {
 		socket_chat.removeListener('makeop')
-
+		
 		const handleMakeop = (data: any) => {
 			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
 				...prev,
@@ -139,7 +144,8 @@ function Chat()
 				}
 			}))
 		}
-
+		
+		
 		socket_chat.on('makeop', handleMakeop)
 	}, [current_chan, set_current_chan])
 
@@ -285,6 +291,25 @@ function Chat()
 			set_current_chan(param as DirectMessage)
 	}
 
+	const leaveChannel = (data: any) => {
+		console.log('INSINDE LEAAAAAAAAAAAAAVE\naaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa')
+		let new_channels = all_channels
+		let new_curr_user = current_user
+
+		new_channels = new_channels
+			.filter((c: Channel) => c.name !== data.name)
+		new_channels.push(data as Channel)
+		set_all_channels(new_channels)
+
+		new_curr_user.channels = new_curr_user.channels
+			.filter((name: string) => name !== data.name)
+		set_current_user(new_curr_user)
+	}
+
+	console.log('current_user:', current_user)
+	console.log('all_channels:', all_channels)
+	console.log('chanOfUser:', chanOfUser)
+
 	return (
 		<div className="dashboard">
         <NavBar /> 
@@ -301,7 +326,8 @@ function Chat()
 							height: '64px',
 						}}>
 							<h1>Group chats</h1>
-							{PopupJoinChannel(chanOfUser, current_user)}
+							{PopupJoinChannel(chanOfUser, current_user,
+											changeChannelOrDm, setChanOfUser)}
 						</div>
 						<div className='lists-holder'>
 							{group_message(chanOfUser,
@@ -323,7 +349,8 @@ function Chat()
 
             <div className="chatbox">
 				{Messages(current_chan as ChanAndMessage,
-					all_users, current_user, set_current_chan, setChanOfUser)}
+					all_users, current_user, set_current_chan,
+					setChanOfUser, leaveChannel)}
 			</div>
 
             <div className="group-members">
