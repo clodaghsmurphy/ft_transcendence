@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, Request, UseGuards } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
 import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
@@ -49,8 +49,9 @@ export class ChannelController {
 		return this.channelService.leave(data);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Get(':name/messages')
-	getAllMessages(@Param() params) {
-		return this.channelService.getAllMessages(params.name);
+	getAllMessages(@Request() request, @Param() params) {
+		return this.channelService.getAllMessages(request.user.id, params.name);
 	}
 }

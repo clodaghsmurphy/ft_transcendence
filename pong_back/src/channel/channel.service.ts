@@ -191,8 +191,8 @@ export class ChannelService {
 		});
 	}
 
-	async getAllMessages(channelName: string) : Promise<Message[]> {
-		await this.checkChannel(channelName);
+	async getAllMessages(userId: number, channelName: string) : Promise<Message[]> {
+		await this.checkUserInChannel(userId, channelName);
 
 		const channel: Channel = await this.prisma.channel.findUnique({where: {name: channelName}});
 		const messageIds: number[] = channel.messages;
