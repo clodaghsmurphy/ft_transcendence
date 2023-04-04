@@ -4,6 +4,7 @@ import { socket_chat } from './Chat'
 import User from '../utils/User'
 import { Channel } from './Channels'
 import { DirectMessage } from './DirectMessage'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -15,16 +16,13 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 	let [channels, setChannels] = useState([] as Channel[])
 
 	useEffect(() => {
-		fetch('/api/channel/info')
-			.then(response => {
-				response.json()
-					.then(data => {
-						let every_chan: Channel[] = data as Channel[]
-						
-						setChannels(every_chan.filter(c => 
-							!c.members.includes(current_user.id) && c.is_public
-						))
-					})
+		axios.get('/api/channel/info')
+			.then((response: AxiosResponse) => {
+				let every_chan: Channel[] = response.data as Channel[]
+				
+				setChannels(every_chan.filter(c => 
+					!c.members.includes(current_user.id) && c.is_public
+				))
 			})
 	}, [current_user, chanOfUser])
 
@@ -32,57 +30,43 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 		if (chan.password) {
 			if (passwordRef.current?.value.length === 0)
 				return;
-			fetch('/api/channel/join/', {
-				method: 'POST',
-				body: JSON.stringify({
+
+
+			axios.post('/api/channel/join/', {
 					name: chan.name,
 					user_id: current_user.id,
 					password: passwordRef.current?.value,
-				}),
-				headers: {'Content-Type': 'application/json'},
-			})
-				.then(response => {
-					if (!response.ok) {
-						return;
-					}
-					response.json()
-						.then(data => {
-							if (typeof data.status === 'undefined') {
-								changeChannelOrDm(data as Channel)
-								socket_chat.emit('join', {
-									name: data.name,
-									user_id: current_user.id,
-								})
-								setChanOfUser((prev: Channel[]) =>
-									[...prev, data as Channel]
-								)
-							}
-						})
-					})
-		}
-		else {
-			fetch('/api/channel/join/', {
-				method: 'POST',
-				body: JSON.stringify({
-					name: chan.name,
-					user_id: current_user.id,
-				}),
-				headers: {'Content-Type': 'application/json'},
-			})
-				.then(response => {
-					response.json()
-						.then(data => {
-							changeChannelOrDm(data as Channel)
+				})
+				.then((response: AxiosResponse) => {
+						if (typeof response.data.status === 'undefined') {
+							changeChannelOrDm(response.data as Channel)
 							socket_chat.emit('join', {
-								name: data.name,
+								name: response.data.name,
 								user_id: current_user.id,
 							})
 							setChanOfUser((prev: Channel[]) =>
-								[...prev, data as Channel]
+								[...prev, response.data as Channel]
 							)
-						})
-						.catch(err => err)
+						}
+					})
+				.catch((err: AxiosError) => err)
+		}
+		else {
+			axios.post('/api/channel/join/', {
+					name: chan.name,
+					user_id: current_user.id,
 				})
+				.then((response: AxiosResponse) => {
+						changeChannelOrDm(response.data as Channel)
+						socket_chat.emit('join', {
+							name: response.data.name,
+							user_id: current_user.id,
+						})
+						setChanOfUser((prev: Channel[]) =>
+							[...prev, response.data as Channel]
+						)
+					})
+				.catch((err: AxiosError) => err)
 		}
 	}
 
