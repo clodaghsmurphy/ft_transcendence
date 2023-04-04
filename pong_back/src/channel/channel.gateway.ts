@@ -13,6 +13,8 @@ import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	private logger = new Logger(ChannelGateway.name);
 
+	private userMap = new Map<number, string>();
+
 	@WebSocketServer() io: Namespace;
 
 	constructor (private readonly channelService: ChannelService) {}
@@ -27,8 +29,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 	}
 
 	handleDisconnect(client: Socket) {
-		this.logger.log(`Disconnected client with id: ${client.id}.`);
-		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
+		this.removeSocketId(client.id);
+		this.logger.log(`Disconnected socket ${client.id}.`);
 	}
 
 	@UseGuards(JwtWsGuard)
@@ -46,9 +48,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		try {
 			await this.channelService.checkUserInChannel(data.user_id, data.name);
 			client.join(data.name);
+			this.userMap.set(data.user_id, client.id)
 			this.io.in(data.name).emit('join', data);
 		} catch (e) {
-			client.leave(data.name);
 			throw new WsException(e);
 		}
 	}
@@ -68,7 +70,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			this.io.in(data.name).emit('leave', data);
 			client.leave(data.name);
 		} catch (e) {
-			client.leave(data.name);
 			throw new WsException(e);
 		}
 	}
@@ -98,6 +99,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			this.channelService.postMessage(message);
 			this.io.in(data.name).emit('kick', data);
 			this.io.in(data.name).emit('message', message);
+			this.removeFromRoom(data.target_id, data.name);
 		} catch (e) {
 			throw new WsException(e);
 		}
@@ -177,6 +179,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			this.channelService.postMessage(message);
 			this.io.in(data.name).emit('ban', data);
 			this.io.in(data.name).emit('message', message);
+			this.removeFromRoom(data.target_id, data.name);
 		} catch (e) {
 			throw new WsException(e);
 		}
@@ -221,5 +224,30 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 	checkUser(client: Socket, channel: string) {
 		if (!client.rooms.has(channel))
 			throw new WsException(`error: client hasnt joined room ${channel}`);
+	}
+
+	getSocketId(userId: number) {
+		return this.userMap.get(userId);
+	}
+
+	removeSocketId(clientId: string) {
+		for (const [userId, socketId] of this.userMap.entries()) {
+			if (socketId === clientId) {
+				this.userMap.delete(userId);
+				break;
+			}
+		}
+	}
+
+	removeFromRoom(userId: number, room: string) {
+		const socketId = this.getSocketId(userId);
+		if (!socketId)
+			return ;
+
+		const socket = this.io.sockets.get(socketId);
+		if (!socket)
+			return ;
+
+		socket.leave(room);
 	}
 }
