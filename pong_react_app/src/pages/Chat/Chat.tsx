@@ -152,18 +152,6 @@ function Chat()
 
 		const handleKick = (data: any) => {
 			console.log('inside handleKick:', data)
-			if (data.user_id !== current_user.id) {
-				socket_chat.emit('message', {
-					name: data.name,
-					sender_id: current_user.id,
-					sender_name: current_user.name,
-					uid: 0,
-					text: 'dummy message for deconnection',
-				})
-			}
-			/* ^ a virer quand le back sera sur JWT 
-				A changer de useEffect quand il n'y aura
-				plus a envoyer de messages					*/
 			
 			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
 				...prev,
@@ -194,18 +182,6 @@ function Chat()
 
 		const handleBan = (data: any) => {
 			console.log('inside handleban:', data)
-			if (data.user_id !== current_user.id) {
-				socket_chat.emit('message', {
-					name: data.name,
-					sender_id: current_user.id,
-					sender_name: current_user.name,
-					uid: 0,
-					text: 'dummy message for deconnection',
-				})
-			}
-			/* ^ a virer quand le back sera sur JWT 
-				A changer de useEffect quand il n'y aura
-				plus a envoyer de messages					*/
 			
 			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
 				...prev,
