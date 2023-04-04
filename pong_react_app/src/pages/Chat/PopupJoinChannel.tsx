@@ -42,19 +42,23 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 				headers: {'Content-Type': 'application/json'},
 			})
 				.then(response => {
+					if (!response.ok) {
+						return;
+					}
 					response.json()
 						.then(data => {
-							changeChannelOrDm(data as Channel)
-							socket_chat.emit('join', {
-								name: data.name,
-								user_id: current_user.id,
-							})
-							setChanOfUser((prev: Channel[]) =>
-								[...prev, data as Channel]
-							)
+							if (typeof data.status === 'undefined') {
+								changeChannelOrDm(data as Channel)
+								socket_chat.emit('join', {
+									name: data.name,
+									user_id: current_user.id,
+								})
+								setChanOfUser((prev: Channel[]) =>
+									[...prev, data as Channel]
+								)
+							}
 						})
-						.catch(err => err)
-				})
+					})
 		}
 		else {
 			fetch('/api/channel/join/', {
