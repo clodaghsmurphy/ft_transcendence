@@ -3,8 +3,13 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] Browse channels
+- [ ] Leave tous les groupes -> remet des groupes (wtf?)
 
+- [x] Create -> password pas pris en compte
+- [x] Browse channels
+  - [x] emit
+  - [x] CSS
+  - [x] add to chanOfUser
 - [x] Choose the mute duration
 - [x] Is-public channel creation working
 - [x] Change the password if we are channel owner

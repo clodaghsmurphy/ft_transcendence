@@ -98,7 +98,7 @@ function Chat()
 			let chan_name = data.name;
 			if (typeof all_channels.find((chan: Channel) => 
 					chan.name === chan_name
-				) === 'undefined')
+				) === 'undefined') // Si le chan existe pas
 			{
 				fetch('/api/channel/info/' + sanitizeString(chan_name))
 				.then((response) => {
@@ -301,7 +301,8 @@ function Chat()
 							height: '64px',
 						}}>
 							<h1>Group chats</h1>
-							{PopupJoinChannel(chanOfUser, current_user)}
+							{PopupJoinChannel(chanOfUser, current_user,
+											changeChannelOrDm, setChanOfUser)}
 						</div>
 						<div className='lists-holder'>
 							{group_message(chanOfUser,

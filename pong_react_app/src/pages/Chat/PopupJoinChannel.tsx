@@ -1,13 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Popup from 'reactjs-popup'
-import { add_group, sanitizeString } from './ChatUtils'
 import { socket_chat } from './Chat'
 import User from '../utils/User'
 import { Channel } from './Channels'
+import { DirectMessage } from './DirectMessage'
 
 const { v4: uuidv4 } = require('uuid');
 
-export default function PopupJoinChannel(chanOfUser: Channel[], current_user: User) {
+export default function PopupJoinChannel(chanOfUser: Channel[], current_user: User,
+	changeChannelOrDm: (param: Channel | DirectMessage) => void,
+	setChanOfUser: React.Dispatch<React.SetStateAction<Channel[]>>)
+{
 	let passwordRef = useRef<HTMLInputElement | null>(null)
 	let [channels, setChannels] = useState([] as Channel[])
 
@@ -40,12 +43,17 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 			})
 				.then(response => {
 					response.json()
-						.then(data => 
-							console.log(data)
-						)
-						.catch(err =>
-							console.error(err)
-						)
+						.then(data => {
+							changeChannelOrDm(data as Channel)
+							socket_chat.emit('join', {
+								name: data.name,
+								user_id: current_user.id,
+							})
+							setChanOfUser((prev: Channel[]) =>
+								[...prev, data as Channel]
+							)
+						})
+						.catch(err => err)
 				})
 		}
 		else {
@@ -59,12 +67,17 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 			})
 				.then(response => {
 					response.json()
-						.then(data => 
-							console.log(data)
-						)
-						.catch(err =>
-							console.error(err)
-						)
+						.then(data => {
+							changeChannelOrDm(data as Channel)
+							socket_chat.emit('join', {
+								name: data.name,
+								user_id: current_user.id,
+							})
+							setChanOfUser((prev: Channel[]) =>
+								[...prev, data as Channel]
+							)
+						})
+						.catch(err => err)
 				})
 		}
 	}
@@ -78,7 +91,7 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 					onClick={() => click_handler(channel)}
 					className='join-channel-password'>
 					<h1>{channel.name}</h1>
-					PASSWORD CHAN
+					<div className='password-indicator'>[password]</div>
 				</div>);
 		else
 			jsx_chans.push(
@@ -96,9 +109,13 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 				{jsx_chans}
 			</div>
 
-			<div className='popup-prompt'>
+			<div className='popup-prompt'
+				style={{
+					marginTop: 'auto',
+					marginBottom: '10px',
+				}}>
 				<input ref={passwordRef} type='password'
-				placeholder='Password'></input>
+				placeholder='Password (if needed)'></input>
 			</div>
 		</Popup>
 	)
