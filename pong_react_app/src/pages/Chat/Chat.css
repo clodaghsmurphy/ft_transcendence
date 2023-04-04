@@ -527,6 +527,12 @@
 	padding: 0 2.5%;
 }
 
+.popup-user input{
+	margin-top: auto;
+	margin-bottom: auto;
+	height: 25px;
+}
+
 .popup-user-dm {
 	background-color: #2E2E2E;
 	border: #9b59b6 2px solid;
@@ -710,6 +716,12 @@
 	background-color: #cda5d8;
 	text-align: center;
 	font-size: 1.25rem;
+}
+
+.private-setter input{
+	margin-bottom: auto;
+	margin-top: auto;
+	height: 15px;
 }
 
 .channel-header {
