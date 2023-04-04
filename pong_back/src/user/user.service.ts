@@ -60,7 +60,6 @@ export class UserService {
 	  
 	async downloadImage(cdn:string): Promise<string>
 	{
-		console.log('in donwload image and cdn ios ' + cdn);
 		const split = cdn.split('/');
 		const name = split[split.length -1];
 		const pathname = path.join('/app', 'uploads', name);
@@ -75,7 +74,6 @@ export class UserService {
 			response.data.pipe(writer);
 			return pathname;
 		} catch (e) {
-			console.log(e);
 			return defaultPath;
 		}
 		
@@ -84,9 +82,7 @@ export class UserService {
 
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
-			console.log('in create and avatar is ' + dto.avatar);
 			const avatarPath = dto.avatar_path ? null : '/app/media/norminet.jpeg';
-			console.log('avatar path is '+ avatarPath);
 			const user = await this.prisma.user.create({
 				data: {
 					name: dto.name,
@@ -147,5 +143,40 @@ export class UserService {
 		}
 	}
 
+	async toUserArray(users: number[]) {
+		let user_array: User[] = [];
+		let res:User;
+		for (let i = 0; i < users.length; i++) {
+			res = await this.userExists(users[i]);
+			if (res) {
+				user_array[i] = res;
+			}
+		}
+		return user_array;
+	}
+
+	async getUsers( usr: User) {
+		const exclude:number[] = usr.friend_users.concat(usr.blocked_users) ;
+		
+		const result = await this.prisma.user.findMany({
+			select: {
+				name:true,
+				id:true,
+				avatar:true,
+			},
+			where: {
+				id: {
+					notIn: exclude,
+				},
+				NOT: {
+					id: {
+						equals:usr.id,
+					}
+				},
+
+			}
+		})
+		return result;
+	}
 	
 }

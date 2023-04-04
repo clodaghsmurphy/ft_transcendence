@@ -59,7 +59,7 @@ function Stats(props:Props)
 							<ProfileStats />
 						
 						<div className="avatar-stats">
-								<Image id={state.user.id} />
+								<Image id={parseInt(state.user.id)} status={0}/>
 							<span className="user-name">{state.user.name}</span>
 
 						</div>

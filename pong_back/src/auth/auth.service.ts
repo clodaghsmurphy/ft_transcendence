@@ -15,7 +15,6 @@ export class AuthService {
 
 
         async login(@Res() res : Response, user: any) {
-            console.log(user);
             if (!user)
                 throw new HttpException('Failed to login', HttpStatus.UNAUTHORIZED);
             const payload = { name: user.name,
@@ -23,15 +22,12 @@ export class AuthService {
                 otp_verified: user.otp_verified,
                 sub: user.id
             };
-			console.log('before jwt service token payload = ', payload);
-			console.log(process.env.JWT_TOKEN);
             return {
                 access_token: this.jwtService.sign(payload, {secret: process.env.JWT_TOKEN}),
             }
         }
 
         async login2fa(@Res() res, user: User) {
-            console.log(user);
             if (!user)
                 throw new HttpException('Failed to login', HttpStatus.UNAUTHORIZED);
             const payload = { name: user.name,

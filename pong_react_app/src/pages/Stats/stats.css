@@ -301,7 +301,7 @@
 
 .stats-avatar
 {
-	border-radius: 50%;
+	position: relative;
 	height: 45px;
 	width: 45px;
 	display: flex;
@@ -667,4 +667,20 @@
 	color: rgb(247, 57, 36);
 	font-size: .5em;
 
+}
+
+.online {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #5CFF5C;
+	border: 1px solid white;
+	right: 0;
+	
+}
+
+.img-container {
+	position: relative;
+	border-radius: 50%;
 }

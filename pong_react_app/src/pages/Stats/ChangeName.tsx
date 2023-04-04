@@ -4,14 +4,6 @@ import { useState, useContext } from 'react'
 import { AuthContext } from '../../App'
 import { ActionKind } from "../../store/reducer"
 
-
-interface nameProps
-{
-	showName: boolean,
-	setShowName: any		
-}
-
-
 const ChangeName = () =>
 {
 	const [showName, setShowName] = useState(false);
@@ -36,10 +28,6 @@ const ChangeName = () =>
 					payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true},
 				}
 			)
-			console.log('datais');
-			console.log(data);
-			console.log('state is ');
-		console.log(state);
 		setShowName(!showName);
 	}
 

@@ -32,7 +32,6 @@ export function SearchBar(every_user_name: string[], on_click_function:
 	function resetList() {
 		if (list_users.length > 0)
 		{
-			console.log(list_users.length)
 			setList_user([<div key={uuidv4()}/>])
 		}
 	}

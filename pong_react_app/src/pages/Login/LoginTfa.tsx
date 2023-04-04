@@ -21,39 +21,29 @@ function LoginTfa()
 
     async function getPayload () 
 	{
-        console.log('here')
 		const { data } = await axios.get('http://localhost:3042/auth/profile');
-		console.log('data is')
-		console.log(data);
-			console.log(data.name);
 			dispatch(
 				{
 					type: ActionKind.Login,
 					payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true}
 				}
 			)
-            console.log(state);
 			localStorage.setItem("isLoggedIn", 'true');
-			console.log(localStorage.getItem("isLoggedIn"));
-			console.log(localStorage.getItem("user"));
+			
 	}
 
     useEffect(() => {
         const url = window.location.href;
 		
-		if (url.includes("?access_token"))
-		{
+		if (url.includes("?access_token")) {
 			setToken(new URLSearchParams(location.search).get('access_token')!);
             
         }
-        // else
-        //     window.location.href = 'http://localhost:8080/login';
     }, [])
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) =>
     {
         e.preventDefault();
-        console.log('in handle submit');
       
             axios.post('http://localhost:3042/auth/auth2fa',
                  { value },

@@ -1,8 +1,7 @@
 import React from 'react';
-import { VscAdd } from "react-icons/vsc";
+import { TbUserSearch } from "react-icons/tb";
 import { FaUserFriends } from "react-icons/fa";
 import { BiMessageAltError } from "react-icons/bi";
-import { useState, useContext } from 'react';
 
 type Props ={
      setTitle: (value:string) => void,
@@ -21,7 +20,7 @@ function FriendsButtons(props:Props) {
 					<BiMessageAltError />
 				</button>
 				<button className='friends-toggle-button' onClick={() => props.setTitle('Add Friends')}>
-					<VscAdd />
+					<TbUserSearch />
 				</button>
                 </>
                     }

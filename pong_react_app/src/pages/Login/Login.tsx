@@ -25,7 +25,6 @@ type Data = {
 function Login ()
 {
 	const location = useLocation();
-	const [authUrl, setAuthUrl] = useState<string>();
 	const { state,  dispatch } = useContext(AuthContext);
 	const [ data, setData ] = useState<Data>( {errorMessage: "", isLoading: false});
 
@@ -33,9 +32,6 @@ function Login ()
 	async function getPayload () 
 	{
 		const { data } = await axios.get(`http://${window.location.hostname}:8080/api/auth/profile`);
-		console.log('data is')
-		console.log(data);
-			console.log(data.name);
 			dispatch(
 				{
 					type: ActionKind.Login,
@@ -43,8 +39,7 @@ function Login ()
 				}
 			)
 			localStorage.setItem("isLoggedIn", 'true');
-			console.log(localStorage.getItem('user'));
-			console.log(localStorage.getItem("isLoggedIn"));
+			
 	}
 	
 	useEffect( () => {
@@ -63,7 +58,6 @@ function Login ()
 
 	const handleLogin = async () =>
 	{
-		console.log('in hadnle login');
 		window.location.href = 'http://localhost:3042/auth/42/login';
 		setData({ ...data, errorMessage: " "});
 		

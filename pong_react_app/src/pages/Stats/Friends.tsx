@@ -4,7 +4,7 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { useState, useContext } from 'react';
 import StatsFriends from "./StatsFriends";
 import AddFriends from "./AddFriends";
-import FriendRequests from "./BlcokedUsers";
+import BlockedUsers from "./BlockedUsers";
 import { AuthContext } from "../../App";
 import FriendsButtons from "./FriendsButtons";
 
@@ -18,8 +18,6 @@ function Friends(props:Props) {
 	const { state, dispatch } = useContext(AuthContext);
 
 	const isCurrent = props.id === state.user.id;
-	console.log(isCurrent);
-	console.log(props.id);
 	const inputChange = (e:React.ChangeEvent<HTMLInputElement>) =>
 	{
 		setValue(e.target.value);
@@ -29,11 +27,11 @@ function Friends(props:Props) {
 			<header>
 				<h1>{title}</h1>
 			</header>
-			<div className='search-bar'>
+			{ title !== 'Blocked Users' && <div className='search-bar'>
 				<AiOutlineSearch />
 				<input type='text' placeholder="Search..." autoFocus value={value} onChange={inputChange}/>
-			</div>
-			{!isCurrent || title === 'Friends' ? <StatsFriends id={props.id}/> : title === 'Blocked Users' ? <FriendRequests value={value} /> : <AddFriends value={value} />}
+			</div> }
+			{!isCurrent || title === 'Friends' ? <StatsFriends id={props.id}/> : title === 'Blocked Users' ? <BlockedUsers /> : <AddFriends value={value} />}
 			<FriendsButtons setTitle={setTitle} isCurrent={isCurrent}/>
 		</div>
 	);
