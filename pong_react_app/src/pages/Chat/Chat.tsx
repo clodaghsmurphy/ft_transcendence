@@ -11,6 +11,7 @@ import { DirectMessage, dm_of_user } from './DirectMessage'
 import { AuthContext } from '../../App'
 import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
 import PopupJoinChannel from './PopupJoinChannel'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 
 export type ChanAndMessage = {
 	chan: Channel,
@@ -276,15 +277,13 @@ function Chat()
 				chan: param as Channel,
 				msg: [],
 			})
-			fetch('/api/channel/' + sanitizeString((param as Channel).name) + '/messages/')
-				.then(response => {
-					response.json()
-						.then(data => {
-							set_current_chan({
-								chan: param as Channel,
-								msg: data as MessageData[],
-							})
-						})
+			axios.get('/api/channel/' + sanitizeString((param as Channel).name) + '/messages/')
+				.then((response: AxiosResponse) => {
+					console.log(response.data)
+					set_current_chan({
+						chan: param as Channel,
+						msg: response.data as MessageData[],
+					})
 				})
 		}
 		if (typeof (param as DirectMessage).messages !== 'undefined')
