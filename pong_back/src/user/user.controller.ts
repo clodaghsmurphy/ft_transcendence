@@ -80,6 +80,7 @@ export class UserController {
 				error: `User doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		const imagePath = user.avatar_path;
+		console.log('Image path is' + imagePath);
 		if (this.userService.checkIfFileExists(imagePath)){
 			const image = fs.readFileSync(imagePath);
 			res.writeHead(200, {'Content-Type': 'image/jpeg' });

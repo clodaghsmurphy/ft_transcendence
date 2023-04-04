@@ -342,13 +342,14 @@
     .game-button 
     {
         position: absolute;
+        font-size: 5em;
         cursor: pointer;
         top: 40%;
         left:  40%;
         align-self: center;
         justify-self: center;
-        width: 10vw;
-        height: 7vh;
+        width: 7em;
+        height: 4em;
         border-radius: 1em;
         border: solid;
         color: white;

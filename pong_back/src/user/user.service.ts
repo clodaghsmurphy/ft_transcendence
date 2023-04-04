@@ -60,6 +60,7 @@ export class UserService {
 	  
 	async downloadImage(cdn:string): Promise<string>
 	{
+		console.log('in donwload image and cdn ios ' + cdn);
 		const split = cdn.split('/');
 		const name = split[split.length -1];
 		const pathname = path.join('/app', 'uploads', name);
@@ -83,13 +84,15 @@ export class UserService {
 
 	async create(dto: UserCreateDto): Promise<User> {
 		try {
-			const avatarPath = dto.avatar ? null : '/app/media/norminet.jpeg';
+			console.log('in create and avatar is ' + dto.avatar);
+			const avatarPath = dto.avatar_path ? null : '/app/media/norminet.jpeg';
+			console.log('avatar path is '+ avatarPath);
 			const user = await this.prisma.user.create({
 				data: {
 					name: dto.name,
 					id: dto.id,
 					avatar: `http://localhost:8080/api/user/image/${dto.id}`,
-					avatar_path: avatarPath ? avatarPath : await this.downloadImage(dto.avatar),
+					avatar_path: avatarPath ? avatarPath : await this.downloadImage(dto.avatar_path),
 				},
 			});
 			return user;
