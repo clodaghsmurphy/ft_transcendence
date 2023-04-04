@@ -19,12 +19,11 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
     
     async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any) 
     {
-        console.log(profile._json.image.link);
         const userData = {
             name: profile.username,
             id: parseInt(profile.id),
             avatar: `http://localhost:8080/api/user/image/${profile.id}`,
-            avatar_path: await this.userService.downloadImage(profile._json.image.link)
+            avatar_path: profile._json.image.link,
         }
         const user = await this.userService.userExists(userData.id);
         console.log('in 42 valiate and user is ');
