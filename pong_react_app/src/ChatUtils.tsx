@@ -1,6 +1,6 @@
 import { Channel } from "./Channels";
 import { DirectMessage, dm_betweeen_two_users } from "./DirectMessage";
-import PopupAddChannel from "./PopupAddChannel";
+import PopupCreateChannel from "./PopupCreateChannel";
 import PopupAddDirect from "./PopupAddDirect";
 import User, { id_to_user } from "./User";
 import plus_sign from './media/white_plus.png'
@@ -48,7 +48,7 @@ export function users_message(message_data: DirectMessage[], all_users: User[],
 		if (typeof dm === 'undefined' || typeof dm.users === 'undefined')
 			return [PopupAddDirect(all_users, current_user)]
 		let user = id_to_user(all_users, dm.users[0]);
-		if (user.id == current_user.id) {
+		if (user.id === current_user.id) {
 			user = id_to_user(all_users, dm.users[1]);
 		}
 
@@ -66,7 +66,7 @@ export function add_group(): JSX.Element {
 			<button className='chat-button'>
 				<div className='group-add'>
 					<img src={plus_sign} alt='plus'/>
-					<h1>Add a group</h1>
+					<h1>Create a group</h1>
 				</div>
 			</button>
 		</div>
@@ -95,7 +95,7 @@ export function group_message(chan_data: Channel[],
 	for (const chan of chan_data) {
 		ret.push(chat_button(chan.name, group_img, click_handler, chan));
 	}
-	ret.push(PopupAddChannel(every_user, current_user))
+	ret.push(PopupCreateChannel(every_user, current_user))
 	return ret;
 }
 

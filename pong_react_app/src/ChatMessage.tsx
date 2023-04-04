@@ -1,13 +1,7 @@
-import React, { ChangeEvent } from 'react'
+import React from 'react'
 import './Dashboard.css'
-import user_pfp from './media/user.png'
-import Messages from './Messages'
-import nathan from './media/nguiard.jpg'
-import { Avatar } from '@mui/material'
-import { useState } from 'react'
-import User, { avatarOf, id_to_user, sample_user_data } from './User'
-import { MessageData, BAN, INVITE, KICK, Channel, MUTE } from './Channels'
-import ProtectedRoute from './ProtectedRoute'
+import User, { avatarOf, id_to_user } from './User'
+import { MessageData, BAN, INVITE, KICK, MUTE } from './Channels'
 import { Link } from 'react-router-dom'
 
 const { v4: uuidv4 } = require('uuid');
@@ -42,7 +36,7 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 	}
 
 
-	const messageClass = msg.sender_id == curr_user.id ? "sender message-wrapper" : "message-wrapper"
+	const messageClass = msg.sender_id === curr_user.id ? "sender message-wrapper" : "message-wrapper"
 	return (
 		<div className={messageClass} key={uuidv4()}>
 			<div className="message-avatar" key={uuidv4()}>
@@ -100,7 +94,7 @@ function MuteMessage(msg: MessageData, sender_name: string): JSX.Element {
 }
 
 function InviteMessage(every_user: User[], msg: MessageData, curr_user: User, sender_name: string) {
-	const messageClass = msg.sender_id == curr_user.id ? "sender message-wrapper" : "message-wrapper"
+	const messageClass = msg.sender_id === curr_user.id ? "sender message-wrapper" : "message-wrapper"
 
 	return (
 		<div className={messageClass} key={uuidv4()}>
