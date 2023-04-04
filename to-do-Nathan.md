@@ -4,6 +4,7 @@
   - [x] CSS
   - [ ] emit
 
+- [x] JWT token refresh socket quand il change
 - [x] CSS -> is_public popupcreate channel
 - [x] join -> Mauvais mot de passe donne une case vide qui cree des 404
 - [x] Leave tous les groupes -> remet des groupes (wtf?)
