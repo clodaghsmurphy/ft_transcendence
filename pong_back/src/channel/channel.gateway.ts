@@ -31,59 +31,73 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
-	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket) {
-		if (client.rooms.has(dto.name))
-			throw new WsException(`error: client has already joined room ${dto.name}`);
+	async handleJoin(@MessageBody() dto: ChannelJoinDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		const data = {
+			name: dto.name,
+			user_id: payload.sub
+		};
+
+		if (client.rooms.has(data.name))
+			throw new WsException(`error: client has already joined room ${data.name}`);
 
 		try {
-			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
-			client.join(dto.name);
-			this.io.in(dto.name).emit('join', dto);
+			await this.channelService.checkUserInChannel(data.user_id, data.name);
+			client.join(data.name);
+			this.io.in(data.name).emit('join', data);
 		} catch (e) {
-			client.leave(dto.name);
+			client.leave(data.name);
 			throw new WsException(e);
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('leave')
-	async handleLeave(@MessageBody() dto: ChannelLeaveDto, @ConnectedSocket() client: Socket) {
-		this.checkUser(client, dto.name);
+	async handleLeave(@MessageBody() dto: ChannelLeaveDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		const data = {
+			name: dto.name,
+			user_id: payload.sub
+		};
 
+		this.checkUser(client, data.name);
 		try {
-			await this.channelService.checkUserInChannel(dto.user_id, dto.name);
-			this.io.in(dto.name).emit('leave', dto);
-			client.leave(dto.name);
+			await this.channelService.checkUserInChannel(data.user_id, data.name);
+			this.io.in(data.name).emit('leave', data);
+			client.leave(data.name);
 		} catch (e) {
-			client.leave(dto.name);
+			client.leave(data.name);
 			throw new WsException(e);
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('kick')
-	async handleKick(@MessageBody() dto: ChannelKickDto, @ConnectedSocket() client: Socket) {
-		this.checkUser(client, dto.name);
+	async handleKick(@MessageBody() dto: ChannelKickDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		let data: any  = dto;
+		data.user_id = payload.sub;
 
+		this.checkUser(client, data.name);
 		try {
-			await this.channelService.checkOperator(dto.user_id, dto.name);
-			await this.channelService.checkIsNotOwner(dto.target_id, dto.name);
-			await this.channelService.leave({user_id: dto.target_id, name: dto.name});
+			await this.channelService.checkOperator(data.user_id, data.name);
+			await this.channelService.checkIsNotOwner(data.target_id, data.name);
+			await this.channelService.leave({user_id: data.target_id, name: data.name});
 
-			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
+			const targetName = await this.channelService.getUserInfo(data.target_id, "name");
 			const message = {
-				sender_id: dto.user_id,
+				sender_id: data.user_id,
 				text: ` has kicked ${targetName["attribute"]}`,
 				type: MessageType.Kick,
 				uid: 0,
-				name: dto.name,
+				name: data.name,
 			};
 
 			this.channelService.postMessage(message);
-			this.io.in(dto.name).emit('kick', dto);
-			this.io.in(dto.name).emit('message', message);
+			this.io.in(data.name).emit('kick', data);
+			this.io.in(data.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
@@ -110,79 +124,95 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('mute')
-	async handleMute(@MessageBody() dto: UserMuteDto, @ConnectedSocket() client: Socket) {
-		this.checkUser(client, dto.name);
-		try {
-			await this.channelService.checkOperator(dto.user_id, dto.name);
-			await this.channelService.mute(dto);
+	async handleMute(@MessageBody() dto: UserMuteDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		let data: any  = dto;
+		data.user_id = payload.sub;
 
-			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
+		this.checkUser(client, data.name);
+		try {
+			await this.channelService.checkOperator(data.user_id, data.name);
+			await this.channelService.mute(data);
+
+			const targetName = await this.channelService.getUserInfo(data.target_id, "name");
 			const message = {
-				sender_id: dto.user_id,
-				text: ` has muted ${targetName["attribute"]} for ${dto.mute_duration} seconds`,
+				sender_id: data.user_id,
+				text: ` has muted ${targetName["attribute"]} for ${data.mute_duration} seconds`,
 				type: MessageType.Mute,
 				uid: 0,
-				name: dto.name,
+				name: data.name,
 			};
 
 			this.channelService.postMessage(message);
-			this.io.in(dto.name).emit('mute', dto);
-			this.io.in(dto.name).emit('message', message);
+			this.io.in(data.name).emit('mute', data);
+			this.io.in(data.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('ban')
-	async handleBan(@MessageBody() dto: UserBanDto, @ConnectedSocket() client: Socket) {
-		this.checkUser(client, dto.name);
-		try {
-			await this.channelService.checkOperator(dto.user_id, dto.name);
-			await this.channelService.ban(dto);
+	async handleBan(@MessageBody() dto: UserBanDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		let data: any  = dto;
+		data.user_id = payload.sub;
 
-			const targetName = await this.channelService.getUserInfo(dto.target_id, "name");
+		this.checkUser(client, data.name);
+		try {
+			await this.channelService.checkOperator(data.user_id, data.name);
+			await this.channelService.ban(data);
+
+			const targetName = await this.channelService.getUserInfo(data.target_id, "name");
 			const message = {
-				sender_id: dto.user_id,
+				sender_id: data.user_id,
 				text: ` has banned ${targetName["attribute"]}`,
 				type: MessageType.Ban,
 				uid: 0,
-				name: dto.name,
+				name: data.name,
 			};
 
 			this.channelService.postMessage(message);
-			this.io.in(dto.name).emit('ban', dto);
-			this.io.in(dto.name).emit('message', message);
+			this.io.in(data.name).emit('ban', data);
+			this.io.in(data.name).emit('message', message);
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('makeop')
-	async handleMakeOp(@MessageBody() dto: MakeOpDto, @ConnectedSocket() client: Socket) {
-		this.checkUser(client, dto.name);
-		try {
-			await this.channelService.checkOperator(dto.user_id, dto.name);
-			await this.channelService.makeOp(dto);
+	async handleMakeOp(@MessageBody() dto: MakeOpDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		let data: any  = dto;
+		data.user_id = payload.sub;
 
-			this.io.in(dto.name).emit('makeop', dto);
+		this.checkUser(client, data.name);
+		try {
+			await this.channelService.checkOperator(data.user_id, data.name);
+			await this.channelService.makeOp(data);
+
+			this.io.in(data.name).emit('makeop', data);
 		} catch (e) {
 			throw new WsException(e);
 		}
 	}
 
+	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('password')
-	async handlePasswordChange(@MessageBody() dto: ChannelPasswordDto, @ConnectedSocket() client: Socket) {
-		this.checkUser(client, dto.name);
-		try {
-			await this.channelService.checkIsOwner(dto.user_id, dto.name);
-			await this.channelService.changePassword(dto);
+	async handlePasswordChange(@MessageBody() dto: ChannelPasswordDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		let data: any  = dto;
+		data.user_id = payload.sub;
 
-			this.io.in(dto.name).emit('password');
+		this.checkUser(client, data.name);
+		try {
+			await this.channelService.checkIsOwner(data.user_id, data.name);
+			await this.channelService.changePassword(data);
+
+			this.io.in(data.name).emit('password');
 		} catch (e) {
 			throw new WsException(e);
 		}
