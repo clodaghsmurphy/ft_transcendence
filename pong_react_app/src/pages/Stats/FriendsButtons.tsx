@@ -19,7 +19,7 @@ function FriendsButtons(props:Props) {
 				<button className='friends-toggle-button' onClick={() => props.setTitle('Blocked Users')}>
 					<BiMessageAltError />
 				</button>
-				<button className='friends-toggle-button' onClick={() => props.setTitle('Add Friends')}>
+				<button className='friends-toggle-button' onClick={() => props.setTitle('Search Friends')}>
 					<TbUserSearch />
 				</button>
                 </>

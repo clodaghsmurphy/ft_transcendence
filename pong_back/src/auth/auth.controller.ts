@@ -129,6 +129,7 @@ export class AuthController {
       
         const token = body.value;
         const secret = request.user.otp_base32;
+        console.log('token is ', token, ' and secret is ', secret);
         const isValid = authenticator.verify({ token, secret});
             if (isValid == true)
             {

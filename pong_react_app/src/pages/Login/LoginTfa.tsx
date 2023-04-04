@@ -29,22 +29,21 @@ function LoginTfa()
 				}
 			)
 			localStorage.setItem("isLoggedIn", 'true');
-			
 	}
 
     useEffect(() => {
         const url = window.location.href;
 		
-		if (url.includes("?access_token")) {
-			setToken(new URLSearchParams(location.search).get('access_token')!);
-            
+		if (url.includes("?access_token"))
+		{
+			setToken(new URLSearchParams(location.search).get('access_token')!);   
         }
     }, [])
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) =>
     {
         e.preventDefault();
-      
+        console.log(token);
             axios.post('http://localhost:3042/auth/auth2fa',
                  { value },
                 { headers: {"Authorization" : `Bearer ${token}`} }, 

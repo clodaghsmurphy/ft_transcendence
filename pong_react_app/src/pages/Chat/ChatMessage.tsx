@@ -3,6 +3,7 @@ import '../Home/Dashboard.css'
 import User, { avatarOf, id_to_user } from '../utils/User'
 import { MessageData, BAN, INVITE, KICK, MUTE } from './Channels'
 import { Link } from 'react-router-dom'
+import Image from '../Components/Image'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -40,18 +41,8 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 	return (
 		<div className={messageClass} key={uuidv4()}>
 			<div className="message-avatar" key={uuidv4()}>
-				<img src={avatarOf(every_user, msg.sender_id)} alt={sender_name} key={uuidv4()}
-					style={{
-						'minWidth': '3rem',
-						'minHeight': '3rem',
-						'height': '3rem',
-						'width': '3rem',
-						'marginTop': 'auto',
-						'marginBottom': 'auto',
-						'aspectRatio': '1 / 1',
-						'borderRadius': '50%'
-					}}>
-				</img>
+				<Image id={msg.sender_id} status={0} />
+					
 				<div className="message-header" key={uuidv4()}>
 					<span key={uuidv4()}>{sender_name}</span>
 				</div>

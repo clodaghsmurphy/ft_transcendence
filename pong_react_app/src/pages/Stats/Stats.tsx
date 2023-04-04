@@ -46,7 +46,6 @@ function Stats(props:Props)
 		setOpen(!open);
 	};
 
-
 	return(
 			<>
 			<Suspense>
@@ -75,9 +74,6 @@ function Stats(props:Props)
 								</ul> ) : null}
 								
 							</div>
-								<Link to={"https://profile.intra.42.fr/users/" + state.user.name} className='ftlogo'>
-									<img src={FTlogo} />
-								</Link>
 						</div>
 					</div>
 

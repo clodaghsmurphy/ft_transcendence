@@ -239,7 +239,7 @@
 
 
     .user-pfp {
-       
+        display: flex;
         width: 3rem;
         object-fit: cover;
         border: 6px solid rgba(255, 255, 255, 0.1);
@@ -602,7 +602,7 @@
         align-items: flex-start;
         align-items: center;
         flex: 1;
-		flex-basis: 5rem;
+		flex-basis: 60px;
 		flex-grow: 0;
 		flex-shrink: 0;
         margin: 0;

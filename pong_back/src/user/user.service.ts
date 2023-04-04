@@ -35,7 +35,7 @@ export class UserService {
 		});
 		if (user === null)
 			return user;
-		return this.returnInfo(user);
+		return user;
 	}
 
 	async getInfo(id: number, attribute: string) {
