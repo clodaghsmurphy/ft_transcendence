@@ -1,7 +1,7 @@
-import adam from './media/adben-mc.jpg'
-import pierre from './media/ple-lez.jpg'
-import clodagh from './media/clmurphy.jpg'
-import nathan from './media/nguiard.jpg'
+import adam from '../../media/adben-mc.jpg'
+import pierre from '../../media/ple-lez.jpg'
+import clodagh from '../../media/clmurphy.jpg'
+import nathan from '../../media/nguiard.jpg'
 
 export type User_last_game = {
 	has_won: boolean,

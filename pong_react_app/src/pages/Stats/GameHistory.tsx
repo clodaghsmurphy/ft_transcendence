@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import gameAvatar from './media/nguiard.jpg';
 import { TbUserSearch } from "react-icons/tb";
-import User, { User_last_game, id_to_user } from "../../User";
+import User, { User_last_game, id_to_user } from "../utils/User";
 const { v4: uuidv4 } = require('uuid');
 
 

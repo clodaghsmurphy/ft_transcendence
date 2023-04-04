@@ -1,6 +1,6 @@
 import React from 'react'
 import '../Home/Dashboard.css'
-import User, { avatarOf, id_to_user } from '../../User'
+import User, { avatarOf, id_to_user } from '../utils/User'
 import { MessageData, BAN, INVITE, KICK, MUTE } from './Channels'
 import { Link } from 'react-router-dom'
 

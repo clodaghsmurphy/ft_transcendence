@@ -1,6 +1,6 @@
 import React from 'react'
 import { MessageData, NORMAL } from './Channels'
-import User from '../../User'
+import User from '../utils/User'
 
 export type DirectMessage = {
 	users: number[], // Tableau avec les id des deux participants

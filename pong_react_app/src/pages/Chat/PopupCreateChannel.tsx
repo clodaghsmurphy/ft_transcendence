@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import Popup from 'reactjs-popup'
 import { add_group, sanitizeString } from './ChatUtils'
 import { socket_chat } from './Chat'
-import User from '../../User'
+import User from '../utils/User'
 
 const { v4: uuidv4 } = require('uuid');
 

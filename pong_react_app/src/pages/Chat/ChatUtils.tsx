@@ -2,7 +2,7 @@ import { Channel } from "./Channels";
 import { DirectMessage, dm_betweeen_two_users } from "./DirectMessage";
 import PopupCreateChannel from "./PopupCreateChannel";
 import PopupAddDirect from "./PopupAddDirect";
-import User, { id_to_user } from "../../User";
+import User, { id_to_user } from "../utils/User";
 import plus_sign from '../../media/white_plus.png'
 import group_img from '../../media/group.png'
 import { useRef } from 'react'

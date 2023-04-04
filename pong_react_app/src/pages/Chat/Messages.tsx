@@ -4,7 +4,7 @@ import '../Home/Dashboard.css'
 import ChatMessage from './ChatMessage'
 import { ChanAndMessage, socket_chat } from './Chat'
 import { Channel } from './Channels'
-import User from '../../User'
+import User from '../utils/User'
 
 const { v4: uuidv4 } = require('uuid');
 

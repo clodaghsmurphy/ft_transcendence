@@ -1,6 +1,6 @@
 import Popup from 'reactjs-popup'
 import { add_dm } from './ChatUtils'
-import User from '../../User'
+import User from '../utils/User'
 
 const { v4: uuidv4 } = require('uuid');
 

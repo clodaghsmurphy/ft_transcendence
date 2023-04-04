@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import User, { id_to_user } from '../../User'
+import User, { id_to_user } from '../utils/User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
 import { DirectMessage } from './DirectMessage';
