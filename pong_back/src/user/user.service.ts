@@ -13,40 +13,39 @@ export class UserService {
 		private readonly httpService: HttpService) {
 	}
 
-	async getAll(): Promise<User[]> {
-		return await this.prisma.user.findMany();
+	async getAll() {
+		const users: User[] = await this.prisma.user.findMany();
+
+		return users.map((user) => this.returnInfo(user));
 	}
 
 	async get(id: number): Promise<User> {
-		const user=  await this.prisma.user.findUnique({
+		const user =  await this.prisma.user.findUnique({
 			where: { id: id }
 		});
-		if (!user){
+		if (!user) {
 			throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
 		}
-		return user;
+		return this.returnInfo(user);
 	}
 
 	async userExists(id: number): Promise<User> {
 		const user = await this.prisma.user.findUnique({
 			where: { id: id },
 		});
-		return user;
+		return this.returnInfo(user);
 	}
 
 	async getInfo(id: number, attribute: string) {
 		await this.checkUser(id);
 
 		const user = await this.prisma.user.findUnique({
-			where: { id: id },
-			select: {
-				otp_base32: false,
-				otp_auth_url: false
-			}
+			where: { id: id }
 		});
-		if (user == null)
+		if (user === null)
 			return ;
-		return { attribute: user[attribute] };
+		const updatedUser = this.returnInfo(user);
+		return { attribute: updatedUser[attribute] };
 	}
 
 	checkIfFileExists(filePath: string): boolean {
@@ -57,7 +56,7 @@ export class UserService {
 		  return false;
 		}
 	  }
-	  
+
 	async downloadImage(cdn:string): Promise<string>
 	{
 		console.log('in donwload image and cdn ios ' + cdn);
@@ -78,11 +77,9 @@ export class UserService {
 			console.log(e);
 			return defaultPath;
 		}
-		
-      
 	}
 
-	async create(dto: UserCreateDto): Promise<User> {
+	async create(dto: UserCreateDto) {
 		try {
 			console.log('in create and avatar is ' + dto.avatar);
 			const avatarPath = dto.avatar_path ? null : '/app/media/norminet.jpeg';
@@ -95,7 +92,7 @@ export class UserService {
 					avatar_path: avatarPath ? avatarPath : await this.downloadImage(dto.avatar_path),
 				},
 			});
-			return user;
+			return this.returnInfo(user);
 		} catch (e) {
 			if (e.code === 'P2002') {
 				throw new HttpException({
@@ -107,12 +104,13 @@ export class UserService {
 		}
 	}
 
-	async update(dto: UserUpdateDto): Promise<User> {
+	async update(dto: UserUpdateDto) {
 		await this.checkUser(dto.id);
-		return await this.prisma.user.update({
+		const user = await this.prisma.user.update({
 			where: { id: dto.id },
 			data: dto,
 		});
+		return this.returnInfo(user);
 	}
 
 	// This should only be called by channel service
@@ -147,5 +145,11 @@ export class UserService {
 		}
 	}
 
-	
+	returnInfo(user: User) {
+		let updatedUser: any = user;
+
+		updatedUser.otp_auth_url = (user.otp_auth_url === null ? false : true);
+		updatedUser.otp_base32 = (user.otp_base32 === null ? false : true);
+		return updatedUser;
+	}
 }
