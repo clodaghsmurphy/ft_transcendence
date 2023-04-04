@@ -5,6 +5,7 @@ import ChatMessage from './ChatMessage'
 import { ChanAndMessage, socket_chat } from './Chat'
 import { Channel } from './Channels'
 import User from '../utils/User'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -95,25 +96,22 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 	}
 
 	function leave(name: string) {
-		fetch('/api/channel/leave', {
-			method: 'POST',
-			body: JSON.stringify({
-				name: name,
-				user_id: current_user.id,
-			}),
-			headers: {'Content-Type': 'application/json'},
-		})
-			.then(response => {
-				response.json()
-					.then(data => {
-						if (typeof data.status === 'undefined') {
-							set_current_chan({});
-							setChanOfUser((prev: Channel[]) => prev.filter(
-								c => c.name !== name
-							))
-							leaveChannel(data)
-						}
-					})
+		const headers = {
+			'Content-Type': 'application/json'
+		}
+		
+		axios.post('/api/channel/leave', {
+			name: name,
+			user_id: current_user.id,
+		},  { headers })
+			.then((response: AxiosResponse) => {
+				if (typeof response.data.status === 'undefined') {
+					set_current_chan({});
+					setChanOfUser((prev: Channel[]) => prev.filter(
+						c => c.name !== name
+					))
+					leaveChannel(response.data)
+				}
 			})
 	}
 

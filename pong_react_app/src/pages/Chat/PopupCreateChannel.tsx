@@ -3,6 +3,8 @@ import Popup from 'reactjs-popup'
 import { add_group, sanitizeString } from './ChatUtils'
 import { socket_chat } from './Chat'
 import User from '../utils/User'
+import axios, { AxiosResponse, AxiosError } from 'axios'
+
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -79,21 +81,16 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 				password: chan_pass
 			}
 		}
-		fetch('/api/channel/create', {
-				method: 'POST',
-				body: JSON.stringify(body),
-				headers: {'Content-Type': 'application/json'},
-			})
-			.then(response => {
-				response.json()
-					.then(data => {
-						socket_chat.emit('join', {
-							name: chan_name,
-							user_id: current_user.id,
-						}, (data: any) => {
-							console.log('return of emit join:', data)
-						})
-					})
+
+		const headers = {'Content-Type': 'application/json'}
+		axios.post('/api/channel/create', body, { headers })
+			.then((response: AxiosResponse) => {
+				socket_chat.emit('join', {
+					name: chan_name,
+					user_id: current_user.id,
+				}, (data: any) => {
+					console.log('return of emit join:', data)
+				})
 			})
 		}
 

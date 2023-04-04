@@ -48,26 +48,21 @@ function Chat()
 	
 	useEffect(() => {
 		document.title = 'Chat';
-		fetch('/api/user/info', {
+		axios.get('/api/user/info', {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
 			}
-		}).then((response) => {
-			response.json()
-			.then(data => {
-				set_all_users(data as User[])
-				set_current_user(id_to_user(data as User[], Number(state.user.id)))
-			})
 		})
+			.then((response: AxiosResponse) => {
+					set_all_users(response.data as User[])
+					set_current_user(id_to_user(response.data as User[], Number(state.user.id)))
+				})
 		
-		fetch('/api/channel/info')
-		.then((response) => {
-			response.json()
-			.then(data => {
-				set_all_channels(data as Channel[])
-			})
-		})
+		axios.get('/api/channel/info')
+			.then((response: AxiosResponse) => {
+					set_all_channels(response.data as Channel[])
+				})
 
 	}, [state.user.id]);
 
@@ -113,24 +108,18 @@ function Chat()
 					chan.name === chan_name
 				) === 'undefined') // Si le chan existe pas
 			{
-				fetch('/api/channel/info/' + sanitizeString(chan_name))
-				.then((response) => {
-					response.json()
-						.then((data) => {
-							set_all_channels((prev: Channel[]) => [...prev, data])
-							setChanOfUser((prev: Channel[]) => [...prev, data])
-							fetch('/api/channel/' + sanitizeString(data.name) + '/messages/')
-								.then(response => {
-									response.json()
-										.then(msg_data => {
-											set_current_chan({
-												chan: data as Channel,
-												msg: msg_data,
-											})
-										})
+				axios.get('/api/channel/info/' + sanitizeString(chan_name))
+					.then((response: AxiosResponse) => {
+						set_all_channels((prev: Channel[]) => [...prev, response.data])
+						setChanOfUser((prev: Channel[]) => [...prev, response.data])
+						axios.get('/api/channel/' + sanitizeString(response.data.name) + '/messages/')
+							.then((response: AxiosResponse) => {
+								set_current_chan({
+									chan: data as Channel,
+									msg: response.data,
 								})
-						})
-				})
+							})
+					})
 			}
 		}
 
@@ -286,7 +275,6 @@ function Chat()
 			})
 			axios.get('/api/channel/' + sanitizeString((param as Channel).name) + '/messages/')
 				.then((response: AxiosResponse) => {
-					console.log(response.data)
 					set_current_chan({
 						chan: param as Channel,
 						msg: response.data as MessageData[],
