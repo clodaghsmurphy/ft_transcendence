@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, Request, UseGuards } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
 import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, MessageCreateDto } from "./dto";
+import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 
 @Controller('channel')
 export class ChannelController {
@@ -21,23 +22,36 @@ export class ChannelController {
 		return this.channelService.getInfo(params.name, params.attribute);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Post('create')
-	createChannel(@Body() dto: ChannelCreateDto) {
-		return this.channelService.create(dto);
+	createChannel(@Request() request, @Body() dto: ChannelCreateDto) {
+		let data: any = dto;
+		data.owner_id = request.user.id;
+
+		return this.channelService.create(data);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Post('join')
-	joinChannel(@Body() dto: ChannelJoinDto) {
-		return this.channelService.join(dto);
+	joinChannel(@Request() request, @Body() dto: ChannelJoinDto) {
+		let data: any = dto;
+		data.user_id = request.user.id;
+
+		return this.channelService.join(data);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Post('leave')
-	leaveChannel(@Body() dto: ChannelLeaveDto) {
-		return this.channelService.leave(dto);
+	leaveChannel(@Request() request, @Body() dto: ChannelLeaveDto) {
+		let data: any = dto;
+		data.user_id = request.user.id;
+
+		return this.channelService.leave(data);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Get(':name/messages')
-	getAllMessages(@Param() params) {
-		return this.channelService.getAllMessages(params.name);
+	getAllMessages(@Request() request, @Param() params) {
+		return this.channelService.getAllMessages(request.user.id, params.name);
 	}
 }

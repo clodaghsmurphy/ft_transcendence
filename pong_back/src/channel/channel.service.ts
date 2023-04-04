@@ -36,23 +36,28 @@ export class ChannelService {
 		return {attribute: channel[attribute]};
 	}
 
-	async create(dto: ChannelCreateDto) : Promise<unknown> {
+	async create(dto: any) : Promise<unknown> {
 		await this.checkUser(dto.owner_id);
-		for (const user of dto.users_ids) {
-			await this.checkUser(user);
+
+		let data = {
+			name: dto.name,
+			operators: [dto.owner_id],
+			owner: dto.owner_id,
+			is_public: true,
 		}
 
-		dto.users_ids.push(dto.owner_id);
+		if (dto.hasOwnProperty('users_ids'))
+		{
+			for (const user of dto.users_ids) {
+				await this.checkUser(user);
+			}
+			dto.users_ids.push(dto.owner_id);
+			data['members'] = dto.users_ids;
+		}
+		else
+			data['members'] = [dto.owner_id];
 
 		try {
-			let data = {
-				name: dto.name,
-				operators: [dto.owner_id],
-				owner: dto.owner_id,
-				members: dto.users_ids,
-				is_public: true,
-			}
-
 			if (dto.hasOwnProperty('is_public') && dto.is_public === false)
 				data.is_public = false;
 
@@ -63,7 +68,10 @@ export class ChannelService {
 			}
 
 			const channel: Channel = await this.prisma.channel.create({data: data});
-			dto.users_ids.forEach(async(user) => await this.userService.joinChannel(user, dto.name));
+
+			if (dto.hasOwnProperty('users_ids'))
+				dto.users_ids.forEach(async(user) => await this.userService.joinChannel(user, dto.name));
+
 			return this.returnInfo(channel);
 		} catch (e) {
 			if (e.code == 'P2002') {
@@ -76,7 +84,7 @@ export class ChannelService {
 		}
 	}
 
-	async changePassword(dto: ChannelPasswordDto) {
+	async changePassword(dto: any) {
 		let hash: string = null;
 		if (dto.hasOwnProperty('password')) {
 			const salt = await bcrypt.genSalt();
@@ -91,7 +99,7 @@ export class ChannelService {
 		return updatedChannel;
 	}
 
-	async join(dto: ChannelJoinDto) : Promise<unknown> {
+	async join(dto: any) : Promise<unknown> {
 		await this.checkCanJoin(dto);
 
 		const channel: Channel = await this.prisma.channel.update({
@@ -105,7 +113,7 @@ export class ChannelService {
 		return this.returnInfo(channel);
 	}
 
-	async leave(dto: ChannelLeaveDto) : Promise<unknown> {
+	async leave(dto: any) : Promise<unknown> {
 		await this.checkUserInChannel(dto.user_id, dto.name);
 
 		const channel: Channel = await this.prisma.channel.findUnique({where: {name: dto.name}});
@@ -122,7 +130,7 @@ export class ChannelService {
 		return this.returnInfo(updateChannel);
 	}
 
-	async mute(dto: UserMuteDto) {
+	async mute(dto: any) {
 		await this.checkIsNotOwner(dto.target_id, dto.name);
 
 		const muteTime = new Date();
@@ -150,7 +158,7 @@ export class ChannelService {
 		return dto;
 	}
 
-	async ban(dto: UserBanDto) {
+	async ban(dto: any) {
 		await this.checkIsNotOwner(dto.target_id, dto.name);
 
 		await this.prisma.channel.update({
@@ -162,7 +170,7 @@ export class ChannelService {
 		this.leave({name: dto.name, user_id: dto.target_id});
 	}
 
-	async makeOp(dto: MakeOpDto) {
+	async makeOp(dto: any) {
 		await this.checkUserInChannel(dto.target_id, dto.name);
 
 		if (await this.prisma.channel.count({where: {
@@ -183,8 +191,8 @@ export class ChannelService {
 		});
 	}
 
-	async getAllMessages(channelName: string) : Promise<Message[]> {
-		await this.checkChannel(channelName);
+	async getAllMessages(userId: number, channelName: string) : Promise<Message[]> {
+		await this.checkUserInChannel(userId, channelName);
 
 		const channel: Channel = await this.prisma.channel.findUnique({where: {name: channelName}});
 		const messageIds: number[] = channel.messages;
@@ -287,7 +295,7 @@ export class ChannelService {
 		}
 	}
 
-	async checkCanJoin(dto: ChannelJoinDto) {
+	async checkCanJoin(dto: any) {
 		await this.checkUser(dto.user_id);
 		await this.checkChannel(dto.name);
 
@@ -329,7 +337,7 @@ export class ChannelService {
 		}
 	}
 
-	async checkIsMuted(dto: MessageCreateDto) {
+	async checkIsMuted(dto: any) {
 		await this.checkUserInChannel(dto.sender_id, dto.name);
 
 		const mutedUser = await this.prisma.muteInfo.findFirst({
