@@ -852,3 +852,20 @@
 	padding: 0 2.5%;
 	color: white;
 }
+
+.join-channel-normal:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+.join-channel-password:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+
+.password-indicator {
+	color: lightgrey;
+	width: auto;
+	flex: 0 0 auto;
+}
