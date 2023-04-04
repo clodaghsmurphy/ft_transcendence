@@ -6,7 +6,7 @@ import './Chat.css'
 import { User_in_group } from './UserGroup'
 import User, { id_to_user } from '../utils/User'
 import { Channel, MUTE, MessageData, names_to_channel } from './Channels'
-import io from 'socket.io-client'
+import io, { Socket } from 'socket.io-client'
 import { DirectMessage, dm_of_user } from './DirectMessage'
 import { AuthContext } from '../../App'
 import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
@@ -18,16 +18,8 @@ export type ChanAndMessage = {
 	msg: MessageData[],
 }
 
-export const socket_chat = io(`http://${window.location.hostname}:8080/channel`,
-		{
-			extraHeaders: {
-				Authorization: "Bearer " + localStorage.getItem('token')
-			}
-		})
+export let socket_chat: Socket
 
-socket_chat.on('connect', () => {
-	console.log('CONNECTED', socket_chat.connected)
-})
 
 function Chat()
 {
@@ -38,7 +30,22 @@ function Chat()
 	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as ChanAndMessage | DirectMessage)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
+	
+	
+	useEffect(() => {
+		// socket_chat.disconnect()
+		socket_chat = io(`http://${window.location.hostname}:8080/channel`,
+		{
+			extraHeaders: {
+				Authorization: "Bearer " + localStorage.getItem('token')
+			}
+		})
+	}, [])
 
+	// socket_chat.on('connect', () => {
+	// 	console.log('CONNECTED', socket_chat.connected)
+	// })
+	
 	useEffect(() => {
 		document.title = 'Chat';
 		fetch('/api/user/info', {
