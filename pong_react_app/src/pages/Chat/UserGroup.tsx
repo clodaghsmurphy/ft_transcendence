@@ -31,7 +31,7 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 		let mute_duration: string[] | null = null;
 		if (muteRef.current) {
 			mute_duration = muteRef.current!.value
-			.match(/^\s*(\d+)\s*(s|sec|second|seconds|secondes)?\s*$/i)
+			.match(/^\s*(\d+)\s*(s|sec|second|seconde|seconds|secondes)?\s*$/i)
 		}
 		if (mute_duration || muteRef.current?.value.length === 0) {
 		let duration: number

@@ -11,7 +11,8 @@ const { v4: uuidv4 } = require('uuid');
 function Messages(chan_and_message: ChanAndMessage, users: User[],
 				current_user: User,
 				set_current_chan: (arg: any) => void,
-				setChanOfUser: (arg: any) => void)
+				setChanOfUser: (arg: any) => void,
+				leaveChannel: (arg: any) => void)
 {
 	let is_undefined: boolean = false;
 	let chan = chan_and_message.chan;
@@ -110,6 +111,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 							setChanOfUser((prev: Channel[]) => prev.filter(
 								c => c.name !== name
 							))
+							leaveChannel(data)
 						}
 					})
 			})
