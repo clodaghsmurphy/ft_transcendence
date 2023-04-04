@@ -30,6 +30,7 @@ export class ChannelJoinDto {
 	@IsNotEmpty()
 	name: string;
 
+	@IsOptional()
 	@IsNumber()
 	@IsNotEmpty()
 	user_id: number;
@@ -47,6 +48,7 @@ export class ChannelLeaveDto {
 	@IsNotEmpty()
 	name: string;
 
+	@IsOptional()
 	@IsNumber()
 	@IsNotEmpty()
 	user_id: number;
@@ -82,6 +84,7 @@ export class MessageCreateDto {
 	@IsNotEmpty()
 	text: string;
 
+	@IsOptional()
 	@IsNumber()
 	@IsNotEmpty()
 	sender_id: number;
