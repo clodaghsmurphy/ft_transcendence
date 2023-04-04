@@ -66,7 +66,6 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 		inputRefPassword.current!.value = '';
 		setSelected([current_user.id]);
 		let tmp = selected.filter(usr => typeof usr === 'number' && usr !== current_user.id)
-		console.log(chan_pass)
 		let body: ChanPost = {
 			name: chan_name,
 			owner_id: current_user.id,

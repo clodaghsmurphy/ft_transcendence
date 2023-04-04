@@ -3,9 +3,9 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] CSS -> is_public popupcreate channel
-- [ ] join -> Mauvais mot de passe donne une case vide qui cree des 404
 
+- [x] CSS -> is_public popupcreate channel
+- [x] join -> Mauvais mot de passe donne une case vide qui cree des 404
 - [x] Leave tous les groupes -> remet des groupes (wtf?)
 - [x] Create -> password pas pris en compte
 - [x] Browse channels

@@ -292,7 +292,6 @@ function Chat()
 	}
 
 	const leaveChannel = (data: any) => {
-		console.log('INSINDE LEAAAAAAAAAAAAAVE\naaaaaaaaaaaaaaaaaaa\naaaaaaaaaaa')
 		let new_channels = all_channels
 		let new_curr_user = current_user
 
@@ -305,10 +304,6 @@ function Chat()
 			.filter((name: string) => name !== data.name)
 		set_current_user(new_curr_user)
 	}
-
-	console.log('current_user:', current_user)
-	console.log('all_channels:', all_channels)
-	console.log('chanOfUser:', chanOfUser)
 
 	return (
 		<div className="dashboard">
