@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Req, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { DmService } from "./dm.service";
-import { DmGetDto } from "./dto";
 
 @Controller('dm')
 export class DmController {
@@ -9,9 +8,17 @@ export class DmController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get()
-	getDms(@Req() request, @Body() dto: DmGetDto) {
-		const data: any = dto;
-		data.sender_id = request.user.id;
+	getUsers(@Req() request) {
+		return this.dmService.getUsers(request.user.id);
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Get(':id')
+	getDms(@Req() request, @Param() params) {
+		const data = {
+			sender_id: request.user.id,
+			receiver_id: parseInt(params.id),
+		};
 		return this.dmService.get(data);
 	}
 }

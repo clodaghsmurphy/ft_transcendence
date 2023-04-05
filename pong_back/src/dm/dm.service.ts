@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable, UseGuards } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
-import { DmCreateDto, DmGetDto } from "./dto";
 
 @Injectable()
 export class DmService {
@@ -28,6 +27,29 @@ export class DmService {
 				created_at: 'asc'
 			}
 		});
+	}
+
+	async getUsers(userId: number) {
+		await this.checkUser(userId);
+
+		const user = await this.prisma.user.findUnique({
+			where: {id: userId},
+			include: {
+				messages_sent: true,
+				messages_received: true
+			}
+		});
+
+		const senderIds: Set<number> = new Set(user.messages_received.map((m) => m.sender_id));
+		const receiverIds: Set<number> = new Set(user.messages_sent.map((m) => m.receiver_id));
+		const uniqueIds: Set<number> = new Set([...senderIds, ...receiverIds]);
+
+		const users = await this.prisma.user.findMany({
+			where: {id: {in: [...uniqueIds]}},
+			select: {id: true, name: true}
+		});
+
+		return users;
 	}
 
 	async post(dto: any) {
