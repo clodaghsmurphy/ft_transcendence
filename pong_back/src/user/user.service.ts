@@ -122,6 +122,15 @@ export class UserService {
 		});
 	}
 
+	// async joinGame(id: number, roomId: number) {
+	// 	await this.prisma.user.update({
+	// 		where: { id: id },
+	// 		data: {
+	// 			games: {push: roomId}
+	// 		},
+	// 	});
+	// }
+
 	// Same here, should only be called by channel
 	async leaveChannel(id: number, channelName: string) {
 		const user: User = await this.prisma.user.findUnique({where: {id: id}});

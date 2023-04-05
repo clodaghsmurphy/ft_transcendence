@@ -19,6 +19,7 @@ model User {
   blocked_users Int[] @default([])
   friend_users Int[] @default([])
   channels String[] @default([])
+  //games Int[] @default([])
 
   connected Boolean @default(true)
   in_game Boolean @default(false)
@@ -76,4 +77,9 @@ model Channel {
   curr_uid Int @default(0)
 
   mutedUsers MuteInfo[] @relation("MutedChannel")
+}
+
+model Game {
+  id        Int      @id @default(autoincrement())
+  members Int[] @default([])
 }
