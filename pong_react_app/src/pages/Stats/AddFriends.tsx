@@ -60,6 +60,7 @@ function AddFriends(props: Props){
 			id:id
 		}})
 		.then((response:AxiosResponse) => {
+			console.log(response);
 			getUsers();
 		})
 		.catch((error:AxiosError) => console.log(error))

@@ -147,7 +147,7 @@ export class UserService {
 		let user_array: User[] = [];
 		let res:User;
 		for (let i = 0; i < users.length; i++) {
-			res = await this.userExists(users[i]);
+			res = await this.get(users[i]);
 			if (res) {
 				user_array[i] = res;
 			}
@@ -178,6 +178,7 @@ export class UserService {
 		})
 		return result;
 	}
+
 	returnInfo(user: User) {
 		let updatedUser: any = user;
 

@@ -59,16 +59,13 @@
         font-size: 2em;
         border-radius: 0em 0em .2em .2em;
         z-index: 2;
-        flex-shrink: 0;
         white-space: nowrap;
         display: flex;
         color: white;
         align-items: center;
         flex-direction: row;
         text-align: center;
-        flex-wrap: nowrap;
         padding: 2rem 0;
-        height: 10%;
         width:100%;
     }
 
@@ -266,6 +263,7 @@
 
     .nav-user {
         flex: 30%;
+        overflow: visible;
         display: flex;
         margin: 1em;
         cursor: pointer;
