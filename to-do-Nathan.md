@@ -1,15 +1,25 @@
 # Chat
 
-- [ ] Change the password if we are channel owner
-  - [x] CSS
-  - [ ] emit
-- [ ] Browse channels
 - [ ] Invite
   - [x] CSS
   - [ ] emit
 
-- [x] Leave a channel
+- [x] JWT token refresh socket quand il change
+- [x] CSS -> is_public popupcreate channel
+- [x] join -> Mauvais mot de passe donne une case vide qui cree des 404
+- [x] Leave tous les groupes -> remet des groupes (wtf?)
+- [x] Create -> password pas pris en compte
+- [x] Browse channels
+  - [x] emit
   - [x] CSS
+  - [x] add to chanOfUser
+- [x] Choose the mute duration
+- [x] Is-public channel creation working
+- [x] Change the password if we are channel owner
+  - [x] CSS
+  - [x] emit
+- [x] Leave a channel
+  - [x] CSS -> Remove the "group message" button of the left channel
   - [x] POST
 - [x] Leave a room (socket)
 - [x] Messages rendered even if there was no messages on the channel

@@ -13,22 +13,28 @@ export class UserService {
 		private readonly httpService: HttpService) {
 	}
 
-	async getAll(): Promise<User[]> {
-		return await this.prisma.user.findMany();
+	async getAll() {
+		const users: User[] = await this.prisma.user.findMany();
+
+		return users.map((user) => this.returnInfo(user));
 	}
 
 	async get(id: number): Promise<User> {
-		await this.checkUser(id);
-
-		return await this.prisma.user.findUnique({
-			where: { id: id },
+		const user =  await this.prisma.user.findUnique({
+			where: { id: id }
 		});
+		if (!user) {
+			throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+		}
+		return this.returnInfo(user);
 	}
 
 	async userExists(id: number): Promise<User> {
 		const user = await this.prisma.user.findUnique({
 			where: { id: id },
 		});
+		if (user === null)
+			return user;
 		return user;
 	}
 
@@ -36,40 +42,55 @@ export class UserService {
 		await this.checkUser(id);
 
 		const user = await this.prisma.user.findUnique({
-			where: { id: id },
+			where: { id: id }
 		});
-		if (user == null)
+		if (user === null)
 			return ;
-		return { attribute: user[attribute] };
+		const updatedUser = this.returnInfo(user);
+		return { attribute: updatedUser[attribute] };
 	}
+
+	checkIfFileExists(filePath: string): boolean {
+		try {
+		  fs.accessSync(filePath, fs.constants.F_OK);
+		  return true;
+		} catch (err) {
+		  return false;
+		}
+	  }
 
 	async downloadImage(cdn:string): Promise<string>
 	{
 		const split = cdn.split('/');
 		const name = split[split.length -1];
-		const pathname = path.join('/app', 'uploads', name)
+		const pathname = path.join('/app', 'uploads', name);
+		const defaultPath = path.join('/app', 'uploads', 'norminet.jpeg')
 		const writer = fs.createWriteStream(pathname);
-
-        const response = await this.httpService.axiosRef({
-            url: cdn,
-            method: 'GET',
-            responseType: 'stream',
-        });
-
-        response.data.pipe(writer);
-        return pathname;
+		try {
+			const response = await this.httpService.axiosRef({
+				url: cdn,
+				method: 'GET',
+				responseType: 'stream',
+			});
+			response.data.pipe(writer);
+			return pathname;
+		} catch (e) {
+			return defaultPath;
+		}
 	}
 
-	async create(dto: UserCreateDto): Promise<User> {
+	async create(dto: UserCreateDto) {
 		try {
-
-			return await this.prisma.user.create({
+			const avatarPath = dto.avatar_path ? null : '/app/media/norminet.jpeg';
+			const user = await this.prisma.user.create({
 				data: {
 					name: dto.name,
 					id: dto.id,
-					avatar: dto.avatar,
+					avatar: `http://localhost:8080/api/user/image/${dto.id}`,
+					avatar_path: avatarPath ? avatarPath : await this.downloadImage(dto.avatar_path),
 				},
 			});
+			return this.returnInfo(user);
 		} catch (e) {
 			if (e.code === 'P2002') {
 				throw new HttpException({
@@ -81,12 +102,13 @@ export class UserService {
 		}
 	}
 
-	async update(dto: UserUpdateDto): Promise<User> {
+	async update(dto: UserUpdateDto) {
 		await this.checkUser(dto.id);
-		return await this.prisma.user.update({
+		const user = await this.prisma.user.update({
 			where: { id: dto.id },
 			data: dto,
 		});
+		return this.returnInfo(user);
 	}
 
 	// This should only be called by channel service
@@ -130,4 +152,47 @@ export class UserService {
 		}
 	}
 
+	async toUserArray(users: number[]) {
+		let user_array: User[] = [];
+		let res:User;
+		for (let i = 0; i < users.length; i++) {
+			res = await this.get(users[i]);
+			if (res) {
+				user_array[i] = res;
+			}
+		}
+		return user_array;
+	}
+
+	async getUsers( usr: User) {
+		const exclude:number[] = usr.friend_users.concat(usr.blocked_users) ;
+		
+		const result = await this.prisma.user.findMany({
+			select: {
+				name:true,
+				id:true,
+				avatar:true,
+			},
+			where: {
+				id: {
+					notIn: exclude,
+				},
+				NOT: {
+					id: {
+						equals:usr.id,
+					}
+				},
+
+			}
+		})
+		return result;
+	}
+
+	returnInfo(user: User) {
+		let updatedUser: any = user;
+
+		updatedUser.otp_auth_url = (user.otp_auth_url === null ? false : true);
+		updatedUser.otp_base32 = (user.otp_base32 === null ? false : true);
+		return updatedUser;
+	}
 }

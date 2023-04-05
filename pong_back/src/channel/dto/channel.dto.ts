@@ -6,10 +6,6 @@ export class ChannelCreateDto {
 	@IsNotEmpty()
 	name: string;
 
-	@IsNumber()
-	@IsNotEmpty()
-	owner_id: number;
-
 	@IsOptional()
 	@IsNumber({}, {each: true})
 	users_ids: number[];
@@ -30,10 +26,6 @@ export class ChannelJoinDto {
 	@IsNotEmpty()
 	name: string;
 
-	@IsNumber()
-	@IsNotEmpty()
-	user_id: number;
-
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
@@ -46,10 +38,6 @@ export class ChannelLeaveDto {
 	@IsString()
 	@IsNotEmpty()
 	name: string;
-
-	@IsNumber()
-	@IsNotEmpty()
-	user_id: number;
 }
 
 export class ChannelKickDto extends ChannelLeaveDto {
@@ -81,8 +69,4 @@ export class MessageCreateDto {
 	@IsString()
 	@IsNotEmpty()
 	text: string;
-
-	@IsNumber()
-	@IsNotEmpty()
-	sender_id: number;
 }

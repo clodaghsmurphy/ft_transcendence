@@ -1,5 +1,5 @@
 import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
-import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException } from '@nestjs/common';
+import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express'
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -27,7 +27,6 @@ export class UserController {
 
 	@Get('info/:id')
 	getUser(@Param() params) {
-		this.checkId(params.id);
 		return this.userService.get(parseInt(params.id));
 	}
 
@@ -54,16 +53,13 @@ export class UserController {
 	@UseInterceptors(FileInterceptor('file'))
 	async uploadFile(@UploadedFile(SharpPipe) file: string, @Res() res, @UserEntity() user)
 	{
-		console.log('in puload annd file is'  + file);
 		try 
 		{
 			const Filepath = path.join('/app', '/uploads', file)
 			const updateUser = await this.prisma.user.update({
 				where: {id: user.id},
-				data: { avatar: Filepath },
+				data: { avatar_path: Filepath },
 			});	
-			console.log(updateUser);
-			console.log(Filepath);
 			return res.send(Filepath);
 		}
 		catch(e)
@@ -75,21 +71,189 @@ export class UserController {
 	@Get('image/:id')
 	async getImage(@Param('id') param, @Res() res)
 	{
-		console.log(param);
 		const user = await this.userService.userExists(parseInt(param));
 		if (!user)
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `User doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
-		console.log(user.avatar);
-		const imagePath = user.avatar;
-		const image = fs.readFileSync(imagePath);
-		res.writeHead(200, {'Content-Type': 'image/jpeg' });
-		res.end(image, 'binary');
+		const imagePath = user.avatar_path;
+		if (this.userService.checkIfFileExists(imagePath)){
+			const image = fs.readFileSync(imagePath);
+			res.writeHead(200, {'Content-Type': 'image/jpeg' });
+			res.end(image, 'binary');
+			return;
+		}
+		else{
+			const image = fs.readFileSync('/app/media/norminet.jpeg');
+			res.writeHead(200, {'Content-Type': 'image/jpeg' });
+			res.end(image, 'binary');
+		}
+		
+	}
+
+	@Get('friends/:id')
+	@UseGuards(JwtAuthGuard)
+	async getFriends(@Param('id') id, @UserEntity() userEntity, @Res() res)
+	{
+		const user = await this.userService.userExists(parseInt(id));
+		if (!user) {
+			throw new NotFoundException(`User ID ${id} not found`);
+		}
+		let user_array : User[] = []
+		for (let i = 0; i < user.friend_users.length; i++){
+			user_array[i] = await this.userService.userExists(user.friend_users[i]);
+			if (!user) {
+				throw new NotFoundException(`User ID ${id} in friend list not found`);
+			}
+		}
+		res.status(200);
+		res.send(user_array);
+		return ;
+	}
+
+	@Get('blocked-users')
+	@UseGuards(JwtAuthGuard)
+	async blockedUsers(@UserEntity() user, @Res() res)
+	{
+		const user_array : User[] =  await this.userService.toUserArray(user.blocked_users);
+
+		res.status(200);
+		res.send(user_array);
+		return ;
+	}
+
+	@Post('friends-search')
+	@UseGuards(JwtAuthGuard)
+	async friendsList(@UserEntity() userEntity, @Body() body, @Req() req, @Res() res)
+	{
+		const user = await this.userService.userExists(userEntity.id);
+		const exclude:number[] = user.friend_users.concat(user.blocked_users) ;
+		if (!user)
+			throw  new UnauthorizedException();
+		const result = await this.prisma.user.findMany({
+			where: {
+				id: {
+					notIn: exclude,
+				},
+				NOT: {
+					id: {
+						equals: user.id,
+					}
+				},
+				name: {
+					startsWith: body.data.value,
+					mode: 'insensitive'
+					}
+				},
+			select: {
+				name: true,
+				avatar: true,
+				id: true,
+			}
+		})
+		res.send(result);
 	}
 
 
+	@Post('add-friend')
+	@UseGuards(JwtAuthGuard)
+	async AddFriend(@UserEntity() usr, @Body() body, @Res() res)
+	{
+		this.checkId(usr.id);
+		const id = body.data.id;
+		if (usr.blocked_users.indexOf(id) != -1)
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `'user id ${id}' is blocked and cannot be added`,
+			}, HttpStatus.BAD_REQUEST);
+		if (id != usr.id ) {
+			const userUpdate = await this.prisma.user.update({
+				where: { id: usr.id },
+				data: {
+					friend_users: { push: id }
+				},
+				
+			});
+			const user_array = await this.userService.getUsers(usr);
+			res.status(200);
+			res.send(`Added User ID ${id} ! `);
+			return ;
+		}
+		throw new HttpException({
+			status: HttpStatus.BAD_REQUEST,
+			error: `cannot add yourself`,
+		}, HttpStatus.BAD_REQUEST);
+	}
+
+	@Post('block-user')
+	@UseGuards(JwtAuthGuard)
+	async BlockUser(@UserEntity() usr, @Body() body, @Res() res)
+	{
+		this.checkId(usr.id);
+		const id = body.data.id;
+		this.checkId(id);
+		if (id != usr.id ) {
+			const updateUser = await this.prisma.user.update({
+				where: { id: usr.id },
+				data: {
+					blocked_users: { push: id }
+				},
+			});
+			res.status(200);
+			res.send(`Blocked User ID ${id} ! `);
+			return ;
+		}
+		throw new HttpException({
+			status: HttpStatus.BAD_REQUEST,
+			error: `cannot block yourself`,
+		}, HttpStatus.BAD_REQUEST);
+	}
+
+	@Post('delete-friend')
+	@UseGuards(JwtAuthGuard)
+	async deleteFriend(@Res() res, @Body() body, @UserEntity() usr)
+	{
+		this.checkId(usr.id);
+		const friendId = body.id;
+		const user = await this.prisma.user.findUnique({ where: { id: usr.id } });
+		const updatedFriends = user.friend_users.filter(id => id !== friendId);
+		await this.prisma.user.update({
+			where: { id: usr.id },
+			data: { friend_users: updatedFriends },
+		});
+		const user_array: User[] = await this.userService.toUserArray(updatedFriends);
+		res.status(200);
+		res.send(user_array);
+	}
+
+	@Post('unblock-friend')
+	@UseGuards(JwtAuthGuard)
+	async unblockFriend(@Res() res, @Body() body, @UserEntity() usr)
+	{
+		this.checkId(usr.id);
+		const friendId = body.id;
+		const user = await this.prisma.user.findUnique({ where: { id: usr.id } });
+		const updatedFriends = user.blocked_users.filter(id => id !== friendId);
+		await this.prisma.user.update({
+			where: { id: usr.id },
+			data: { blocked_users: updatedFriends },
+		});
+		const user_array: User[] = await this.userService.toUserArray(updatedFriends);
+		res.status(200);
+		res.send(user_array);
+	}
+
+	@Get('users')
+	@UseGuards(JwtAuthGuard)
+	async getUsers(@Res() res, @UserEntity() usr){
+		this.checkId(usr.id);
+		const result = await this.userService.getUsers( usr);
+		res.status(200);
+		res.send(result);
+		return ;
+		
+	}
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {
 			throw new HttpException({

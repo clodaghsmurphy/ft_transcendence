@@ -37,7 +37,6 @@ export class AuthController {
     @Post('logout')
     @UseGuards(JwtAuthGuard)
     async handleLogout(@Req () req, @UserEntity() user) {
-        console.log('in logout');
         await this.userService.checkUser(user.id);
         const updateUser = await this.prisma.user.update({
             where: {id: user.id},
@@ -49,18 +48,14 @@ export class AuthController {
     @Get('42/redirect')
     @UseGuards(FT_AuthGuard)
     handleRedirect(@Req() req, @Res() res, @UserEntity() user){
-        console.log(res);
-        console.log('in 42 redriect');
         const token =  this.authService.login(res, user);
         if (user.otp_enabled && !user.otp_verified)
         {
-            console.log('redirecting to 2fa and token is ' + token);
             token.then(token => {
                 res.redirect(`http://localhost:8080/2fa?access_token=${token.access_token}`)
             });
             return ;
         }
-        console.log('after login')
         token.then(token => {
             res.redirect(`http://localhost:8080/login?access_token=${token.access_token}`)
         });
@@ -75,8 +70,6 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Get('profile')
     getProfile(@Request() req) {
-        console.log('in profile');
-        console.log(req.headers);
         return this.userService.get(req.user.id);
     }
 
@@ -88,8 +81,6 @@ export class AuthController {
         if (!user)
             throw new UnauthorizedException();
         const secret = await user.otp_base32 || authenticator.generateSecret();
-        console.log('secret is' );
-        console.log(secret);
         const otpauth_url = await user.otp_auth_url || authenticator.keyuri(req.user.id, 'transcendence', secret);
         const response = {
             secret: secret,
@@ -111,28 +102,22 @@ export class AuthController {
     @Post('validate')
     async validate(@Body() body:any, @Req() req ){
         const token = body.totp;
-        console.log('toekn is ' + token);
         const user = await this.userService.userExists(parseInt(req.user.id));
         if (!user)
             throw new UnauthorizedException();
-        console.log(user);
         const secret = user.otp_base32;
 
-        console.log('token = ' + token + ' and secret is ' + secret);
         const isValid = authenticator.verify({ token, secret});
-        console.log('isValid == ' + isValid);
         if (isValid == true)
         {
             const updateUser = await this.prisma.user.update({
                 where: {id: req.user.id},
                 data: { otp_enabled: true, otp_verified: true },
             });
-            console.log(updateUser);
             return updateUser;
         }
         else
         {
-            console.log('returning 401');
             throw new UnauthorizedException();
         }
 
@@ -141,15 +126,11 @@ export class AuthController {
     @Post('auth2fa')
     @UseGuards(JwtAuthGuard)
     async authenticate2fa(@Request() request, @Body() body){
-        console.log('in auth 2fa and bosy is ');
-        console.log(body.value);
+      
         const token = body.value;
-        console.log(request.user);
-        console.log('request is');
         const secret = request.user.otp_base32;
-        console.log('token = ' + token + ' and secret is ' + secret);
+        console.log('token is ', token, ' and secret is ', secret);
         const isValid = authenticator.verify({ token, secret});
-        console.log('isValid == ' + isValid);
             if (isValid == true)
             {
             const updateUser = await this.prisma.user.update({
@@ -175,8 +156,6 @@ export class AuthController {
             where: {id: request.user.id},
             data: { otp_enabled: false, otp_verified: false }
         });
-        console.log('in didable');
-        console.log(updateUser);
         return updateUser;
     }
  
