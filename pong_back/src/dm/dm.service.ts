@@ -29,6 +29,29 @@ export class DmService {
 		});
 	}
 
+	async getUsers(userId: number) {
+		await this.checkUser(userId);
+
+		const user = await this.prisma.user.findUnique({
+			where: {id: userId},
+			include: {
+				messages_sent: true,
+				messages_received: true
+			}
+		});
+
+		const senderIds: Set<number> = new Set(user.messages_received.map((m) => m.sender_id));
+		const receiverIds: Set<number> = new Set(user.messages_sent.map((m) => m.receiver_id));
+		const uniqueIds: Set<number> = new Set([...senderIds, ...receiverIds]);
+
+		const users = await this.prisma.user.findMany({
+			where: {id: {in: [...uniqueIds]}},
+			select: {id: true, name: true}
+		});
+
+		return users;
+	}
+
 	async post(dto: any) {
 		const message = await this.prisma.privateMessage.create({
 			data: {

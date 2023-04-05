@@ -7,6 +7,12 @@ export class DmController {
 	constructor (private dmService: DmService) {}
 
 	@UseGuards(JwtAuthGuard)
+	@Get()
+	getUsers(@Req() request) {
+		return this.dmService.getUsers(request.user.id);
+	}
+
+	@UseGuards(JwtAuthGuard)
 	@Get(':id')
 	getDms(@Req() request, @Param() params) {
 		const data = {
