@@ -102,22 +102,30 @@ function Chat()
 		if (typeof (param as Channel).operators !== 'undefined') // C'est un channel
 		{
 			param = param as Channel
-			const chan_is_defined = typeof current_chan.type !== 'undefined'
+			const curr_chan_is_defined = typeof current_chan.type !== 'undefined'
 			const curr_is_chan = current_chan.type === CHANNEL
 
-			if ((chan_is_defined && curr_is_chan) &&
+			if ((curr_chan_is_defined && curr_is_chan) &&
 				current_chan.chan!.name !== param.name) {
-					console.log('left')
-					socket_chan.emit('leave', {
+				
+				socket_chan.emit('leave', {
 					name: current_chan.chan!.name,
 					user_id: current_user.id,
 				})
+
+				socket_chan.emit('join', {
+					name: param.name,
+					user_id: current_user.id,
+				});
 			}
 
-			socket_chan.emit('join', {
-				name: param.name,
-				user_id: current_user.id,
-			});
+			if (!curr_chan_is_defined) {
+				socket_chan.emit('join', {
+					name: param.name,
+					user_id: current_user.id,
+				});
+			}
+
 
 			set_current_chan({
 				chan: param,
