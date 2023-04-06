@@ -12,7 +12,7 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 	let sender_name = id_to_user(every_user, msg.sender_id).name
 
 	if (typeof curr_user === 'undefined')
-		return <div/>
+		return <div key='undefined'/>
 	
 
 	if (msg.type === BAN) {
@@ -30,7 +30,7 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 	// Si le sender a ete ban par le curr_user
 	if (msg.type !== BAN && msg.type !== KICK &&
 		curr_user.blocked_users.includes(msg.sender_id))
-		return <div></div>;
+		return <div key='blocked'></div>;
 	
 	if (msg.type === INVITE) {
 		return InviteMessage(every_user, msg, curr_user, sender_name)
@@ -99,8 +99,8 @@ function InviteMessage(every_user: User[], msg: MessageData, curr_user: User, se
 	const messageClass = msg.sender_id === curr_user.id ? "sender message-wrapper" : "message-wrapper"
 
 	return (
-		<div className={messageClass}>
-			<div className="message-avatar" key={msg.id}>
+		<div className={messageClass} key={msg.id}>
+			<div className="message-avatar">
 				<img src={avatarOf(every_user, msg.sender_id)} alt={sender_name}
 					style={{
 						'minWidth': '3rem',

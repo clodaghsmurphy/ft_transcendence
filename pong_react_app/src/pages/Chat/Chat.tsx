@@ -12,6 +12,7 @@ import { AuthContext } from '../../App'
 import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
 import PopupJoinChannel from './PopupJoinChannel'
 import axios, { AxiosResponse, AxiosError } from 'axios'
+import { handleBan, handleJoin, handleKick, handleMakeop, handleMessage } from './SocketEvents'
 
 export type ChanAndMessage = {
 	chan: Channel,
@@ -20,39 +21,17 @@ export type ChanAndMessage = {
 
 export let socket_chan: Socket
 
-
 function Chat()
 {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { state, dispatch } = useContext(AuthContext);
+	const user_id = Number(state.user.id)
 	let [all_users, set_all_users] = useState([] as User[])
 	let [all_channels, set_all_channels] = useState([] as Channel[])
 	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as ChanAndMessage | DirectMessage)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
-	
-	
-	useEffect(() => {
-		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
-		{
-			extraHeaders: {
-				Authorization: "Bearer " + localStorage.getItem('token')
-			}
-		})
-
-		socket_chan.on('exception', (data: any) => {
-			console.log(data)
-		})
-
-		axios.get('/api/dm')
-			.then((response: AxiosResponse) => {
-				console.log(response.data)
-			})
-	}, [])
-
-	// socket_chan.on('connect', () => {
-	// 	console.log('CONNECTED', socket_chan.connected)
-	// })
+	let direct_messages = dm_of_user(current_user);
 	
 	useEffect(() => {
 		document.title = 'Chat';
@@ -64,167 +43,45 @@ function Chat()
 		})
 			.then((response: AxiosResponse) => {
 					set_all_users(response.data as User[])
-					set_current_user(id_to_user(response.data as User[], Number(state.user.id)))
+					set_current_user(id_to_user(response.data as User[], user_id))
 				})
 		
 		axios.get('/api/channel/info')
 			.then((response: AxiosResponse) => {
 					set_all_channels(response.data as Channel[])
-				})
+			})
+		
+		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
+		{
+			extraHeaders: {
+				Authorization: "Bearer " + localStorage.getItem('token')
+			}
+		})
 
-	}, [state.user.id]);
+		socket_chan.on('exception', (data: any) => {
+			console.log(data)
+		})
+	}, [])
 
 	useEffect(() => {
-		socket_chan.removeListener('message')
-		const handleMessage = (param: any) => {
-			if (typeof (current_chan as ChanAndMessage).msg === 'undefined')
-				return;
+		handleBan(all_channels, set_current_chan, set_all_channels);
+	}, [all_channels, set_current_chan, set_all_channels])
 
-			set_current_chan((current_chan: ChanAndMessage | DirectMessage) => ({
-				...current_chan,
-				msg: [...(current_chan as ChanAndMessage).msg, param]
-			}));
-		}
-
-		socket_chan.on('message', handleMessage)
+	useEffect(() => {
+		handleMessage({current_chan, set_current_chan})
 	}, [current_chan, set_current_chan])
 
 	useEffect(() => {
-		// on removeListener pour eviter d'avour plusieurs listening d'event
-		socket_chan.removeListener('mute')
-		socket_chan.removeListener('join')
-
-		const handleMute = (data: any) => {
-			if (data.user === current_user.id) {
-				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
-				let target = id_to_user(all_users, data.target_id).name;
-				let kick_message = " has muted " + target + " for " + data.mute_duration
-				socket_chan.emit('message', {
-					name: data.name,
-					sender_id: current_user.id,
-					sender_name: current_user.name,
-					uid: chan.curr_uid + 1,
-					text: kick_message,
-					type: MUTE,
-				})
-			}
-		}
-
-		const handleJoin = (data: any) => {
-			let chan_name = data.name;
-			if (typeof all_channels.find((chan: Channel) => 
-					chan.name === chan_name
-				) === 'undefined') // Si le chan existe pas
-			{
-				axios.get('/api/channel/info/' + sanitizeString(chan_name))
-					.then((response: AxiosResponse) => {
-						set_all_channels((prev: Channel[]) => [...prev, response.data])
-						setChanOfUser((prev: Channel[]) => [...prev, response.data])
-						axios.get('/api/channel/' + sanitizeString(response.data.name) + '/messages/')
-							.then((response: AxiosResponse) => {
-								set_current_chan({
-									chan: data as Channel,
-									msg: response.data,
-								})
-							})
-					})
-			}
-		}
-
-		socket_chan.on('join', handleJoin)
-		socket_chan.on('mute', handleMute)
-	}, [all_channels, set_all_channels,
-		current_user, set_current_user,
-		all_users, set_all_users])
+		handleJoin({set_current_chan, set_all_channels, setChanOfUser, all_channels})
+	}, [set_current_chan, set_all_channels, setChanOfUser, all_channels])
 
 	useEffect(() => {
-		socket_chan.removeListener('makeop')
-		
-		const handleMakeop = (data: any) => {
-			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
-				...prev,
-				chan: {
-					...(prev as ChanAndMessage).chan,
-					operators: [...(prev as ChanAndMessage).chan.operators, data.target_id],
-				}
-			}))
-		}
-		
-		
-		socket_chan.on('makeop', handleMakeop)
-	}, [current_chan, set_current_chan])
+		handleMakeop({set_current_chan})
+	}, [set_current_chan])
 
 	useEffect(() => {
-		socket_chan.removeListener('kick')
-		socket_chan.removeListener('ban')
-
-		const handleKick = (data: any) => {
-			console.log('inside handleKick:', data)
-			
-			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
-				...prev,
-				chan: {
-					...(prev as ChanAndMessage).chan,
-					members: (prev as ChanAndMessage).chan.members
-						.filter((user: number) => user !== data.target_id)
-				}
-			}))
-
-			let tmp_chan = all_channels.find((c: Channel) => c.name === data.name)
-
-			if (typeof tmp_chan === 'undefined')
-				return;	
-
-			(tmp_chan as Channel).members = (tmp_chan as Channel).members.filter((user: number) => 
-				user !== data.target_id
-			)
-
-			set_all_channels((prev: Channel[]) => {
-				let ret = prev.filter((c: Channel) => 
-					c.name !== data.name
-				)
-				ret.push((tmp_chan as Channel))
-				return ret;
-			})
-		}
-
-		const handleBan = (data: any) => {
-			console.log('inside handleban:', data)
-			
-			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
-				...prev,
-				chan: {
-					...(prev as ChanAndMessage).chan,
-					members: (prev as ChanAndMessage).chan.members
-						.filter((user: number) => user !== data.target_id),
-					banned: [...(prev as ChanAndMessage).chan.banned, data.target_id],
-				}
-			}))
-
-			let tmp_chan = all_channels.find((c: Channel) => c.name === data.name)
-
-			if (typeof tmp_chan === 'undefined')
-				return;	
-
-			(tmp_chan as Channel).members = (tmp_chan as Channel).members.filter((user: number) => 
-				user !== data.target_id
-			);
-			(tmp_chan as Channel).banned.push(data.target_id)
-
-			set_all_channels((prev: Channel[]) => {
-				let ret = prev.filter((c: Channel) => 
-					c.name !== data.name
-				)
-				ret.push((tmp_chan as Channel))
-				return ret;
-			})
-		}
-
-		socket_chan.on('kick', handleKick)
-		socket_chan.on('ban', handleBan)
-	}, [current_chan, set_current_chan,
-		current_user, set_current_user,
-		all_channels, set_all_channels])
+		handleKick({set_current_user, all_channels, set_all_channels, set_current_chan})
+	}, [set_current_user, all_channels, set_all_channels, set_current_chan])
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'
@@ -233,7 +90,6 @@ function Chat()
 		setChanOfUser(names_to_channel(all_channels, current_user.channels))
 	}
 
-	let direct_messages = dm_of_user(current_user);
 
 	function changeChannelOrDm(param: Channel | DirectMessage): void {
 		if (typeof (param as Channel).operators !== 'undefined')
@@ -249,8 +105,6 @@ function Chat()
 			socket_chan.emit('join', {
 				name: (param as Channel).name,
 				user_id: current_user.id,
-			}, (data: any) => {
-				console.log('emitted join, ret:', data)
 			});
 
 			set_current_chan({

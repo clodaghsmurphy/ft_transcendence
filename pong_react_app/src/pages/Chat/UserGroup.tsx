@@ -135,8 +135,6 @@ function button_not_op(user: User, is_op: boolean): JSX.Element {
 
 function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel,
 	fnc: (user: User) => void): JSX.Element {
-
-	// console.log('rendering a Button_op', ref.current)
 			
 	function emit_kick() {
 		socket_chan.emit('kick', {

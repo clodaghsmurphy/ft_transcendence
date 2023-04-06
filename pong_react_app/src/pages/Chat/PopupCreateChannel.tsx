@@ -75,7 +75,6 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 			is_public: !privateRef.current!.checked,
 		}
 		if (chan_pass?.length > 0) {
-			console.log('inside the chan_pass if')
 			body = {
 				...body,
 				password: chan_pass
@@ -88,8 +87,6 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 				socket_chan.emit('join', {
 					name: chan_name,
 					user_id: current_user.id,
-				}, (data: any) => {
-					console.log('return of emit join:', data)
 				})
 			})
 		}

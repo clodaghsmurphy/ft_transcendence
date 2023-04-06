@@ -3,6 +3,8 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
+- [ ] 75% popup user au lieu de 80%
+- [ ] create -> pas de users a droite
 
 - [x] JWT token refresh socket quand il change
 - [x] CSS -> is_public popupcreate channel
