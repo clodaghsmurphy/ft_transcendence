@@ -22,13 +22,12 @@ model User {
 
   connected Boolean @default(true)
   in_game Boolean @default(false)
+
   game_id Int?
+  past_games Int[] @default([])
 
   messages_sent PrivateMessage[] @relation("SentMessages")
   messages_received PrivateMessage[] @relation("ReceivedMessages")
-  player1_game Game? @relation("CurrentGame1")
-  player2_game Game? @relation("CurrentGame2")
-  current_game_id Int?
 
   otp_enabled Boolean @default(false)
   otp_verified Boolean @default(false)
@@ -84,8 +83,8 @@ model Channel {
 model Game {
   id Int @id @default(autoincrement())
 
-  player1_id Int @unique
-  player2_id Int? @unique
-  player1 User @relation("CurrentGame1", fields: [player1_id], references: [id])
-  player2 User? @relation("CurrentGame2", fields: [player2_id], references: [id])
+  ongoing Boolean @default(true)
+
+  player1 Int
+  player2 Int
 }

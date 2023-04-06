@@ -4,6 +4,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { GameCreateDto } from "./dto";
 import { GameRoom } from "./types/game.types";
+import { use } from "passport";
 
 @Injectable()
 export class GameService {
@@ -12,7 +13,7 @@ export class GameService {
 	public activeGames: Map<number, GameRoom> = new Map<number, GameRoom>();
 
 	async getAll() {
-		return await this.prisma.game.findMany();
+		return await this.prisma.game.findMany({where: {ongoing: true}});
 	}
 
 	async get(id: number) {
@@ -25,21 +26,32 @@ export class GameService {
 
 		const game = await this.prisma.game.create({
 			data: {
-				player1: {connect: {id: dto.user_id}},
-				player2: {connect: {id: dto.target_id}},
-			},
-			include: {
-				player1: true,
-				player2: true,
+				player1: dto.user_id,
+				player2: dto.target_id,
 			}
 		});
 
+		await this.prisma.user.update({
+			where: {id: dto.user_id | dto.target_id},
+			data: {game_id: game.id}
+		});
 		return game;
 	}
 
+	async remove(id: number) {
+		const game = await this.prisma.game.update({
+			where: {id: id},
+			data: {ongoing: false},
+		});
+
+		// await this.prisma.user.update({
+		// 	where: {id: game.player1 | game.player2},
+		// 	data: {}
+		// })
+	}
+
 	async checkGame(id: number) {
-		if (await this.prisma.game.count({where: {id: id}}) == 0)
-		{
+		if (await this.prisma.game.count({where: {id: id}}) == 0) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `Game ${id} doesn't exist`,
@@ -48,20 +60,14 @@ export class GameService {
 	}
 
 	async checkUserInGame(userId: number) {
-		const user = await this.prisma.user.findUnique({
-			where: {id: userId},
-			include: {
-				player1_game: true,
-				player2_game: true,
-			}
-		});
+		await this.userService.checkUser(userId);
 
-		if (user.player1_game != null || user.player2_game != null)
-		{
+		const user = await this.userService.get(userId);
+		if (user.game_id !== null) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
-				error: `User ${userId} is already in game`,
-			}, HttpStatus.BAD_REQUEST)
+				error: `User ${userId} is already in game ${user.game_id}`,
+			}, HttpStatus.BAD_REQUEST);
 		}
 	}
 }
