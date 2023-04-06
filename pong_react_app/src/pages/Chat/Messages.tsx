@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import '../Home/Dashboard.css'
 import ChatMessage from './ChatMessage'
 import { ChanAndMessage, socket_chat } from './Chat'
@@ -23,7 +23,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 		is_undefined = true
 	}
 	let [last_chan, setLastChan] = useState(typeof chan === 'undefined' ? "" : chan.name)
-	let [formValue, setFormValue] = useState("");
+	let messageRef = useRef<HTMLInputElement | null>(null)
 
 	let [messagesBlocks, setMessagesBlocks] = useState(
 		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
@@ -64,9 +64,10 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 			</div>
 			<form className="message-box" key="Message-ret-c">
 				<input type="text" className="message-input"
-					placeholder="Type message..." value={ formValue }
-					onChange={e => setFormValue(e.target.value)} autoFocus
-					key="will_never_change"/>
+					ref={messageRef}
+					placeholder="Type message..."
+					key="will_never_change"
+					autoFocus/>
 				<div className="button-submit" key="Message-ret-d">
 					<button type="submit" onClick={(event) => sendMessageOnClick(event, messagesBlocks)} key="Message-ret-e">Send</button>
 				</div>
@@ -82,16 +83,16 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 	function sendMessageOnClick(e: React.FormEvent<HTMLButtonElement>, msg: JSX.Element[])
 	{
 		e.preventDefault();
-		if (formValue.length !== 0)
+		if (messageRef.current!.value.length !== 0)
 		{
 			socket_chat.emit('message', {
 				name: chan.name,
 				sender_id: current_user.id,
 				sender_name: current_user.name,
 				uid: chan.curr_uid + 1,
-				text: formValue,
+				text: messageRef.current!.value,
 			})
-			setFormValue('');
+			messageRef.current!.value = '';
 		}
 	}
 
@@ -144,10 +145,11 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 			</div>
 
 			<form className="message-box" key="Message-ret-c">
-				<input type="text" className="message-input"
-					placeholder="Type message..." value={ formValue }
-					onChange={(e) => setFormValue(e.target.value)} autoFocus
-					key="will_never_change"/>
+			<input type="text" className="message-input"
+					ref={messageRef}
+					placeholder="Type message..."
+					key="will_never_change"
+					autoFocus/>
 				<div className="button-submit" key="Message-ret-d">
 					<button type="submit" onClick={(event) => sendMessageOnClick(event, messagesBlocks)} key="Message-ret-e">Send</button>
 				</div>
