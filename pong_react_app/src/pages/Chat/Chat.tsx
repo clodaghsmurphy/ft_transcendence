@@ -33,12 +33,15 @@ function Chat()
 	
 	
 	useEffect(() => {
-		// socket_chat.disconnect()
 		socket_chat = io(`http://${window.location.hostname}:8080/channel`,
 		{
 			extraHeaders: {
 				Authorization: "Bearer " + localStorage.getItem('token')
 			}
+		})
+
+		socket_chat.on('exception', (data: any) => {
+			console.log(data)
 		})
 	}, [])
 

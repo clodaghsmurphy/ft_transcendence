@@ -106,7 +106,7 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 			<div className='popup-user-container'>
 				{b_users}
 			</div>
-			
+
 			<div className='bar' style={{
 				width: '90%',
 				marginLeft: '5%',

@@ -89,7 +89,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 				name: chan.name,
 				sender_id: current_user.id,
 				sender_name: current_user.name,
-				uid: chan.curr_uid + 1,
+				uid: (isNaN(chan.curr_uid + 1) ? 0 : chan.curr_uid + 1),
 				text: messageRef.current!.value,
 			})
 			messageRef.current!.value = '';
