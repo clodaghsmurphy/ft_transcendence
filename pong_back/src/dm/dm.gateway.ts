@@ -77,7 +77,7 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	}
 
 	getRoomName(user1: number, user2: number): string {
-		return Math.min(user1, user2) + ';' + Math.max(user1, user2);
+		return Math.min(user1, user2) + '+' + Math.max(user1, user2);
 	}
 
 	checkUser(client: Socket, roomName: string) {

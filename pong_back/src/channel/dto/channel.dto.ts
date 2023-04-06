@@ -70,3 +70,13 @@ export class MessageCreateDto {
 	@IsNotEmpty()
 	text: string;
 }
+
+export class ChannelParams {
+	@IsString()
+	@IsNotEmpty()
+	name: string;
+
+	@IsOptional()
+	@IsString()
+	attribute: string;
+}
