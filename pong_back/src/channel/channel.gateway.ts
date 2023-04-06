@@ -88,15 +88,15 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.leave({user_id: data.target_id, name: data.name});
 
 			const targetName = await this.channelService.getUserInfo(data.target_id, "name");
-			const message = {
+			const messageData = {
 				sender_id: data.user_id,
 				text: ` has kicked ${targetName["attribute"]}`,
 				type: MessageType.Kick,
 				uid: 0,
 				name: data.name,
 			};
+			const message = await this.channelService.postMessage(messageData);
 
-			this.channelService.postMessage(message);
 			this.io.in(data.name).emit('kick', data);
 			this.io.in(data.name).emit('message', message);
 			this.removeFromRoom(data.target_id, data.name);
@@ -139,15 +139,15 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.mute(data);
 
 			const targetName = await this.channelService.getUserInfo(data.target_id, "name");
-			const message = {
+			const messageData = {
 				sender_id: data.user_id,
 				text: ` has muted ${targetName["attribute"]} for ${data.mute_duration} seconds`,
 				type: MessageType.Mute,
 				uid: 0,
 				name: data.name,
 			};
+			const message = await this.channelService.postMessage(messageData);
 
-			this.channelService.postMessage(message);
 			this.io.in(data.name).emit('mute', data);
 			this.io.in(data.name).emit('message', message);
 		} catch (e) {
@@ -168,7 +168,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			await this.channelService.ban(data);
 
 			const targetName = await this.channelService.getUserInfo(data.target_id, "name");
-			const message = {
+			const messageData = {
 				sender_id: data.user_id,
 				text: ` has banned ${targetName["attribute"]}`,
 				type: MessageType.Ban,
@@ -176,7 +176,8 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				name: data.name,
 			};
 
-			this.channelService.postMessage(message);
+			const message = this.channelService.postMessage(messageData);
+
 			this.io.in(data.name).emit('ban', data);
 			this.io.in(data.name).emit('message', message);
 			this.removeFromRoom(data.target_id, data.name);
