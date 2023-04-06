@@ -83,6 +83,7 @@ model Channel {
 
 model Game {
   id Int @id @default(autoincrement())
+
   player1_id Int @unique
   player2_id Int? @unique
   player1 User @relation("CurrentGame1", fields: [player1_id], references: [id])
