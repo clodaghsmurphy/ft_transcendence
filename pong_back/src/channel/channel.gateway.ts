@@ -176,7 +176,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				name: data.name,
 			};
 
-			const message = this.channelService.postMessage(messageData);
+			const message = await this.channelService.postMessage(messageData);
 
 			this.io.in(data.name).emit('ban', data);
 			this.io.in(data.name).emit('message', message);
