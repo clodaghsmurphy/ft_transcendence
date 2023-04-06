@@ -3,26 +3,30 @@ import User, { id_to_user } from '../utils/User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
 import { DirectMessage } from './DirectMessage';
-import { socket_chan } from './Chat';
+import { CurrentChan, DM, socket_chan } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
 
-export function User_in_group(every_user: User[], current_user: User, chan: Channel | DirectMessage): JSX.Element[] {
+export function User_in_group(every_user: User[], current_user: User, current_chan: CurrentChan): JSX.Element[] {
 	let ret: JSX.Element[] = []
 	let muteRef = useRef<HTMLInputElement | null>(null)
 
 	if (typeof current_user === 'undefined' ||
-		typeof chan === 'undefined')
+		typeof current_chan === 'undefined')
 		return [<div key='no-users-in-group' className='no-users'>No user found</div>]
 
 
-	if (typeof (chan as DirectMessage).users !== 'undefined') {
-		return user_in_dm(every_user, current_user, chan as DirectMessage);
+	if (current_chan.type === DM) {
+		return [user_in_dm(every_user, current_user, {
+			user: current_chan.user!,
+			msg: current_chan.msg,
+		})];
 	}
 
-	chan = chan as Channel
+	current_chan.chan = current_chan.chan!
 
-	if (typeof chan.operators === 'undefined')
+	if (typeof current_chan.chan === 'undefined' ||
+		typeof current_chan.chan.operators === 'undefined')
 	{
 		return ret
 	}
@@ -42,7 +46,7 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 			if (isNaN(duration))
 				duration = 60
 			socket_chan.emit('mute', {
-				name: (chan as Channel).name,
+				name: (current_chan.chan as Channel).name,
 				user_id: current_user.id,
 				target_id: user.id,
 				mute_duration: duration,
@@ -50,7 +54,7 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 		}
 	}
 
-	const curr_is_op = chan.operators.includes(current_user.id)
+	const curr_is_op = current_chan.chan.operators.includes(current_user.id)
 
 	if (curr_is_op)
 		ret.push(<div style={{
@@ -73,14 +77,14 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 					}}/> 
 		</div>)
 
-	for (const user of chan.members) {
-		const target_is_op = chan.operators.includes(user)
-		const target_is_owner = chan.owner === user
+	for (const user of current_chan.chan.members) {
+		const target_is_op = current_chan.chan.operators.includes(user)
+		const target_is_owner = current_chan.chan.owner === user
 
 		if (user !== current_user.id) {
 			if (curr_is_op && !target_is_owner)
 				ret.push(Button_op(id_to_user(every_user, user),
-					target_is_op, current_user, chan, emit_mute))
+					target_is_op, current_user, current_chan.chan, emit_mute))
 			else
 				ret.push(button_not_op(id_to_user(every_user, user), target_is_op))
 		}
@@ -91,15 +95,9 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 	return ret
 }
 
-function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage): JSX.Element[] {
-	let ret: JSX.Element[] = []
-
-	for (const user of dm.users) {
-		if (user !== current_user.id) {
-			ret.push(button_not_op(id_to_user(every_user, user), false))
-		}
-	}
-	return ret
+function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage) {
+	
+	return button_not_op(id_to_user(every_user, dm.user), false)
 }
 
 function button_not_op(user: User, is_op: boolean): JSX.Element {	

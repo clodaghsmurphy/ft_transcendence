@@ -1,6 +1,6 @@
 import React from 'react'
 import { Channel } from './Channels'
-import { socket_chan, ChanAndMessage } from './Chat'
+import { socket_chan, ChanAndMessage, CurrentChan, CHANNEL } from './Chat'
 import { DirectMessage } from './DirectMessage'
 import User, { id_to_user } from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios'
@@ -10,50 +10,56 @@ type ChatVariables = {
 	all_users?: User[],
 	all_channels?: Channel[],
 	current_user?: User,
-	current_chan?: ChanAndMessage | DirectMessage,
+	current_chan?: CurrentChan,
 	chanOfUser?: Channel[],
 	set_all_users?: React.Dispatch<React.SetStateAction<User[]>>,
 	set_all_channels?: React.Dispatch<React.SetStateAction<Channel[]>>,
 	set_current_user?: React.Dispatch<React.SetStateAction<User>>,
-	set_current_chan?: React.Dispatch<React.SetStateAction<ChanAndMessage | DirectMessage>>,
+	set_current_chan?: React.Dispatch<React.SetStateAction<CurrentChan>>,
 	setChanOfUser?: React.Dispatch<React.SetStateAction<Channel[]>>,
 }
 
-export function handleBan(all_channels: Channel[],
-		set_current_chan: React.Dispatch<React.SetStateAction<ChanAndMessage | DirectMessage>>,
-		set_all_channels: React.Dispatch<React.SetStateAction<Channel[]>>) {
+export function handleBan(vars: ChatVariables) {
 
 	socket_chan.removeListener('ban')
 
 	const ban_function = (data: any) => {
+		if (!vars.current_chan || !vars.set_current_chan ||
+			!vars.all_channels || !vars.set_all_channels)
+			return
 		
-		set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
-			...prev,
-			chan: {
-				...(prev as ChanAndMessage).chan,
-				members: (prev as ChanAndMessage).chan.members
-					.filter((user: number) => user !== data.target_id),
-				banned: [...(prev as ChanAndMessage).chan.banned, data.target_id],
-			}
-		}))
+		if (vars.current_chan.type === CHANNEL) {
+			vars.current_chan.chan = vars.current_chan.chan!
+			let new_chan = vars.current_chan.chan!
 
-		let tmp_chan = all_channels.find((c: Channel) => c.name === data.name)
+			new_chan.members = new_chan.members
+				.filter((user: number) => user !== data.target_id)
+			new_chan.banned.push(data.target_id)
 
-		if (typeof tmp_chan === 'undefined')
-			return;	
-
-		(tmp_chan as Channel).members = (tmp_chan as Channel).members.filter((user: number) => 
-			user !== data.target_id
-		);
-		(tmp_chan as Channel).banned.push(data.target_id)
-
-		set_all_channels((prev: Channel[]) => {
-			let ret = prev.filter((c: Channel) => 
-				c.name !== data.name
-			)
-			ret.push((tmp_chan as Channel))
-			return ret;
-		})
+			vars.set_current_chan({
+				type: vars.current_chan.type,
+				msg: vars.current_chan.msg,
+				chan: new_chan,
+			})
+	
+			let tmp_chan = vars.all_channels.find((c: Channel) => c.name === data.name)
+	
+			if (typeof tmp_chan === 'undefined')
+				return;	
+	
+			(tmp_chan as Channel).members = (tmp_chan as Channel).members.filter((user: number) => 
+				user !== data.target_id
+			);
+			(tmp_chan as Channel).banned.push(data.target_id)
+	
+			vars.set_all_channels((prev: Channel[]) => {
+				let ret = prev.filter((c: Channel) => 
+					c.name !== data.name
+				)
+				ret.push((tmp_chan as Channel))
+				return ret;
+			})
+		}
 	}
 
 	socket_chan.on('ban', ban_function)
@@ -68,7 +74,7 @@ export function handleMessage(vars: ChatVariables) {
 		if (typeof (vars.current_chan as ChanAndMessage).msg === 'undefined')
 			return;
 
-		vars.set_current_chan((current_chan: ChanAndMessage | DirectMessage) => ({
+		vars.set_current_chan((current_chan: CurrentChan) => ({
 			...current_chan,
 			msg: [...(current_chan as ChanAndMessage).msg, param]
 		}));
@@ -107,7 +113,7 @@ export function handleMakeop(vars: ChatVariables) {
 	const handleMakeop = (data: any) => {
 		if (!vars.set_current_chan)
 			return
-		vars.set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
+		vars.set_current_chan((prev: CurrentChan) => ({
 			...prev,
 			chan: {
 				...(prev as ChanAndMessage).chan,
@@ -141,6 +147,7 @@ export function handleJoin(vars: ChatVariables) {
 							vars.set_current_chan!({
 								chan: data as Channel,
 								msg: response.data,
+								type: CHANNEL,
 							})
 						})
 				})
@@ -158,7 +165,7 @@ export function handleKick(vars: ChatVariables) {
 				!vars.set_all_channels || !vars.set_current_chan)
 				return
 			
-			vars.set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
+			vars.set_current_chan((prev: CurrentChan) => ({
 				...prev,
 				chan: {
 					...(prev as ChanAndMessage).chan,

@@ -3,9 +3,9 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] 75% popup user au lieu de 80%
 - [ ] create -> pas de users a droite
 
+- [x] 72% popup user au lieu de 80%
 - [x] JWT token refresh socket quand il change
 - [x] CSS -> is_public popupcreate channel
 - [x] join -> Mauvais mot de passe donne une case vide qui cree des 404
