@@ -41,22 +41,17 @@ export function users_message(message_data: DirectMessage[], all_users: User[],
 	let ret: JSX.Element[] = [];
 
 	if (message_data.length === 0) {
-		return [PopupAddDirect(all_users, current_user)]
+		return [PopupAddDirect(all_users, current_user, click_handler)]
 	}
 
 	for (const dm of message_data) {
 		if (typeof dm === 'undefined' || typeof dm.msg === 'undefined')
-			return [PopupAddDirect(all_users, current_user)]
+			continue
 		let user = id_to_user(all_users, dm.user)
 
-		let direct: DirectMessage = {
-			user: 11,
-			msg: [],
-		}
-
-		ret.push(chat_button(user.name, user.avatar, click_handler, direct));
+		ret.push(chat_button(user.name, user.avatar, click_handler, dm));
 	}
-	ret.push(PopupAddDirect(all_users, current_user))
+	ret.push(PopupAddDirect(all_users, current_user, click_handler))
 	return ret;
 }
 

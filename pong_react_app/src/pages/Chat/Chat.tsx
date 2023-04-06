@@ -30,6 +30,7 @@ export type CurrentChan = {
 }
 
 export let socket_chan: Socket
+export let socket_dm: Socket
 
 function Chat()
 {
@@ -41,16 +42,12 @@ function Chat()
 	let [current_user, set_current_user] = useState({} as User)
 	let [current_chan, set_current_chan] = useState({} as CurrentChan)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
+	let [dms, set_dms] = useState([] as DirectMessage[])
 	// let direct_messages = dm_of_user(current_user);
 	
 	useEffect(() => {
 		document.title = 'Chat';
-		axios.get('/api/user/info', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			}
-		})
+		axios.get('/api/user/info')
 			.then((response: AxiosResponse) => {
 					set_all_users(response.data as User[])
 					set_current_user(id_to_user(response.data as User[], user_id))
@@ -61,6 +58,11 @@ function Chat()
 					set_all_channels(response.data as Channel[])
 			})
 		
+		axios.get('/api/dm')
+			.then((response: AxiosResponse) => {
+				set_dms(response.data)
+			})
+		
 		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
 		{
 			extraHeaders: {
@@ -68,8 +70,18 @@ function Chat()
 			}
 		})
 
+		socket_dm = io(`http://${window.location.hostname}:8080/dm`,
+		{
+			extraHeaders: {
+				Authorization: "Bearer " + localStorage.getItem('token')
+			}
+		})
+
 		socket_chan.on('exception', (data: any) => {
-			console.log(data)
+			console.log('chan:', data)
+		})
+		socket_dm.on('exception', (data: any) => {
+			console.log('dm:', data)
 		})
 	}, [])
 
@@ -150,6 +162,10 @@ function Chat()
 						user: target_id,
 						type: DM,
 						msg: response.data as MessageData[],
+					})
+
+					socket_dm.emit('join', {
+						receiver_id: target_id
 					})
 				})
 		}

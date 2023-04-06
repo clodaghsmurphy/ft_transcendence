@@ -1,15 +1,21 @@
 import Popup from 'reactjs-popup'
 import { add_dm } from './ChatUtils'
 import User from '../utils/User'
+import { DirectMessage } from './DirectMessage';
+import { Channel } from './Channels';
 
 const { v4: uuidv4 } = require('uuid');
 
-export default function PopupAddDirect(every_users: User[], current_user: User) {
+export default function PopupAddDirect(every_users: User[], current_user: User,
+	fnc: (c: Channel | DirectMessage) => void) {
 	if (typeof current_user === 'undefined')
 		return <div key={uuidv4()}></div>
 
 	function create_dm(usr: User) {
-		console.log("tried to dm", usr.id);
+		fnc({
+			user: usr.id,
+			msg: [],
+		})
 	}
 
 	function basic_users(every_user: User[]): JSX.Element[] {
