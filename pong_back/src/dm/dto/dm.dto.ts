@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
 
 export class DmJoinDto {
 	@IsNumber()
@@ -10,4 +10,10 @@ export class DmCreateDto extends DmJoinDto {
 	@IsString()
 	@IsNotEmpty()
 	text: string;
+}
+
+export class DmParams {
+	@IsNumberString()
+	@IsNotEmpty()
+	id: string;
 }

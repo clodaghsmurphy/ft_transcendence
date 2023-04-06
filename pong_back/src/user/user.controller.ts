@@ -14,8 +14,6 @@ import { UserEntity } from "./utils/user.decorator";
 import { PrismaService } from "src/prisma/prisma.service";
 import { User} from '@prisma/client';
 
-
-
 @Controller('user')
 export class UserController {
 	constructor(private userService: UserService, private prisma: PrismaService	) {}
@@ -27,6 +25,7 @@ export class UserController {
 
 	@Get('info/:id')
 	getUser(@Param() params) {
+		this.checkId(params.id);
 		return this.userService.get(parseInt(params.id));
 	}
 
@@ -53,13 +52,13 @@ export class UserController {
 	@UseInterceptors(FileInterceptor('file'))
 	async uploadFile(@UploadedFile(SharpPipe) file: string, @Res() res, @UserEntity() user)
 	{
-		try 
+		try
 		{
 			const Filepath = path.join('/app', '/uploads', file)
 			const updateUser = await this.prisma.user.update({
 				where: {id: user.id},
 				data: { avatar_path: Filepath },
-			});	
+			});
 			return res.send(Filepath);
 		}
 		catch(e)
@@ -71,6 +70,7 @@ export class UserController {
 	@Get('image/:id')
 	async getImage(@Param('id') param, @Res() res)
 	{
+		this.checkId(param);
 		const user = await this.userService.userExists(parseInt(param));
 		if (!user)
 			throw new HttpException({
@@ -89,13 +89,14 @@ export class UserController {
 			res.writeHead(200, {'Content-Type': 'image/jpeg' });
 			res.end(image, 'binary');
 		}
-		
+
 	}
 
 	@Get('friends/:id')
 	@UseGuards(JwtAuthGuard)
 	async getFriends(@Param('id') id, @UserEntity() userEntity, @Res() res)
 	{
+		this.checkId(id);
 		const user = await this.userService.userExists(parseInt(id));
 		if (!user) {
 			throw new NotFoundException(`User ID ${id} not found`);
@@ -173,7 +174,7 @@ export class UserController {
 				data: {
 					friend_users: { push: id }
 				},
-				
+
 			});
 			const user_array = await this.userService.getUsers(usr);
 			res.status(200);
@@ -252,8 +253,8 @@ export class UserController {
 		res.status(200);
 		res.send(result);
 		return ;
-		
 	}
+
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {
 			throw new HttpException({
