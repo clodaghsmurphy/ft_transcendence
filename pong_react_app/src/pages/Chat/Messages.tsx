@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import '../Home/Dashboard.css'
 import ChatMessage from './ChatMessage'
-import { ChanAndMessage, socket_chat } from './Chat'
+import { ChanAndMessage, socket_chan } from './Chat'
 import { Channel } from './Channels'
 import User from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios';
@@ -85,7 +85,7 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 		e.preventDefault();
 		if (messageRef.current!.value.length !== 0)
 		{
-			socket_chat.emit('message', {
+			socket_chan.emit('message', {
 				name: chan.name,
 				sender_id: current_user.id,
 				sender_name: current_user.name,

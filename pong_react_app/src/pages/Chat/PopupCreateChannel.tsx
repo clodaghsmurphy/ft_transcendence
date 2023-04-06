@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import Popup from 'reactjs-popup'
 import { add_group, sanitizeString } from './ChatUtils'
-import { socket_chat } from './Chat'
+import { socket_chan } from './Chat'
 import User from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 
@@ -85,7 +85,7 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 		const headers = {'Content-Type': 'application/json'}
 		axios.post('/api/channel/create', body, { headers })
 			.then((response: AxiosResponse) => {
-				socket_chat.emit('join', {
+				socket_chan.emit('join', {
 					name: chan_name,
 					user_id: current_user.id,
 				}, (data: any) => {

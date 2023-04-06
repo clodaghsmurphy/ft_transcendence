@@ -6,7 +6,7 @@ import User, { id_to_user } from "../utils/User";
 import plus_sign from '../../media/white_plus.png'
 import group_img from '../../media/group.png'
 import { useRef } from 'react'
-import { ChanAndMessage, socket_chat } from "./Chat";
+import { ChanAndMessage, socket_chan } from "./Chat";
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -110,7 +110,7 @@ export function Password(current_user: User, current_chan: ChanAndMessage | Dire
 		return <div key={uuidv4()}></div>
 
 	function changePassword(name: string) {
-		socket_chat.emit('password', {
+		socket_chan.emit('password', {
 			name: name,
 			user_id: current_user.id,
 			password: pass_ref.current!.value,
@@ -119,7 +119,7 @@ export function Password(current_user: User, current_chan: ChanAndMessage | Dire
 	}
 
 	function clearPassword(name: string) {
-		socket_chat.emit('password', {
+		socket_chan.emit('password', {
 			name: name,
 			user_id: current_user.id,
 		})

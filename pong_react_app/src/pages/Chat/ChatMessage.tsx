@@ -41,7 +41,18 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 	return (
 		<div className={messageClass} key={msg.id}>
 			<div className="message-avatar">
-				<Image id={msg.sender_id} status={0} />
+				<img src={avatarOf(every_user, msg.sender_id)} alt={sender_name} key={uuidv4()}
+					style={{
+						'minWidth': '3rem',
+						'minHeight': '3rem',
+						'height': '3rem',
+						'width': '3rem',
+						'marginTop': 'auto',
+						'marginBottom': 'auto',
+						'aspectRatio': '1 / 1',
+						'borderRadius': '50%'
+					}}>
+				</img>
 					
 				<div className="message-header">
 					<span>{sender_name}</span>

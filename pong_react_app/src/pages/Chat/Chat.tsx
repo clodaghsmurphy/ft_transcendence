@@ -18,7 +18,7 @@ export type ChanAndMessage = {
 	msg: MessageData[],
 }
 
-export let socket_chat: Socket
+export let socket_chan: Socket
 
 
 function Chat()
@@ -33,20 +33,25 @@ function Chat()
 	
 	
 	useEffect(() => {
-		socket_chat = io(`http://${window.location.hostname}:8080/channel`,
+		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
 		{
 			extraHeaders: {
 				Authorization: "Bearer " + localStorage.getItem('token')
 			}
 		})
 
-		socket_chat.on('exception', (data: any) => {
+		socket_chan.on('exception', (data: any) => {
 			console.log(data)
 		})
+
+		axios.get('/api/dm')
+			.then((response: AxiosResponse) => {
+				console.log(response.data)
+			})
 	}, [])
 
-	// socket_chat.on('connect', () => {
-	// 	console.log('CONNECTED', socket_chat.connected)
+	// socket_chan.on('connect', () => {
+	// 	console.log('CONNECTED', socket_chan.connected)
 	// })
 	
 	useEffect(() => {
@@ -70,7 +75,7 @@ function Chat()
 	}, [state.user.id]);
 
 	useEffect(() => {
-		socket_chat.removeListener('message')
+		socket_chan.removeListener('message')
 		const handleMessage = (param: any) => {
 			if (typeof (current_chan as ChanAndMessage).msg === 'undefined')
 				return;
@@ -81,20 +86,20 @@ function Chat()
 			}));
 		}
 
-		socket_chat.on('message', handleMessage)
+		socket_chan.on('message', handleMessage)
 	}, [current_chan, set_current_chan])
 
 	useEffect(() => {
 		// on removeListener pour eviter d'avour plusieurs listening d'event
-		socket_chat.removeListener('mute')
-		socket_chat.removeListener('join')
+		socket_chan.removeListener('mute')
+		socket_chan.removeListener('join')
 
 		const handleMute = (data: any) => {
 			if (data.user === current_user.id) {
 				let chan = all_channels.filter((c: Channel) => c.name === data.name)[0]
 				let target = id_to_user(all_users, data.target_id).name;
 				let kick_message = " has muted " + target + " for " + data.mute_duration
-				socket_chat.emit('message', {
+				socket_chan.emit('message', {
 					name: data.name,
 					sender_id: current_user.id,
 					sender_name: current_user.name,
@@ -126,14 +131,14 @@ function Chat()
 			}
 		}
 
-		socket_chat.on('join', handleJoin)
-		socket_chat.on('mute', handleMute)
+		socket_chan.on('join', handleJoin)
+		socket_chan.on('mute', handleMute)
 	}, [all_channels, set_all_channels,
 		current_user, set_current_user,
 		all_users, set_all_users])
 
 	useEffect(() => {
-		socket_chat.removeListener('makeop')
+		socket_chan.removeListener('makeop')
 		
 		const handleMakeop = (data: any) => {
 			set_current_chan((prev: ChanAndMessage | DirectMessage) => ({
@@ -146,12 +151,12 @@ function Chat()
 		}
 		
 		
-		socket_chat.on('makeop', handleMakeop)
+		socket_chan.on('makeop', handleMakeop)
 	}, [current_chan, set_current_chan])
 
 	useEffect(() => {
-		socket_chat.removeListener('kick')
-		socket_chat.removeListener('ban')
+		socket_chan.removeListener('kick')
+		socket_chan.removeListener('ban')
 
 		const handleKick = (data: any) => {
 			console.log('inside handleKick:', data)
@@ -215,8 +220,8 @@ function Chat()
 			})
 		}
 
-		socket_chat.on('kick', handleKick)
-		socket_chat.on('ban', handleBan)
+		socket_chan.on('kick', handleKick)
+		socket_chan.on('ban', handleBan)
 	}, [current_chan, set_current_chan,
 		current_user, set_current_user,
 		all_channels, set_all_channels])
@@ -235,13 +240,13 @@ function Chat()
 		{
 			if (typeof (current_chan as ChanAndMessage).chan !== 'undefined' &&
 				(current_chan as ChanAndMessage).chan.name !== (param as Channel).name) {
-				socket_chat.emit('leave', {
+				socket_chan.emit('leave', {
 					name: (current_chan as ChanAndMessage).chan.name,
 					user_id: current_user.id,
 				})
 			}
 
-			socket_chat.emit('join', {
+			socket_chan.emit('join', {
 				name: (param as Channel).name,
 				user_id: current_user.id,
 			}, (data: any) => {

@@ -3,7 +3,7 @@ import User, { id_to_user } from '../utils/User'
 import { Link } from 'react-router-dom';
 import { Channel } from './Channels';
 import { DirectMessage } from './DirectMessage';
-import { socket_chat } from './Chat';
+import { socket_chan } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -41,7 +41,7 @@ export function User_in_group(every_user: User[], current_user: User, chan: Chan
 				duration = NaN
 			if (isNaN(duration))
 				duration = 60
-			socket_chat.emit('mute', {
+			socket_chan.emit('mute', {
 				name: (chan as Channel).name,
 				user_id: current_user.id,
 				target_id: user.id,
@@ -139,7 +139,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	// console.log('rendering a Button_op', ref.current)
 			
 	function emit_kick() {
-		socket_chat.emit('kick', {
+		socket_chan.emit('kick', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -147,7 +147,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_ban() {
-		socket_chat.emit('ban', {
+		socket_chan.emit('ban', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,
@@ -155,7 +155,7 @@ function Button_op(user: User, is_op: boolean, current_user: User, chan: Channel
 	}
 
 	function emit_makeop() {
-		socket_chat.emit('makeop', {
+		socket_chan.emit('makeop', {
 			name: chan.name,
 			user_id: current_user.id,
 			target_id: user.id,

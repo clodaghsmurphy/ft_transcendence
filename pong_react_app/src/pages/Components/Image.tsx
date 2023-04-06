@@ -25,8 +25,8 @@ function Image(props: Props) {
 	}, [])
 	return (
 		<>
-		<div className="img-container">	
-				<img src={image} alt='profile pciture'/>
+		<div className="img-container">
+				<img src={image} alt='profile picture'/>
 		</div>
 			{ props.status ? <span className='online'></span> : null}
 		</>
