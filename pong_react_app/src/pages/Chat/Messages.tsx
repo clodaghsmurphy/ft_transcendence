@@ -2,23 +2,23 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import '../Home/Dashboard.css'
 import ChatMessage from './ChatMessage'
-import { ChanAndMessage, socket_chan } from './Chat'
+import { CHANNEL, ChanAndMessage, CurrentChan, socket_chan } from './Chat'
 import { Channel } from './Channels'
 import User from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios';
 
 const { v4: uuidv4 } = require('uuid');
 
-function Messages(chan_and_message: ChanAndMessage, users: User[],
+function Messages(chan_and_message: CurrentChan, users: User[],
 				current_user: User,
 				set_current_chan: (arg: any) => void,
 				setChanOfUser: (arg: any) => void,
 				leaveChannel: (arg: any) => void)
 {
 	let is_undefined: boolean = false;
-	let chan = chan_and_message.chan;
+	let chan = chan_and_message.chan!;
 	let messages = chan_and_message.msg;
-	if (typeof chan === 'undefined') {
+	if (typeof messages === 'undefined') {
 		messages = []
 		is_undefined = true
 	}
@@ -31,6 +31,10 @@ function Messages(chan_and_message: ChanAndMessage, users: User[],
 
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
+	
+	if (chan_and_message.type !== CHANNEL)
+		return <div className='no-messages'>Please select a channel (dm)</div>
+	
 
 	if (messages.length === 0)
 		return (<div style={{

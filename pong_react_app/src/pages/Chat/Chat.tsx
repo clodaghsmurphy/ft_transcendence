@@ -223,7 +223,7 @@ function Chat()
 			</div>
 
             <div className="chatbox">
-				{Messages(current_chan as ChanAndMessage,
+				{Messages(current_chan,
 					all_users, current_user, set_current_chan,
 					setChanOfUser, leaveChannel)}
 			</div>
