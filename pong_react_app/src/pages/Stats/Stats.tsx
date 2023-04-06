@@ -46,7 +46,6 @@ function Stats(props:Props)
 		setOpen(!open);
 	};
 
-
 	return(
 			<>
 			<Suspense>
@@ -59,7 +58,7 @@ function Stats(props:Props)
 							<ProfileStats />
 						
 						<div className="avatar-stats">
-								<Image id={state.user.id} />
+								<Image id={parseInt(state.user.id)} status={0}/>
 							<span className="user-name">{state.user.name}</span>
 
 						</div>
@@ -75,9 +74,6 @@ function Stats(props:Props)
 								</ul> ) : null}
 								
 							</div>
-								<Link to={"https://profile.intra.42.fr/users/" + state.user.name} className='ftlogo'>
-									<img src={FTlogo} />
-								</Link>
 						</div>
 					</div>
 

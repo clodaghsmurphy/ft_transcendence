@@ -1,0 +1,71 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#root {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100vh;
+	/* min-width: 800px;
+	min-height: 600px; */
+  }
+  #game {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	background-color: #222;
+	/* border: 2px solid #fff; */
+	/* border-radius: 5px; */
+  }
+  #leftPaddle, #rightPaddle {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 10px;
+	height: 80px;
+	background-color: #fff;
+  }
+  #leftPaddle::before, #rightPaddle::before {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 10px;
+	background-color: #fff;
+  }
+  #leftPaddle {
+	left: 2%;
+  }
+  #rightPaddle {
+	right: 2%;
+  }
+  #ball {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background-color: #fff;
+	border-radius: 50%;
+  }
+
+/* Belle page de score qui est centrer et en bas de page */
+
+#score {
+	display: flex;
+	font-size: 2em;
+	color: white;
+	align-items: center;
+	flex-direction: column;
+	font-family: 'arcade_normalregular', cursive;
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+  }
+  
+

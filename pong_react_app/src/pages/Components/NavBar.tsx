@@ -3,7 +3,8 @@ import { useContext } from 'react'
 import '../Home/Dashboard.css'
 import logo from '../../media/pong-logo.svg'
 import axios from 'axios';
-import {AxiosResponse, AxiosError} from 'axios'
+import { AxiosError} from 'axios';
+import Image from './Image';
 import { Link } from 'react-router-dom'
 import { FaBars, FaTimes } from "react-icons/fa";
 import { AiOutlineLogout } from "react-icons/ai"
@@ -24,9 +25,7 @@ function NavBar()
     }
 
      const handleLogout = async() => {
-        console.log('logout');
          axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
-        .then((res:AxiosResponse) => console.log("res : " + res))
         .catch((e:AxiosError) => console.log(e))
         dispatch ({
             type: ActionKind.Logout
@@ -48,10 +47,10 @@ function NavBar()
         </ul>
         <div className="nav-user" id="nav-user">
             <AiOutlineLogout className="logout-btn" onClick={ handleLogout}/>
-            <div className="user-pfp">
-                <img src={state.user.avatar} />
+            <Link to="/stats" className="user-pfp">
+                <Image id={parseInt(state.user.id)} status={0} />
                 
-            </div>
+            </Link>
             <p className='userName' > Welcome {state.user.name} !</p>
            
         </div>

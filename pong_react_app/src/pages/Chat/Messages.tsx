@@ -5,7 +5,7 @@ import ChatMessage from './ChatMessage'
 import { ChanAndMessage, socket_chat } from './Chat'
 import { Channel } from './Channels'
 import User from '../utils/User'
-import axios, { AxiosResponse, AxiosError } from 'axios'
+import axios, { AxiosResponse, AxiosError } from 'axios';
 
 const { v4: uuidv4 } = require('uuid');
 

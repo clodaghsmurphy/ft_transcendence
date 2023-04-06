@@ -8,7 +8,6 @@ import { jwtConstants } from '../constants';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor(private userService: UserService) {
-		console.log('here');
 		super({
 		jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 		 ignoreExpiration: false,
@@ -18,8 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 	async validate(payload: any)
 	{
-		console.log('In jwt strategy and palyoad is');
-		console.log(payload);
 		const user = await this.userService.userExists(payload.sub);
 		if (!user)
 		{

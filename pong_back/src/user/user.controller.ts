@@ -60,8 +60,6 @@ export class UserController {
 				where: {id: user.id},
 				data: { avatar_path: Filepath },
 			});	
-			console.log(updateUser);
-			console.log(Filepath);
 			return res.send(Filepath);
 		}
 		catch(e)
@@ -80,7 +78,6 @@ export class UserController {
 				error: `User doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		const imagePath = user.avatar_path;
-		console.log('Image path is' + imagePath);
 		if (this.userService.checkIfFileExists(imagePath)){
 			const image = fs.readFileSync(imagePath);
 			res.writeHead(200, {'Content-Type': 'image/jpeg' });
@@ -105,7 +102,6 @@ export class UserController {
 		}
 		let user_array : User[] = []
 		for (let i = 0; i < user.friend_users.length; i++){
-			console.log(user.friend_users[i])
 			user_array[i] = await this.userService.userExists(user.friend_users[i]);
 			if (!user) {
 				throw new NotFoundException(`User ID ${id} in friend list not found`);
@@ -116,20 +112,29 @@ export class UserController {
 		return ;
 	}
 
+	@Get('blocked-users')
+	@UseGuards(JwtAuthGuard)
+	async blockedUsers(@UserEntity() user, @Res() res)
+	{
+		const user_array : User[] =  await this.userService.toUserArray(user.blocked_users);
+
+		res.status(200);
+		res.send(user_array);
+		return ;
+	}
+
 	@Post('friends-search')
 	@UseGuards(JwtAuthGuard)
 	async friendsList(@UserEntity() userEntity, @Body() body, @Req() req, @Res() res)
 	{
 		const user = await this.userService.userExists(userEntity.id);
+		const exclude:number[] = user.friend_users.concat(user.blocked_users) ;
 		if (!user)
 			throw  new UnauthorizedException();
-		console.log('in friends search');
-		console.log(body);
-		console.log(body.data.value);
 		const result = await this.prisma.user.findMany({
 			where: {
 				id: {
-					notIn: user.friend_users,
+					notIn: exclude,
 				},
 				NOT: {
 					id: {
@@ -147,10 +152,9 @@ export class UserController {
 				id: true,
 			}
 		})
-		console.log(result);
 		res.send(result);
-
 	}
+
 
 	@Post('add-friend')
 	@UseGuards(JwtAuthGuard)
@@ -164,16 +168,46 @@ export class UserController {
 				error: `'user id ${id}' is blocked and cannot be added`,
 			}, HttpStatus.BAD_REQUEST);
 		if (id != usr.id ) {
-			await this.prisma.user.update({
+			const userUpdate = await this.prisma.user.update({
 				where: { id: usr.id },
 				data: {
 					friend_users: { push: id }
 				},
+				
 			});
-			console.log(usr.friend_users);
+			const user_array = await this.userService.getUsers(usr);
 			res.status(200);
-			res.send(`${id} added !`)
+			res.send(`Added User ID ${id} ! `);
+			return ;
 		}
+		throw new HttpException({
+			status: HttpStatus.BAD_REQUEST,
+			error: `cannot add yourself`,
+		}, HttpStatus.BAD_REQUEST);
+	}
+
+	@Post('block-user')
+	@UseGuards(JwtAuthGuard)
+	async BlockUser(@UserEntity() usr, @Body() body, @Res() res)
+	{
+		this.checkId(usr.id);
+		const id = body.data.id;
+		this.checkId(id);
+		if (id != usr.id ) {
+			const updateUser = await this.prisma.user.update({
+				where: { id: usr.id },
+				data: {
+					blocked_users: { push: id }
+				},
+			});
+			res.status(200);
+			res.send(`Blocked User ID ${id} ! `);
+			return ;
+		}
+		throw new HttpException({
+			status: HttpStatus.BAD_REQUEST,
+			error: `cannot block yourself`,
+		}, HttpStatus.BAD_REQUEST);
 	}
 
 	@Post('delete-friend')
@@ -188,40 +222,37 @@ export class UserController {
 			where: { id: usr.id },
 			data: { friend_users: updatedFriends },
 		});
-		let user_array: User[] = []
-		for (let i = 0; i < updatedFriends.length; i++) {
-			user_array[i] = await this.userService.userExists(updatedFriends[i]);
-		}
+		const user_array: User[] = await this.userService.toUserArray(updatedFriends);
+		res.status(200);
+		res.send(user_array);
+	}
+
+	@Post('unblock-friend')
+	@UseGuards(JwtAuthGuard)
+	async unblockFriend(@Res() res, @Body() body, @UserEntity() usr)
+	{
+		this.checkId(usr.id);
+		const friendId = body.id;
+		const user = await this.prisma.user.findUnique({ where: { id: usr.id } });
+		const updatedFriends = user.blocked_users.filter(id => id !== friendId);
+		await this.prisma.user.update({
+			where: { id: usr.id },
+			data: { blocked_users: updatedFriends },
+		});
+		const user_array: User[] = await this.userService.toUserArray(updatedFriends);
 		res.status(200);
 		res.send(user_array);
 	}
 
 	@Get('users')
 	@UseGuards(JwtAuthGuard)
-	async getUsers(@Res() res, @UserEntity() usr)
-	{
-		this.checkId(usr.id)
-		const excludeid = usr.id!;
-		console.log('in users and id is ' + excludeid);
-		const result = await this.prisma.user.findMany({
-			select: {
-				name:true,
-				id:true,
-				avatar:true,
-			},
-			where: {
-				id: {
-					notIn: usr.friend_users,
-				},
-				NOT: {
-					id: {
-						equals:excludeid,
-					}
-				},
-
-			}
-		})
+	async getUsers(@Res() res, @UserEntity() usr){
+		this.checkId(usr.id);
+		const result = await this.userService.getUsers( usr);
+		res.status(200);
 		res.send(result);
+		return ;
+		
 	}
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {

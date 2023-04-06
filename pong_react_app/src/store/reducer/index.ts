@@ -77,16 +77,12 @@ export const initialState:State = {
     error: null,
   };
   
-  export const reducer = (state:State, action:Action) => { // {type, payload: { isLoggedIn, user }}
+  export const reducer = (state:State, action:Action) => { 
     switch (action.type) {
       case "LOGIN": {
-        console.log('in login and payload is');
-        console.log(action.payload);
         localStorage.setItem("isLoggedIn", JSON.stringify(action.payload.isLoggedIn))
         localStorage.setItem("user", JSON.stringify(action.payload.user));
-        // state.isLoggedIn = ddd
-        // state.user = xxxx
-        // return state
+        
         return {
           ...state,
           isLoggedIn: action.payload.isLoggedIn,
@@ -102,7 +98,6 @@ export const initialState:State = {
         };
       }
       case "NAME_UPDATE": {
-        console.log('in dispatch and payload is');
         console.log(action.payload);
        
         
@@ -113,9 +108,6 @@ export const initialState:State = {
         }
       }
       case "USER_UPDATE": {
-        console.log('in user update');
-        console.log(action.payload.user);
-        console.log(action.payload.user.name)
 			  localStorage.setItem('user', JSON.stringify(action.payload.user))
         return {
           ...state,

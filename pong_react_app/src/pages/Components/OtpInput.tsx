@@ -16,10 +16,8 @@ export type OTPProps={
 	const inputOnChange = (
 		e:React.ChangeEvent<HTMLInputElement>, idx:number 
 	) => {
-		console.log('in on change');
 		let val = e.target.value
 		const isDigit = RE_DIGIT.test(val)
-		console.log(val);
 		
 		if (!isDigit && val !== '') {
 			return ;

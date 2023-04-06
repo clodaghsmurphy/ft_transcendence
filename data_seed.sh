@@ -31,7 +31,36 @@ curl -H 'Content-Type: application/json' \
 echo
 
 curl -H 'Content-Type: application/json' \
+	-d '{ "name": "norminet", "avatar_path": "https://cdn.intra.42.fr/users/430b2acd1bcfedf5475654d235003086/norminet.jpeg", "id" : 11  }' \
+	-X POST \
+	localhost:3042/user/create
+
+echo
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "itahani", "avatar_path": "https://cdn.intra.42.fr/users/0504d9830dfa34b62527ba0df32a9ffe/itahani.jpg", "id" : 24, "blocked_users" : [94596]  }' \
+	-X POST \
+	localhost:3042/user/create
+
+echo
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "eleotard", "avatar_path": "https://cdn.intra.42.fr/users/06ceaf6a58e3bbf49ee184df7474d82d/eleotard.jpg", "id" : 7, "blocked_users" : [94596]  }' \
+	-X POST \
+	localhost:3042/user/create
+
+echo
+
+curl -H 'Content-Type: application/json' \
 	-d '{ "name": "barodrig", "avatar_path": "https://cdn.intra.42.fr/users/9b998c38218fde1d95be711c71c92c71/barodrig.jpg", "id" : 42  }' \
+	-X POST \
+	localhost:3042/user/create
+
+
+echo
+
+curl -H 'Content-Type: application/json' \
+	-d '{ "name": "amontant", "avatar_path": "https://cdn.intra.42.fr/users/9871e8434e67b1016119e4a70bf8bd2e/amontant.jpg", "id" : 43  }' \
 	-X POST \
 	localhost:3042/user/create
 

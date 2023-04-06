@@ -23,7 +23,6 @@ const EnableTwoFAuth = () =>
     }, [state.user.otp_enabled]);
     const disable = async () =>
     {
-        console.log('in disable');
         axios.post(`http://${window.location.hostname}:8080/api/auth/disable2fa`)
         .then(function (res:AxiosResponse) {
             dispatch({

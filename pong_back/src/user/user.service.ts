@@ -35,7 +35,7 @@ export class UserService {
 		});
 		if (user === null)
 			return user;
-		return this.returnInfo(user);
+		return user;
 	}
 
 	async getInfo(id: number, attribute: string) {
@@ -61,7 +61,6 @@ export class UserService {
 
 	async downloadImage(cdn:string): Promise<string>
 	{
-		console.log('in donwload image and cdn ios ' + cdn);
 		const split = cdn.split('/');
 		const name = split[split.length -1];
 		const pathname = path.join('/app', 'uploads', name);
@@ -76,16 +75,13 @@ export class UserService {
 			response.data.pipe(writer);
 			return pathname;
 		} catch (e) {
-			console.log(e);
 			return defaultPath;
 		}
 	}
 
 	async create(dto: UserCreateDto) {
 		try {
-			console.log('in create and avatar is ' + dto.avatar);
 			const avatarPath = dto.avatar_path ? null : '/app/media/norminet.jpeg';
-			console.log('avatar path is '+ avatarPath);
 			const user = await this.prisma.user.create({
 				data: {
 					name: dto.name,
@@ -126,6 +122,15 @@ export class UserService {
 		});
 	}
 
+	// async joinGame(id: number, roomId: number) {
+	// 	await this.prisma.user.update({
+	// 		where: { id: id },
+	// 		data: {
+	// 			games: {push: roomId}
+	// 		},
+	// 	});
+	// }
+
 	// Same here, should only be called by channel
 	async leaveChannel(id: number, channelName: string) {
 		const user: User = await this.prisma.user.findUnique({where: {id: id}});
@@ -145,6 +150,42 @@ export class UserService {
 				error: `User ${id} doesn't exist`,
 			}, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	async toUserArray(users: number[]) {
+		let user_array: User[] = [];
+		let res:User;
+		for (let i = 0; i < users.length; i++) {
+			res = await this.get(users[i]);
+			if (res) {
+				user_array[i] = res;
+			}
+		}
+		return user_array;
+	}
+
+	async getUsers( usr: User) {
+		const exclude:number[] = usr.friend_users.concat(usr.blocked_users) ;
+		
+		const result = await this.prisma.user.findMany({
+			select: {
+				name:true,
+				id:true,
+				avatar:true,
+			},
+			where: {
+				id: {
+					notIn: exclude,
+				},
+				NOT: {
+					id: {
+						equals:usr.id,
+					}
+				},
+
+			}
+		})
+		return result;
 	}
 
 	returnInfo(user: User) {
