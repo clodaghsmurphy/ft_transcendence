@@ -3,12 +3,13 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] trop de users a droite -> pas de mute (?)
 - [ ] changer le header si c'est un DM
   - [ ] leave -> block
   - [ ] invite -> enlever
 - [ ] Channel avec un nom avec que des whitespaces
+- [ ] GERER LES ERREURS lol
 
+- [x] trop de users a droite -> pas de mute (?)
 - [x] create -> pas de users a droite
 - [x] on('message') pour les DMs
 - [x] 72% popup user au lieu de 80%

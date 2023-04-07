@@ -62,6 +62,7 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 			display: 'flex',
 			flexDirection: 'row',
 			gap: '5px',
+			minHeight: '28px',
 		}} key={uuidv4()}>
 			<h3 style={{
 				flex: '0',
@@ -93,6 +94,8 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 	if (ret.length === 0 || (ret.length === 1 && curr_is_op)) {
 		return [<div key='no-users-in-group' className='no-users'>No users</div>]
 	}
+
+	console.log(ret.length)
 	return ret
 }
 
