@@ -124,11 +124,12 @@ export function handleJoin(vars: ChatVariables) {
 				.then((response: AxiosResponse) => {
 					vars.set_all_channels!((prev: Channel[]) => [...prev, response.data])
 					vars.setChanOfUser!((prev: Channel[]) => [...prev, response.data])
+
 					axios.get('/api/channel/' + sanitizeString(response.data.name) + '/messages/')
-						.then((response: AxiosResponse) => {
+						.then((response_messages: AxiosResponse) => {
 							vars.set_current_chan!({
-								chan: data as Channel,
-								msg: response.data,
+								chan: response.data as Channel,
+								msg: response_messages.data,
 								type: CHANNEL,
 							})
 						})

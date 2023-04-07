@@ -25,8 +25,9 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 
 	current_chan.chan = current_chan.chan!
 
-	if (typeof current_chan.chan === 'undefined' ||
-		typeof current_chan.chan.operators === 'undefined')
+
+	if (typeof current_chan.user === 'undefined' &&
+		typeof current_chan.chan?.operators === 'undefined')
 	{
 		return ret
 	}
