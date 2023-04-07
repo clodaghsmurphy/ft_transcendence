@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { GameService } from "./game.service";
-import { GameCreateDto, GameParams } from "./dto";
+import { GameCreateDto, GameParams, GameRemoveDto } from "./dto";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 
 @Controller('game')
@@ -25,5 +25,10 @@ export class GameController {
 			target_id: dto.target_id,
 		};
 		return this.gameService.create(data);
+	}
+
+	@Post('remove')
+	removeGame(@Body() dto: GameRemoveDto) {
+		return this.gameService.remove(dto.id);
 	}
 }

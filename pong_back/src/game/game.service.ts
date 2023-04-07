@@ -31,9 +31,12 @@ export class GameService {
 			}
 		});
 
-		await this.prisma.user.update({
-			where: {id: dto.user_id | dto.target_id},
-			data: {game_id: game.id}
+		await this.prisma.user.updateMany({
+			where: {id: {in: [dto.target_id, dto.user_id]}},
+			data: {
+				game_id: game.id,
+				in_game: true,
+			}
 		});
 		return game;
 	}
@@ -44,10 +47,15 @@ export class GameService {
 			data: {ongoing: false},
 		});
 
-		// await this.prisma.user.update({
-		// 	where: {id: game.player1 | game.player2},
-		// 	data: {}
-		// })
+		await this.prisma.user.updateMany({
+			where: {id: {in: [game.player1, game.player2]}},
+			data: {
+				game_id: null,
+				in_game: false,
+			}
+		});
+
+		return game;
 	}
 
 	async checkGame(id: number) {
@@ -63,7 +71,7 @@ export class GameService {
 		await this.userService.checkUser(userId);
 
 		const user = await this.userService.get(userId);
-		if (user.game_id !== null) {
+		if (user.game_id !== null || user.in_game) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `User ${userId} is already in game ${user.game_id}`,
@@ -71,7 +79,6 @@ export class GameService {
 		}
 	}
 }
-
 
 /*
 
