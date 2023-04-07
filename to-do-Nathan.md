@@ -3,12 +3,13 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] changer le header si c'est un DM
   - [ ] leave -> block
   - [ ] invite -> enlever
 - [ ] Channel avec un nom avec que des whitespaces
 - [ ] GERER LES ERREURS lol
 
+- [x] Ne pas creer de dm avec qqun avec qui on a deja un dm
+- [x] changer le header si c'est un DM
 - [x] trop de users a droite -> pas de mute (?)
 - [x] create -> pas de users a droite
 - [x] on('message') pour les DMs

@@ -38,6 +38,32 @@ function Messages(current_chan: CurrentChan, users: User[],
 
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
+	
+	let header = current_chan.type === CHANNEL ?
+		<div className='channel-header'>
+	<button className='invite-button'>
+			invite
+		</button>
+		<div style={{
+			flex: '8',
+			textAlign: 'center',
+		}}>
+			{chan_name}
+		</div>
+		<button className='leave-button'
+			onClick={() => leave(chan_name)}>
+			leave
+		</button>
+	</div> :
+	<div className='channel-header'>
+		<div style={{
+			flex: '8',
+			textAlign: 'center',
+		}}>
+			{chan_name}
+		</div>
+	</div>
+
 		
 	if (messages.length === 0)
 		return (<div style={{
@@ -46,22 +72,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 			'justifyContent': 'space-between',
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
-			<div className='channel-header'>
-			<button className='invite-button'>
-					invite
-				</button>
-				<div style={{
-					flex: '8',
-					textAlign: 'center',
-				}}>
-					{chan_name}
-				</div>
-				<button className='leave-button'
-					onClick={() => leave(chan_name)}>
-					leave
-				</button>
-			</div>
-			
+			{header}
+
 			<div className='no-messages' key="Message-ret-b"
 				style={{
 					marginTop: 'auto',
@@ -155,7 +167,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 			'height': '100%',
 		}} key={"Message-ret-a"+uuidv4()}>
 
-			<div className='channel-header'>
+			{current_chan.type === CHANNEL ?
+				<div className='channel-header'>
 			<button className='invite-button'>
 					invite
 				</button>
@@ -169,7 +182,15 @@ function Messages(current_chan: CurrentChan, users: User[],
 					onClick={() => leave(chan_name)}>
 					leave
 				</button>
-			</div>
+			</div> :
+			<div className='channel-header'>
+				<div style={{
+					flex: '8',
+					textAlign: 'center',
+				}}>
+					{chan_name}
+				</div>
+			</div>}
 
 			<div id="messages" key="Message-ret-b">
 				{messagesBlocks}

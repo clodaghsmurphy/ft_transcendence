@@ -99,7 +99,7 @@
 	flex-direction: column;
 	gap: 5px;
 	flex: 5;
-	flex-basis: 45%;
+	flex-basis: 40%;
 	flex-grow: 0;
 	overflow-y: hidden;
 }

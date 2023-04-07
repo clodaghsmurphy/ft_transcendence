@@ -59,7 +59,11 @@ export default function PopupAddDirect(every_users: User[], current_user: User,
 		<Popup trigger={add_dm()} modal nested key={uuidv4()}>
 			<h1>User list:</h1>
 			<div className='popup-user-container'>
-				{basic_users(every_users.filter(usr => usr.name !== current_user.name))}
+				{basic_users(every_users.filter(usr => 
+					usr.name !== current_user.name && dms.every(
+						(dm: DirectMessage) => dm.id !== usr.id
+					)
+				))}
 			</div>
 		</Popup>
 	)
