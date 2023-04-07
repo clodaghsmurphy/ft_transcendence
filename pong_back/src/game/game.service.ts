@@ -4,14 +4,12 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { GameCreateDto } from "./dto";
 import { GameRoom } from "./types/game.types";
-import { use } from "passport";
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 
 @Injectable()
 export class GameService {
 
-	public io: Namespace;
 	private activeGames: Map<number, GameRoom> = new Map<number, GameRoom>();
 
 	constructor(private prisma: PrismaService, private userService: UserService) {}
@@ -47,7 +45,10 @@ export class GameService {
 		room.id = game.id;
 		room.player1_id = dto.user_id;
 		room.player2_id = dto.target_id;
+		room.rounds = 0;
+
 		room.state = new GameState();
+		room.state.ongoing = true;
 
 		this.activeGames[room.id] = room;
 		return game;
@@ -104,6 +105,29 @@ export class GameService {
 				error: `User ${userId} is not part of game ${gameId}`
 			}, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	async startGame(gameId: number, io: Namespace) {
+		await this.checkGame(gameId);
+
+		const room: GameRoom = this.activeGames[gameId];
+
+		const intervalId = setInterval(() => {
+			if (room.state.ongoing === true) {
+				this.gameLoop(room);
+				io.in('' + room.id).emit('update');
+			} else {
+				clearInterval(intervalId);
+				io.in('' + room.id).emit('gameover');
+			}
+		}, 500);
+
+	}
+
+	gameLoop(room: GameRoom) {
+		room.rounds++;
+		if (room.rounds >= 5)
+			room.state.ongoing = false;
 	}
 }
 

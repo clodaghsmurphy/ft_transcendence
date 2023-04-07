@@ -1,4 +1,5 @@
 export class GameState {
+	ongoing: boolean;
 }
 
 export class GameRoom {
@@ -8,4 +9,7 @@ export class GameRoom {
 	player2_id: number;
 
 	state: GameState;
+
+	// TMP TEST
+	rounds: number;
 }
