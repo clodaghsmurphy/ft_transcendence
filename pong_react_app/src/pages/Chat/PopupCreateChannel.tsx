@@ -81,15 +81,14 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 			}
 		}
 
-		const headers = {'Content-Type': 'application/json'}
-		axios.post('/api/channel/create', body, { headers })
+		axios.post('/api/channel/create', body)
 			.then((response: AxiosResponse) => {
 				socket_chan.emit('join', {
 					name: chan_name,
 					user_id: current_user.id,
 				})
 			})
-		}
+	}
 
 	let b_users: JSX.Element[] = []
 	if (every_users.length !== 0)

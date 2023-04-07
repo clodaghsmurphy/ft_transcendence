@@ -1,6 +1,6 @@
 import React from 'react'
 import { Channel } from './Channels'
-import { socket_chan, ChanAndMessage, CurrentChan, CHANNEL } from './Chat'
+import { socket_chan, ChanAndMessage, CurrentChan, CHANNEL, socket_dm } from './Chat'
 import { DirectMessage } from './DirectMessage'
 import User, { id_to_user } from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios'
@@ -67,20 +67,22 @@ export function handleBan(vars: ChatVariables) {
 
 export function handleMessage(vars: ChatVariables) {
 	socket_chan.removeListener('message')
+	socket_dm.removeListener('message')
 
 	const function_message = (param: any) => {
 		if (!vars.set_current_chan || !vars.current_chan)
 			return
-		if (typeof (vars.current_chan as ChanAndMessage).msg === 'undefined')
+		if (typeof vars.current_chan.msg === 'undefined')
 			return;
 
 		vars.set_current_chan((current_chan: CurrentChan) => ({
 			...current_chan,
-			msg: [...(current_chan as ChanAndMessage).msg, param]
+			msg: [...current_chan.msg, param]
 		}));
 	}
 
 	socket_chan.on('message', function_message)
+	socket_dm.on('message', function_message)
 }
 
 export function  handleMute(vars: ChatVariables) {

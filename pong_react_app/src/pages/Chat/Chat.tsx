@@ -61,7 +61,6 @@ function Chat()
 		axios.get('/api/dm')
 			.then((response: AxiosResponse) => {
 				set_dms(response.data)
-				console.log(response.data)
 			})
 		
 		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
@@ -191,15 +190,12 @@ function Chat()
 		}
 		else if (is_dm) {
 			const target_id = (param as DirectMessage).id
-			
-			console.log('dans change etc')
 
 			axios.get('/api/dm/' + target_id)
 				.then((response: AxiosResponse) => {
 					socket_dm.emit('join', {
 						receiver_id: target_id
 					})
-					console.log(response.data)
 					set_current_chan({
 						user: target_id,
 						type: DM,
@@ -208,8 +204,6 @@ function Chat()
 				})
 		}
 	}
-
-	console.log(current_chan.msg?.map((msg: any) => msg.text))
 
 	const leaveChannel = (data: any) => {
 		let new_channels = all_channels

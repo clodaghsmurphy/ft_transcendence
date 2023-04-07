@@ -8,8 +8,9 @@
 - [ ] changer le header si c'est un DM
   - [ ] leave -> block
   - [ ] invite -> enlever
-- [ ] on('message') pour les DMs
+- [ ] Channel avec un nom avec que des whitespaces
 
+- [x] on('message') pour les DMs
 - [x] 72% popup user au lieu de 80%
 - [x] JWT token refresh socket quand il change
 - [x] CSS -> is_public popupcreate channel
