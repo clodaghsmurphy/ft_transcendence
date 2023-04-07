@@ -3,11 +3,9 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-  - [ ] leave -> block
-  - [ ] invite -> enlever
-- [ ] Channel avec un nom avec que des whitespaces
 - [ ] GERER LES ERREURS lol
 
+- [x] Channel avec un nom avec que des whitespaces
 - [x] Ne pas creer de dm avec qqun avec qui on a deja un dm
 - [x] changer le header si c'est un DM
 - [x] trop de users a droite -> pas de mute (?)

@@ -60,7 +60,7 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 	}
 
 	function ValidateChan() {
-		if (!inputRef.current || inputRef.current.value === '')
+		if (!inputRef.current || inputRef.current.value === '' || /^\s*$/.test(inputRef.current.value))
 			return ;
 		const chan_name = sanitizeString(inputRef.current!.value);
 		const chan_pass = inputRefPassword.current!.value;
