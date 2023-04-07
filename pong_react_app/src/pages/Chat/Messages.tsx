@@ -33,9 +33,9 @@ function Messages(current_chan: CurrentChan, users: User[],
 	let [messagesBlocks, setMessagesBlocks] = useState(
 		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
 		);
-	const chan_name = last_chan.type === CHANNEL ? current_chan.chan!.name
+	let chan_name = current_chan.type === CHANNEL ? current_chan.chan!.name
 								: id_to_user(users, current_chan.user!).name
-		
+
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
 		

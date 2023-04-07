@@ -84,6 +84,9 @@ function Chat()
 		socket_dm.on('exception', (data: any) => {
 			console.log('dm:', data)
 		})
+		socket_dm.on('leave', (data: any) => {
+			console.log(data)
+		})
 	}, [])
 
 	useEffect(() => {
@@ -131,6 +134,20 @@ function Chat()
 					})
 				})
 			}
+			if (is_dm) {
+				console.log('test dm')
+				socket_dm.emit('join', {
+					receiver_id: (param as DirectMessage).id
+				});
+				axios.get('/api/dm/' + (param as DirectMessage).id)
+				.then((response: AxiosResponse) => {
+					set_current_chan({
+						user: (param as DirectMessage).id,
+						msg: response.data as MessageData[],
+						type: DM
+					})
+				})
+			}
 			return
 		}
 
@@ -166,6 +183,10 @@ function Chat()
 			const target_id = (param as DirectMessage).id
 			
 			console.log('dans change etc')
+
+			socket_dm.emit('leave', {
+				receiver_id: current_chan.user
+			})
 
 			axios.get('/api/dm/' + target_id)
 				.then((response: AxiosResponse) => {
