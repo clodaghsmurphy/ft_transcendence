@@ -84,9 +84,6 @@ function Chat()
 		socket_dm.on('exception', (data: any) => {
 			console.log('dm:', data)
 		})
-		socket_dm.on('leave', (data: any) => {
-			console.log(data)
-		})
 	}, [])
 
 	useEffect(() => {
@@ -151,15 +148,26 @@ function Chat()
 			return
 		}
 
-		if (is_chan && current_chan.type === CHANNEL)
+		if (current_chan.type === CHANNEL) {
+			if (current_chan.chan!.name !== (param as Channel).name) {
+				console.log('leaving ' + current_chan.chan!.name)
+				socket_chan.emit('leave', {
+				name: current_chan.chan!.name,
+				user_id: current_user.id,
+			})}
+		} else {
+			socket_dm.emit('leave', {
+				receiver_id: current_chan.user
+			})
+		}
+
+		if (is_chan)
 		{
 			param = param as Channel
 
-			socket_chan.emit('leave', {
-				name: current_chan.chan!.name,
-				user_id: current_user.id,
-			})
-
+			if (current_chan.chan?.name === (param as Channel).name)
+				return
+			
 			socket_chan.emit('join', {
 				name: param.name,
 				user_id: current_user.id,
@@ -172,6 +180,8 @@ function Chat()
 			})
 			axios.get('/api/channel/' + sanitizeString(param.name) + '/messages/')
 				.then((response: AxiosResponse) => {
+					console.log(response.data)
+
 					set_current_chan({
 						chan: param as Channel,
 						msg: response.data as MessageData[],
@@ -179,29 +189,27 @@ function Chat()
 					})
 				})
 		}
-		else if (is_dm && current_chan.type === DM) {
+		else if (is_dm) {
 			const target_id = (param as DirectMessage).id
 			
 			console.log('dans change etc')
 
-			socket_dm.emit('leave', {
-				receiver_id: current_chan.user
-			})
-
 			axios.get('/api/dm/' + target_id)
 				.then((response: AxiosResponse) => {
+					socket_dm.emit('join', {
+						receiver_id: target_id
+					})
+					console.log(response.data)
 					set_current_chan({
 						user: target_id,
 						type: DM,
 						msg: response.data as MessageData[],
 					})
-
-					socket_dm.emit('join', {
-						receiver_id: target_id
-					})
 				})
 		}
 	}
+
+	console.log(current_chan.msg?.map((msg: any) => msg.text))
 
 	const leaveChannel = (data: any) => {
 		let new_channels = all_channels

@@ -88,7 +88,7 @@ function Messages(current_chan: CurrentChan, users: User[],
 	const same_name = last_chan.name === chan_name;
 	
 				
-	if (wasnt_defined || (same_type && !same_name) || msg_number_diff) // si c'est vide il faut l'update
+	if (wasnt_defined || (same_type && !same_name) || msg_number_diff || !same_type) // si c'est vide il faut l'update
 	{
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
 		setLastChan({
