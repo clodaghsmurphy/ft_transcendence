@@ -3,7 +3,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Socket, Namespace } from "socket.io";
 import { BadRequestFilter } from "./dm.filters";
 import { DmService } from "./dm.service";
-import { DmCreateDto, DmJoinDto } from "./dto";
+import { DmCreateDto, DmJoinDto, DmLeaveDto } from "./dto";
 import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 
 @UseFilters(new BadRequestFilter())
@@ -52,6 +52,18 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 			client.leave(roomName);
 			throw new WsException(e);
 		}
+	}
+
+	@UseGuards(JwtWsGuard)
+	@SubscribeMessage('leave')
+	async handleLeave(@MessageBody() dto: DmLeaveDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		const user_id: number = payload.sub;
+		const roomName: string = this.getRoomName(user_id, dto.receiver_id);
+
+		this.checkUser(client, roomName);
+
+		this.io.in(roomName).emit('leave', {user_id: user_id});
+		client.leave(roomName);
 	}
 
 	@UseGuards(JwtWsGuard)
