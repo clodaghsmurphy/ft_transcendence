@@ -5,7 +5,7 @@ import PopupAddDirect from "./PopupAddDirect";
 import User, { id_to_user } from "../utils/User";
 import plus_sign from '../../media/white_plus.png'
 import group_img from '../../media/group.png'
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 import { ChanAndMessage, CurrentChan, DM, socket_chan } from "./Chat";
 
 const { v4: uuidv4 } = require('uuid');
@@ -36,22 +36,20 @@ export function chat_button(name: string, img: string,
 }
 
 export function users_message(message_data: DirectMessage[], all_users: User[],
-		current_user: User, click_handler: (param: Channel | DirectMessage) => void)
+		current_user: User, click_handler: (param: Channel | DirectMessage) => void,
+		dm: DirectMessage[], set_dms: React.Dispatch<React.SetStateAction<DirectMessage[]>>)
 {
 	let ret: JSX.Element[] = [];
 
-	if (message_data.length === 0) {
-		return [PopupAddDirect(all_users, current_user, click_handler)]
-	}
-
 	for (const dm of message_data) {
-		if (typeof dm === 'undefined' || typeof dm.msg === 'undefined')
+		if (typeof dm === 'undefined')
 			continue
-		let user = id_to_user(all_users, dm.user)
+		let user = id_to_user(all_users, dm.id)
 
 		ret.push(chat_button(user.name, user.avatar, click_handler, dm));
 	}
-	ret.push(PopupAddDirect(all_users, current_user, click_handler))
+	ret.push(PopupAddDirect(all_users, current_user, click_handler,
+			dm, set_dms))
 	return ret;
 }
 

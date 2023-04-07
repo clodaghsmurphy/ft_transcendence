@@ -1,20 +1,42 @@
+import React from 'react'
 import Popup from 'reactjs-popup'
 import { add_dm } from './ChatUtils'
 import User from '../utils/User'
-import { DirectMessage } from './DirectMessage';
-import { Channel } from './Channels';
+import { DirectMessage } from './DirectMessage'
+import { Channel, MessageData } from './Channels'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 
 const { v4: uuidv4 } = require('uuid');
 
 export default function PopupAddDirect(every_users: User[], current_user: User,
-	fnc: (c: Channel | DirectMessage) => void) {
+	change_dm: (c: Channel | DirectMessage) => void, dms: DirectMessage[],
+	set_dms: React.Dispatch<React.SetStateAction<DirectMessage[]>>) {
 	if (typeof current_user === 'undefined')
 		return <div key={uuidv4()}></div>
 
 	function create_dm(usr: User) {
-		fnc({
-			user: usr.id,
-			msg: [],
+		let msg: MessageData[] = []
+
+		console.log('test')
+
+		if (typeof dms.find(
+				(dm: DirectMessage) => dm.id === usr.id
+			) === 'undefined') {
+
+			axios.get('/api/dm/' + usr.id)
+				.then((response: AxiosResponse) => {
+					console.log(response.data)
+					msg = response.data
+				})
+			
+			set_dms([...dms, {
+				id: usr.id,
+				msg: msg,
+			}])
+		}
+		change_dm({
+			id: usr.id,
+			msg: msg,
 		})
 	}
 

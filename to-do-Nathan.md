@@ -4,6 +4,7 @@
   - [x] CSS
   - [ ] emit
 - [ ] create -> pas de users a droite
+- [ ] trop de users a droite -> pas de mute (?)
 
 - [x] 72% popup user au lieu de 80%
 - [x] JWT token refresh socket quand il change

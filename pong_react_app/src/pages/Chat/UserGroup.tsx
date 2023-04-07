@@ -18,7 +18,7 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 
 	if (current_chan.type === DM) {
 		return [user_in_dm(every_user, current_user, {
-			user: current_chan.user!,
+			id: current_chan.user!,
 			msg: current_chan.msg,
 		})];
 	}
@@ -97,7 +97,7 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 
 function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage) {
 	
-	return button_not_op(id_to_user(every_user, dm.user), false)
+	return button_not_op(id_to_user(every_user, dm.id), false)
 }
 
 function button_not_op(user: User, is_op: boolean): JSX.Element {	

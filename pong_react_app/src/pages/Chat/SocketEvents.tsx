@@ -84,27 +84,7 @@ export function handleMessage(vars: ChatVariables) {
 }
 
 export function  handleMute(vars: ChatVariables) {
-	socket_chan.removeListener('mute')
-
-	const function_mute = (data: any) => {
-		// if (data.user === vars.current_user!.id) {
-		// 	let chan = vars.all_channels!.filter((c: Channel) => c.name === data.name)[0]
-		// 	let target = id_to_user(all_users, data.target_id).name;
-		// 	let kick_message = " has muted " + target + " for " + data.mute_duration
-		// 	socket_chan.emit('message', {
-		// 		name: data.name,
-		// 		sender_id: vars.current_user!.id,
-		// 		sender_name: vars.current_user!.name,
-		// 		uid: chan.curr_uid + 1,
-		// 		text: kick_message,
-		// 		type: MUTE,
-		// 	})
-		// }
-
-		// test //
-	}
-	
-	socket_chan.on('mute', function_mute)
+	// lol
 }
 
 export function handleMakeop(vars: ChatVariables) {

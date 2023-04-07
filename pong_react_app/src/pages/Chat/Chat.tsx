@@ -61,6 +61,7 @@ function Chat()
 		axios.get('/api/dm')
 			.then((response: AxiosResponse) => {
 				set_dms(response.data)
+				console.log(response.data)
 			})
 		
 		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
@@ -111,33 +112,41 @@ function Chat()
 
 
 	function changeChannelOrDm(param: Channel | DirectMessage): void {
-		if (typeof (param as Channel).operators !== 'undefined') // C'est un channel
+		const is_chan = typeof (param as Channel).operators !== 'undefined'
+		const is_dm = typeof (param as DirectMessage).id !== 'undefined'
+
+		if (typeof current_chan.msg === 'undefined') {
+			if (is_chan) {
+				console.log('test')
+				socket_chan.emit('join', {
+					name: (param as Channel).name,
+					user_id: current_user.id,
+				});
+				axios.get('/api/channel/' + sanitizeString((param as Channel).name) + '/messages/')
+				.then((response: AxiosResponse) => {
+					set_current_chan({
+						chan: param as Channel,
+						msg: response.data as MessageData[],
+						type: CHANNEL
+					})
+				})
+			}
+			return
+		}
+
+		if (is_chan && current_chan.type === CHANNEL)
 		{
 			param = param as Channel
-			const curr_chan_is_defined = typeof current_chan.type !== 'undefined'
-			const curr_is_chan = current_chan.type === CHANNEL
 
-			if ((curr_chan_is_defined && curr_is_chan) &&
-				current_chan.chan!.name !== param.name) {
-				
-				socket_chan.emit('leave', {
-					name: current_chan.chan!.name,
-					user_id: current_user.id,
-				})
+			socket_chan.emit('leave', {
+				name: current_chan.chan!.name,
+				user_id: current_user.id,
+			})
 
-				socket_chan.emit('join', {
-					name: param.name,
-					user_id: current_user.id,
-				});
-			}
-
-			if (!curr_chan_is_defined) {
-				socket_chan.emit('join', {
-					name: param.name,
-					user_id: current_user.id,
-				});
-			}
-
+			socket_chan.emit('join', {
+				name: param.name,
+				user_id: current_user.id,
+			});
 
 			set_current_chan({
 				chan: param,
@@ -153,9 +162,11 @@ function Chat()
 					})
 				})
 		}
-		if (typeof (param as DirectMessage).msg !== 'undefined') {
-			const target_id = (param as DirectMessage).user
+		else if (is_dm && current_chan.type === DM) {
+			const target_id = (param as DirectMessage).id
 			
+			console.log('dans change etc')
+
 			axios.get('/api/dm/' + target_id)
 				.then((response: AxiosResponse) => {
 					set_current_chan({
@@ -214,8 +225,9 @@ function Chat()
 					<div className='lists'>
 						<h1>User messages</h1>
 						<div className='lists-holder'>
-							{users_message(/* direct_messages */ [],
-								all_users, current_user, changeChannelOrDm)}
+							{users_message(dms, all_users,
+									current_user, changeChannelOrDm,
+									dms, set_dms)}
 						</div>
 						<div className='channels-holder'></div>
 					</div>
