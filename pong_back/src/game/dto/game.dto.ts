@@ -20,3 +20,10 @@ export class GameRemoveDto {
 	@IsNumber()
 	id: number;
 }
+
+// Temporary as well
+export class GameJoinDto extends GameRemoveDto {
+	@IsNotEmpty()
+	@IsNumber()
+	user_id: number;
+}

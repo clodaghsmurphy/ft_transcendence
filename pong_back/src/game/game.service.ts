@@ -5,12 +5,16 @@ import { UserService } from "src/user/user.service";
 import { GameCreateDto } from "./dto";
 import { GameRoom } from "./types/game.types";
 import { use } from "passport";
+import { GameState } from "./types/game.types";
+import { Namespace } from 'socket.io';
 
 @Injectable()
 export class GameService {
-	constructor(private prisma: PrismaService, private userService: UserService) {}
 
-	public activeGames: Map<number, GameRoom> = new Map<number, GameRoom>();
+	public io: Namespace;
+	private activeGames: Map<number, GameRoom> = new Map<number, GameRoom>();
+
+	constructor(private prisma: PrismaService, private userService: UserService) {}
 
 	async getAll() {
 		return await this.prisma.game.findMany({where: {ongoing: true}});
@@ -21,8 +25,8 @@ export class GameService {
 	}
 
 	async create(dto) {
-		await this.checkUserInGame(dto.user_id);
-		await this.checkUserInGame(dto.target_id);
+		await this.checkUserNotInGame(dto.user_id);
+		await this.checkUserNotInGame(dto.target_id);
 
 		const game = await this.prisma.game.create({
 			data: {
@@ -38,6 +42,14 @@ export class GameService {
 				in_game: true,
 			}
 		});
+
+		const room = new GameRoom();
+		room.id = game.id;
+		room.player1_id = dto.user_id;
+		room.player2_id = dto.target_id;
+		room.state = new GameState();
+
+		this.activeGames[room.id] = room;
 		return game;
 	}
 
@@ -55,6 +67,7 @@ export class GameService {
 			}
 		});
 
+		this.activeGames.delete(game.id);
 		return game;
 	}
 
@@ -67,7 +80,7 @@ export class GameService {
 		}
 	}
 
-	async checkUserInGame(userId: number) {
+	async checkUserNotInGame(userId: number) {
 		await this.userService.checkUser(userId);
 
 		const user = await this.userService.get(userId);
@@ -75,6 +88,20 @@ export class GameService {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `User ${userId} is already in game ${user.game_id}`,
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	async checkUserInGame(userId: number, gameId: number) {
+		await this.userService.checkUser(userId);
+		await this.checkGame(gameId);
+
+		const game = await this.prisma.game.findUnique({where: {id: gameId}});
+
+		if (game.player1 != userId && game.player2 != userId) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${userId} is not part of game ${gameId}`
 			}, HttpStatus.BAD_REQUEST);
 		}
 	}

@@ -7,6 +7,7 @@ import { DmCreateDto, DmJoinDto } from "./dto";
 import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 
 @UseFilters(new BadRequestFilter())
+@UsePipes(new ValidationPipe({whitelist: true}))
 @WebSocketGateway({namespace: 'dm'})
 export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	private logger = new Logger(DmGateway.name);
@@ -30,7 +31,6 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	}
 
 	@UseGuards(JwtWsGuard)
-	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		const data: any = {
@@ -55,7 +55,6 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	}
 
 	@UseGuards(JwtWsGuard)
-	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('message')
 	async handleMessage(@MessageBody() dto: DmCreateDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		const data: any = dto;
