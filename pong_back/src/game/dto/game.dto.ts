@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, ValidateNested } from "class-validator";
+import { GameKeyEvent } from "../types/game.types";
 
 export class GameCreateDto {
 	// Temporary measure before matchmaking/invites are implemented
@@ -26,4 +27,10 @@ export class GameJoinDto extends GameRemoveDto {
 	@IsNotEmpty()
 	@IsNumber()
 	user_id: number;
+}
+
+export class GameKeyDto extends GameRemoveDto {
+	@IsNotEmpty()
+	@Type(() => GameKeyEvent)
+	keyEvent: GameKeyEvent;
 }

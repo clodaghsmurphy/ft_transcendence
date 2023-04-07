@@ -13,3 +13,18 @@ export class GameRoom {
 	// TMP TEST
 	rounds: number;
 }
+
+enum KeyType {
+	'UP',
+	'DOWN'
+};
+
+enum KeyAction {
+	'PRESS',
+	'RELEASE'
+};
+
+export class GameKeyEvent {
+	key: KeyType;
+	action: KeyAction;
+}
