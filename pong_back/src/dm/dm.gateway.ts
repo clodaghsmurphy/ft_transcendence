@@ -3,10 +3,11 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Socket, Namespace } from "socket.io";
 import { BadRequestFilter } from "./dm.filters";
 import { DmService } from "./dm.service";
-import { DmCreateDto, DmJoinDto } from "./dto";
+import { DmCreateDto, DmJoinDto, DmLeaveDto } from "./dto";
 import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 
 @UseFilters(new BadRequestFilter())
+@UsePipes(new ValidationPipe({whitelist: true}))
 @WebSocketGateway({namespace: 'dm'})
 export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	private logger = new Logger(DmGateway.name);
@@ -30,7 +31,6 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	}
 
 	@UseGuards(JwtWsGuard)
-	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: DmJoinDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		const data: any = {
@@ -55,7 +55,18 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	}
 
 	@UseGuards(JwtWsGuard)
-	@UsePipes(new ValidationPipe({whitelist: true}))
+	@SubscribeMessage('leave')
+	async handleLeave(@MessageBody() dto: DmLeaveDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		const user_id: number = payload.sub;
+		const roomName: string = this.getRoomName(user_id, dto.receiver_id);
+
+		this.checkUser(client, roomName);
+
+		this.io.in(roomName).emit('leave', {user_id: user_id});
+		client.leave(roomName);
+	}
+
+	@UseGuards(JwtWsGuard)
 	@SubscribeMessage('message')
 	async handleMessage(@MessageBody() dto: DmCreateDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		const data: any = dto;
