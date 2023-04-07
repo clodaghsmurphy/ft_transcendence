@@ -3,7 +3,15 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
+- [ ] GERER LES ERREURS lol
 
+- [x] Channel avec un nom avec que des whitespaces
+- [x] Ne pas creer de dm avec qqun avec qui on a deja un dm
+- [x] changer le header si c'est un DM
+- [x] trop de users a droite -> pas de mute (?)
+- [x] create -> pas de users a droite
+- [x] on('message') pour les DMs
+- [x] 72% popup user au lieu de 80%
 - [x] JWT token refresh socket quand il change
 - [x] CSS -> is_public popupcreate channel
 - [x] join -> Mauvais mot de passe donne une case vide qui cree des 404

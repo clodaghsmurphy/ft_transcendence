@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Popup from 'reactjs-popup'
-import { socket_chat } from './Chat'
+import { socket_chan } from './Chat'
 import User from '../utils/User'
 import { Channel } from './Channels'
 import { DirectMessage } from './DirectMessage'
@@ -40,7 +40,7 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 				.then((response: AxiosResponse) => {
 						if (typeof response.data.status === 'undefined') {
 							changeChannelOrDm(response.data as Channel)
-							socket_chat.emit('join', {
+							socket_chan.emit('join', {
 								name: response.data.name,
 								user_id: current_user.id,
 							})
@@ -58,7 +58,7 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 				})
 				.then((response: AxiosResponse) => {
 						changeChannelOrDm(response.data as Channel)
-						socket_chat.emit('join', {
+						socket_chan.emit('join', {
 							name: response.data.name,
 							user_id: current_user.id,
 						})

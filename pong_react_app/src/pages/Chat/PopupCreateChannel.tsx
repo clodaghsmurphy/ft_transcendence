@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import Popup from 'reactjs-popup'
 import { add_group, sanitizeString } from './ChatUtils'
-import { socket_chat } from './Chat'
+import { socket_chan } from './Chat'
 import User from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 
@@ -60,7 +60,7 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 	}
 
 	function ValidateChan() {
-		if (!inputRef.current || inputRef.current.value === '')
+		if (!inputRef.current || inputRef.current.value === '' || /^\s*$/.test(inputRef.current.value))
 			return ;
 		const chan_name = sanitizeString(inputRef.current!.value);
 		const chan_pass = inputRefPassword.current!.value;
@@ -75,24 +75,20 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 			is_public: !privateRef.current!.checked,
 		}
 		if (chan_pass?.length > 0) {
-			console.log('inside the chan_pass if')
 			body = {
 				...body,
 				password: chan_pass
 			}
 		}
 
-		const headers = {'Content-Type': 'application/json'}
-		axios.post('/api/channel/create', body, { headers })
+		axios.post('/api/channel/create', body)
 			.then((response: AxiosResponse) => {
-				socket_chat.emit('join', {
+				socket_chan.emit('join', {
 					name: chan_name,
 					user_id: current_user.id,
-				}, (data: any) => {
-					console.log('return of emit join:', data)
 				})
 			})
-		}
+	}
 
 	let b_users: JSX.Element[] = []
 	if (every_users.length !== 0)
@@ -106,7 +102,7 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 			<div className='popup-user-container'>
 				{b_users}
 			</div>
-			
+
 			<div className='bar' style={{
 				width: '90%',
 				marginLeft: '5%',

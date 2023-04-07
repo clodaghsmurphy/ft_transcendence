@@ -1,12 +1,12 @@
 import { Channel } from "./Channels";
-import { DirectMessage, dm_betweeen_two_users } from "./DirectMessage";
+import { DirectMessage } from "./DirectMessage";
 import PopupCreateChannel from "./PopupCreateChannel";
 import PopupAddDirect from "./PopupAddDirect";
 import User, { id_to_user } from "../utils/User";
 import plus_sign from '../../media/white_plus.png'
 import group_img from '../../media/group.png'
-import { useRef } from 'react'
-import { ChanAndMessage, socket_chat } from "./Chat";
+import React, { useRef } from 'react'
+import { ChanAndMessage, CurrentChan, DM, socket_chan } from "./Chat";
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -36,27 +36,20 @@ export function chat_button(name: string, img: string,
 }
 
 export function users_message(message_data: DirectMessage[], all_users: User[],
-		current_user: User, click_handler: (param: Channel | DirectMessage) => void)
+		current_user: User, click_handler: (param: Channel | DirectMessage) => void,
+		dm: DirectMessage[], set_dms: React.Dispatch<React.SetStateAction<DirectMessage[]>>)
 {
 	let ret: JSX.Element[] = [];
 
-	if (message_data.length === 0) {
-		return [PopupAddDirect(all_users, current_user)]
-	}
-
 	for (const dm of message_data) {
-		if (typeof dm === 'undefined' || typeof dm.users === 'undefined')
-			return [PopupAddDirect(all_users, current_user)]
-		let user = id_to_user(all_users, dm.users[0]);
-		if (user.id === current_user.id) {
-			user = id_to_user(all_users, dm.users[1]);
-		}
+		if (typeof dm === 'undefined')
+			continue
+		let user = id_to_user(all_users, dm.id)
 
-		let direct = dm_betweeen_two_users(current_user, user);
-
-		ret.push(chat_button(user.name, user.avatar, click_handler, direct));
+		ret.push(chat_button(user.name, user.avatar, click_handler, dm));
 	}
-	ret.push(PopupAddDirect(all_users, current_user))
+	ret.push(PopupAddDirect(all_users, current_user, click_handler,
+			dm, set_dms))
 	return ret;
 }
 
@@ -100,17 +93,22 @@ export function group_message(chan_data: Channel[],
 }
 
 
-export function Password(current_user: User, current_chan: ChanAndMessage | DirectMessage): JSX.Element {
+export function Password(current_user: User, current_chan: CurrentChan): JSX.Element {
 	let pass_ref = useRef<HTMLInputElement | null>(null)
 
-	if (typeof (current_chan as ChanAndMessage).chan === 'undefined')
+	if (current_chan.type === DM)
 		return <div key={uuidv4()}></div>
 
-	if ((current_chan as ChanAndMessage).chan.owner !== current_user.id)
-		return <div key={uuidv4()}></div>
+	current_chan.chan = current_chan.chan!
+
+	if (typeof current_chan.chan === 'undefined')
+		return <div key='nothing'/>
+
+	if (current_chan.chan.owner !== current_user.id)
+		return <div key='nothing'/>
 
 	function changePassword(name: string) {
-		socket_chat.emit('password', {
+		socket_chan.emit('password', {
 			name: name,
 			user_id: current_user.id,
 			password: pass_ref.current!.value,
@@ -119,7 +117,7 @@ export function Password(current_user: User, current_chan: ChanAndMessage | Dire
 	}
 
 	function clearPassword(name: string) {
-		socket_chat.emit('password', {
+		socket_chan.emit('password', {
 			name: name,
 			user_id: current_user.id,
 		})
