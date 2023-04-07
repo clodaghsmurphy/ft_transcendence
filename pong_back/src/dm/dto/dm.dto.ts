@@ -6,6 +6,8 @@ export class DmJoinDto {
 	receiver_id: number;
 }
 
+export class DmLeaveDto extends DmJoinDto {}
+
 export class DmCreateDto extends DmJoinDto {
 	@IsString()
 	@IsNotEmpty()

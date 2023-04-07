@@ -13,3 +13,17 @@ export class GameParams {
 	@IsNotEmpty()
 	id: string;
 }
+
+export class GameRemoveDto {
+	// Temporary, games should be removed automatically in the future
+	@IsNotEmpty()
+	@IsNumber()
+	id: number;
+}
+
+// Temporary as well
+export class GameJoinDto extends GameRemoveDto {
+	@IsNotEmpty()
+	@IsNumber()
+	user_id: number;
+}

@@ -7,6 +7,7 @@ export class BadRequestFilter extends BaseWsExceptionFilter {
 
 	catch(exception: BadRequestException, host: ArgumentsHost) {
 		const properError = new WsException(exception);
+		this.logger.error(JSON.stringify(properError));
 		super.catch(properError, host);
 	}
 }
