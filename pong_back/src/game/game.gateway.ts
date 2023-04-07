@@ -14,9 +14,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@WebSocketServer() io: Namespace;
 
-	constructor (private readonly gameService: GameService) {
-		gameService.io = this.io;
-	}
+	constructor (private gameService: GameService) {}
 
 	afterInit() {
 	}
@@ -40,6 +38,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 		if (this.io.adapter.rooms.get('' + dto.id).size === 2) {
 			this.io.in('' + dto.id).emit('gamestart');
+			this.gameService.startGame(dto.id, this.io);
 		}
 	}
 }
