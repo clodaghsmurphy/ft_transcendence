@@ -4,7 +4,7 @@ import { Socket, Namespace, Server } from 'socket.io';
 import { BadRequestFilter } from "./game.filters";
 import { GameService } from "./game.service";
 import { JwtWsGuard } from "src/auth/utils/JwtWsGuard";
-import { GameJoinDto } from "./dto";
+import { GameJoinDto, GameKeyDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())
 @UsePipes(new ValidationPipe({whitelist: true}))
@@ -40,5 +40,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			this.io.in('' + dto.id).emit('gamestart');
 			this.gameService.startGame(dto.id, this.io);
 		}
+	}
+
+	@SubscribeMessage('keyEvent')
+	async handleKeyEvent(@MessageBody() dto: GameKeyDto, @ConnectedSocket() client: Socket) {
+		this.logger.log(`Key Event: ${JSON.stringify(dto)}`);
 	}
 }
