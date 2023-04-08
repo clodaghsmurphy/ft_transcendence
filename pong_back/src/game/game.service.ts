@@ -21,6 +21,10 @@ export class GameService {
 		return await this.prisma.game.findMany({where: {ongoing: true}});
 	}
 
+	async getAllPast() {
+		return await this.prisma.game.findMany({});
+	}
+
 	async get(id: number) {
 		return await this.prisma.game.findUnique({where: {id: id}});
 	}
