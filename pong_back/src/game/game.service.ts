@@ -13,7 +13,9 @@ export class GameService {
 
 	private activeGames: Map<number, GameRoom> = new Map<number, GameRoom>();
 
-	constructor(private prisma: PrismaService, private userService: UserService) {}
+	constructor(private prisma: PrismaService, private userService: UserService) {
+		this.cleanHangingGames();
+	}
 
 	async getAll() {
 		return await this.prisma.game.findMany({where: {ongoing: true}});
@@ -67,11 +69,11 @@ export class GameService {
 			data: {
 				game_id: null,
 				in_game: false,
+				past_games: {push: id}
 			}
 		});
 
 		this.activeGames.delete(game.id);
-		this.remove(game.id);
 		return game;
 	}
 
@@ -104,9 +106,9 @@ export class GameService {
 
 		if (dto.keyEvent.action === KeyAction.Press) {
 			if (dto.keyEvent.key === KeyType.Up) {
-				newDir = 10;
+				newDir = -room.state.racket_speed;
 			} else {
-				newDir = -10;
+				newDir = room.state.racket_speed;
 			}
 		}
 
@@ -172,6 +174,11 @@ export class GameService {
 				error: `User ${userId} is not a player`
 			}, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	async cleanHangingGames() {
+		const games = await this.prisma.game.findMany({where: {ongoing: true}});
+		games.forEach((game) => this.remove(game.id));
 	}
 }
 

@@ -4,6 +4,9 @@ export class GameState {
 	width: number;
 	height: number;
 
+	racket_speed: number;
+	racket_length: number;
+
 	player1_pos: number;
 	player2_pos: number;
 
@@ -26,6 +29,10 @@ export const defaultState: GameState = {
 	// TODO: Figure out default screen size
 	width: 400,
 	height: 400,
+
+	// TODO: Figure out racket length and speed
+	racket_speed: 10,
+	racket_length: 50,
 
 	player1_pos: 200,
 	player2_pos: 200,
