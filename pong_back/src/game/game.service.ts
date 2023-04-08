@@ -2,10 +2,11 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
-import { GameCreateDto } from "./dto";
-import { GameRoom } from "./types/game.types";
+import { GameCreateDto, GameKeyDto } from "./dto";
+import { GameKeyEvent, GameRoom, KeyAction, KeyType, defaultState } from "./types/game.types";
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
+import { use } from "passport";
 
 @Injectable()
 export class GameService {
@@ -47,14 +48,15 @@ export class GameService {
 		room.player2_id = dto.target_id;
 		room.rounds = 0;
 
-		room.state = new GameState();
-		room.state.ongoing = true;
+		room.state = defaultState;
 
-		this.activeGames[room.id] = room;
+		this.activeGames.set(game.id, room);
 		return game;
 	}
 
 	async remove(id: number) {
+		await this.checkGame(id);
+
 		const game = await this.prisma.game.update({
 			where: {id: id},
 			data: {ongoing: false},
@@ -69,7 +71,49 @@ export class GameService {
 		});
 
 		this.activeGames.delete(game.id);
+		this.remove(game.id);
 		return game;
+	}
+
+	startGame(gameId: number, io: Namespace) {
+		this.checkActiveGame(gameId);
+
+		const room: GameRoom = this.activeGames.get(gameId);
+
+		const intervalId = setInterval(async () => {
+			if (room.state.ongoing === true) {
+				this.gameLoop(room);
+				io.in('' + room.id).emit('update', room.state);
+			} else {
+				clearInterval(intervalId);
+				io.in('' + room.id).emit('gameover');
+				await this.remove(room.id);
+			}
+		}, 500);
+	}
+
+	gameLoop(room: GameRoom) {
+		room.rounds++;
+		if (room.rounds >= 50)
+			room.state.ongoing = false;
+	}
+
+	keyEvent(dto: GameKeyDto) {
+		const room: GameRoom = this.activeGames.get(dto.id);
+		let newDir = 0;
+
+		if (dto.keyEvent.action === KeyAction.Press) {
+			if (dto.keyEvent.key === KeyType.Up) {
+				newDir = 10;
+			} else {
+				newDir = -10;
+			}
+		}
+
+		if (dto.user_id === room.player1_id)
+			room.state.player1_dir = newDir;
+		else
+			room.state.player2_dir = newDir;
 	}
 
 	async checkGame(id: number) {
@@ -107,27 +151,27 @@ export class GameService {
 		}
 	}
 
-	async startGame(gameId: number, io: Namespace) {
-		await this.checkGame(gameId);
-
-		const room: GameRoom = this.activeGames[gameId];
-
-		const intervalId = setInterval(() => {
-			if (room.state.ongoing === true) {
-				this.gameLoop(room);
-				io.in('' + room.id).emit('update');
-			} else {
-				clearInterval(intervalId);
-				io.in('' + room.id).emit('gameover');
-			}
-		}, 500);
-
+	checkActiveGame(gameId: number) {
+		if (!this.activeGames.has(gameId)) {
+			console.log(`${JSON.stringify(this.activeGames)}`);
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `Game ${gameId} is not ongoing.`
+			}, HttpStatus.BAD_REQUEST);
+		}
 	}
 
-	gameLoop(room: GameRoom) {
-		room.rounds++;
-		if (room.rounds >= 5)
-			room.state.ongoing = false;
+	checkUserIsPlayer(userId: number, gameId: number) {
+		this.checkActiveGame(gameId);
+
+		const room : GameRoom = this.activeGames.get(gameId);
+
+		if (userId != room.player1_id && userId != room.player2_id) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `User ${userId} is not a player`
+			}, HttpStatus.BAD_REQUEST);
+		}
 	}
 }
 
