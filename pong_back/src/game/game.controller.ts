@@ -12,6 +12,11 @@ export class GameController {
 		return this.gameService.getAll();
 	}
 
+	@Get('all')
+	getAllPastGames() {
+		return this.gameService.getAllPast();
+	}
+
 	@Get(':id')
 	getGame(@Param() params: GameParams) {
 		return this.gameService.get(parseInt(params.id));
