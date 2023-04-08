@@ -21,7 +21,7 @@ type GamePost = {
 export let socket_game: Socket
 
 function Game() {
-	
+
 	const [isJoined, setIsJoined] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
 
@@ -47,29 +47,54 @@ function Game() {
 				})
 			})
 	}
-	
+
 	useEffect(() => {
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "ArrowUp") {
-				socket_game.emit('toucheAppuyee', { touche: 'ArrowUp' });
-				console.log("emit ArrowUp");
-			} else if (event.key === "ArrowDown") {
-				socket_game.emit('toucheAppuyee', { touche: 'ArrowDown' });
-				console.log("emit ArrowDown");
-			} else if (event.key === "w") {	
-				socket_game.emit('toucheAppuyee', { touche: 'w' });
-				console.log("emit w");
-			} else if (event.key === "s") {
-				socket_game.emit('toucheAppuyee', { touche: 's' });
-				console.log("emit s");
+		let isKeyPressed = false;
+
+		const handleKeyEvent = (event: KeyboardEvent, action: string) => {
+			let keyEvent = {
+				action: action,
+				key: ""
+			};
+
+			if (event.key === "ArrowUp" || event.key === "w") {
+				keyEvent.key = "Up";
+			} else if (event.key === "ArrowDown" || event.key === "s") {
+				keyEvent.key = "Down";
+			} else {
+				return ;
 			}
+
+			// This wont work yet
+			// The object transmitted to keyEvent should be of form:
+			// "id": id_of_game
+			// "user_id": id_of the user
+			// "keyEvent": keyEvent object
+			socket_game.emit("keyEvent", keyEvent);
+			console.log(`emit keyEvent: ${JSON.stringify(keyEvent)}`);
 		};
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (isKeyPressed)
+				return ;
+			isKeyPressed = true;
+			handleKeyEvent(event, "Press");
+		}
+
+		const handleKeyUp = (event: KeyboardEvent) => {
+			isKeyPressed = false;
+			handleKeyEvent(event, "Release");
+		}
+
 		document.addEventListener("keydown", handleKeyDown);
+		document.addEventListener("keyup", handleKeyUp);
+
 		return () => {
 			document.removeEventListener("keydown", handleKeyDown);
+			document.removeEventListener("keyup", handleKeyUp);
 		};
 	}, []);
-	
+
 	const handleJoinGame = async () => {
 		// Appel à la fonction pour rejoindre la partie
 		try {
@@ -79,7 +104,7 @@ function Game() {
 			console.log(error);
 		}
 	};
-	
+
 	if (!isJoined) {
 		return (
 			<div>
