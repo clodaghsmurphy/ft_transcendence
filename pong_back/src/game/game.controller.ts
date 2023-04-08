@@ -19,16 +19,16 @@ export class GameController {
 
 	@UseGuards(JwtAuthGuard)
 	@Post('create')
-	createGame(@Req() request, @Body() dto: GameCreateDto) {
+	async createGame(@Req() request, @Body() dto: GameCreateDto) {
 		const data = {
 			user_id: request.user.id,
 			target_id: dto.target_id,
 		};
-		return this.gameService.create(data);
+		return await this.gameService.create(data);
 	}
 
 	@Post('remove')
-	removeGame(@Body() dto: GameRemoveDto) {
-		return this.gameService.remove(dto.id);
+	async removeGame(@Body() dto: GameRemoveDto) {
+		return await this.gameService.remove(dto.id);
 	}
 }

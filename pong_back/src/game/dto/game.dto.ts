@@ -29,7 +29,7 @@ export class GameJoinDto extends GameRemoveDto {
 	user_id: number;
 }
 
-export class GameKeyDto extends GameRemoveDto {
+export class GameKeyDto extends GameJoinDto {
 	@IsNotEmpty()
 	@Type(() => GameKeyEvent)
 	keyEvent: GameKeyEvent;
