@@ -65,6 +65,11 @@ function Game() {
 				return ;
 			}
 
+			// This wont work yet
+			// The object transmitted to keyEvent should be of form:
+			// "id": id_of_game
+			// "user_id": id_of the user
+			// "keyEvent": keyEvent object
 			socket_game.emit("keyEvent", keyEvent);
 			console.log(`emit keyEvent: ${JSON.stringify(keyEvent)}`);
 		};
