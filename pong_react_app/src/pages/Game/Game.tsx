@@ -16,6 +16,7 @@ const { v4: uuidv4 } = require('uuid');
 
 type GamePost = {
 	id_user: number,
+	target_id: number,
 }
 
 export let socket_game: Socket
@@ -39,22 +40,15 @@ function Game() {
 		});
 		let body: GamePost = {
 			id_user: Number(state.user.id),
+			target_id: 4,
 		}
 		axios.post('/api/game/create', body)
 			.then((response: AxiosResponse) => {
-				socket_game.emit('create', {
-					id_user: Number(state.user.id),
-					target_id: 94551,
-				})
-				socket_game.on('create', (data:any) => {
-					console.log('Received message :', data);
-				});
+				console.log('Received message :', body);
+				// socket_game.emit('create', { body: body })
+				// socket_game.on('create', (data:any) => {
+				// });
 			})
-			.catch((error: AxiosError) => {
-				// Gérer les erreurs ici
-				console.log(error);
-			});
-		console.log(Number(state.user.id))
 	}
 
 	useEffect(() => {
@@ -74,17 +68,22 @@ function Game() {
 				return ;
 			}
 
-			let data = {
-				"user_id": Number(state.user.id),
-				"keyEvent": keyEvent,
-				// "id": 1,
+			// let data = {
+			// 	"user_id": Number(state.user.id),
+			// 	"keyEvent": keyEvent,
+			// 	// "id": 1,
 				
-			}
+			// }
 			// This wont work yet
 			// The object transmitted to keyEvent should be of form:
 			// "id": id_of_game
 			// "user_id": id_of the user
 			// "keyEvent": keyEvent object
+			let data = {
+				"id": 1,
+				"user_id": Number(state.user.id),
+				"keyEvent": keyEvent,
+			}
 			socket_game.emit("keyEvent", data);
 			console.log(`emit keyEvent: ${JSON.stringify(data)}`);
 		};
