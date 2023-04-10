@@ -86,7 +86,7 @@ export class UserService {
 				data: {
 					name: dto.name,
 					id: dto.id,
-					avatar: `http://localhost:8080/api/user/image/${dto.id}`,
+					avatar: `http://${process.env.HOSTNAME}:8080/api/user/image/${dto.id}`,
 					avatar_path: avatarPath ? avatarPath : await this.downloadImage(dto.avatar_path),
 				},
 			});

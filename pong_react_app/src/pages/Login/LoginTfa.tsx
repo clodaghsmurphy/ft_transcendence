@@ -21,7 +21,7 @@ function LoginTfa()
 
     async function getPayload () 
 	{
-		const { data } = await axios.get('http://localhost:3042/auth/profile');
+		const { data } = await axios.get(`http://${process.env.HOSTNAME}:3042/auth/profile`);
 			dispatch(
 				{
 					type: ActionKind.Login,
@@ -44,7 +44,7 @@ function LoginTfa()
     {
         e.preventDefault();
         console.log(token);
-            axios.post('http://localhost:3042/auth/auth2fa',
+            axios.post(`http://${process.env.HOSTNAME}:3042/auth/auth2fa`,
                  { value },
                 { headers: {"Authorization" : `Bearer ${token}`} }, 
             )
