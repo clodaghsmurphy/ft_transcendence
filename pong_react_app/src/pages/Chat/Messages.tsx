@@ -144,6 +144,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 		const headers = {
 			'Content-Type': 'application/json'
 		}
+
+		socket_chan.emit('leave', { name })
 		
 		axios.post('/api/channel/leave', {
 			name: name,

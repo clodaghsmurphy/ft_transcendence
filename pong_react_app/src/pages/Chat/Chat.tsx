@@ -128,6 +128,7 @@ function Chat()
 
 		if (typeof current_chan.msg === 'undefined') {
 			if (is_chan) {
+				console.log('join', (param as Channel).name)
 				socket_chan.emit('join', {
 					name: (param as Channel).name,
 					user_id: current_user.id,
@@ -182,7 +183,8 @@ function Chat()
 			if (current_chan.chan?.name === (param as Channel).name)
 				return
 			
-			socket_chan.emit('join', {
+			console.log('join', (param as Channel).name)
+				socket_chan.emit('join', {
 				name: param.name,
 				user_id: current_user.id,
 			});
