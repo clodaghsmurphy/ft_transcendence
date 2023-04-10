@@ -54,7 +54,7 @@ export class GameService {
 		room.player2_id = dto.target_id;
 		room.rounds = 0;
 
-		room.state = defaultState;
+		room.state = {...defaultState};
 
 		this.activeGames.set(game.id, room);
 		return game;
