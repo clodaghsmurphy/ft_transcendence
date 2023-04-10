@@ -3,7 +3,8 @@ import { ReactP5Wrapper } from "react-p5-wrapper";
 export default function sketch(p5) {
 
     let canvas;
-    let ball;
+    let ballX = 200,
+        ballY = 200;
     let paddle1 = 200,
         paddle2 = 200;
     let paddleWidth = 10,
@@ -39,6 +40,8 @@ export default function sketch(p5) {
         p5.rectMode(p5.CENTER);
         p5.rect(20, paddle1, paddleWidth, paddleHeight);
         p5.rect(p5.width - 20, paddle2, paddleWidth, paddleHeight);
+
+        p5.ellipse(ballX, ballY, 20, 20);
     };
 
     p5.updateWithProps = (props) => {
@@ -50,5 +53,11 @@ export default function sketch(p5) {
 
         paddle1 = data.player1_pos;
         paddle2 = data.player2_pos;
+
+        score1 = data.player1_goals;
+        score2 = data.player2_goals;
+
+        ballX = data.ball_pos_x;
+        ballY = data.ball_pos_y;
     };
 }

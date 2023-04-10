@@ -105,7 +105,7 @@ export class GameService {
 		// Bouge la raquette de joueur1
 		room.state.player1_pos += room.state.player1_dir;
 
-		if (room.state.player1_pos < room.state.racket_length / 2)
+		if (room.state.player1_pos < room.state.racket_length)
 			room.state.player1_pos -= room.state.player1_dir;
 		if (room.state.player1_pos > room.state.height - (room.state.racket_length / 2))
 			room.state.player1_pos -= room.state.player1_dir;
