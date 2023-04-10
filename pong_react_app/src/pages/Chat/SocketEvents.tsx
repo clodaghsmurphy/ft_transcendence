@@ -5,6 +5,7 @@ import { DirectMessage } from './DirectMessage'
 import User, { id_to_user } from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { sanitizeString } from './ChatUtils'
+import { toast } from 'react-toastify'
 
 type ChatVariables = {
 	all_users?: User[],
@@ -133,6 +134,16 @@ export function handleJoin(vars: ChatVariables) {
 								type: CHANNEL,
 							})
 						})
+						.catch((err: AxiosError) => {
+							if (err) {
+								toast.error('Couldn\'t fetch ' + chan_name + ' messages');
+							}
+						})
+				})
+				.catch((err: AxiosError) => {
+					if (err) {
+						toast.error('Couldn\'t fetch channel ' + chan_name);
+					}
 				})
 		}
 	}

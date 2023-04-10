@@ -13,6 +13,9 @@ import { group_message, Password, sanitizeString, users_message } from './ChatUt
 import PopupJoinChannel from './PopupJoinChannel'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { handleBan, handleJoin, handleKick, handleMakeop, handleMessage } from './SocketEvents'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import './ToastifyFix.css'
 
 export const CHANNEL	= false
 export const DM 		= true
@@ -52,15 +55,24 @@ function Chat()
 					set_all_users(response.data as User[])
 					set_current_user(id_to_user(response.data as User[], user_id))
 				})
+			.catch((err: AxiosError) => {
+				toast.error('Error fetching users');
+			})
 		
 		axios.get('/api/channel/info')
 			.then((response: AxiosResponse) => {
 					set_all_channels(response.data as Channel[])
 			})
+			.catch((err: AxiosError) => {
+				toast.error('Error fetching channels');
+			})
 		
 		axios.get('/api/dm')
 			.then((response: AxiosResponse) => {
 				set_dms(response.data)
+			})
+			.catch((err: AxiosError) => {
+				toast.error('Error fetching DMs');
 			})
 		
 		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
@@ -116,7 +128,6 @@ function Chat()
 
 		if (typeof current_chan.msg === 'undefined') {
 			if (is_chan) {
-				console.log('test')
 				socket_chan.emit('join', {
 					name: (param as Channel).name,
 					user_id: current_user.id,
@@ -129,9 +140,11 @@ function Chat()
 						type: CHANNEL
 					})
 				})
+				.catch((err: AxiosError) => {
+					toast.error('Error fetching channel ' + sanitizeString((param as Channel).name));
+				})
 			}
 			if (is_dm) {
-				console.log('test dm')
 				socket_dm.emit('join', {
 					receiver_id: (param as DirectMessage).id
 				});
@@ -143,13 +156,15 @@ function Chat()
 						type: DM
 					})
 				})
+				.catch((err: AxiosError) => {
+					toast.error('Error fetching DM with user ' + (param as DirectMessage).id);
+				})
 			}
 			return
 		}
 
 		if (current_chan.type === CHANNEL) {
 			if (current_chan.chan!.name !== (param as Channel).name) {
-				console.log('leaving ' + current_chan.chan!.name)
 				socket_chan.emit('leave', {
 				name: current_chan.chan!.name,
 				user_id: current_user.id,
@@ -179,13 +194,14 @@ function Chat()
 			})
 			axios.get('/api/channel/' + sanitizeString(param.name) + '/messages/')
 				.then((response: AxiosResponse) => {
-					console.log(response.data)
-
 					set_current_chan({
 						chan: param as Channel,
 						msg: response.data as MessageData[],
 						type: CHANNEL
 					})
+				})
+				.catch((err: AxiosError) => {
+					toast.error('Error fetching channel ' + (param as DirectMessage).id);
 				})
 		}
 		else if (is_dm) {
@@ -201,6 +217,9 @@ function Chat()
 						type: DM,
 						msg: response.data as MessageData[],
 					})
+				})
+				.catch((err: AxiosError) => {
+					toast.error('Error fetching DM with user ' + (param as DirectMessage).id);
 				})
 		}
 	}
@@ -223,6 +242,9 @@ function Chat()
 		<div className="dashboard">
         <NavBar /> 
         <main className="page-wrapper">
+				<ToastContainer 
+					theme='colored'
+				/>
             <div className="channels">
 				<h1>Messages</h1>
 

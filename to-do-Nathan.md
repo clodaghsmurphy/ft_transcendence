@@ -3,8 +3,9 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] GERER LES ERREURS lol
+- [ ] Leave un chan ne leave pas la room (socket)
 
+- [x] GERER LES ERREURS lol
 - [x] Channel avec un nom avec que des whitespaces
 - [x] Ne pas creer de dm avec qqun avec qui on a deja un dm
 - [x] changer le header si c'est un DM

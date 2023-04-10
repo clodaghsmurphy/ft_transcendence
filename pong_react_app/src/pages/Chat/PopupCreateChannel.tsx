@@ -4,7 +4,7 @@ import { add_group, sanitizeString } from './ChatUtils'
 import { socket_chan } from './Chat'
 import User from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios'
-
+import { toast } from 'react-toastify'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -87,6 +87,12 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 					name: chan_name,
 					user_id: current_user.id,
 				})
+			})
+			.catch((err: AxiosError) => {
+				if (err) {
+					let desc = (err.response?.data as any).error
+					toast.error(desc);
+				}
 			})
 	}
 

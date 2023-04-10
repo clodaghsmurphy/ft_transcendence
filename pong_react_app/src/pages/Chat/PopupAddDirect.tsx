@@ -5,6 +5,7 @@ import User from '../utils/User'
 import { DirectMessage } from './DirectMessage'
 import { Channel, MessageData } from './Channels'
 import axios, { AxiosResponse, AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -17,17 +18,18 @@ export default function PopupAddDirect(every_users: User[], current_user: User,
 	function create_dm(usr: User) {
 		let msg: MessageData[] = []
 
-		console.log('test')
-
 		if (typeof dms.find(
 				(dm: DirectMessage) => dm.id === usr.id
 			) === 'undefined') {
 
 			axios.get('/api/dm/' + usr.id)
 				.then((response: AxiosResponse) => {
-					console.log(response.data)
 					msg = response.data
 				})
+				.catch((err: AxiosError) => {
+					toast.error('Error fetching DM with user ' + usr.id);
+				})
+				
 			
 			set_dms([...dms, {
 				id: usr.id,

@@ -5,6 +5,7 @@ import User from '../utils/User'
 import { Channel } from './Channels'
 import { DirectMessage } from './DirectMessage'
 import axios, { AxiosResponse, AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -24,6 +25,11 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 					!c.members.includes(current_user.id) && c.is_public
 				))
 			})
+			.catch((err: AxiosError) => {
+				if (err) {
+					toast.error('Couldn\'t fetch channels');
+				}
+			})
 	}, [current_user, chanOfUser])
 
 	function click_handler(chan: Channel) {
@@ -38,25 +44,7 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 					password: passwordRef.current?.value,
 				})
 				.then((response: AxiosResponse) => {
-						if (typeof response.data.status === 'undefined') {
-							changeChannelOrDm(response.data as Channel)
-							socket_chan.emit('join', {
-								name: response.data.name,
-								user_id: current_user.id,
-							})
-							setChanOfUser((prev: Channel[]) =>
-								[...prev, response.data as Channel]
-							)
-						}
-					})
-				.catch((err: AxiosError) => err)
-		}
-		else {
-			axios.post('/api/channel/join/', {
-					name: chan.name,
-					user_id: current_user.id,
-				})
-				.then((response: AxiosResponse) => {
+					if (typeof response.data.status === 'undefined') {
 						changeChannelOrDm(response.data as Channel)
 						socket_chan.emit('join', {
 							name: response.data.name,
@@ -65,8 +53,34 @@ export default function PopupJoinChannel(chanOfUser: Channel[], current_user: Us
 						setChanOfUser((prev: Channel[]) =>
 							[...prev, response.data as Channel]
 						)
+					}
+				})
+				.catch((err: AxiosError) => {
+					if (err) {
+						toast.error('Couldn\'t join channel ' + chan.name);
+					}
+				})
+		}
+		else {
+			axios.post('/api/channel/join/', {
+					name: chan.name,
+					user_id: current_user.id,
+				})
+				.then((response: AxiosResponse) => {
+					changeChannelOrDm(response.data as Channel)
+					socket_chan.emit('join', {
+						name: response.data.name,
+						user_id: current_user.id,
 					})
-				.catch((err: AxiosError) => err)
+					setChanOfUser((prev: Channel[]) =>
+						[...prev, response.data as Channel]
+					)
+				})
+				.catch((err: AxiosError) => {
+					if (err) {
+						toast.error('Couldn\'t join channel ' + chan.name);
+					}
+				})
 		}
 	}
 

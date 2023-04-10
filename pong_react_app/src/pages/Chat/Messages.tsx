@@ -6,6 +6,7 @@ import { CHANNEL, ChanAndMessage, CurrentChan, DM, socket_chan, socket_dm } from
 import { Channel } from './Channels'
 import User, { id_to_user } from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios';
+import { toast } from 'react-toastify'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -156,6 +157,9 @@ function Messages(current_chan: CurrentChan, users: User[],
 					))
 					leaveChannel(response.data)
 				}
+			})
+			.catch((err: AxiosError) => {
+				toast.error('Error posting leave');
 			})
 	}
 
