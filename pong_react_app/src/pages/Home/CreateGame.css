@@ -24,3 +24,57 @@
 		display: none;
 	}
 }
+
+.button-holder-create {
+	display: flex;
+	background-color: #585bac;
+	flex-direction: row;
+}
+
+.button-holder-browse {
+	display: flex;
+	background-color: #585bac;
+	flex-direction: row;
+}
+
+.button-holder-create .button-create { /* Focused button */
+	background-color: #7377dd;
+	border-top: solid 1px black;
+	border-bottom: 0px;
+	border-left: solid 1px #7377dd;
+	border-right: solid 1px black;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	height: 40px;
+	font-size: 1.10rem;
+	color: white;
+}
+
+.button-holder-browse .button-browse { /* Focused button */
+	background-color: #7377dd;
+	border-top: solid 1px black;
+	border-bottom: 0px;
+	border-right: solid 1px #7377dd;
+	border-left: solid 1px black;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	height: 40px;
+	font-size: 1.10rem;
+	color: white;
+}
+
+.button-holder-create .button-browse { /* Focused button */
+	background-color: #585bac;
+	border: 0;
+	border-bottom: 1px solid black;
+	height: 40px;
+	color: lightgrey;
+}
+
+.button-holder-browse .button-create { /* Focused button */
+	background-color: #585bac;
+	border: 0;
+	border-bottom: 1px solid black;
+	height: 40px;
+	color: lightgrey;
+}

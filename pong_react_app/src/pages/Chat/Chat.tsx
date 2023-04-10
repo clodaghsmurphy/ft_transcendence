@@ -46,7 +46,6 @@ function Chat()
 	let [current_chan, set_current_chan] = useState({} as CurrentChan)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
 	let [dms, set_dms] = useState([] as DirectMessage[])
-	// let direct_messages = dm_of_user(current_user);
 	
 	useEffect(() => {
 		document.title = 'Chat';

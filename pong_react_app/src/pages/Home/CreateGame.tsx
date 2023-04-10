@@ -6,6 +6,7 @@ const BROWSE = 2;
 
 export default function CreateGame() {
 	let [window, setWindow] = useState(CREATE)
+	const is_create = window === CREATE
 
 	function changeWindow(win: number) {
 		if (window != win) {
@@ -19,17 +20,20 @@ export default function CreateGame() {
 
 	return (
 		<div className='create-game'>
-			<div className='buttonHolder'>
-				<button 
+			<div className={is_create ?
+						'button-holder-create' :
+						'button-holder-browse'}>
+				<button className='button-create'
 					onClick={() => changeWindow(CREATE)}>
 					Create
 				</button>
-				<button 
+				<button className='button-browse'
 					onClick={() => changeWindow(BROWSE)}>
 					Browse
 				</button>
 			</div>
-			<h1>Create a game</h1>
+			<h1>{is_create ? 'Create a game' :
+				'Browse games'}</h1>
 		</div>
 	)
 }
