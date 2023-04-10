@@ -96,7 +96,7 @@ export class GameService {
 				io.in('' + room.id).emit('gameover');
 				await this.remove(room.id);
 			}
-		}, 500);
+		}, 34);
 	}
 
 	gameLoop(room: GameRoom) {
@@ -155,7 +155,7 @@ export class GameService {
 		}
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 100) {
+		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 300) {
 			room.state.ongoing = false;
 		}
 	}

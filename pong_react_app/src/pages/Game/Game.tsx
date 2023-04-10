@@ -58,15 +58,14 @@ function Game() {
 					id: game_id
 				};
 
+				socket_game.on('update', (dto) => {
+					setData(dto);
+				});
+
 				socket_game.on('join', (res) => {
 					console.log(`join: ${res.id}`);
 				});
 				socket_game.emit('join', join_dto);
-				// socket_game.removeListener('update');
-				socket_game.on('update', (dto) => {
-					console.log(dto);
-					setData(dto);
-				});
 			});
 	}
 
@@ -87,18 +86,12 @@ function Game() {
 				return ;
 			}
 
-			// This wont work yet
-			// The object transmitted to keyEvent should be of form:
-			// "id": id_of_game
-			// "user_id": id_of the user
-			// "keyEvent": keyEvent object
 			const key_data = {
 				"id": game_id,
 				"user_id": Number(state.user.id),
 				"keyEvent": keyEvent,
 			}
 			socket_game.emit("keyEvent", key_data);
-			console.log(`emit keyEvent: ${JSON.stringify(key_data)}`);
 		};
 
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -142,7 +135,7 @@ function Game() {
 	} else {
 		return (
 			<div id="game">
-				<ReactP5Wrapper sketch={sketch} data={data} key={JSON.stringify(data)}></ReactP5Wrapper>
+				<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
 			</div>
 		);
 	}
