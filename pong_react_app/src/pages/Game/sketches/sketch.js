@@ -1,23 +1,23 @@
 import { ReactP5Wrapper } from "react-p5-wrapper";
 
 export default function sketch(p5) {
-    function Paddle(x, y) {
-        this.x = x;
-        this.y = y;
-        this.w = 10;
-        this.h = 80;
-        this.velocity = p5.createVector(0, 0);
-
-        this.update = () => {
-            this.velocity.limit(10);
-            this.y += this.velocity.y;
-            this.y = p5.constrain(this.y, this.h / 2, p5.height - this.h / 2);
+    class Paddle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.w = 10;
+            this.h = 80;
+            this.velocity = p5.createVector(0, 0);
         }
 
-        this.show = () => {
+        update(pos) {
+            this.y = pos;
+        }
+
+        show() {
             p5.rectMode(p5.CENTER);
             p5.rect(this.x, this.y, this.w, this.h);
-        }
+        };
     }
 
     let canvas;
@@ -50,16 +50,14 @@ export default function sketch(p5) {
         p5.text(score1, p5.width / 4, 40);
         p5.text(score2, 3 * p5.width / 4, 40);
 
-        paddle1.update();
         paddle1.show();
-        paddle2.update();
         paddle2.show();
     };
 
     p5.myCustomRedrawAccordingToNewPropsHandler = (data) => {
         if (canvas && data) {
-            paddle1.y = data.player1_pos;
-            paddle2.y = data.player2_pos;
+            paddle1.update(data.player1_pos);
+            paddle2.update(data.player2_pos);
         }
     };
 }

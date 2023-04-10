@@ -42,11 +42,6 @@ function Game() {
 			console.log(socket_game);
 		});
 
-		socket_game.on('update', (dto) => {
-			console.log(dto);
-			setData(dto);
-		});
-
 		const body: GamePost = {
 			user_id: Number(state.user.id),
 			target_id: 4,
@@ -64,11 +59,14 @@ function Game() {
 				};
 
 				socket_game.on('join', (res) => {
-					console.log(res);
+					console.log(`join: ${res.id}`);
 				});
-
-
 				socket_game.emit('join', join_dto);
+				// socket_game.removeListener('update');
+				socket_game.on('update', (dto) => {
+					console.log(dto);
+					setData(dto);
+				});
 			});
 	}
 
@@ -125,16 +123,6 @@ function Game() {
 		};
 	}, []);
 
-	// useEffect(() => {
-	// 	if (!socket_game)
-	// 		return ;
-	// 	socket_game.removeListener('update');
-	// 	socket_game.on('update', (data) => {
-	// 		console.log(data);
-	// 		setData(data);
-	// 	});
-	// }, [data, setData]);
-
 	const handleJoinGame = async () => {
 		// Appel à la fonction pour rejoindre la partie
 		try {
@@ -154,7 +142,7 @@ function Game() {
 	} else {
 		return (
 			<div id="game">
-				<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
+				<ReactP5Wrapper sketch={sketch} data={data} key={JSON.stringify(data)}></ReactP5Wrapper>
 			</div>
 		);
 	}

@@ -85,6 +85,7 @@ export class GameService {
 		this.checkActiveGame(gameId);
 
 		const room: GameRoom = this.activeGames.get(gameId);
+		room.rounds = 0;
 
 		const intervalId = setInterval(async () => {
 			if (room.state.ongoing === true) {
@@ -100,6 +101,23 @@ export class GameService {
 
 	gameLoop(room: GameRoom) {
 		room.rounds++;
+
+		// Bouge la raquette de joueur1
+		room.state.player1_pos += room.state.player1_dir;
+
+		if (room.state.player1_pos < room.state.racket_length / 2)
+			room.state.player1_pos -= room.state.player1_dir;
+		if (room.state.player1_pos > room.state.height - (room.state.racket_length / 2))
+			room.state.player1_pos -= room.state.player1_dir;
+
+		// Bouge la raquette de joueur2
+		room.state.player2_pos += room.state.player2_dir;
+
+		if (room.state.player2_pos < room.state.racket_length)
+			room.state.player2_pos -= room.state.player2_dir;
+		if (room.state.player2_pos > room.state.height - room.state.racket_length)
+			room.state.player2_pos -= room.state.player2_dir;
+
 		// Met à jour la position de la balle en fonction de sa direction
 		room.state.ball_pos_x += room.state.ball_dir_x;
 		room.state.ball_pos_y += room.state.ball_dir_y;
@@ -137,7 +155,7 @@ export class GameService {
 		}
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 20) {
+		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 100) {
 			room.state.ongoing = false;
 		}
 	}
