@@ -4,9 +4,9 @@ import ball from '../../media/Ball.svg';
 import paddle from '../../media/Paddle.svg';
 import nathan from '../../media/nguiard.jpg';
 import './Dashboard.css'
-import MainChat from '../Chat/MainChat'
 import { useContext } from 'react';
 import { AuthContext } from '../../App';
+import CreateGame from './CreateGame';
 
 function Dashboard()
 {
@@ -52,7 +52,7 @@ function Dashboard()
                         </div>
                     </div>
                 </div>
-                <MainChat />
+                <CreateGame />
             </main>
             </div>
         </div>
