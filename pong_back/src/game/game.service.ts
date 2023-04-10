@@ -55,6 +55,7 @@ export class GameService {
 		room.rounds = 0;
 
 		room.state = {...defaultState};
+		room.state.ball_dir_x = -10;
 
 		this.activeGames.set(game.id, room);
 		return game;
@@ -155,7 +156,7 @@ export class GameService {
 		}
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 300) {
+		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 900) {
 			room.state.ongoing = false;
 		}
 	}
