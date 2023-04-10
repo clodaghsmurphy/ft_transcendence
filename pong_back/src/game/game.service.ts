@@ -99,10 +99,11 @@ export class GameService {
 	}
 
 	gameLoop(room: GameRoom) {
+		room.rounds++;
 		// Met à jour la position de la balle en fonction de sa direction
 		room.state.ball_pos_x += room.state.ball_dir_x;
 		room.state.ball_pos_y += room.state.ball_dir_y;
-	
+
 		// Vérifie si la balle a atteint un bord de l'écran et la fait rebondir si c'est le cas
 		if (room.state.ball_pos_x < 0 || room.state.ball_pos_x > room.state.width) {
 			room.state.ball_dir_x *= -1;
@@ -110,37 +111,37 @@ export class GameService {
 		if (room.state.ball_pos_y < 0 || room.state.ball_pos_y > room.state.height) {
 			room.state.ball_dir_y *= -1;
 		}
-		
+
 		// Vérifie si la balle est en collision avec la raquette de joueur1 et la fait rebondir si c'est le cas
 		if (room.state.ball_pos_x <= room.state.racket_length && room.state.ball_pos_y >= room.state.player1_pos && room.state.ball_pos_y <= room.state.player1_pos + room.state.racket_length) {
 			room.state.ball_dir_x *= -1;
 		}
-		
+
 		// Vérifie si la balle est en collision avec la raquette de joueur2 et la fait rebondir si c'est le cas
 		if (room.state.ball_pos_x >= room.state.width - room.state.racket_length && room.state.ball_pos_y >= room.state.player2_pos && room.state.ball_pos_y <= room.state.player2_pos + room.state.racket_length) {
 			room.state.ball_dir_x *= -1;
 		}
-		
+
 		// Vérifie si la balle est passée la raquette de joueur1 et incrémente les points de joueur2 si c'est le cas
 		if (room.state.ball_pos_x < 0) {
 			room.state.player2_goals++;
 			room.state.ball_pos_x = room.state.width / 2;
 			room.state.ball_pos_y = room.state.height / 2;
 		}
-		
+
 		// Vérifie si la balle est passée la raquette de joueur2 et incrémente les points de joueur1 si c'est le cas
 		if (room.state.ball_pos_x > room.state.width) {
 			room.state.player1_goals++;
 			room.state.ball_pos_x = room.state.width / 2;
 			room.state.ball_pos_y = room.state.height / 2;
 		}
-		
+
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5) {
+		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 20) {
 			room.state.ongoing = false;
 		}
 	}
-	  
+
 
 	keyEvent(dto: GameKeyDto) {
 		const room: GameRoom = this.activeGames.get(dto.id);
