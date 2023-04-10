@@ -160,7 +160,7 @@ export function Password(current_user: User, current_chan: CurrentChan): JSX.Ele
 export function sanitizeString(str: string): string {
 	let sanitizedStr: string = str.replace(/[^\w\s-]/g, "_");
 	
-	sanitizedStr = sanitizedStr.replace(/^_+|_+$/g, "");
+	sanitizedStr = sanitizedStr.replace(/^[ \s_]+|[ \s_]+$/g, "")
 
 	return sanitizedStr;
 }

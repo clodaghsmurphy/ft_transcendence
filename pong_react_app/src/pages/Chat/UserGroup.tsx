@@ -95,7 +95,6 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 		return [<div key='no-users-in-group' className='no-users'>No users</div>]
 	}
 
-	console.log(ret.length)
 	return ret
 }
 

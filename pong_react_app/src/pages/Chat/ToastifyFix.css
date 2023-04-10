@@ -1,0 +1,23 @@
+.Toastify {
+	width: 0
+}
+
+.Toastify__close-button {
+	width: auto;
+}
+
+.Toastify__toast-body {
+	font-family: 'Poppins';
+}
+
+.Toastify__progress-bar-theme--colored.Toastify__progress-bar--info,
+.Toastify__progress-bar-theme--colored.Toastify__progress-bar--success,
+.Toastify__progress-bar-theme--colored.Toastify__progress-bar--warning,
+.Toastify__progress-bar-theme--colored.Toastify__progress-bar--error {
+	background-color: #e73737;
+}
+
+:root {
+	--toastify-color-error: #311818;
+	--toastify-text-color-error: #f5a1a1;
+}
