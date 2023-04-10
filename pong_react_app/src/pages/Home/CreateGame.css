@@ -1,0 +1,26 @@
+.create-game
+{
+	z-index: 1;
+	align-self:flex-end;
+	flex: 45%;
+	display: flex;
+	overflow-x: hidden;
+	border-radius: 2rem;
+	align-items: center;
+	background: #7377dd;       
+	flex-direction: column;
+	justify-content: flex-start;
+	color: white;
+	height: 100%;
+}
+
+.create-game h1
+{
+	text-align: center;
+}
+
+@media only screen and (max-width: 1200px) {
+	.create-game {
+		display: none;
+	}
+}

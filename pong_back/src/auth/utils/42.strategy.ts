@@ -13,7 +13,7 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
         super({
             clientID: process.env.REACT_APP_CLIENT_ID,
             clientSecret: process.env.REACT_APP_CLIENT_SECRET,
-            callbackURL: 'http://127.0.0.1:3042/auth/42/redirect'
+            callbackURL: 'http://' + process.env.HOSTNAME + ':3042/auth/42/redirect',
         });
     }
     
@@ -22,7 +22,7 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
         const userData = {
             name: profile.username,
             id: parseInt(profile.id),
-            avatar: `http://localhost:8080/api/user/image/${profile.id}`,
+            avatar: 'http://' + process.env.HOSTNAME + `:8080/api/user/image/${profile.id}`,
             avatar_path: profile._json.image.link,
         }
         const user = await this.userService.userExists(userData.id);
