@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useMemo} from 'react'
 import axios, { AxiosError, AxiosResponse} from 'axios'
 import loading from '../../media/load-loading.gif'
 
@@ -15,18 +15,17 @@ type Props = {
 function Image(props: Props) {
 	const [image, setImage] = useState(loading);
 
-	useEffect(() => {
-		axios.get(`http://${window.location.hostname}:8080/api/user/image/${props.id}`, { responseType: 'arraybuffer' })
-		.then(function (response:AxiosResponse) {
-			const blob = new Blob([response.data], { type: response.headers['content-type'] });
-			setImage(URL.createObjectURL(blob));
-		})
-		.catch((error:AxiosError) => console.log(error))
+	const memoizedImage  = React.useMemo(() => {
+		console.log('in memo')
+		return (
+			<img src={`http://${window.location.hostname}:8080/api/user/image/${props.id}`} alt='avatar' />
+		)
 	}, [])
+	
 	return (
 		<>
 		<div className="img-container">
-				<img src={image} alt='profile picture'/>
+			{memoizedImage}
 		</div>
 			{ props.status ? <span className='online'></span> : null}
 		</>

@@ -6,6 +6,8 @@ export class GameState {
 
 	racket_speed: number;
 	racket_length: number;
+	racket_width: number;
+	racket_shift: number;
 
 	player1_pos: number;
 	player2_pos: number;
@@ -21,6 +23,13 @@ export class GameState {
 
 	ball_dir_x: number;
 	ball_dir_y: number;
+
+	ball_radius: number;
+	ball_speed: number;
+
+	// Duration on pause after a goal in frames
+	pause_frames: number;
+	current_pause: number;
 }
 
 export const defaultState: GameState = {
@@ -32,7 +41,9 @@ export const defaultState: GameState = {
 
 	// TODO: Figure out racket length and speed
 	racket_speed: 10,
-	racket_length: 50,
+	racket_length: 80, // hauteur
+	racket_width: 10, // largeur
+	racket_shift: 20, // decalage
 
 	player1_pos: 200,
 	player2_pos: 200,
@@ -47,7 +58,13 @@ export const defaultState: GameState = {
 	ball_pos_y: 200,
 
 	ball_dir_x: 0,
-	ball_dir_y: 0
+	ball_dir_y: 0,
+
+	ball_radius: 20,
+	ball_speed: 15,
+
+	pause_frames: 15,
+	current_pause: 0
 };
 
 export class GameRoom {
@@ -58,8 +75,6 @@ export class GameRoom {
 
 	state: GameState;
 
-	// TMP TEST
-	rounds: number;
 }
 
 export enum KeyType {
