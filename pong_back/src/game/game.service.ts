@@ -54,7 +54,7 @@ export class GameService {
 		room.player2_id = dto.target_id;
 
 		room.state = {...defaultState};
-		room.state.ball_dir_x = -10;
+		[room.state.ball_dir_x, room.state.ball_dir_y] = this.getRandomDirection(room.state.ball_speed);
 
 		this.activeGames.set(game.id, room);
 		return game;
@@ -105,10 +105,10 @@ export class GameService {
 
 		this.checkBallCollision(state);
 
+		this.checkGoal(state);
+
 		state.ball_pos_x += state.ball_dir_x;
 		state.ball_pos_y += state.ball_dir_y;
-
-		this.checkGoal(state);
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
 		if (state.player1_goals >= 5 || state.player2_goals >= 5 || state.rounds >= 2000) {
@@ -144,13 +144,25 @@ export class GameService {
 		// Vérifie si la balle est en collision avec la raquette de joueur1 et la fait rebondir si c'est le cas
 		if (state.ball_pos_x - half_radius <= state.racket_width + state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player1_pos - half_length &&
-			state.ball_pos_y - half_radius <= state.player1_pos + half_length) {
-			state.ball_dir_x *= -1;
+			state.ball_pos_y - half_radius <= state.player1_pos + half_length &&
+			state.ball_dir_x < 0) {
+
+				// Check if it hits top of paddle
+				if (state.ball_pos_y < state.player1_pos - half_length / 2) {
+					state.ball_dir_x = state.ball_speed / 2;
+					state.ball_dir_y = state.ball_speed * -0.5;
+				} else if (state.ball_pos_y > state.player1_pos + half_length / 2) {
+					state.ball_dir_x = state.ball_speed / 2;
+					state.ball_dir_y = state.ball_speed / 2;
+				} else {
+					state.ball_dir_x = state.ball_speed;
+				}
 		}
 
 		if (state.ball_pos_x + half_radius >= state.height - state.racket_width - state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player2_pos - half_length &&
-			state.ball_pos_y - half_radius <= state.player2_pos + half_length) {
+			state.ball_pos_y - half_radius <= state.player2_pos + half_length &&
+			state.ball_dir_x > 0) {
 			state.ball_dir_x *= -1;
 		}
 	}
@@ -163,6 +175,8 @@ export class GameService {
 			state.player2_goals++;
 			state.ball_pos_x = state.width / 2;
 			state.ball_pos_y = state.height / 2;
+
+			[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
 		}
 
 		// Vérifie si la balle est passée la raquette de joueur2 et incrémente les points de joueur1 si c'est le cas
@@ -170,6 +184,8 @@ export class GameService {
 			state.player1_goals++;
 			state.ball_pos_x = state.width / 2;
 			state.ball_pos_y = state.height / 2;
+
+			[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
 		}
 	}
 
@@ -189,6 +205,21 @@ export class GameService {
 			room.state.player1_dir = newDir;
 		else
 			room.state.player2_dir = newDir;
+	}
+
+	getRandomDirection(ballSpeed: number) : [number, number]  {
+		const x = Math.random() * (ballSpeed * 2 + 1) - ballSpeed;
+		let y = ballSpeed - Math.abs(x);
+
+		const neg = Math.floor(Math.random() * 2);
+		if (neg == 1)
+			y *= -1;
+
+		if (Math.abs(x) + Math.abs(y) != ballSpeed) {
+			console.log(`x: ${x}, y: ${y}, abs(x) + abs(y): ${Math.abs(x) + Math.abs(y)}`);
+		}
+
+		return [x, y];
 	}
 
 	async checkGame(id: number) {

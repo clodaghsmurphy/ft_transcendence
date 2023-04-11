@@ -25,6 +25,7 @@ export class GameState {
 	ball_dir_y: number;
 
 	ball_radius: number;
+	ball_speed: number;
 
 	// TMP TEST
 	rounds: number;
@@ -59,6 +60,7 @@ export const defaultState: GameState = {
 	ball_dir_y: 0,
 
 	ball_radius: 20,
+	ball_speed: 15,
 
 	rounds: 0
 };
