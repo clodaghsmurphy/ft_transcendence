@@ -9,7 +9,7 @@ import { Channel, MUTE, MessageData, names_to_channel } from './Channels'
 import io, { Socket } from 'socket.io-client'
 import { DirectMessage } from './DirectMessage'
 import { AuthContext } from '../../App'
-import { group_message, Password, sanitizeString, users_message } from './ChatUtils'
+import { group_message, Password, refresh_button, sanitizeString, users_message } from './ChatUtils'
 import PopupJoinChannel from './PopupJoinChannel'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { handleBan, handleJoin, handleKick, handleMakeop, handleMessage } from './SocketEvents'
@@ -127,7 +127,6 @@ function Chat()
 
 		if (typeof current_chan.msg === 'undefined') {
 			if (is_chan) {
-				console.log('join', (param as Channel).name)
 				socket_chan.emit('join', {
 					name: (param as Channel).name,
 					user_id: current_user.id,
@@ -182,7 +181,6 @@ function Chat()
 			if (current_chan.chan?.name === (param as Channel).name)
 				return
 			
-			console.log('join', (param as Channel).name)
 				socket_chan.emit('join', {
 				name: param.name,
 				user_id: current_user.id,
@@ -239,6 +237,12 @@ function Chat()
 		set_current_user(new_curr_user)
 	}
 
+	function refresh_function(to_refresh: string): void {
+		if (to_refresh === 'channels') {
+			
+		}
+	}
+
 	return (
 		<div className="dashboard">
         <NavBar /> 
@@ -260,6 +264,7 @@ function Chat()
 							<h1>Group chats</h1>
 							{PopupJoinChannel(chanOfUser, current_user,
 											changeChannelOrDm, setChanOfUser)}
+							{refresh_button('channels', refresh_function)}
 						</div>
 						<div className='lists-holder'>
 							{group_message(chanOfUser,

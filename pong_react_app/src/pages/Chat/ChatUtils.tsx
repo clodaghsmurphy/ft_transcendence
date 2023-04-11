@@ -6,7 +6,9 @@ import User, { id_to_user } from "../utils/User";
 import plus_sign from '../../media/white_plus.png'
 import group_img from '../../media/group.png'
 import React, { useRef } from 'react'
-import { ChanAndMessage, CurrentChan, DM, socket_chan } from "./Chat";
+import { ChanAndMessage, CurrentChan, DM, socket_chan } from "./Chat"
+import refresh_icon from '../../media/refresh_icon.png'
+
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -163,5 +165,15 @@ export function sanitizeString(str: string): string {
 	sanitizedStr = sanitizedStr.replace(/^[ \s_]+|[ \s_]+$/g, "")
 
 	return sanitizedStr;
+}
+
+export function refresh_button(to_refresh: string, fnc: (s: string) => void): JSX.Element {
+	return (
+		<button
+			className="refresh-button"
+			onClick={() => fnc(to_refresh)}>
+			<img src={refresh_icon} />
+		</button>
+	)
 }
   

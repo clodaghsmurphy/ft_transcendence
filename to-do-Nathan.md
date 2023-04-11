@@ -3,6 +3,8 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
+- [ ] quand kicked -> enlever le truc a gauche
+- [ ] Bouttons refresh partout
 
 - [x] Leave un chan ne leave pas la room (socket)
 - [x] creavtion d'un channel '<div />' marche pas
@@ -38,3 +40,9 @@
 - [x] Mute
   - [x] CSS
   - [x] emit
+
+#Bugs
+
+- [ ] faire render un message clear mon mesasge
+- [ ] messages 'vides' avec que des whites spaces ?
+- [ ] messages trop grands -> CSS buggued
