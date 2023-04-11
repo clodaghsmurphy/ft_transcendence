@@ -22,10 +22,11 @@
 	text-align: center;
 }
 
-@media only screen and (max-width: 200px) {
+@media only screen and (max-width: 900px) {
 	.create-game {
 		display: none;
 	}
+	
 }
 
 .button-holder-create {

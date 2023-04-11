@@ -220,6 +220,7 @@
 
 .group-add h1 {
 	display: flex;
+	font-size: 1.3em;
 	flex: 1;
 }
 
@@ -275,6 +276,11 @@
     height: calc(100% - 64px);
     background-color: #2E2E2E;
 	margin-bottom: 5%;
+}
+@media only screen and (max-width: 900px) {
+	.group-members {
+		display: none;
+	}
 }
 
 .group-members * {
