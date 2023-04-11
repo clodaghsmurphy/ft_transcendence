@@ -11,7 +11,6 @@ export default function sketch(p5) {
         paddleHeight = 80;
     let score1 = 0,
         score2 = 0;
-    let servingPlayer = 1;
 
     function centerCanvas() {
         const x = (p5.windowWidth - p5.width) / 2;
@@ -40,8 +39,7 @@ export default function sketch(p5) {
         p5.rectMode(p5.CENTER);
         p5.rect(20, paddle1, paddleWidth, paddleHeight);
         p5.rect(p5.width - 20, paddle2, paddleWidth, paddleHeight);
-
-        p5.ellipse(ballX, ballY, 20, 20);
+        p5.rect(ballX, ballY, 20, 20);
     };
 
     p5.updateWithProps = (props) => {
