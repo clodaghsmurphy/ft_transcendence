@@ -1,13 +1,11 @@
-import { HttpException, Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
-import { Channel } from "@prisma/client";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./channel.filters";
 import { ChannelService } from "./channel.service";
 import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, ChannelPasswordDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
 import { MessageType } from "./types/message.type";
 import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
-import { of } from "rxjs";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -57,7 +55,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 				for (const [userId, socketId] of this.userMap.entries()) {
 
 					if (dto.users_ids.includes(userId)) {
-						this.io.to(socketId).emit('create', data);
+						if (this.io.sockets.has(socketId)) {
+							this.io.to(socketId).emit('create', data);
+						}
 					}
 				}
 			}
