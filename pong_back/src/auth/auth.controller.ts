@@ -52,12 +52,12 @@ export class AuthController {
         if (user.otp_enabled && !user.otp_verified)
         {
             token.then(token => {
-                res.redirect(`http://localhost:8080/2fa?access_token=${token.access_token}`)
+                res.redirect(`http://${process.env.HOSTNAME}:8080/2fa?access_token=${token.access_token}`)
             });
             return ;
         }
         token.then(token => {
-            res.redirect(`http://localhost:8080/login?access_token=${token.access_token}`)
+            res.redirect(`http://${process.env.HOSTNAME}:8080/login?access_token=${token.access_token}`)
         });
         return ;    }
 
