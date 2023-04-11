@@ -155,7 +155,7 @@ export class GameService {
 					state.ball_dir_x = state.ball_speed / 2;
 					state.ball_dir_y = state.ball_speed / 2;
 				} else {
-					state.ball_dir_x = state.ball_speed;
+					state.ball_dir_x = state.ball_speed - Math.abs(state.ball_dir_y);
 				}
 		}
 
@@ -163,7 +163,17 @@ export class GameService {
 			state.ball_pos_y + half_radius >= state.player2_pos - half_length &&
 			state.ball_pos_y - half_radius <= state.player2_pos + half_length &&
 			state.ball_dir_x > 0) {
-			state.ball_dir_x *= -1;
+
+				// Check if it hits top of paddle
+				if (state.ball_pos_y < state.player2_pos - half_length / 2) {
+					state.ball_dir_x = -(state.ball_speed / 2);
+					state.ball_dir_y = state.ball_speed * -0.5;
+				} else if (state.ball_pos_y > state.player2_pos + half_length / 2) {
+					state.ball_dir_x = -(state.ball_speed / 2);
+					state.ball_dir_y = state.ball_speed / 2;
+				} else {
+					state.ball_dir_x = -(state.ball_speed - Math.abs(state.ball_dir_y));
+				}
 		}
 	}
 
