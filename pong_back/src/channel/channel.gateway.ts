@@ -7,6 +7,7 @@ import { ChannelService } from "./channel.service";
 import { ChannelCreateDto, ChannelJoinDto, ChannelKickDto, ChannelLeaveDto, ChannelPasswordDto, MakeOpDto, MessageCreateDto, UserBanDto, UserMuteDto } from "./dto";
 import { MessageType } from "./types/message.type";
 import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
+import { of } from "rxjs";
 
 @UseFilters(new BadRequestFilter())
 @WebSocketGateway({namespace: 'channel'})
@@ -31,6 +32,42 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 	handleDisconnect(client: Socket) {
 		this.removeSocketId(client.id);
 		this.logger.log(`Disconnected socket ${client.id}.`);
+	}
+
+	@UseGuards(JwtWsGuard)
+	@SubscribeMessage('ping')
+	async handlePing(@ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		this.userMap.set(payload.sub, client.id);
+		this.io.to(client.id).emit('pong');
+	}
+
+	@UseGuards(JwtWsGuard)
+	@UsePipes(new ValidationPipe({whitelist: true}))
+	@SubscribeMessage('create')
+	async handleCreate(@MessageBody() dto: ChannelCreateDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		let data: any = dto;
+		data.owner_id = payload.sub;
+
+		this.userMap.set(payload.sub, client.id);
+		try {
+			const channel = await this.channelService.create(data);
+
+			this.io.to(client.id).emit('create', data);
+			if (dto.hasOwnProperty('users_ids')) {
+				for (const [userId, socketId] of this.userMap.entries()) {
+
+					if (dto.users_ids.includes(userId)) {
+						this.io.to(socketId).emit('create', data);
+					}
+				}
+			}
+
+			return ({status: "ok", data: channel});
+		} catch (e) {
+			const result = {status: e.status, data: e.response};
+			this.logger.error(JSON.stringify(result));
+			return result;
+		}
 	}
 
 	@UseGuards(JwtWsGuard)
