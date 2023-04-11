@@ -237,6 +237,7 @@
 	display: flex;
 	flex-direction: column-reverse;
 	scrollbar-color: #9b59b6 transparent;
+	gap: 15px
 }
 
 .no-messages {
@@ -622,7 +623,7 @@
 	width: 100%;
 	border-radius: 5px;
 }
-nt_chan.chan
+
 .ban-message {
 	color:#2E2E2E;
 	font-style: italic;
@@ -913,4 +914,34 @@ nt_chan.chan
 	height: 14px;
 	min-height: 14px;
 	max-height: 14px;
+}
+
+.message-wrapper2 {
+	display: flex;
+	flex-direction: row;
+	min-height: 75px;
+	flex: 1 0 auto;
+	height: auto;
+}
+
+.sender2 {
+	flex-direction: row-reverse;
+}
+
+.message-body {
+	border: #9b59b6 1px solid;
+	border-radius: 5px;
+	padding: 10px 15px;
+	height: auto;
+	min-height: calc(1.5rem + 20px);
+	height: fit-content;
+	margin-top: auto;
+	margin-bottom: auto;
+	font-size: 1.10rem;
+	margin-right: 25px;
+}
+
+.sender2 .message-body {
+	margin-right: 5px;
+	margin-left: 25px;
 }

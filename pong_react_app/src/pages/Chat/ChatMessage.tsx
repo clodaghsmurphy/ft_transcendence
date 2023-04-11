@@ -1,9 +1,8 @@
 import React from 'react'
-import '../Home/Dashboard.css'
 import User, { avatarOf, id_to_user } from '../utils/User'
 import { MessageData, BAN, INVITE, KICK, MUTE } from './Channels'
 import { Link } from 'react-router-dom'
-import Image from '../Components/Image'
+import './Chat.css'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -37,7 +36,7 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX
 	}
 
 
-	const messageClass = msg.sender_id === curr_user.id ? "sender message-wrapper" : "message-wrapper"
+	const messageClass = msg.sender_id === curr_user.id ? "sender2 message-wrapper2" : "message-wrapper2"
 	return (
 		<div className={messageClass} key={msg.id}>
 			<div className="message-avatar">

@@ -261,7 +261,7 @@ function Chat()
 							justifyContent: 'space-between',
 							height: '64px',
 						}}>
-							<h1>Group chats</h1>
+							<h1>Channels</h1>
 							{PopupJoinChannel(chanOfUser, current_user,
 											changeChannelOrDm, setChanOfUser)}
 							{refresh_button('channels', refresh_function)}
@@ -274,7 +274,7 @@ function Chat()
 
 					<div className='bar'></div>
 					<div className='lists'>
-						<h1>User messages</h1>
+						<h1>DM</h1>
 						<div className='lists-holder'>
 							{users_message(dms, all_users,
 									current_user, changeChannelOrDm,
@@ -292,7 +292,7 @@ function Chat()
 			</div>
 
             <div className="group-members">
-				<h1>Group users</h1>
+				<h1>User(s)</h1>
 				
 				<div className='user-holder'>
 					{User_in_group(all_users, current_user, current_chan)}
