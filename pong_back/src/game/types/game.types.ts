@@ -27,8 +27,9 @@ export class GameState {
 	ball_radius: number;
 	ball_speed: number;
 
-	// TMP TEST
-	rounds: number;
+	// Duration on pause after a goal in frames
+	pause_frames: number;
+	current_pause: number;
 }
 
 export const defaultState: GameState = {
@@ -62,7 +63,8 @@ export const defaultState: GameState = {
 	ball_radius: 20,
 	ball_speed: 15,
 
-	rounds: 0
+	pause_frames: 15,
+	current_pause: 0
 };
 
 export class GameRoom {
@@ -72,6 +74,7 @@ export class GameRoom {
 	player2_id: number;
 
 	state: GameState;
+
 }
 
 export enum KeyType {

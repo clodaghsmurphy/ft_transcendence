@@ -99,7 +99,10 @@ export class GameService {
 	}
 
 	gameLoop(state: GameState) {
-		state.rounds++;
+		if (state.current_pause > 0) {
+			--state.current_pause;
+			return ;
+		}
 
 		this.movePaddles(state);
 
@@ -111,7 +114,7 @@ export class GameService {
 		state.ball_pos_y += state.ball_dir_y;
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (state.player1_goals >= 5 || state.player2_goals >= 5 || state.rounds >= 2000) {
+		if (state.player1_goals >= 5 || state.player2_goals >= 5) {
 			state.ongoing = false;
 		}
 	}
@@ -137,6 +140,9 @@ export class GameService {
 		const half_length = state.racket_length / 2;
 		const half_radius = state.ball_radius / 2;
 
+		let player1_hit: boolean = false;
+		let player2_hit: boolean = false;
+
 		if (state.ball_pos_y - half_radius <= 0 || state.ball_pos_y + half_radius >= state.height) {
 			state.ball_dir_y *= -1;
 		}
@@ -147,45 +153,60 @@ export class GameService {
 			state.ball_pos_y - half_radius <= state.player1_pos + half_length &&
 			state.ball_dir_x < 0) {
 
-				// Check if it hits top of paddle
-				if (state.ball_pos_y < state.player1_pos - half_length / 2) {
-					state.ball_dir_x = state.ball_speed / 2;
-					state.ball_dir_y = state.ball_speed * -0.5;
-				} else if (state.ball_pos_y > state.player1_pos + half_length / 2) {
-					state.ball_dir_x = state.ball_speed / 2;
-					state.ball_dir_y = state.ball_speed / 2;
-				} else {
-					state.ball_dir_x = state.ball_speed;
-				}
+				player1_hit = true;
 		}
 
 		if (state.ball_pos_x + half_radius >= state.height - state.racket_width - state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player2_pos - half_length &&
 			state.ball_pos_y - half_radius <= state.player2_pos + half_length &&
 			state.ball_dir_x > 0) {
-			state.ball_dir_x *= -1;
+
+				player2_hit = true;
+		}
+
+		if (player1_hit || player2_hit) {
+			if (state.ball_pos_y < state.player1_pos - half_length / 2) {
+				state.ball_dir_x = state.ball_speed / 2;
+				state.ball_dir_y = state.ball_speed * -0.5;
+			} else if (state.ball_pos_y > state.player1_pos + half_length / 2) {
+				state.ball_dir_x = state.ball_speed / 2;
+				state.ball_dir_y = state.ball_speed / 2;
+			} else {
+				state.ball_dir_x = state.ball_speed - Math.abs(state.ball_dir_y);
+			}
+
+			if (player2_hit) {
+				state.ball_dir_x *= -1;
+			}
 		}
 	}
 
 	checkGoal(state: GameState) {
-		const half_radius = state.ball_radius / 2;
+		let goal: boolean = false;
+		const half_radius: number = state.ball_radius / 2;
 
 		// Vérifie si la balle est passée la raquette de joueur1 et incrémente les points de joueur2 si c'est le cas
 		if (state.ball_pos_x - half_radius < 0) {
 			state.player2_goals++;
-			state.ball_pos_x = state.width / 2;
-			state.ball_pos_y = state.height / 2;
-
-			[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
+			goal = true;
 		}
 
 		// Vérifie si la balle est passée la raquette de joueur2 et incrémente les points de joueur1 si c'est le cas
 		if (state.ball_pos_x + half_radius > state.width) {
 			state.player1_goals++;
+			goal = true;
+		}
+
+		// Reset the game state
+		if (goal) {
 			state.ball_pos_x = state.width / 2;
 			state.ball_pos_y = state.height / 2;
 
 			[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
+			state.current_pause = state.pause_frames;
+
+			state.player1_pos = defaultState.player1_pos;
+			state.player2_pos = defaultState.player2_pos;
 		}
 	}
 
