@@ -292,16 +292,24 @@
 	font-style: normal;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
+	
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	align-items: center;
 	overflow: hidden;
+	object-fit: contain;
 	font-size: 35px;
 	color: white;
-	border: 0px;	
+	border: 0px;
+	border-radius: 5px;
+	
 	margin-top: 5%;
 	margin-left: 9%;
 	min-height: 2rem;
 
 	flex-basis: 71px;
-	flex-grow: 1;
+	flex-grow: 0;
 	flex-shrink: 0;
 }
 
