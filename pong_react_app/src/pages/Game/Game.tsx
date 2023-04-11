@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef, useContext} from 'react'
 import { Link } from 'react-router-dom'
 import User, { id_to_user } from '../utils/User'
 import NavBar from '../Components/NavBar'
+import { ReactP5Wrapper } from 'react-p5-wrapper'
+import sketch from './sketches/sketch'
 import { io, Socket } from 'socket.io-client';
 import './Game.css'
 import { AuthContext } from '../../App'
@@ -15,7 +17,8 @@ const PADDLE_SPEED = 20;
 const { v4: uuidv4 } = require('uuid');
 
 type GamePost = {
-	id_user: number,
+	user_id: number,
+	target_id: number,
 }
 
 export let socket_game: Socket
@@ -24,6 +27,8 @@ function Game() {
 
 	const [isJoined, setIsJoined] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
+	const [data, setData] = useState(null);
+	let game_id: Number;
 
 	const connect = () => {
 		socket_game = io(`http://${window.location.hostname}:8080/game`,
@@ -34,18 +39,34 @@ function Game() {
 		});
 		socket_game.on("connect", () => {
 			console.log("Connected to game");
-			// socket_game.emit("custom_event", {name: "Bob", age:12})
 			console.log(socket_game);
 		});
-		let body: GamePost = {
-			id_user: Number(state.user.id),
+
+		const body: GamePost = {
+			user_id: Number(state.user.id),
+			target_id: 4,
 		}
+
 		axios.post('/api/game/create', body)
 			.then((response: AxiosResponse) => {
-				socket_game.emit('create', {
-					id_user: Number(state.user.id),
-				})
-			})
+				console.log('Received message :', response);
+				game_id = response.data.id;
+
+				const join_dto = {
+					user_id: state.user.id,
+					target_id: 4,
+					id: game_id
+				};
+
+				socket_game.on('update', (dto) => {
+					setData(dto);
+				});
+
+				socket_game.on('join', (res) => {
+					console.log(`join: ${res.id}`);
+				});
+				socket_game.emit('join', join_dto);
+			});
 	}
 
 	useEffect(() => {
@@ -65,18 +86,17 @@ function Game() {
 				return ;
 			}
 
-			// This wont work yet
-			// The object transmitted to keyEvent should be of form:
-			// "id": id_of_game
-			// "user_id": id_of the user
-			// "keyEvent": keyEvent object
-			socket_game.emit("keyEvent", keyEvent);
-			console.log(`emit keyEvent: ${JSON.stringify(keyEvent)}`);
+			const key_data = {
+				"id": game_id,
+				"user_id": Number(state.user.id),
+				"keyEvent": keyEvent,
+			}
+			socket_game.emit("keyEvent", key_data);
 		};
 
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (isKeyPressed)
-				return ;
+			return ;
 			isKeyPressed = true;
 			handleKeyEvent(event, "Press");
 		}
@@ -90,6 +110,7 @@ function Game() {
 		document.addEventListener("keyup", handleKeyUp);
 
 		return () => {
+
 			document.removeEventListener("keydown", handleKeyDown);
 			document.removeEventListener("keyup", handleKeyUp);
 		};
@@ -114,10 +135,7 @@ function Game() {
 	} else {
 		return (
 			<div id="game">
-				<div id="leftPaddle"></div>
-				<div id="ball"></div>
-				<div id="score">0-0</div>
-				<div id="rightPaddle"></div>
+				<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
 			</div>
 		);
 	}
