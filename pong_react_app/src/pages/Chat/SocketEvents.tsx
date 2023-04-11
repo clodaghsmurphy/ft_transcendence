@@ -7,17 +7,19 @@ import axios, { AxiosResponse, AxiosError } from 'axios'
 import { sanitizeString } from './ChatUtils'
 import { toast } from 'react-toastify'
 
-type ChatVariables = {
+export type ChatVariables = {
 	all_users?: User[],
 	all_channels?: Channel[],
 	current_user?: User,
 	current_chan?: CurrentChan,
 	chanOfUser?: Channel[],
+	dms?: DirectMessage[],
 	set_all_users?: React.Dispatch<React.SetStateAction<User[]>>,
 	set_all_channels?: React.Dispatch<React.SetStateAction<Channel[]>>,
 	set_current_user?: React.Dispatch<React.SetStateAction<User>>,
 	set_current_chan?: React.Dispatch<React.SetStateAction<CurrentChan>>,
 	setChanOfUser?: React.Dispatch<React.SetStateAction<Channel[]>>,
+	set_dms?: React.Dispatch<React.SetStateAction<DirectMessage[]>>,
 }
 
 export function handleBan(vars: ChatVariables) {
@@ -26,7 +28,8 @@ export function handleBan(vars: ChatVariables) {
 
 	const ban_function = (data: any) => {
 		if (!vars.current_chan || !vars.set_current_chan ||
-			!vars.all_channels || !vars.set_all_channels)
+			!vars.all_channels || !vars.set_all_channels ||
+			!vars.current_user || !vars.setChanOfUser)
 			return
 		
 		if (vars.current_chan.type === CHANNEL) {
@@ -60,6 +63,15 @@ export function handleBan(vars: ChatVariables) {
 				ret.push((tmp_chan as Channel))
 				return ret;
 			})
+			if (data.target_id === vars.current_user.id) {
+				vars.setChanOfUser((prev: Channel[]) => {
+					let ret = prev.filter((c: Channel) => 
+						c.name !== data.name
+					)
+					return ret;
+				})
+				toast.error('You have been banned of channel ' + data.name)
+			}
 		}
 	}
 
@@ -156,7 +168,8 @@ export function handleKick(vars: ChatVariables) {
 
 		const function_kick = (data: any) => {
 			if (!vars.set_current_user || !vars.all_channels ||
-				!vars.set_all_channels || !vars.set_current_chan)
+				!vars.set_all_channels || !vars.set_current_chan || 
+				!vars.current_user || !vars.setChanOfUser)
 				return
 			
 			vars.set_current_chan((prev: CurrentChan) => ({
@@ -184,7 +197,33 @@ export function handleKick(vars: ChatVariables) {
 				ret.push((tmp_chan as Channel))
 				return ret;
 			})
+			if (data.target_id === vars.current_user.id) {
+				vars.setChanOfUser((prev: Channel[]) => {
+					let ret = prev.filter((c: Channel) => 
+						c.name !== data.name
+					)
+					return ret;
+				})
+				toast.warn('You have been kicked of channel ' + data.name)
+			}
 		}
 
 		socket_chan.on('kick', function_kick)
+}
+
+export function handleCreate(vars: ChatVariables) {
+	socket_chan.removeListener('create')
+
+	const function_create = (data: any) => {
+		if (!vars.all_channels || !vars.setChanOfUser ||
+			!vars.set_all_channels)
+			return
+
+		if (vars.all_channels.find((c: Channel) => c.name === data.name)) {
+			vars.setChanOfUser((prev: Channel[]) => [...prev, data as Channel])
+			vars.set_all_channels((prev: Channel[]) => [...prev, data as Channel])
+		}
+	}
+
+	socket_chan.on('create', function_create)
 }

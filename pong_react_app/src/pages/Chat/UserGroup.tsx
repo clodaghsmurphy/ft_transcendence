@@ -84,11 +84,13 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 		const target_is_owner = current_chan.chan.owner === user
 
 		if (user !== current_user.id) {
+			const real_user = id_to_user(every_user, user)
+			
 			if (curr_is_op && !target_is_owner)
-				ret.push(Button_op(id_to_user(every_user, user),
-					target_is_op, current_user, current_chan.chan, emit_mute))
+				ret.push(Button_op(real_user, target_is_op, current_user,
+					current_chan.chan, emit_mute))
 			else
-				ret.push(button_not_op(id_to_user(every_user, user), target_is_op))
+				ret.push(button_not_op(real_user, target_is_op))
 		}
 	}
 	if (ret.length === 0 || (ret.length === 1 && curr_is_op)) {

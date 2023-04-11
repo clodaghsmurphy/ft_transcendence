@@ -10,9 +10,14 @@
 	font-family: 'Poppins';
 }
 
-.Toastify__progress-bar-theme--colored.Toastify__progress-bar--info,
-.Toastify__progress-bar-theme--colored.Toastify__progress-bar--success,
-.Toastify__progress-bar-theme--colored.Toastify__progress-bar--warning,
+.Toastify__progress-bar-theme--colored.Toastify__progress-bar--warning {
+	background-color: yellow;
+}
+
+.Toastify__progress-bar-theme--colored.Toastify__progress-bar--success {
+	background-color: #54ee26;
+}
+
 .Toastify__progress-bar-theme--colored.Toastify__progress-bar--error {
 	background-color: #e73737;
 }
@@ -20,4 +25,8 @@
 :root {
 	--toastify-color-error: #311818;
 	--toastify-text-color-error: #f5a1a1;
+	--toastify-color-warning: #744f00;
+	--toastify-text-color-warning: #fcfa9e;
+	--toastify-color-success: #08470c;
+	--toastify-text-color-success: #ade9a5;
 }

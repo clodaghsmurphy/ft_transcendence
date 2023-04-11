@@ -1,4 +1,4 @@
-import { Channel } from "./Channels";
+import { Channel, names_to_channel } from "./Channels";
 import { DirectMessage } from "./DirectMessage";
 import PopupCreateChannel from "./PopupCreateChannel";
 import PopupAddDirect from "./PopupAddDirect";
@@ -6,7 +6,12 @@ import User, { id_to_user } from "../utils/User";
 import plus_sign from '../../media/white_plus.png'
 import group_img from '../../media/group.png'
 import React, { useRef } from 'react'
-import { ChanAndMessage, CurrentChan, DM, socket_chan } from "./Chat";
+import { ChanAndMessage, CurrentChan, DM, socket_chan } from "./Chat"
+import refresh_icon from '../../media/refresh_icon.png'
+import { ChatVariables } from "./SocketEvents";
+import axios, { AxiosResponse, AxiosError } from "axios";
+import { toast } from "react-toastify";
+
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -163,5 +168,60 @@ export function sanitizeString(str: string): string {
 	sanitizedStr = sanitizedStr.replace(/^[ \s_]+|[ \s_]+$/g, "")
 
 	return sanitizedStr;
+}
+
+export function refresh_button(to_refresh: string, fnc: (s: string) => void): JSX.Element {
+	return (
+		<button
+			className="refresh-button"
+			onClick={() => fnc(to_refresh)}>
+			<img src={refresh_icon} />
+		</button>
+	)
+}
+
+export function refresh_data(vars: ChatVariables, user_id: number) {
+	if (!vars.set_all_channels || !vars.set_all_users ||
+		!vars.set_dms || !vars.set_current_user ||
+		!vars.current_user || !vars.setChanOfUser ||
+		!vars.all_channels) {
+			return
+		}
+	
+	const is_not_the_first_time_entering_the_function =
+		typeof vars.current_user.friend_users !== 'undefined'
+	
+	axios.get('/api/user/info')
+		.then((response: AxiosResponse) => {
+				vars.set_all_users!(response.data as User[])
+				vars.set_current_user!(id_to_user(response.data as User[], user_id))
+
+				let usr = id_to_user(response.data as User[], user_id)
+				axios.get('/api/channel/info')
+					.then((response: AxiosResponse) => {
+							vars.set_all_channels!(response.data as Channel[])
+							vars.setChanOfUser!(names_to_channel(response.data as Channel[],
+								usr.channels))
+					})
+					.catch((err: AxiosError) => {
+						toast.error('Error fetching channels');
+					})
+			})
+		.catch((err: AxiosError) => {
+			toast.error('Error fetching users');
+		})
+	
+	axios.get('/api/dm')
+		.then((response: AxiosResponse) => {
+			vars.set_dms!(response.data)
+		})
+		.catch((err: AxiosError) => {
+			toast.error('Error fetching DMs');
+		})
+	
+	
+	if (is_not_the_first_time_entering_the_function) {
+		toast.success('Refreshed data')
+	}
 }
   
