@@ -42,7 +42,7 @@
 
 #Bugs
 
-- [ ] faire render un message clear mon mesasge
-- [ ] messages 'vides' avec que des whites spaces ?
+- [ ] faire render un message clear mon mesasge (vais-je vraiment le fix?)
+- [ ] messages 'vides' avec que des whites spaces ? (dans le back)
 - [x] setChanOfUser dans refresh
 - [x] messages trop grands -> CSS buggued
