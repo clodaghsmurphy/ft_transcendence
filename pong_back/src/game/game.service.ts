@@ -101,6 +101,11 @@ export class GameService {
 	gameLoop(state: GameState) {
 		state.rounds++;
 
+		if (state.current_pause > 0) {
+			--state.current_pause;
+			return ;
+		}
+
 		this.movePaddles(state);
 
 		this.checkBallCollision(state);
@@ -178,24 +183,31 @@ export class GameService {
 	}
 
 	checkGoal(state: GameState) {
-		const half_radius = state.ball_radius / 2;
+		let goal: boolean = false;
+		const half_radius: number = state.ball_radius / 2;
 
 		// Vérifie si la balle est passée la raquette de joueur1 et incrémente les points de joueur2 si c'est le cas
 		if (state.ball_pos_x - half_radius < 0) {
 			state.player2_goals++;
-			state.ball_pos_x = state.width / 2;
-			state.ball_pos_y = state.height / 2;
-
-			[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
+			goal = true;
 		}
 
 		// Vérifie si la balle est passée la raquette de joueur2 et incrémente les points de joueur1 si c'est le cas
 		if (state.ball_pos_x + half_radius > state.width) {
 			state.player1_goals++;
+			goal = true;
+		}
+
+		// Reset the game state
+		if (goal) {
 			state.ball_pos_x = state.width / 2;
 			state.ball_pos_y = state.height / 2;
 
 			[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
+			state.current_pause = state.pause_frames;
+
+			state.player1_pos = defaultState.player1_pos;
+			state.player2_pos = defaultState.player2_pos;
 		}
 	}
 
