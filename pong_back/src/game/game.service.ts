@@ -99,8 +99,6 @@ export class GameService {
 	}
 
 	gameLoop(state: GameState) {
-		state.rounds++;
-
 		if (state.current_pause > 0) {
 			--state.current_pause;
 			return ;
@@ -116,7 +114,7 @@ export class GameService {
 		state.ball_pos_y += state.ball_dir_y;
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (state.player1_goals >= 5 || state.player2_goals >= 5 || state.rounds >= 2000) {
+		if (state.player1_goals >= 5 || state.player2_goals >= 5) {
 			state.ongoing = false;
 		}
 	}
@@ -142,6 +140,9 @@ export class GameService {
 		const half_length = state.racket_length / 2;
 		const half_radius = state.ball_radius / 2;
 
+		let player1_hit: boolean = false;
+		let player2_hit: boolean = false;
+
 		if (state.ball_pos_y - half_radius <= 0 || state.ball_pos_y + half_radius >= state.height) {
 			state.ball_dir_y *= -1;
 		}
@@ -152,16 +153,7 @@ export class GameService {
 			state.ball_pos_y - half_radius <= state.player1_pos + half_length &&
 			state.ball_dir_x < 0) {
 
-				// Check if it hits top of paddle
-				if (state.ball_pos_y < state.player1_pos - half_length / 2) {
-					state.ball_dir_x = state.ball_speed / 2;
-					state.ball_dir_y = state.ball_speed * -0.5;
-				} else if (state.ball_pos_y > state.player1_pos + half_length / 2) {
-					state.ball_dir_x = state.ball_speed / 2;
-					state.ball_dir_y = state.ball_speed / 2;
-				} else {
-					state.ball_dir_x = state.ball_speed - Math.abs(state.ball_dir_y);
-				}
+				player1_hit = true;
 		}
 
 		if (state.ball_pos_x + half_radius >= state.height - state.racket_width - state.racket_shift &&
@@ -169,16 +161,23 @@ export class GameService {
 			state.ball_pos_y - half_radius <= state.player2_pos + half_length &&
 			state.ball_dir_x > 0) {
 
-				// Check if it hits top of paddle
-				if (state.ball_pos_y < state.player2_pos - half_length / 2) {
-					state.ball_dir_x = -(state.ball_speed / 2);
-					state.ball_dir_y = state.ball_speed * -0.5;
-				} else if (state.ball_pos_y > state.player2_pos + half_length / 2) {
-					state.ball_dir_x = -(state.ball_speed / 2);
-					state.ball_dir_y = state.ball_speed / 2;
-				} else {
-					state.ball_dir_x = -(state.ball_speed - Math.abs(state.ball_dir_y));
-				}
+				player2_hit = true;
+		}
+
+		if (player1_hit || player2_hit) {
+			if (state.ball_pos_y < state.player1_pos - half_length / 2) {
+				state.ball_dir_x = state.ball_speed / 2;
+				state.ball_dir_y = state.ball_speed * -0.5;
+			} else if (state.ball_pos_y > state.player1_pos + half_length / 2) {
+				state.ball_dir_x = state.ball_speed / 2;
+				state.ball_dir_y = state.ball_speed / 2;
+			} else {
+				state.ball_dir_x = state.ball_speed - Math.abs(state.ball_dir_y);
+			}
+
+			if (player2_hit) {
+				state.ball_dir_x *= -1;
+			}
 		}
 	}
 
