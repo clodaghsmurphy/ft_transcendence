@@ -97,8 +97,12 @@ function Chat()
 	}, [])
 
 	useEffect(() => {
-		handleBan({all_channels, set_current_chan, set_all_channels, current_chan});
-	}, [all_channels, set_current_chan, set_all_channels, current_chan])
+		handleBan({all_channels, set_current_chan, 
+				set_all_channels, current_chan,
+				current_user, setChanOfUser});
+	}, [all_channels, set_current_chan,
+		set_all_channels, current_chan,
+		current_user, setChanOfUser])
 
 	useEffect(() => {
 		handleMessage({current_chan, set_current_chan})
@@ -110,8 +114,12 @@ function Chat()
 	}, [set_current_chan, set_all_channels, setChanOfUser, all_channels])
 
 	useEffect(() => {
-		handleKick({set_current_user, all_channels, set_all_channels, set_current_chan})
-	}, [set_current_user, all_channels, set_all_channels, set_current_chan])
+		handleKick({set_current_user, all_channels,
+					set_all_channels, set_current_chan,
+					current_user, setChanOfUser})
+	}, [set_current_user, all_channels,
+		set_all_channels, set_current_chan,
+		current_user, setChanOfUser])
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'
@@ -292,7 +300,7 @@ function Chat()
 			</div>
 
             <div className="group-members">
-				<h1>User(s)</h1>
+				<h1>Users</h1>
 				
 				<div className='user-holder'>
 					{User_in_group(all_users, current_user, current_chan)}

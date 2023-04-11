@@ -26,7 +26,8 @@ export function handleBan(vars: ChatVariables) {
 
 	const ban_function = (data: any) => {
 		if (!vars.current_chan || !vars.set_current_chan ||
-			!vars.all_channels || !vars.set_all_channels)
+			!vars.all_channels || !vars.set_all_channels ||
+			!vars.current_user || !vars.setChanOfUser)
 			return
 		
 		if (vars.current_chan.type === CHANNEL) {
@@ -60,6 +61,15 @@ export function handleBan(vars: ChatVariables) {
 				ret.push((tmp_chan as Channel))
 				return ret;
 			})
+			if (data.target_id === vars.current_user.id) {
+				vars.setChanOfUser((prev: Channel[]) => {
+					let ret = prev.filter((c: Channel) => 
+						c.name !== data.name
+					)
+					return ret;
+				})
+				toast.error('You have been banned of channel ' + data.name)
+			}
 		}
 	}
 
@@ -156,7 +166,8 @@ export function handleKick(vars: ChatVariables) {
 
 		const function_kick = (data: any) => {
 			if (!vars.set_current_user || !vars.all_channels ||
-				!vars.set_all_channels || !vars.set_current_chan)
+				!vars.set_all_channels || !vars.set_current_chan || 
+				!vars.current_user || !vars.setChanOfUser)
 				return
 			
 			vars.set_current_chan((prev: CurrentChan) => ({
@@ -184,6 +195,15 @@ export function handleKick(vars: ChatVariables) {
 				ret.push((tmp_chan as Channel))
 				return ret;
 			})
+			if (data.target_id === vars.current_user.id) {
+				vars.setChanOfUser((prev: Channel[]) => {
+					let ret = prev.filter((c: Channel) => 
+						c.name !== data.name
+					)
+					return ret;
+				})
+				toast.warn('You have been kicked of channel ' + data.name)
+			}
 		}
 
 		socket_chan.on('kick', function_kick)
