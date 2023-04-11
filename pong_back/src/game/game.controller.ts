@@ -36,4 +36,5 @@ export class GameController {
 	async removeGame(@Body() dto: GameRemoveDto) {
 		return await this.gameService.remove(dto.id);
 	}
+
 }
