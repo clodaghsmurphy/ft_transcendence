@@ -12,6 +12,8 @@ import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	private logger = new Logger(DmGateway.name);
 
+	private userMap = new Map<number, string>();
+
 	@WebSocketServer() io: Namespace;
 
 	constructor (private readonly dmService: DmService) {}
@@ -26,8 +28,15 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	}
 
 	handleDisconnect(client: Socket) {
+		this.removeSocketId(client.id);
 		this.logger.log(`Disconnected client with id: ${client.id}`);
-		this.logger.log(`Number of connection: ${this.io.sockets.size}`);
+	}
+
+	@UseGuards(JwtWsGuard)
+	@SubscribeMessage('ping')
+	async handlePing(@ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		this.userMap.set(payload.sub, client.id);
+		this.io.to(client.id).emit('pong');
 	}
 
 	@UseGuards(JwtWsGuard)
@@ -42,12 +51,18 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 		if (client.rooms.has(roomName))
 			throw new WsException(`error: client has already joined this room`);
 
+		this.userMap.set(payload.sub, client.id);
 		try {
 			await this.dmService.checkUser(data.sender_id);
 			await this.dmService.checkUser(data.receiver_id);
 
 			client.join(roomName);
 			this.io.in(roomName).emit('join', data);
+
+			const target = this.userMap.get(data.receiver_id);
+			if (target && this.io.sockets.has(target)) {
+				this.io.to(target).emit('join', data);
+			}
 		} catch (e) {
 			client.leave(roomName);
 			throw new WsException(e);
@@ -94,5 +109,14 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	checkUser(client: Socket, roomName: string) {
 		if (!client.rooms.has(roomName))
 			throw new WsException(`error: client hasn't joined this room`);
+	}
+
+	removeSocketId(clientId: string) {
+		for (const [userId, socketId] of this.userMap.entries()) {
+			if (socketId === clientId) {
+				this.userMap.delete(userId);
+				break;
+			}
+		}
 	}
 }
