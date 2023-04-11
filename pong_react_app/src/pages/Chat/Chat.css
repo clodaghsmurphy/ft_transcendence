@@ -237,7 +237,6 @@
 	display: flex;
 	flex-direction: column-reverse;
 	scrollbar-color: #9b59b6 transparent;
-	gap: 15px
 }
 
 .no-messages {
@@ -895,7 +894,7 @@
 	margin-bottom: auto;
 	border: 0;
 	padding: 0;
-	border-radius: 2px;
+	border-radius: 3px;
 	align-items: center;
 	justify-content: center;
 	margin-left: 5px;
@@ -922,6 +921,7 @@
 	min-height: 75px;
 	flex: 1 0 auto;
 	height: auto;
+	margin-bottom: 20px;
 }
 
 .sender2 {
@@ -939,9 +939,11 @@
 	margin-bottom: auto;
 	font-size: 1.10rem;
 	margin-right: 25px;
+	min-width: 44px;
 }
 
 .sender2 .message-body {
 	margin-right: 5px;
 	margin-left: 25px;
+	text-align: right;
 }

@@ -45,4 +45,4 @@
 
 - [ ] faire render un message clear mon mesasge
 - [ ] messages 'vides' avec que des whites spaces ?
-- [ ] messages trop grands -> CSS buggued
+- [x] messages trop grands -> CSS buggued
