@@ -7,17 +7,19 @@ import axios, { AxiosResponse, AxiosError } from 'axios'
 import { sanitizeString } from './ChatUtils'
 import { toast } from 'react-toastify'
 
-type ChatVariables = {
+export type ChatVariables = {
 	all_users?: User[],
 	all_channels?: Channel[],
 	current_user?: User,
 	current_chan?: CurrentChan,
 	chanOfUser?: Channel[],
+	dms?: DirectMessage[],
 	set_all_users?: React.Dispatch<React.SetStateAction<User[]>>,
 	set_all_channels?: React.Dispatch<React.SetStateAction<Channel[]>>,
 	set_current_user?: React.Dispatch<React.SetStateAction<User>>,
 	set_current_chan?: React.Dispatch<React.SetStateAction<CurrentChan>>,
 	setChanOfUser?: React.Dispatch<React.SetStateAction<Channel[]>>,
+	set_dms?: React.Dispatch<React.SetStateAction<DirectMessage[]>>,
 }
 
 export function handleBan(vars: ChatVariables) {

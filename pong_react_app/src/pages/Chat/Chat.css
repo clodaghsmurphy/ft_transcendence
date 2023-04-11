@@ -292,24 +292,16 @@
 	font-style: normal;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
-	
-	display: flex;
-	flex-direction: row;
-	justify-content: left;
-	align-items: center;
 	overflow: hidden;
-	object-fit: contain;
 	font-size: 35px;
 	color: white;
-	border: 0px;
-	border-radius: 5px;
-	
+	border: 0px;	
 	margin-top: 5%;
 	margin-left: 9%;
 	min-height: 2rem;
 
 	flex-basis: 71px;
-	flex-grow: 0;
+	flex-grow: 1;
 	flex-shrink: 0;
 }
 
@@ -890,6 +882,9 @@
 	height: 24px;
 	min-height: 24px;
 	max-height: 24px;
+	width: 24px;
+	min-width: 24px;
+	max-width: 24px;
 	margin-top: auto;
 	margin-bottom: auto;
 	border: 0;

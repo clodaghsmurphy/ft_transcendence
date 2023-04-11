@@ -9,7 +9,7 @@ import { Channel, MUTE, MessageData, names_to_channel } from './Channels'
 import io, { Socket } from 'socket.io-client'
 import { DirectMessage } from './DirectMessage'
 import { AuthContext } from '../../App'
-import { group_message, Password, refresh_button, sanitizeString, users_message } from './ChatUtils'
+import { group_message, Password, refresh_button, refresh_data, sanitizeString, users_message } from './ChatUtils'
 import PopupJoinChannel from './PopupJoinChannel'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { handleBan, handleCreate, handleJoin, handleKick, handleMakeop, handleMessage } from './SocketEvents'
@@ -49,30 +49,14 @@ function Chat()
 	
 	useEffect(() => {
 		document.title = 'Chat';
-		axios.get('/api/user/info')
-			.then((response: AxiosResponse) => {
-					set_all_users(response.data as User[])
-					set_current_user(id_to_user(response.data as User[], user_id))
-				})
-			.catch((err: AxiosError) => {
-				toast.error('Error fetching users');
-			})
 		
-		axios.get('/api/channel/info')
-			.then((response: AxiosResponse) => {
-					set_all_channels(response.data as Channel[])
-			})
-			.catch((err: AxiosError) => {
-				toast.error('Error fetching channels');
-			})
-		
-		axios.get('/api/dm')
-			.then((response: AxiosResponse) => {
-				set_dms(response.data)
-			})
-			.catch((err: AxiosError) => {
-				toast.error('Error fetching DMs');
-			})
+		refresh_data({
+			current_user,
+			set_all_channels,
+			set_all_users,
+			set_current_user,
+			set_dms,
+		}, user_id)
 		
 		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
 		{
@@ -251,12 +235,6 @@ function Chat()
 		set_current_user(new_curr_user)
 	}
 
-	function refresh_function(to_refresh: string): void {
-		if (to_refresh === 'channels') {
-			
-		}
-	}
-
 	return (
 		<div className="dashboard">
         <NavBar /> 
@@ -278,7 +256,15 @@ function Chat()
 							<h1>Channels</h1>
 							{PopupJoinChannel(chanOfUser, current_user,
 											changeChannelOrDm, setChanOfUser)}
-							{refresh_button('channels', refresh_function)}
+							{refresh_button('channels', () => 
+								refresh_data({
+											current_user,
+											set_all_channels,
+											set_all_users,
+											set_current_user,
+											set_dms,
+								}, user_id)
+							)}
 						</div>
 						<div className='lists-holder'>
 							{group_message(chanOfUser,

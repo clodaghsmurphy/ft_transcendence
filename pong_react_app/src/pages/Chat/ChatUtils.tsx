@@ -8,6 +8,9 @@ import group_img from '../../media/group.png'
 import React, { useRef } from 'react'
 import { ChanAndMessage, CurrentChan, DM, socket_chan } from "./Chat"
 import refresh_icon from '../../media/refresh_icon.png'
+import { ChatVariables } from "./SocketEvents";
+import axios, { AxiosResponse, AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 
 const { v4: uuidv4 } = require('uuid');
@@ -175,5 +178,45 @@ export function refresh_button(to_refresh: string, fnc: (s: string) => void): JS
 			<img src={refresh_icon} />
 		</button>
 	)
+}
+
+export function refresh_data(vars: ChatVariables, user_id: number) {
+	if (!vars.set_all_channels || !vars.set_all_users ||
+		!vars.set_dms || !vars.set_current_user ||
+		!vars.current_user) {
+			return
+		}
+	
+	const is_not_the_first_time_entering_the_function =
+		typeof vars.current_user.friend_users !== 'undefined'
+	
+	axios.get('/api/user/info')
+		.then((response: AxiosResponse) => {
+				vars.set_all_users!(response.data as User[])
+				vars.set_current_user!(id_to_user(response.data as User[], user_id))
+			})
+		.catch((err: AxiosError) => {
+			toast.error('Error fetching users');
+		})
+	
+	axios.get('/api/channel/info')
+		.then((response: AxiosResponse) => {
+				vars.set_all_channels!(response.data as Channel[])
+		})
+		.catch((err: AxiosError) => {
+			toast.error('Error fetching channels');
+		})
+	
+	axios.get('/api/dm')
+		.then((response: AxiosResponse) => {
+			vars.set_dms!(response.data)
+		})
+		.catch((err: AxiosError) => {
+			toast.error('Error fetching DMs');
+		})
+	
+	if (is_not_the_first_time_entering_the_function) {
+		toast.success('Refreshed data')
+	}
 }
   
