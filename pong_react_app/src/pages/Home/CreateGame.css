@@ -1,13 +1,16 @@
 .create-game
 {
 	z-index: 1;
+	border: solid 1px;
+    border-color: #7070a535;
+    box-shadow: #7070a560 0px 5px 15px;
 	align-self:flex-end;
 	flex: 45%;
 	display: flex;
 	overflow-x: hidden;
 	border-radius: 2rem;
 	align-items: center;
-	background: #7377dd;       
+	background: #161848dc;       
 	flex-direction: column;
 	justify-content: flex-start;
 	color: white;
@@ -19,7 +22,7 @@
 	text-align: center;
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 200px) {
 	.create-game {
 		display: none;
 	}

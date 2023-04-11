@@ -3,7 +3,7 @@ body {
     padding: 0;
 }
 
-#root {
+ /* #root {
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -11,9 +11,8 @@ body {
     align-items: center;
     width: 100%;
     height: 100vh;
-    /* min-width: 800px;
-	min-height: 600px; */
-}
+
+}  */
 
 #game {
     display: flex;
