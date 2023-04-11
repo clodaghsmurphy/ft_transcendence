@@ -88,6 +88,8 @@ function Chat()
 			}
 		})
 
+		socket_chan.emit('ping')
+
 		socket_chan.on('exception', (data: any) => {
 			console.log('chan:', data)
 		})

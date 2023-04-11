@@ -3,7 +3,6 @@
 - [ ] Invite
   - [x] CSS
   - [ ] emit
-- [ ] Bouttons refresh partout
 
 - [x] quand kicked -> enlever le truc a gauche
 - [x] Leave un chan ne leave pas la room (socket)
