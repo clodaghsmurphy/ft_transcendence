@@ -81,19 +81,17 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 			}
 		}
 
-		axios.post('/api/channel/create', body)
-			.then((response: AxiosResponse) => {
+		socket_chan.emit('create', body , (data: any) => {
+			if (data.status === 'ok') {
 				socket_chan.emit('join', {
 					name: chan_name,
 					user_id: current_user.id,
 				})
-			})
-			.catch((err: AxiosError) => {
-				if (err) {
-					let desc = (err.response?.data as any).error
-					toast.error(desc);
-				}
-			})
+			} else {
+				let desc = (data as any).error
+				toast.error(desc);
+			}
+		})
 	}
 
 	let b_users: JSX.Element[] = []

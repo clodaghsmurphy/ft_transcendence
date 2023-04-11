@@ -12,7 +12,7 @@ import { AuthContext } from '../../App'
 import { group_message, Password, refresh_button, sanitizeString, users_message } from './ChatUtils'
 import PopupJoinChannel from './PopupJoinChannel'
 import axios, { AxiosResponse, AxiosError } from 'axios'
-import { handleBan, handleJoin, handleKick, handleMakeop, handleMessage } from './SocketEvents'
+import { handleBan, handleCreate, handleJoin, handleKick, handleMakeop, handleMessage } from './SocketEvents'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './ToastifyFix.css'
@@ -120,6 +120,10 @@ function Chat()
 	}, [set_current_user, all_channels,
 		set_all_channels, set_current_chan,
 		current_user, setChanOfUser])
+	
+	useEffect(() => {
+		handleCreate({all_channels, set_all_channels, setChanOfUser})
+	}, [all_channels, set_all_channels, setChanOfUser])
 
 	if (typeof current_user.channels !== 'undefined'
 	&& typeof all_channels[0] !== 'undefined'

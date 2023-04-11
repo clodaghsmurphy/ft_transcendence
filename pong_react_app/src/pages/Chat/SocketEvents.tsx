@@ -208,3 +208,22 @@ export function handleKick(vars: ChatVariables) {
 
 		socket_chan.on('kick', function_kick)
 }
+
+export function handleCreate(vars: ChatVariables) {
+	socket_chan.removeListener('create')
+
+	const function_create = (data: any) => {
+		console.log(vars)
+		if (!vars.all_channels || !vars.setChanOfUser ||
+			!vars.set_all_channels)
+			return
+
+		if (vars.all_channels.find((c: Channel) => c.name === data.name)) {
+			console.log('inside')
+			vars.setChanOfUser((prev: Channel[]) => [...prev, data as Channel])
+			vars.set_all_channels((prev: Channel[]) => [...prev, data as Channel])
+		}
+	}
+
+	socket_chan.on('create', function_create)
+}
