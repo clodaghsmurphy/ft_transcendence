@@ -105,34 +105,34 @@ export class GameService {
 
 		// Bouge la raquette de joueur1
 		room.state.player1_pos += room.state.player1_dir;
-
 		if (room.state.player1_pos < room.state.racket_length)
 			room.state.player1_pos -= room.state.player1_dir;
 		if (room.state.player1_pos > room.state.height - (room.state.racket_length / 2))
 			room.state.player1_pos -= room.state.player1_dir;
 
+			
 		// Bouge la raquette de joueur2
+		
 		room.state.player2_pos += room.state.player2_dir;
-
-		if (room.state.player2_pos < room.state.racket_length)
+		if (room.state.player2_pos < room.state.racket_length / 2)
 			room.state.player2_pos -= room.state.player2_dir;
-		if (room.state.player2_pos > room.state.height - room.state.racket_length)
+		if (room.state.player2_pos > room.state.height - room.state.racket_length / 2)
 			room.state.player2_pos -= room.state.player2_dir;
 
 		// Met à jour la position de la balle en fonction de sa direction
-		room.state.ball_pos_x += room.state.ball_dir_x;
-		room.state.ball_pos_y += room.state.ball_dir_y;
-
+		let ball_next_x = room.state.ball_pos_x + room.state.ball_dir_x;
+		let ball_next_y = room.state.ball_pos_y + room.state.ball_dir_y;;
+		
 		// Vérifie si la balle a atteint un bord de l'écran et la fait rebondir si c'est le cas
-		if (room.state.ball_pos_x < 0 || room.state.ball_pos_x > room.state.width) {
+		if (ball_next_x < 0 || ball_next_x > room.state.width) {
 			room.state.ball_dir_x *= -1;
 		}
-		if (room.state.ball_pos_y < 0 || room.state.ball_pos_y > room.state.height) {
+		if (ball_next_y < 0 || ball_next_y > room.state.height) {
 			room.state.ball_dir_y *= -1;
 		}
 
 		// Vérifie si la balle est en collision avec la raquette de joueur1 et la fait rebondir si c'est le cas
-		if (room.state.ball_pos_x <= room.state.racket_length && room.state.ball_pos_y >= room.state.player1_pos && room.state.ball_pos_y <= room.state.player1_pos + room.state.racket_length) {
+		if (ball_next_x <= room.state.racket_length && ball_next_y >= room.state.player1_pos && ball_next_y <= room.state.player1_pos + room.state.racket_length) {
 			room.state.ball_dir_x *= -1;
 		}
 
@@ -156,11 +156,13 @@ export class GameService {
 		}
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 900) {
+		if (room.state.player1_goals >= 5 || room.state.player2_goals >= 5 || room.rounds >= 2000) {
 			room.state.ongoing = false;
 		}
-	}
 
+		room.state.ball_pos_x += room.state.ball_dir_x;
+		room.state.ball_pos_y += room.state.ball_dir_y;
+	}
 
 	keyEvent(dto: GameKeyDto) {
 		const room: GameRoom = this.activeGames.get(dto.id);

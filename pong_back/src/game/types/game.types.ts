@@ -6,6 +6,8 @@ export class GameState {
 
 	racket_speed: number;
 	racket_length: number;
+	racket_width: number,
+	racket_shift: number,
 
 	player1_pos: number;
 	player2_pos: number;
@@ -32,7 +34,9 @@ export const defaultState: GameState = {
 
 	// TODO: Figure out racket length and speed
 	racket_speed: 10,
-	racket_length: 50,
+	racket_length: 80, // hauteur
+	racket_width: 10, // largeur
+	racket_shift: 0, // decalage
 
 	player1_pos: 200,
 	player2_pos: 200,
