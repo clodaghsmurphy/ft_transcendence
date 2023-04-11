@@ -921,7 +921,8 @@
 	min-height: 75px;
 	flex: 1 0 auto;
 	height: auto;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 .sender2 {
