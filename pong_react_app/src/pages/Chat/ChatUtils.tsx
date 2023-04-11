@@ -1,4 +1,4 @@
-import { Channel } from "./Channels";
+import { Channel, names_to_channel } from "./Channels";
 import { DirectMessage } from "./DirectMessage";
 import PopupCreateChannel from "./PopupCreateChannel";
 import PopupAddDirect from "./PopupAddDirect";
@@ -183,7 +183,8 @@ export function refresh_button(to_refresh: string, fnc: (s: string) => void): JS
 export function refresh_data(vars: ChatVariables, user_id: number) {
 	if (!vars.set_all_channels || !vars.set_all_users ||
 		!vars.set_dms || !vars.set_current_user ||
-		!vars.current_user) {
+		!vars.current_user || !vars.setChanOfUser ||
+		!vars.all_channels) {
 			return
 		}
 	
@@ -194,17 +195,20 @@ export function refresh_data(vars: ChatVariables, user_id: number) {
 		.then((response: AxiosResponse) => {
 				vars.set_all_users!(response.data as User[])
 				vars.set_current_user!(id_to_user(response.data as User[], user_id))
+
+				let usr = id_to_user(response.data as User[], user_id)
+				axios.get('/api/channel/info')
+					.then((response: AxiosResponse) => {
+							vars.set_all_channels!(response.data as Channel[])
+							vars.setChanOfUser!(names_to_channel(response.data as Channel[],
+								usr.channels))
+					})
+					.catch((err: AxiosError) => {
+						toast.error('Error fetching channels');
+					})
 			})
 		.catch((err: AxiosError) => {
 			toast.error('Error fetching users');
-		})
-	
-	axios.get('/api/channel/info')
-		.then((response: AxiosResponse) => {
-				vars.set_all_channels!(response.data as Channel[])
-		})
-		.catch((err: AxiosError) => {
-			toast.error('Error fetching channels');
 		})
 	
 	axios.get('/api/dm')
@@ -214,6 +218,7 @@ export function refresh_data(vars: ChatVariables, user_id: number) {
 		.catch((err: AxiosError) => {
 			toast.error('Error fetching DMs');
 		})
+	
 	
 	if (is_not_the_first_time_entering_the_function) {
 		toast.success('Refreshed data')

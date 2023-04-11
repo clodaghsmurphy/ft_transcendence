@@ -42,7 +42,7 @@
 
 #Bugs
 
-- [ ] setChanOfUser dans refresh
 - [ ] faire render un message clear mon mesasge
 - [ ] messages 'vides' avec que des whites spaces ?
+- [x] setChanOfUser dans refresh
 - [x] messages trop grands -> CSS buggued

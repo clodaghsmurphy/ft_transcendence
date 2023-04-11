@@ -51,6 +51,8 @@ function Chat()
 		document.title = 'Chat';
 		
 		refresh_data({
+			all_channels,
+			setChanOfUser,
 			current_user,
 			set_all_channels,
 			set_all_users,
@@ -110,14 +112,6 @@ function Chat()
 	useEffect(() => {
 		handleCreate({all_channels, set_all_channels, setChanOfUser})
 	}, [all_channels, set_all_channels, setChanOfUser])
-
-	if (typeof current_user.channels !== 'undefined'
-	&& typeof all_channels[0] !== 'undefined'
-	&& (chanOfUser.length === 0 && current_user.channels.length > 0))
-	{
-		setChanOfUser(names_to_channel(all_channels, current_user.channels))
-	}
-
 
 	function changeChannelOrDm(param: Channel | DirectMessage): void {
 		const is_chan = typeof (param as Channel).operators !== 'undefined'
@@ -258,6 +252,8 @@ function Chat()
 											changeChannelOrDm, setChanOfUser)}
 							{refresh_button('channels', () => 
 								refresh_data({
+											all_channels,
+											setChanOfUser,
 											current_user,
 											set_all_channels,
 											set_all_users,
