@@ -19,30 +19,46 @@ export default function sketch(p5) {
     let score1 = 0,
         score2 = 0;
 
-    const header = document.querySelector('.nav-bar');
-    let header_hauteur = header.offsetHeight;
+    const dimension_width = 600,
+        dimension_height = 400;
+    const header = document.getElementsByTagName("header");
+    let header_hauteur = header[0].offsetHeight;
     const gameDiv = document.getElementById("game");
     let div_largeur = gameDiv.offsetWidth,
         div_hauteur = gameDiv.offsetHeight;
-    if (header_hauteur == div_hauteur)
-        header_hauteur = 0;
     let game_height = div_hauteur - header_hauteur,
         game_width = div_largeur;
+    
+    let terrain_height,
+        terrain_width;
+    tailleterrain();
 
-    let ratio_hauteur = (1 / 400) * game_height,
-        ratio_largeur = (1 / 400) * game_width;
+
+    let ratio_hauteur = (1 / dimension_height) * terrain_height,
+        ratio_largeur = (1 / dimension_width) * terrain_width;
 
     function centerCanvas() {
-        const gameDiv = document.getElementById("game");
-        const x = 0;
-        const y = 0;
+        const x = (game_width - p5.width) / 2; // Calcul de la position x du canvas pour le centrer horizontalement
+        const y = (game_height - p5.height) / 2; // Calcul de la position y du canvas pour le centrer verticalement
         canvas.position(x, y);
     }
 
+    function tailleterrain() {
+        // Calculer le facteur d'échelle en fonction de la taille de la div
+        let scaleX = game_width / dimension_width;
+        let scaleY = game_height / dimension_height;
+
+        let scale = Math.min(scaleX, scaleY); // Utiliser le facteur d'échelle le plus petit pour conserver les proportions
+        // Appliquer l'échelle et centrer le terrain de jeu au milieu du canvas
+        terrain_height = dimension_height * scale;
+        terrain_width = dimension_width * scale;
+    }
+
     p5.setup = () => {
-        const gameDiv = document.getElementById("game");
-        canvas = p5.createCanvas(game_width, game_height);
+        tailleterrain();
+        canvas = p5.createCanvas(terrain_width, terrain_height);
         canvas.parent('game');
+        centerCanvas();
     };
 
     p5.draw = () => {
@@ -50,12 +66,14 @@ export default function sketch(p5) {
         p5.fill(p5.color(255, 255, 255));
         p5.strokeWeight(0);
 
+        //Score
         p5.textSize(32);
         p5.text(score1, p5.width / 4, 40);
         p5.text(score2, 3 * p5.width / 4, 40);
 
         p5.rectMode(p5.CENTER);
 
+        // Effet balle
         p5.fill(p5.color(69, 41, 77));
         p5.rect(previousBallX3 * ratio_largeur, previousBallY3 * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
         p5.fill(p5.color(155, 89, 182));
@@ -65,10 +83,13 @@ export default function sketch(p5) {
         p5.fill(p5.color(255, 255, 255));
         p5.rect(ballX * ratio_largeur, ballY * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
 
+
+
         p5.fill(p5.color(0, 0, 0));
         p5.stroke(p5.color(255, 255, 255));
         p5.strokeWeight(5);
 
+        // Paddle
         p5.rect(20 * ratio_largeur, paddle1 * ratio_hauteur, paddleWidth * ratio_largeur, paddleHeight * ratio_hauteur);
         p5.rect(p5.width - 20 * ratio_largeur, paddle2 * ratio_hauteur, paddleWidth * ratio_largeur, paddleHeight * ratio_hauteur);
     };
@@ -81,18 +102,18 @@ export default function sketch(p5) {
 
         // Check if resize needed
         if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight ||
-            header_hauteur != header.offsetHeight) {
+            header_hauteur != header[0].offsetHeight) {
             div_largeur = gameDiv.offsetWidth;
             div_hauteur = gameDiv.offsetHeight;
-            header_hauteur = header.offsetHeight;
-            if (header_hauteur == div_hauteur)
-                header_hauteur = 0;
+            header_hauteur = header[0].offsetHeight;
             game_height = div_hauteur - header_hauteur;
             game_width = div_largeur;
             console.log("Resive");
-            p5.resizeCanvas(game_width, game_height);
-            ratio_hauteur = (1 / 400) * game_height;
-            ratio_largeur = (1 / 400) * game_width;
+            tailleterrain();
+            p5.resizeCanvas(terrain_width, terrain_height);
+            centerCanvas();
+            ratio_hauteur = (1 / dimension_height) * terrain_height;
+            ratio_largeur = (1 / dimension_width) * terrain_width;
         }
 
         // let bob = {
@@ -106,7 +127,6 @@ export default function sketch(p5) {
         // console.log(bob);
 
         let data = props.data;
-
         paddle1 = data.player1_pos;
         paddle2 = data.player2_pos;
 

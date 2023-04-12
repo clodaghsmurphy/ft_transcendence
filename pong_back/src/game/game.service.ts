@@ -170,17 +170,17 @@ export class GameService {
 			const clampedRatio = Math.max(-50, Math.min(50, ratio));
 
 			// Modifie la direction de la balle en fonction du ratio
-			state.ball_dir_x = state.ball_speed / 2;
+			state.ball_dir_x = state.ball_speed;
 			state.ball_dir_y = state.ball_speed * (clampedRatio / 100);
 
 			// Facteur de vitesse entre 1 et 2 en fonction du ratio
 			const speedFactor = 1 + (Math.abs(clampedRatio) / 100);
-			state.ball_dir_x *= speedFactor;
+			// state.ball_dir_x *= speedFactor;
 			state.ball_dir_y *= speedFactor;
 		}
 
 		// Collision joueur 2
-		if (state.ball_pos_x + half_radius >= state.height - state.racket_width - state.racket_shift &&
+		if (state.ball_pos_x + half_radius >= state.width - state.racket_width - state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player2_pos - half_length &&
 			state.ball_pos_y - half_radius <= state.player2_pos + half_length &&
 			state.ball_dir_x > 0) {
@@ -201,12 +201,12 @@ export class GameService {
 			const clampedRatio = Math.max(-50, Math.min(50, ratio));
 
 			// Modifie la direction de la balle en fonction du ratio
-			state.ball_dir_x = -state.ball_speed / 2;
+			state.ball_dir_x = -state.ball_speed;
 			state.ball_dir_y = state.ball_speed * (clampedRatio / 100);
 
 			// Facteur de vitesse entre 1 et 2 en fonction du ratio
 			const speedFactor = 1 + (Math.abs(clampedRatio) / 100);
-			state.ball_dir_x *= speedFactor;
+			// state.ball_dir_x *= speedFactor;
 			state.ball_dir_y *= speedFactor;
 		}
 
@@ -261,6 +261,7 @@ export class GameService {
 
 	keyEvent(dto: GameKeyDto) {
 		const room: GameRoom = this.activeGames.get(dto.id);
+
 		let newDir = 0;
 
 		if (dto.keyEvent.action === KeyAction.Press) {
@@ -271,10 +272,8 @@ export class GameService {
 			}
 		}
 
-		// if (dto.user_id === room.player1_id)
-			room.state.player1_dir = newDir;
-		// else
-			room.state.player2_dir = newDir;
+		room.state.player1_dir = newDir;
+		room.state.player2_dir = newDir;
 	}
 
 	getRandomDirection(ballSpeed: number): [number, number] {

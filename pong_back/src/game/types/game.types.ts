@@ -60,7 +60,7 @@ export const defaultState: GameState = {
 	ongoing: true,
 
 	// TODO: Figure out default screen size
-	width: 400,
+	width: 600,
 	height: 400,
 
 	// TODO: Figure out racket length and speed
