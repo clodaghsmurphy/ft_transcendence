@@ -17,6 +17,7 @@ export class GameState {
 
 	player1_goals: number;
 	player2_goals: number;
+	winning_goals: number;
 
 	ball_pos_x: number;
 	ball_pos_y: number;
@@ -40,6 +41,12 @@ export class GameState {
 	mode_chaos: boolean;
 }
 
+export const min_racket_length = 30;
+export const max_racket_length = 150;
+
+export const min_ball_radius = 5;
+export const max_ball_radius = 100;
+
 export const defaultState: GameState = {
 	ongoing: true,
 
@@ -61,6 +68,7 @@ export const defaultState: GameState = {
 
 	player1_goals: 0,
 	player2_goals: 0,
+	winning_goals: 5,
 
 	ball_pos_x: 200,
 	ball_pos_y: 200,
@@ -89,7 +97,6 @@ export class GameRoom {
 	player2_id: number;
 
 	state: GameState;
-
 }
 
 export enum KeyType {
