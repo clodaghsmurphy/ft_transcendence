@@ -88,8 +88,7 @@ export default function PopupCreateChannel(every_users: User[], current_user: Us
 					user_id: current_user.id,
 				})
 			} else {
-				let desc = (data as any).error
-				toast.error(desc);
+				toast.error(data.data.error);
 			}
 		})
 	}

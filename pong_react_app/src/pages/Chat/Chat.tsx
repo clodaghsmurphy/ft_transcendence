@@ -76,11 +76,16 @@ function Chat()
 
 		socket_chan.emit('ping')
 
+		socket_chan.on('pong', () => {
+			console.log('pong received')
+		})
+
 		socket_chan.on('exception', (data: any) => {
-			console.log('chan:', data)
+			console.log(data)
+			toast.warn('chan: ' + data.error)
 		})
 		socket_dm.on('exception', (data: any) => {
-			console.log('dm:', data)
+			toast.warn('dm: ' + data.error)
 		})
 	}, [])
 

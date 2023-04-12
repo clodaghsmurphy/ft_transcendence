@@ -6,6 +6,7 @@ import User, { id_to_user } from '../utils/User'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { sanitizeString } from './ChatUtils'
 import { toast } from 'react-toastify'
+import { channel } from 'diagnostics_channel'
 
 export type ChatVariables = {
 	all_users?: User[],
@@ -133,6 +134,7 @@ export function handleJoin(vars: ChatVariables) {
 				chan.name === chan_name
 			) === 'undefined') // Si le chan existe pas
 		{
+			console.log('didnt found channel', data.name)
 			axios.get('/api/channel/info/' + sanitizeString(chan_name))
 				.then((response: AxiosResponse) => {
 					vars.set_all_channels!((prev: Channel[]) => [...prev, response.data])
