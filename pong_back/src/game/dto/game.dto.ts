@@ -1,12 +1,62 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, ValidateNested } from "class-validator";
-import { GameKeyEvent } from "../types/game.types";
+import { IsArray, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, ValidateNested, Min, Max, IsBoolean } from "class-validator";
+import { GameKeyEvent, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, max_winning_goals, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed, min_winning_goals } from "../types/game.types";
 
 export class GameCreateDto {
 	// Temporary measure before matchmaking/invites are implemented
 	@IsNotEmpty()
 	@IsNumber()
 	target_id: number;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsNumber()
+	@Min(min_racket_length)
+	@Max(max_racket_length)
+	racket_length: number;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsNumber()
+	@Min(min_racket_speed)
+	@Max(max_racket_speed)
+	racket_speed: number;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsNumber()
+	@Min(min_ball_radius)
+	@Max(max_ball_radius)
+	ball_initial_radius: number;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsNumber()
+	@Min(min_ball_speed)
+	@Max(max_ball_speed)
+	ball_initial_speed: number;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsNumber()
+	@Min(min_winning_goals)
+	@Max(max_winning_goals)
+	winning_goals: number;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsBoolean()
+	mode_speedup: boolean;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsBoolean()
+	mode_shrink: boolean;
+
+	@IsOptional()
+	@IsNotEmpty()
+	@IsBoolean()
+	mode_chaos: boolean;
 }
 
 export class GameParams {

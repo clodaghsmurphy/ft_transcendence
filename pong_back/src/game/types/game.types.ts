@@ -44,8 +44,17 @@ export class GameState {
 export const min_racket_length = 30;
 export const max_racket_length = 150;
 
+export const min_racket_speed = 10;
+export const max_racket_speed = 50;
+
 export const min_ball_radius = 5;
 export const max_ball_radius = 100;
+
+export const min_ball_speed = 10;
+export const max_ball_speed = 30;
+
+export const min_winning_goals = 3;
+export const max_winning_goals = 99;
 
 export const defaultState: GameState = {
 	ongoing: true,
@@ -85,7 +94,7 @@ export const defaultState: GameState = {
 	pause_frames: 15,
 	current_pause: 0,
 
-	mode_speedup: true,
+	mode_speedup: false,
 	mode_shrink: false,
 	mode_chaos: false,
 };
