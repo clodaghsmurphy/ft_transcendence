@@ -25,11 +25,19 @@ export class GameState {
 	ball_dir_y: number;
 
 	ball_radius: number;
+	ball_initial_radius: number;
+
 	ball_speed: number;
+	ball_initial_speed: number;
 
 	// Duration on pause after a goal in frames
 	pause_frames: number;
 	current_pause: number;
+
+	// Gamemodes
+	mode_speedup: boolean;
+	mode_shrink: boolean;
+	mode_chaos: boolean;
 }
 
 export const defaultState: GameState = {
@@ -61,10 +69,17 @@ export const defaultState: GameState = {
 	ball_dir_y: 0,
 
 	ball_radius: 20,
-	ball_speed: 15,
+	ball_initial_radius: 20,
+
+	ball_speed: 10,
+	ball_initial_speed: 10,
 
 	pause_frames: 15,
-	current_pause: 0
+	current_pause: 0,
+
+	mode_speedup: true,
+	mode_shrink: true,
+	mode_chaos: true,
 };
 
 export class GameRoom {
