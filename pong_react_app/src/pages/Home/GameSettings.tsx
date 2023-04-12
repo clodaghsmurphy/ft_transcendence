@@ -158,7 +158,9 @@ export default function GameSettings() {
 		</div>
 
 		<div className='gamemode'>
-			<h2>chaos mode:</h2>
+			<h2 style={{
+				color: 'red'
+			}}>chaos mode:</h2>
 			<input type='checkbox'
 					ref={chaos_mode_ref}
 					value={String(settings.mode_chaos)}

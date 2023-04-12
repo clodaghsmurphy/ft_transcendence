@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Start from './Start';
 import Login from './Login';
 import ball from '../../media/Ball.svg';
@@ -14,6 +14,10 @@ function Home()
 	const handleClick = () => {
 		navigate('/login');
 	}
+
+	useEffect(() => {
+		document.title = 'Pong'
+	})
 
 	return (
 	<div>
