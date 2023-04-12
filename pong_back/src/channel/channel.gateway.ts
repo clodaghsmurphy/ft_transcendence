@@ -49,15 +49,12 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		this.userMap.set(payload.sub, client.id);
 		try {
 			const channel = await this.channelService.create(data);
-
 			this.io.to(client.id).emit('create', data);
-			if (dto.hasOwnProperty('users_ids')) {
-				for (const [userId, socketId] of this.userMap.entries()) {
 
-					if (dto.users_ids.includes(userId)) {
-						if (this.io.sockets.has(socketId)) {
-							this.io.to(socketId).emit('create', data);
-						}
+			if (dto.hasOwnProperty('users_ids')) {
+				for (const userId of dto.users_ids) {
+					if (this.userMap.has(userId)) {
+						this.io.to(this.userMap.get(userId)).emit('create', data);
 					}
 				}
 			}
