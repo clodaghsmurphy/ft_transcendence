@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useContext} from 'react'
 import { Link } from 'react-router-dom'
 import User, { id_to_user } from '../utils/User'
 import NavBar from '../Components/NavBar'
+import '../Home/Dashboard.css'
 import { ReactP5Wrapper } from 'react-p5-wrapper'
 import sketch from './sketches/sketch'
 import { io, Socket } from 'socket.io-client';
@@ -19,6 +20,14 @@ const { v4: uuidv4 } = require('uuid');
 type GamePost = {
 	user_id: number,
 	target_id: number,
+	racket_length: number,
+	racket_speed: number,
+	ball_initial_radius: number,
+	ball_initial_speed: number,
+	winning_goals: number,
+	mode_speedup: boolean,
+	mode_shrink: boolean,
+	mode_chaos: boolean,
 }
 
 export let socket_game: Socket
@@ -45,6 +54,14 @@ function Game() {
 		const body: GamePost = {
 			user_id: Number(state.user.id),
 			target_id: 4,
+			racket_length: 150,
+			racket_speed: 30,
+			ball_initial_radius: 20,
+			ball_initial_speed: 20,
+			winning_goals: 3,
+			mode_speedup: true,
+			mode_shrink: false,
+			mode_chaos: false
 		}
 
 		axios.post('/api/game/create', body)
@@ -128,14 +145,20 @@ function Game() {
 
 	if (!isJoined) {
 		return (
-			<div>
-				<button onClick={handleJoinGame}>Rejoindre la partie</button>
+			<div className="dashboard">
+			<NavBar />
+				<div>
+					<button onClick={handleJoinGame}>Rejoindre la partie</button>
+				</div>
 			</div>
 		);
 	} else {
 		return (
-			<div id="game">
-				<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
+			<div className="dashboard">
+			<NavBar />
+				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
+					<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
+				</div>
 			</div>
 		);
 	}

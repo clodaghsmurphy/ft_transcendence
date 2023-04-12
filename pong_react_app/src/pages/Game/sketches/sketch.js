@@ -5,6 +5,13 @@ export default function sketch(p5) {
     let canvas;
     let ballX = 200,
         ballY = 200;
+    let previousBallX1 = 200,
+        previousBallX2 = 200,
+        previousBallX3 = 300,
+        previousBallY1 = 200,
+        previousBallY2 = 200,
+        previousBallY3 = 300;
+    let ballRadius = 20;
     let paddle1 = 200,
         paddle2 = 200;
     let paddleWidth = 10,
@@ -12,40 +19,91 @@ export default function sketch(p5) {
     let score1 = 0,
         score2 = 0;
 
+    const header = document.querySelector('.nav-bar');
+    let header_hauteur = header.offsetHeight;
+    const gameDiv = document.getElementById("game");
+    let div_largeur = gameDiv.offsetWidth,
+        div_hauteur = gameDiv.offsetHeight;
+    if (header_hauteur == div_hauteur)
+        header_hauteur = 0;
+    let game_height = div_hauteur - header_hauteur,
+        game_width = div_largeur;
+
+    let ratio_hauteur = (1 / 400) * game_height,
+        ratio_largeur = (1 / 400) * game_width;
+
     function centerCanvas() {
-        const x = (p5.windowWidth - p5.width) / 2;
-        const y = (p5.windowHeight - p5.height) / 2;
+        const gameDiv = document.getElementById("game");
+        const x = 0;
+        const y = 0;
         canvas.position(x, y);
     }
 
     p5.setup = () => {
-        canvas = p5.createCanvas(400, 400);
+        const gameDiv = document.getElementById("game");
+        canvas = p5.createCanvas(game_width, game_height);
         canvas.parent('game');
-        centerCanvas();
     };
-
-    p5.windowResized = () => {
-        centerCanvas();
-    };
-
 
     p5.draw = () => {
         p5.background(0);
+        p5.fill(p5.color(255, 255, 255));
+        p5.strokeWeight(0);
+
         p5.textSize(32);
         p5.text(score1, p5.width / 4, 40);
         p5.text(score2, 3 * p5.width / 4, 40);
-        p5.fill(p5.color(255, 255, 255));
 
         p5.rectMode(p5.CENTER);
-        p5.rect(20, paddle1, paddleWidth, paddleHeight);
-        p5.rect(p5.width - 20, paddle2, paddleWidth, paddleHeight);
-        p5.rect(ballX, ballY, 20, 20);
+
+        p5.fill(p5.color(69, 41, 77));
+        p5.rect(previousBallX3 * ratio_largeur, previousBallY3 * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
+        p5.fill(p5.color(155, 89, 182));
+        p5.rect(previousBallX2 * ratio_largeur, previousBallY2 * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
+        p5.fill(p5.color(34, 68, 131));
+        p5.rect(previousBallX1 * ratio_largeur, previousBallY1 * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
+        p5.fill(p5.color(255, 255, 255));
+        p5.rect(ballX * ratio_largeur, ballY * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
+
+        p5.fill(p5.color(0, 0, 0));
+        p5.stroke(p5.color(255, 255, 255));
+        p5.strokeWeight(5);
+
+        p5.rect(20 * ratio_largeur, paddle1 * ratio_hauteur, paddleWidth * ratio_largeur, paddleHeight * ratio_hauteur);
+        p5.rect(p5.width - 20 * ratio_largeur, paddle2 * ratio_hauteur, paddleWidth * ratio_largeur, paddleHeight * ratio_hauteur);
     };
 
     p5.updateWithProps = (props) => {
         if (!props || !props.data) {
             return;
         }
+
+
+        // Check if resize needed
+        if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight ||
+            header_hauteur != header.offsetHeight) {
+            div_largeur = gameDiv.offsetWidth;
+            div_hauteur = gameDiv.offsetHeight;
+            header_hauteur = header.offsetHeight;
+            if (header_hauteur == div_hauteur)
+                header_hauteur = 0;
+            game_height = div_hauteur - header_hauteur;
+            game_width = div_largeur;
+            console.log("Resive");
+            p5.resizeCanvas(game_width, game_height);
+            ratio_hauteur = (1 / 400) * game_height;
+            ratio_largeur = (1 / 400) * game_width;
+        }
+
+        // let bob = {
+        //     header_hight: header_hauteur,
+        //     div_largeur: div_largeur,
+        //     div_hauteur: div_hauteur,
+        //     header_hauteur: header_hauteur,
+        //     game_height: game_height,
+        //     game_width: game_width,
+        // }
+        // console.log(bob);
 
         let data = props.data;
 
@@ -55,7 +113,18 @@ export default function sketch(p5) {
         score1 = data.player1_goals;
         score2 = data.player2_goals;
 
+        previousBallX3 = previousBallX2;
+        previousBallX2 = previousBallX1;
+        previousBallX1 = ballX;
         ballX = data.ball_pos_x;
+
+        previousBallY3 = previousBallY2;
+        previousBallY2 = previousBallY1;
+        previousBallY1 = ballY;
         ballY = data.ball_pos_y;
+
+        ballRadius = data.ball_radius;
+        paddleHeight = data.racket_length;
     };
+
 }

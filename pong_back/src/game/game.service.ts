@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { GameCreateDto, GameKeyDto } from "./dto";
-import { GameKeyEvent, GameRoom, KeyAction, KeyType, defaultState } from "./types/game.types";
+import { GameKeyEvent, GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_racket_length, min_ball_radius, min_racket_length } from "./types/game.types";
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { use } from "passport";
@@ -52,9 +52,8 @@ export class GameService {
 		room.id = game.id;
 		room.player1_id = dto.user_id;
 		room.player2_id = dto.target_id;
-
-		room.state = {...defaultState};
-		[room.state.ball_dir_x, room.state.ball_dir_y] = this.getRandomDirection(room.state.ball_speed);
+		room.state = {...dto.state};
+		this.initState(room.state);
 
 		this.activeGames.set(game.id, room);
 		return game;
@@ -114,7 +113,7 @@ export class GameService {
 		state.ball_pos_y += state.ball_dir_y;
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (state.player1_goals >= 5 || state.player2_goals >= 5) {
+		if (state.player1_goals >= state.winning_goals || state.player2_goals >= state.winning_goals) {
 			state.ongoing = false;
 		}
 	}
@@ -136,49 +135,78 @@ export class GameService {
 	}
 
 	checkBallCollision(state: GameState) {
-		// Vérifie si la balle a atteint un bord de l'écran et la fait rebondir si c'est le cas
 		const half_length = state.racket_length / 2;
 		const half_radius = state.ball_radius / 2;
 
-		let player1_hit: boolean = false;
-		let player2_hit: boolean = false;
-
+		// Vérifie si la balle a atteint un bord de l'écran et la fait rebondir si c'est le cas
 		if (state.ball_pos_y - half_radius <= 0 || state.ball_pos_y + half_radius >= state.height) {
 			state.ball_dir_y *= -1;
 		}
 
-		// Vérifie si la balle est en collision avec la raquette de joueur1 et la fait rebondir si c'est le cas
+		// Collision joueur1
 		if (state.ball_pos_x - half_radius <= state.racket_width + state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player1_pos - half_length &&
 			state.ball_pos_y - half_radius <= state.player1_pos + half_length &&
 			state.ball_dir_x < 0) {
 
-				player1_hit = true;
+			// Increments speed on gamemode
+			if (state.mode_speedup) {
+				state.ball_speed += state.ball_initial_speed * 0.2;
+			}
+
+			// Shrink ball size on gamemode
+			if (state.mode_shrink && state.ball_radius > min_ball_radius) {
+				state.ball_radius -= state.ball_initial_radius / 10;
+			}
+
+			// Calcule la position relative de la balle par rapport à la raquette de joueur1
+			const relativePos = (state.ball_pos_y - state.player1_pos) / state.racket_length;
+			// Calcule le ratio en fonction de la position relative
+			const ratio = relativePos * 50;
+			// Limite la valeur du ratio entre -50 et 50
+			const clampedRatio = Math.max(-50, Math.min(50, ratio));
+
+			// Modifie la direction de la balle en fonction du ratio
+			state.ball_dir_x = state.ball_speed / 2;
+			state.ball_dir_y = state.ball_speed * (clampedRatio / 100);
+
+			// Facteur de vitesse entre 1 et 2 en fonction du ratio
+			const speedFactor = 1 + (Math.abs(clampedRatio) / 100);
+			state.ball_dir_x *= speedFactor;
+			state.ball_dir_y *= speedFactor;
 		}
 
+		// Collision joueur 2
 		if (state.ball_pos_x + half_radius >= state.height - state.racket_width - state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player2_pos - half_length &&
 			state.ball_pos_y - half_radius <= state.player2_pos + half_length &&
 			state.ball_dir_x > 0) {
 
-				player2_hit = true;
-		}
-
-		if (player1_hit || player2_hit) {
-			if (state.ball_pos_y < state.player1_pos - half_length / 2) {
-				state.ball_dir_x = state.ball_speed / 2;
-				state.ball_dir_y = state.ball_speed * -0.5;
-			} else if (state.ball_pos_y > state.player1_pos + half_length / 2) {
-				state.ball_dir_x = state.ball_speed / 2;
-				state.ball_dir_y = state.ball_speed / 2;
-			} else {
-				state.ball_dir_x = state.ball_speed - Math.abs(state.ball_dir_y);
+			if (state.mode_speedup) {
+				state.ball_speed += state.ball_initial_speed * 0.2;
 			}
 
-			if (player2_hit) {
-				state.ball_dir_x *= -1;
+			if (state.mode_shrink && state.ball_radius > min_ball_radius) {
+				state.ball_radius -= state.ball_initial_radius / 10;
 			}
+
+			// Calcule la position relative de la balle par rapport à la raquette de joueur2
+			const relativePos = (state.ball_pos_y - state.player2_pos) / state.racket_length;
+			// Calcule le ratio en fonction de la position relative
+			const ratio = relativePos * 50;
+			// Limite la valeur du ratio entre -50 et 50
+			const clampedRatio = Math.max(-50, Math.min(50, ratio));
+
+			// Modifie la direction de la balle en fonction du ratio
+			state.ball_dir_x = -state.ball_speed / 2;
+			state.ball_dir_y = state.ball_speed * (clampedRatio / 100);
+
+			// Facteur de vitesse entre 1 et 2 en fonction du ratio
+			const speedFactor = 1 + (Math.abs(clampedRatio) / 100);
+			state.ball_dir_x *= speedFactor;
+			state.ball_dir_y *= speedFactor;
 		}
+
 	}
 
 	checkGoal(state: GameState) {
@@ -199,15 +227,33 @@ export class GameService {
 
 		// Reset the game state
 		if (goal) {
-			state.ball_pos_x = state.width / 2;
-			state.ball_pos_y = state.height / 2;
-
-			[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
-			state.current_pause = state.pause_frames;
-
-			state.player1_pos = defaultState.player1_pos;
-			state.player2_pos = defaultState.player2_pos;
+			this.initState(state);
 		}
+	}
+
+	initState(state: GameState) {
+		state.player1_pos = defaultState.player1_pos;
+		state.player2_pos = defaultState.player2_pos;
+
+		state.ball_pos_x = state.width / 2;
+		state.ball_pos_y = state.height / 2;
+
+		if (state.mode_shrink) {
+			state.ball_radius = max_ball_radius;
+			state.ball_initial_radius = max_ball_radius;
+		}
+		if (state.mode_chaos) {
+			state.ball_speed = this.getRandomCapped(10, 20);
+			state.racket_speed = this.getRandomCapped(10, 30);
+			state.ball_radius = this.getRandomCapped(min_ball_radius, max_ball_radius);
+			state.racket_length = this.getRandomCapped(min_racket_length, max_racket_length);
+		} else {
+			state.ball_speed = state.ball_initial_speed;
+			state.ball_radius = state.ball_initial_radius;
+		}
+
+		[state.ball_dir_x, state.ball_dir_y] = this.getRandomDirection(state.ball_speed);
+		state.current_pause = state.pause_frames;
 	}
 
 	keyEvent(dto: GameKeyDto) {
@@ -222,25 +268,31 @@ export class GameService {
 			}
 		}
 
-		if (dto.user_id === room.player1_id)
+		// if (dto.user_id === room.player1_id)
 			room.state.player1_dir = newDir;
-		else
+		// else
 			room.state.player2_dir = newDir;
 	}
 
-	getRandomDirection(ballSpeed: number) : [number, number]  {
-		const x = Math.random() * (ballSpeed * 2 + 1) - ballSpeed;
-		let y = ballSpeed - Math.abs(x);
-
-		const neg = Math.floor(Math.random() * 2);
-		if (neg == 1)
-			y *= -1;
-
-		if (Math.abs(x) + Math.abs(y) != ballSpeed) {
-			console.log(`x: ${x}, y: ${y}, abs(x) + abs(y): ${Math.abs(x) + Math.abs(y)}`);
+	getRandomDirection(ballSpeed: number): [number, number] {
+		let angle: number;
+		if (Math.random() < 0.5) {
+			// Si c'est le joueur de gauche qui effectue le service
+			angle = (Math.random() * 90 - 45) * Math.PI / 180; // angle entre -45 et 45 degrés converti en radians
+		} else {
+			// Sinon, c'est le joueur de droite qui effectue le service
+			angle = (Math.random() * 90 + 135) * Math.PI / 180; // angle entre 135 et 225 degrés converti en radians
 		}
 
-		return [x, y];
+		// Calcule les composantes x et y de la direction en fonction de l'angle
+		let x = Math.cos(angle) * ballSpeed;
+		let y = Math.sin(angle) * ballSpeed;
+
+   		return [x, y];
+	}
+
+	getRandomCapped(minValue: number, maxValue: number) {
+		return Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
 	}
 
 	async checkGame(id: number) {

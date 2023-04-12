@@ -17,6 +17,7 @@ export class GameState {
 
 	player1_goals: number;
 	player2_goals: number;
+	winning_goals: number;
 
 	ball_pos_x: number;
 	ball_pos_y: number;
@@ -25,12 +26,35 @@ export class GameState {
 	ball_dir_y: number;
 
 	ball_radius: number;
+	ball_initial_radius: number;
+
 	ball_speed: number;
+	ball_initial_speed: number;
 
 	// Duration on pause after a goal in frames
 	pause_frames: number;
 	current_pause: number;
+
+	// Gamemodes
+	mode_speedup: boolean;
+	mode_shrink: boolean;
+	mode_chaos: boolean;
 }
+
+export const min_racket_length = 30;
+export const max_racket_length = 150;
+
+export const min_racket_speed = 10;
+export const max_racket_speed = 50;
+
+export const min_ball_radius = 5;
+export const max_ball_radius = 100;
+
+export const min_ball_speed = 10;
+export const max_ball_speed = 30;
+
+export const min_winning_goals = 3;
+export const max_winning_goals = 99;
 
 export const defaultState: GameState = {
 	ongoing: true,
@@ -53,6 +77,7 @@ export const defaultState: GameState = {
 
 	player1_goals: 0,
 	player2_goals: 0,
+	winning_goals: 5,
 
 	ball_pos_x: 200,
 	ball_pos_y: 200,
@@ -61,10 +86,17 @@ export const defaultState: GameState = {
 	ball_dir_y: 0,
 
 	ball_radius: 20,
-	ball_speed: 15,
+	ball_initial_radius: 20,
+
+	ball_speed: 10,
+	ball_initial_speed: 10,
 
 	pause_frames: 15,
-	current_pause: 0
+	current_pause: 0,
+
+	mode_speedup: false,
+	mode_shrink: false,
+	mode_chaos: false,
 };
 
 export class GameRoom {
@@ -74,7 +106,6 @@ export class GameRoom {
 	player2_id: number;
 
 	state: GameState;
-
 }
 
 export enum KeyType {
