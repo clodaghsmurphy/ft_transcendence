@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { GameCreateDto, GameKeyDto } from "./dto";
-import { GameKeyEvent, GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_racket_length, min_ball_radius, min_racket_length } from "./types/game.types";
+import { GameKeyEvent, GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed } from "./types/game.types";
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { use } from "passport";
@@ -139,7 +139,10 @@ export class GameService {
 		const half_radius = state.ball_radius / 2;
 
 		// Vérifie si la balle a atteint un bord de l'écran et la fait rebondir si c'est le cas
-		if (state.ball_pos_y - half_radius <= 0 || state.ball_pos_y + half_radius >= state.height) {
+		if (state.ball_pos_y - half_radius <= 0 && state.ball_dir_y < 0) {
+			state.ball_dir_y *= -1;
+		}
+		if (state.ball_pos_y + half_radius >= state.height && state.ball_dir_y > 0) {
 			state.ball_dir_y *= -1;
 		}
 
@@ -243,8 +246,8 @@ export class GameService {
 			state.ball_initial_radius = max_ball_radius;
 		}
 		if (state.mode_chaos) {
-			state.ball_speed = this.getRandomCapped(10, 20);
-			state.racket_speed = this.getRandomCapped(10, 30);
+			state.ball_speed = this.getRandomCapped(min_ball_speed, max_ball_speed);
+			state.racket_speed = this.getRandomCapped(min_racket_speed, max_racket_speed);
 			state.ball_radius = this.getRandomCapped(min_ball_radius, max_ball_radius);
 			state.racket_length = this.getRandomCapped(min_racket_length, max_racket_length);
 		} else {

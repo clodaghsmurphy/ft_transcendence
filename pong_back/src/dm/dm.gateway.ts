@@ -58,11 +58,6 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 
 			client.join(roomName);
 			this.io.in(roomName).emit('join', data);
-
-			const target = this.userMap.get(data.receiver_id);
-			if (target && this.io.sockets.has(target)) {
-				this.io.to(target).emit('join', data);
-			}
 		} catch (e) {
 			client.leave(roomName);
 			throw new WsException(e);
