@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useContext} from 'react'
 import { Link } from 'react-router-dom'
 import User, { id_to_user } from '../utils/User'
 import NavBar from '../Components/NavBar'
+import '../Home/Dashboard.css'
 import { ReactP5Wrapper } from 'react-p5-wrapper'
 import sketch from './sketches/sketch'
 import { io, Socket } from 'socket.io-client';
@@ -128,14 +129,20 @@ function Game() {
 
 	if (!isJoined) {
 		return (
-			<div>
-				<button onClick={handleJoinGame}>Rejoindre la partie</button>
+			<div className="dashboard">
+			<NavBar /> 
+				<div>
+					<button onClick={handleJoinGame}>Rejoindre la partie</button>
+				</div>
 			</div>
 		);
 	} else {
 		return (
-			<div id="game">
-				<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
+			<div className="dashboard">
+			<NavBar /> 
+				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
+					<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
+				</div>
 			</div>
 		);
 	}

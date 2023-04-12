@@ -136,50 +136,65 @@ export class GameService {
 	}
 
 	checkBallCollision(state: GameState) {
-		// Vérifie si la balle a atteint un bord de l'écran et la fait rebondir si c'est le cas
 		const half_length = state.racket_length / 2;
 		const half_radius = state.ball_radius / 2;
-
-		let player1_hit: boolean = false;
-		let player2_hit: boolean = false;
-
+		
+		// Vérifie si la balle a atteint un bord de l'écran et la fait rebondir si c'est le cas
 		if (state.ball_pos_y - half_radius <= 0 || state.ball_pos_y + half_radius >= state.height) {
 			state.ball_dir_y *= -1;
 		}
 
-		// Vérifie si la balle est en collision avec la raquette de joueur1 et la fait rebondir si c'est le cas
+		// Collision joueur1
 		if (state.ball_pos_x - half_radius <= state.racket_width + state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player1_pos - half_length &&
 			state.ball_pos_y - half_radius <= state.player1_pos + half_length &&
 			state.ball_dir_x < 0) {
-
-				player1_hit = true;
+	
+			// Calcule la position relative de la balle par rapport à la raquette de joueur1
+			const relativePos = (state.ball_pos_y - state.player1_pos) / state.racket_length;
+			// Calcule le ratio en fonction de la position relative
+			const ratio = relativePos * 50;
+			// Limite la valeur du ratio entre -50 et 50
+			const clampedRatio = Math.max(-50, Math.min(50, ratio));
+	
+			// Modifie la direction de la balle en fonction du ratio
+			state.ball_dir_x = state.ball_speed / 2;
+			state.ball_dir_y = state.ball_speed * (clampedRatio / 100);
+			
+			// Facteur de vitesse entre 1 et 2 en fonction du ratio
+			const speedFactor = 1 + (Math.abs(clampedRatio) / 100);
+			state.ball_dir_x *= speedFactor;
+			state.ball_dir_y *= speedFactor;
 		}
 
+		// Collision joueur 2
 		if (state.ball_pos_x + half_radius >= state.height - state.racket_width - state.racket_shift &&
 			state.ball_pos_y + half_radius >= state.player2_pos - half_length &&
 			state.ball_pos_y - half_radius <= state.player2_pos + half_length &&
 			state.ball_dir_x > 0) {
+	
+			// Calcule la position relative de la balle par rapport à la raquette de joueur2
+			const relativePos = (state.ball_pos_y - state.player2_pos) / state.racket_length;
+			// Calcule le ratio en fonction de la position relative
+			const ratio = relativePos * 50;
+			// Limite la valeur du ratio entre -50 et 50
+			const clampedRatio = Math.max(-50, Math.min(50, ratio));
+	
+			// Modifie la direction de la balle en fonction du ratio
+			state.ball_dir_x = -state.ball_speed / 2;
+			state.ball_dir_y = state.ball_speed * (clampedRatio / 100);
 
-				player2_hit = true;
+			// Facteur de vitesse entre 1 et 2 en fonction du ratio
+			const speedFactor = 1 + (Math.abs(clampedRatio) / 100);
+			state.ball_dir_x *= speedFactor;
+			state.ball_dir_y *= speedFactor;
 		}
 
-		if (player1_hit || player2_hit) {
-			if (state.ball_pos_y < state.player1_pos - half_length / 2) {
-				state.ball_dir_x = state.ball_speed / 2;
-				state.ball_dir_y = state.ball_speed * -0.5;
-			} else if (state.ball_pos_y > state.player1_pos + half_length / 2) {
-				state.ball_dir_x = state.ball_speed / 2;
-				state.ball_dir_y = state.ball_speed / 2;
-			} else {
-				state.ball_dir_x = state.ball_speed - Math.abs(state.ball_dir_y);
-			}
-
-			if (player2_hit) {
-				state.ball_dir_x *= -1;
-			}
-		}
 	}
+
+	// rebondBalle(state: GameState) {
+
+	// }
 
 	checkGoal(state: GameState) {
 		let goal: boolean = false;
@@ -228,20 +243,22 @@ export class GameService {
 			room.state.player2_dir = newDir;
 	}
 
-	getRandomDirection(ballSpeed: number) : [number, number]  {
-		const x = Math.random() * (ballSpeed * 2 + 1) - ballSpeed;
-		let y = ballSpeed - Math.abs(x);
-
-		const neg = Math.floor(Math.random() * 2);
-		if (neg == 1)
-			y *= -1;
-
-		if (Math.abs(x) + Math.abs(y) != ballSpeed) {
-			console.log(`x: ${x}, y: ${y}, abs(x) + abs(y): ${Math.abs(x) + Math.abs(y)}`);
+	getRandomDirection(ballSpeed: number): [number, number] {
+		let angle: number;
+		if (Math.random() < 0.5) {
+			// Si c'est le joueur de gauche qui effectue le service
+			angle = (Math.random() * 90 - 45) * Math.PI / 180; // angle entre -45 et 45 degrés converti en radians
+		} else {
+			// Sinon, c'est le joueur de droite qui effectue le service
+			angle = (Math.random() * 90 + 135) * Math.PI / 180; // angle entre 135 et 225 degrés converti en radians
 		}
 
-		return [x, y];
-	}
+		// Calcule les composantes x et y de la direction en fonction de l'angle
+		const x = Math.cos(angle) * ballSpeed;
+		const y = Math.sin(angle) * ballSpeed;
+
+    return [x, y];
+}
 
 	async checkGame(id: number) {
 		if (await this.prisma.game.count({where: {id: id}}) == 0) {
