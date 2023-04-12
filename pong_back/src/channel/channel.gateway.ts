@@ -51,14 +51,6 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			const channel = await this.channelService.create(data);
 			this.io.to(client.id).emit('create', data);
 
-			if (dto.hasOwnProperty('users_ids')) {
-				for (const userId of dto.users_ids) {
-					if (this.userMap.has(userId)) {
-						this.io.to(this.userMap.get(userId)).emit('create', data);
-					}
-				}
-			}
-
 			return ({status: "ok", data: channel});
 		} catch (e) {
 			const result = {status: e.status, data: e.response};

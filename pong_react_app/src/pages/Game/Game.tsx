@@ -20,6 +20,14 @@ const { v4: uuidv4 } = require('uuid');
 type GamePost = {
 	user_id: number,
 	target_id: number,
+	racket_length: number,
+	racket_speed: number,
+	ball_initial_radius: number,
+	ball_initial_speed: number,
+	winning_goals: number,
+	mode_speedup: boolean,
+	mode_shrink: boolean,
+	mode_chaos: boolean,
 }
 
 export let socket_game: Socket
@@ -46,6 +54,14 @@ function Game() {
 		const body: GamePost = {
 			user_id: Number(state.user.id),
 			target_id: 4,
+			racket_length: 80,
+			racket_speed: 10,
+			ball_initial_radius: 20,
+			ball_initial_speed: 20,
+			winning_goals: 10,
+			mode_speedup: true,
+			mode_shrink: false,
+			mode_chaos: false
 		}
 
 		axios.post('/api/game/create', body)
@@ -130,7 +146,7 @@ function Game() {
 	if (!isJoined) {
 		return (
 			<div className="dashboard">
-			<NavBar /> 
+			<NavBar />
 				<div>
 					<button onClick={handleJoinGame}>Rejoindre la partie</button>
 				</div>
@@ -139,7 +155,7 @@ function Game() {
 	} else {
 		return (
 			<div className="dashboard">
-			<NavBar /> 
+			<NavBar />
 				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
 					<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
 				</div>
