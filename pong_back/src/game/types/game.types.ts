@@ -42,7 +42,7 @@ export class GameState {
 }
 
 export const min_racket_length = 30;
-export const max_racket_length = 150;
+export const max_racket_length = 400;
 
 export const min_racket_speed = 10;
 export const max_racket_speed = 50;
