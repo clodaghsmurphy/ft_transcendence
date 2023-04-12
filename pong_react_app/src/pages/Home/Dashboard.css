@@ -105,7 +105,6 @@
         list-style: none;
         text-decoration: none;
         color: white;
-        margin-top: 1.5rem;
         font-size: calc(.3em + .8vw);
         font-weight: 800;
         border-radius: 1em;
@@ -281,7 +280,7 @@
 
     .logout-btn
     {
-        height: 5vh;
+        height: 48px;
         fill: white;
         width: 5vw;
     }
@@ -295,11 +294,11 @@
         flex: 30% 1;
         align-self: center;
         justify-self: flex-start;
-        margin-top: 2vh;
+        margin-top: 30px;
         display: flex;
         justify-content: flex-start;
         float: left;
-        height: 10vh;
+        height: 100px;
         width: 20vh;
     }
     
