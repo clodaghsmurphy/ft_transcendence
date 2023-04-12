@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { GameCreateDto, GameKeyDto } from "./dto";
-import { GameKeyEvent, GameRoom, KeyAction, KeyType, defaultState } from "./types/game.types";
+import { GameKeyEvent, GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_racket_length, min_ball_radius, min_racket_length } from "./types/game.types";
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { use } from "passport";
@@ -115,7 +115,7 @@ export class GameService {
 		state.ball_pos_y += state.ball_dir_y;
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
-		if (state.player1_goals >= 5 || state.player2_goals >= 5) {
+		if (state.player1_goals >= state.winning_goals || state.player2_goals >= state.winning_goals) {
 			state.ongoing = false;
 		}
 	}
@@ -157,7 +157,7 @@ export class GameService {
 			}
 
 			// Shrink ball size on gamemode
-			if (state.mode_shrink && state.ball_radius > 5) {
+			if (state.mode_shrink && state.ball_radius > min_ball_radius) {
 				state.ball_radius -= state.ball_initial_radius / 10;
 			}
 
@@ -188,7 +188,7 @@ export class GameService {
 				state.ball_speed += state.ball_initial_speed * 0.2;
 			}
 
-			if (state.mode_shrink && state.ball_radius > 5) {
+			if (state.mode_shrink && state.ball_radius > min_ball_radius) {
 				state.ball_radius -= state.ball_initial_radius / 10;
 			}
 
@@ -241,14 +241,14 @@ export class GameService {
 		state.ball_pos_y = state.height / 2;
 
 		if (state.mode_shrink) {
-			state.ball_radius = 100;
-			state.ball_initial_radius = 100;
+			state.ball_radius = max_ball_radius;
+			state.ball_initial_radius = max_ball_radius;
 		}
 		if (state.mode_chaos) {
-			state.ball_speed = Math.floor(Math.random() * 11) + 10;
-			state.racket_speed = Math.floor(Math.random() * 11) + 10;
-			state.racket_length = Math.floor(Math.random() * 121) + 30;
-			state.ball_radius = Math.floor(Math.random() * 96) + 5;
+			state.ball_speed = this.getRandomCapped(10, 20);
+			state.racket_speed = this.getRandomCapped(10, 30);
+			state.ball_radius = this.getRandomCapped(min_ball_radius, max_ball_radius);
+			state.racket_length = this.getRandomCapped(min_racket_length, max_racket_length);
 		} else {
 			state.ball_speed = state.ball_initial_speed;
 			state.ball_radius = state.ball_initial_radius;
@@ -290,8 +290,12 @@ export class GameService {
 		let x = Math.cos(angle) * ballSpeed;
 		let y = Math.sin(angle) * ballSpeed;
 
-    return [x, y];
-}
+   		return [x, y];
+	}
+
+	getRandomCapped(minValue: number, maxValue: number) {
+		return Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+	}
 
 	async checkGame(id: number) {
 		if (await this.prisma.game.count({where: {id: id}}) == 0) {
