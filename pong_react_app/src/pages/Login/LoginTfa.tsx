@@ -21,7 +21,7 @@ function LoginTfa()
 
     async function getPayload () 
 	{
-		const { data } = await axios.get(`http://${process.env.HOSTNAME}:3042/auth/profile`);
+		const { data } = await axios.get(`http://${window.location.hostname}:3042/auth/profile`);
 			dispatch(
 				{
 					type: ActionKind.Login,
@@ -43,8 +43,7 @@ function LoginTfa()
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) =>
     {
         e.preventDefault();
-        console.log(token);
-            axios.post(`http://${process.env.HOSTNAME}:3042/auth/auth2fa`,
+            axios.post(`http://${window.location.hostname}:3042/auth/auth2fa`,
                  { value },
                 { headers: {"Authorization" : `Bearer ${token}`} }, 
             )

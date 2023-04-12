@@ -4,6 +4,7 @@
   - [x] CSS
   - [ ] emit
 
+- [x] quand kicked -> enlever le truc a gauche
 - [x] Leave un chan ne leave pas la room (socket)
 - [x] creavtion d'un channel '<div />' marche pas
 - [x] GERER LES ERREURS lol
@@ -38,3 +39,10 @@
 - [x] Mute
   - [x] CSS
   - [x] emit
+
+#Bugs
+
+- [ ] faire render un message clear mon mesasge (vais-je vraiment le fix?)
+- [ ] messages 'vides' avec que des whites spaces ? (dans le back)
+- [x] setChanOfUser dans refresh
+- [x] messages trop grands -> CSS buggued

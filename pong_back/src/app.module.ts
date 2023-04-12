@@ -11,6 +11,7 @@ import { MulterModule } from '@nestjs/platform-express'
 import { memoryStorage} from 'multer';
 import { HttpModule } from '@nestjs/axios'
 import { DmModule } from './dm/dm.module';
+import { AchievementsModule } from './achievements/achievements.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { DmModule } from './dm/dm.module';
     ChannelModule,
     DmModule,
     AuthModule,
+    AchievementsModule,
     GameModule,
     PassportModule,
     HttpModule,

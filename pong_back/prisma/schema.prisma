@@ -12,9 +12,12 @@ datasource db {
 
 model User {
   name String
-  id Int @id
+  id Int @id @unique
   avatar String
   avatar_path String
+
+  stats Stats?
+  achievements Achievements[]
 
   blocked_users Int[] @default([])
   friend_users Int[] @default([])
@@ -87,4 +90,26 @@ model Game {
 
   player1 Int
   player2 Int
+}
+
+model Stats {
+  id Int @id  @default(autoincrement())
+  userId  Int @unique
+  User User @relation(fields: [userId], references: [id])
+  wins  Int @default(0)
+  total_games Int @default(0)
+  total_spe_games Int @default(0)
+  Lvl Int @default(1)
+  points  Int @default(0)
+}
+
+model Achievements {
+  id Int @id  @default(autoincrement())
+  achievement_id Int
+  userId  Int 
+  User User @relation(fields: [userId], references: [id])
+  icon String
+  title String
+  cap Int
+  score Int
 }

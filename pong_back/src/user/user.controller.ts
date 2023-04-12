@@ -12,7 +12,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { UserEntity } from "./utils/user.decorator";
 import { PrismaService } from "src/prisma/prisma.service";
-import { User} from '@prisma/client';
+import { User, Stats, Achievements} from '@prisma/client';
+import { DefaultAchievements } from "./utils/user.types";
 
 @Controller('user')
 export class UserController {
@@ -254,6 +255,8 @@ export class UserController {
 		res.send(result);
 		return ;
 	}
+
+
 
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {

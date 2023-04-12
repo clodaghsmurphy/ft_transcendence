@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Res } from "@nestjs/common";
-import { User } from "@prisma/client";
+import { User, Stats, Achievements } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -90,6 +90,11 @@ export class UserService {
 					avatar_path: avatarPath ? avatarPath : await this.downloadImage(dto.avatar_path),
 				},
 			});
+			const stats = await this.prisma.stats.create({
+				data: {
+					userId: dto.id
+				}
+			})
 			return this.returnInfo(user);
 		} catch (e) {
 			if (e.code === 'P2002') {
@@ -187,6 +192,19 @@ export class UserService {
 		})
 		return result;
 	}
+
+	async getStats(user:User) :  Promise<Stats> {
+		console.log('in stats')
+		const result : Stats = await this.prisma.stats.findUnique({
+			where: {
+				userId: user.id
+			}
+		})
+		console.log(result)
+		return result;
+	}
+
+
 
 	returnInfo(user: User) {
 		let updatedUser: any = user;

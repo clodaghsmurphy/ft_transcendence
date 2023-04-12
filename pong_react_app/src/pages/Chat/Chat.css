@@ -220,6 +220,7 @@
 
 .group-add h1 {
 	display: flex;
+	font-size: 1.3em;
 	flex: 1;
 }
 
@@ -275,6 +276,11 @@
     height: calc(100% - 64px);
     background-color: #2E2E2E;
 	margin-bottom: 5%;
+}
+@media only screen and (max-width: 900px) {
+	.group-members {
+		display: none;
+	}
 }
 
 .group-members * {
@@ -622,7 +628,7 @@
 	width: 100%;
 	border-radius: 5px;
 }
-nt_chan.chan
+
 .ban-message {
 	color:#2E2E2E;
 	font-style: italic;
@@ -880,4 +886,74 @@ nt_chan.chan
 	color: lightgrey;
 	width: auto;
 	flex: 0 0 auto;
+}
+
+.refresh-button {
+	display: flex;
+	flex: 0;
+	flex-basis: 24px;
+	flex-shrink: 0;
+	height: 24px;
+	min-height: 24px;
+	max-height: 24px;
+	width: 24px;
+	min-width: 24px;
+	max-width: 24px;
+	margin-top: auto;
+	margin-bottom: auto;
+	border: 0;
+	padding: 0;
+	border-radius: 3px;
+	align-items: center;
+	justify-content: center;
+	margin-left: 5px;
+	background-color:#cda5d8;
+}
+
+.refresh-button:hover {
+	cursor: pointer;
+	opacity: 0.7;
+}
+
+.refresh-button img {
+	width: 14px;
+	min-width: 14px;
+	max-width: 14px;
+	height: 14px;
+	min-height: 14px;
+	max-height: 14px;
+}
+
+.message-wrapper2 {
+	display: flex;
+	flex-direction: row;
+	min-height: 75px;
+	flex: 1 0 auto;
+	height: auto;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.sender2 {
+	flex-direction: row-reverse;
+}
+
+.message-body {
+	border: #9b59b6 1px solid;
+	border-radius: 5px;
+	padding: 10px 15px;
+	height: auto;
+	min-height: calc(1.5rem + 20px);
+	height: fit-content;
+	margin-top: auto;
+	margin-bottom: auto;
+	font-size: 1.10rem;
+	margin-right: 25px;
+	min-width: 44px;
+}
+
+.sender2 .message-body {
+	margin-right: 5px;
+	margin-left: 25px;
+	text-align: right;
 }
