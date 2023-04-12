@@ -54,7 +54,7 @@ export const min_ball_speed = 10;
 export const max_ball_speed = 30;
 
 export const min_winning_goals = 3;
-export const max_winning_goals = 99;
+export const max_winning_goals = 20;
 
 export const defaultState: GameState = {
 	ongoing: true,
