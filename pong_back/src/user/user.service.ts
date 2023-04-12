@@ -171,7 +171,7 @@ export class UserService {
 
 	async getUsers( usr: User) {
 		const exclude:number[] = usr.friend_users.concat(usr.blocked_users) ;
-		
+
 		const result = await this.prisma.user.findMany({
 			select: {
 				name:true,
@@ -203,8 +203,6 @@ export class UserService {
 		console.log(result)
 		return result;
 	}
-
-
 
 	returnInfo(user: User) {
 		let updatedUser: any = user;
