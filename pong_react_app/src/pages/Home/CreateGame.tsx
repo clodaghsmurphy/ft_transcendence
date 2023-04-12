@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './CreateGame.css'
+import GameSettings from './GameSettings';
 
 const CREATE = 1;
 const BROWSE = 2;
@@ -34,6 +35,8 @@ export default function CreateGame() {
 			</div>
 			<h1>{is_create ? 'Create a game' :
 				'Browse games'}</h1>
+
+			{is_create ? <GameSettings /> : <div/> /*<GameBrowsing /> */}
 		</div>
 	)
 }

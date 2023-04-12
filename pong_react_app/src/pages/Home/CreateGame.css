@@ -82,3 +82,10 @@
 	height: 40px;
 	color: lightgrey;
 }
+
+.game-settings {
+	border: 1px red solid;
+	display: flex;
+	height: max-content;
+	flex-direction: column;
+}
