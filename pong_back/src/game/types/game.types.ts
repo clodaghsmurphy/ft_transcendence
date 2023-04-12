@@ -86,8 +86,8 @@ export const defaultState: GameState = {
 	current_pause: 0,
 
 	mode_speedup: true,
-	mode_shrink: true,
-	mode_chaos: true,
+	mode_shrink: false,
+	mode_chaos: false,
 };
 
 export class GameRoom {
