@@ -21,7 +21,7 @@ function StatsIdUser(props: Props) {
 				<div className="stats">
 					<div className="profile-header">
 						<div className="profile-sub-header" >
-							<ProfileStats />
+							<ProfileStats id={usr.id}/>
 						
 						<div className="avatar-stats">
 								<img style={{
@@ -48,7 +48,7 @@ function StatsIdUser(props: Props) {
 							<header>
 								<h1>Achievements</h1>
 							</header>
-							{StatsAchievements(usr)}
+							{StatsAchievements(usr.id)}
 						</div>
 						 <Friends id={usr.id}/>
 					</div>

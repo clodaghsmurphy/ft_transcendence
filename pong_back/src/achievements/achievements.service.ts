@@ -34,6 +34,7 @@ export class AchievementsService {
 
         async getIcon(title : string) {
             const imagePath = `/app/media/ach_icons/${title}.png`
+            console.log('image path is ' + imagePath)
             if (this.userService.checkIfFileExists(imagePath)){
                 const image = fs.readFileSync(imagePath);
                 return image;

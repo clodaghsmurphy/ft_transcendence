@@ -99,7 +99,7 @@ model Stats {
   wins  Int @default(0)
   total_games Int @default(0)
   total_spe_games Int @default(0)
-  Lvl Int @default(1)
+  lvl Int @default(1)
   points  Int @default(0)
 }
 

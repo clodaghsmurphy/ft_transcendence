@@ -24,8 +24,8 @@ function NavBar()
         navLink.current?.classList.toggle("nav-list-visible")
     }
 
-     const handleLogout = async() => {
-         axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
+    const handleLogout = async() => {
+        axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
         .catch((e:AxiosError) => console.log(e))
         dispatch ({
             type: ActionKind.Logout

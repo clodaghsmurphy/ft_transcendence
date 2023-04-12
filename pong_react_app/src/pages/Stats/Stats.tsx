@@ -55,7 +55,7 @@ function Stats(props:Props)
 				<div className="stats">
 					<div className="profile-header">
 						<div className="profile-sub-header" >
-							<ProfileStats />
+							<ProfileStats id={state.user.id}/>
 						
 						<div className="avatar-stats">
 								<Image id={parseInt(state.user.id)} status={0}/>
@@ -89,7 +89,7 @@ function Stats(props:Props)
 							<header>
 								<h1>Achievements</h1>
 							</header>
-								{StatsAchievements(state.user)}
+								{StatsAchievements(state.user.id)}
 							
 						</div>
 						<Friends id={state.user.id}/>
