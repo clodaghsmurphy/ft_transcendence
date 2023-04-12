@@ -5,6 +5,7 @@ export default function sketch(p5) {
     let canvas;
     let ballX = 200,
         ballY = 200;
+    let ballRadius = 20;
     let paddle1 = 200,
         paddle2 = 200;
     let paddleWidth = 10,
@@ -16,7 +17,7 @@ export default function sketch(p5) {
     let header_hauteur = header.offsetHeight;
     const gameDiv = document.getElementById("game");
     let div_largeur = gameDiv.offsetWidth,
-    div_hauteur = gameDiv.offsetHeight;
+        div_hauteur = gameDiv.offsetHeight;
     if (header_hauteur == div_hauteur)
         header_hauteur = 0;
     let game_height = div_hauteur - header_hauteur,
@@ -49,8 +50,7 @@ export default function sketch(p5) {
         p5.rect(20 * ratio_largeur, paddle1 * ratio_hauteur, paddleWidth * ratio_largeur, paddleHeight * ratio_hauteur);
         p5.rect(p5.width - 20 * ratio_largeur, paddle2 * ratio_hauteur, paddleWidth * ratio_largeur, paddleHeight * ratio_hauteur);
 
-        p5.ellipse(ballX * ratio_largeur, ballY * ratio_hauteur, 20 * ratio_largeur , 20 * ratio_hauteur);
-
+        p5.ellipse(ballX * ratio_largeur, ballY * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
 
         p5.ellipse(game_width, game_height, 20, 20);
 
@@ -60,12 +60,11 @@ export default function sketch(p5) {
         if (!props || !props.data) {
             return;
         }
-        
+
 
         // Check if resize needed
-        if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight
-            || header_hauteur != header.offsetHeight)
-        {
+        if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight ||
+            header_hauteur != header.offsetHeight) {
             div_largeur = gameDiv.offsetWidth;
             div_hauteur = gameDiv.offsetHeight;
             header_hauteur = header.offsetHeight;
@@ -99,6 +98,9 @@ export default function sketch(p5) {
 
         ballX = data.ball_pos_x;
         ballY = data.ball_pos_y;
+
+        ballRadius = data.ball_radius;
+        paddleHeight = data.racket_length;
     };
 
 }
