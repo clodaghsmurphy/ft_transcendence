@@ -52,9 +52,7 @@ export class GameService {
 		room.id = game.id;
 		room.player1_id = dto.user_id;
 		room.player2_id = dto.target_id;
-
-
-		room.state = {...defaultState};
+		room.state = {...dto.state};
 		this.initState(room.state);
 
 		this.activeGames.set(game.id, room);
