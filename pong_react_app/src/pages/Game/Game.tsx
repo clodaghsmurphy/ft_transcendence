@@ -54,12 +54,12 @@ function Game() {
 		const body: GamePost = {
 			user_id: Number(state.user.id),
 			target_id: 4,
-			racket_length: 400,
+			racket_length: 80,
 			racket_speed: 10,
 			ball_initial_radius: 20,
-			ball_initial_speed: 20,
+			ball_initial_speed: 10,
 			winning_goals: 5,
-			mode_speedup: true,
+			mode_speedup: false,
 			mode_shrink: false,
 			mode_chaos: false
 		}

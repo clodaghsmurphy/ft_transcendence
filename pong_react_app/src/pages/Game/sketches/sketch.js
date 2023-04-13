@@ -19,6 +19,8 @@ export default function sketch(p5) {
     let score1 = 0,
         score2 = 0;
 
+    let obstacles = [];
+
     const dimension_width = 600,
         dimension_height = 400;
     const header = document.getElementsByTagName("header");
@@ -28,7 +30,7 @@ export default function sketch(p5) {
         div_hauteur = gameDiv.offsetHeight;
     let game_height = div_hauteur - header_hauteur,
         game_width = div_largeur;
-    
+
     let terrain_height,
         terrain_width;
     tailleterrain();
@@ -73,6 +75,11 @@ export default function sketch(p5) {
 
         p5.rectMode(p5.CENTER);
 
+        // Obstacles
+        obstacles.forEach((obstacle) => {
+            p5.rect(obstacle.pos_x * ratio_hauteur, obstacle.pos_y * ratio_hauteur, obstacle.width * ratio_largeur, obstacle.length * ratio_hauteur);
+        });
+
         // Effet balle
         p5.fill(p5.color(69, 41, 77));
         p5.rect(previousBallX3 * ratio_largeur, previousBallY3 * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
@@ -82,7 +89,6 @@ export default function sketch(p5) {
         p5.rect(previousBallX1 * ratio_largeur, previousBallY1 * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
         p5.fill(p5.color(255, 255, 255));
         p5.rect(ballX * ratio_largeur, ballY * ratio_hauteur, ballRadius * ratio_largeur, ballRadius * ratio_hauteur);
-
 
 
         p5.fill(p5.color(0, 0, 0));
@@ -145,6 +151,9 @@ export default function sketch(p5) {
 
         ballRadius = data.ball_radius;
         paddleHeight = data.racket_length;
+        paddleWidth = data.racket_width;
+
+        obstacles = data.obstacles;
     };
 
 }

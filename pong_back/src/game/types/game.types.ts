@@ -1,3 +1,51 @@
+export class GameObstacle {
+	// middle
+	pos_x: number;
+	initial_pos_x: number;
+	pos_y: number;
+	initial_pos_y: number;
+
+
+	width: number;
+	length: number;
+
+	dir_x: number;
+	dir_y: number;
+}
+
+export const classic_map: GameObstacle[] = [];
+
+export const pendulum_map: GameObstacle[] = [{
+	pos_x: 300,
+	pos_y: 60,
+	initial_pos_x: 300,
+	initial_pos_y: 60,
+	width: 10,
+	length: 120,
+	dir_x: 0,
+	dir_y: 5,
+}];
+
+export const double_trouble_map: GameObstacle[] = [{
+	pos_x: 300,
+	pos_y: 60,
+	initial_pos_x: 300,
+	initial_pos_y: 60,
+	width: 10,
+	length: 120,
+	dir_x: 0,
+	dir_y: 0,
+},{
+	pos_x: 300,
+	pos_y: 340,
+	initial_pos_x: 300,
+	initial_pos_y: 340,
+	width: 10,
+	length: 120,
+	dir_x: 0,
+	dir_y: 0,
+}];
+
 export class GameState {
 	ongoing: boolean;
 
@@ -30,6 +78,9 @@ export class GameState {
 
 	ball_speed: number;
 	ball_initial_speed: number;
+
+	// Map obstacles
+	obstacles: GameObstacle[];
 
 	// Duration on pause after a goal in frames
 	pause_frames: number;
@@ -90,6 +141,8 @@ export const defaultState: GameState = {
 
 	ball_speed: 10,
 	ball_initial_speed: 10,
+
+	obstacles: [...pendulum_map],
 
 	pause_frames: 15,
 	current_pause: 0,
