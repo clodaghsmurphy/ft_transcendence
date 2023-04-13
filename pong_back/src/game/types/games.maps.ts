@@ -13,6 +13,26 @@ export const pendulum_map: GameObstacle[] = [{
 	dir_y: 5,
 }];
 
+export const parallel_peril_map: GameObstacle[] = [{
+	pos_x: 200,
+	pos_y: 60,
+	initial_pos_x: 200,
+	initial_pos_y: 60,
+	width: 10,
+	length: 120,
+	dir_x: 0,
+	dir_y: 5,
+},{
+	pos_x: 400,
+	pos_y: 340,
+	initial_pos_x: 400,
+	initial_pos_y: 340,
+	width: 10,
+	length: 120,
+	dir_x: 0,
+	dir_y: -5,
+}];
+
 export const double_trouble_map: GameObstacle[] = [{
 	pos_x: 300,
 	pos_y: 60,
