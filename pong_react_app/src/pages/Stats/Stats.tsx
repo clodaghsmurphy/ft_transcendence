@@ -15,6 +15,7 @@ import Image from "../Components/Image";
 import { ActionKind } from "../../store/reducer"
 
 import Friends from "./Friends";
+import GameHistory from "./GameHistory";
 
 type Props ={
 	error?:string,
@@ -83,7 +84,7 @@ function Stats(props:Props)
 							<header>
 								<h1>Game History</h1>
 							</header>
-						
+							<GameHistory id={parseInt(state.user.id)}/>		
 						</div>
 						<div className="info-card friends">
 							<header>
