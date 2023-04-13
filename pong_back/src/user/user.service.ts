@@ -193,11 +193,16 @@ export class UserService {
 		return result;
 	}
 
-	async getStats(user:User) :  Promise<Stats> {
+	async getStats(user:User)  {
 		console.log('in stats')
-		const result : Stats = await this.prisma.stats.findUnique({
+		const result = await this.prisma.stats.findUnique({
 			where: {
 				userId: user.id
+			},
+			select: {
+				lvl: true,
+				total_games: true,
+				wins: true,
 			}
 		})
 		console.log(result)

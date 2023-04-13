@@ -82,3 +82,101 @@
 	height: 40px;
 	color: lightgrey;
 }
+
+.button-holder-browse *:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+.button-holder-create *:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+.game-settings {
+	display: flex;
+	height: max-content;
+	flex-direction: column;
+	text-align: center;
+}
+
+.game-settings h2 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: auto;
+}
+
+.range-settings {
+	display: flex;
+	flex-direction: row;
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.range {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.range:hover {
+	cursor: pointer;
+}
+
+.gamemode {
+	display: flex;
+	flex-direction: row;
+	width: 70%;
+	margin-right: auto;
+	margin-left: auto;
+	justify-content: center;
+}
+
+.gamemode input {
+	height: 25px;
+	min-height: 25px;
+	max-height: 25px;
+	width: 25px;
+	min-width: 25px;
+	max-width: 25px;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: 15px;
+}
+
+.gamemode input:hover {
+	cursor: pointer;
+}
+
+.buttons-create-and-reset {
+	display: flex;
+	flex-direction: row;
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.buttons-create-and-reset button {
+	font-size: 1.15rem;
+	width: 40%;
+	margin-left: auto;
+	margin-right: auto;
+	border: 0;
+	border-radius: 5px;
+	background-color: #585bac;
+}
+
+.buttons-create-and-reset button:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+.bar-create {
+	height: 0;
+	border: 1px solid gray;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}

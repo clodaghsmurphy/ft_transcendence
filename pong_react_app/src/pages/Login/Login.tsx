@@ -47,6 +47,10 @@ function Login ()
 			
 	}
 	
+	useEffect(() => {
+		document.title = 'Login'
+	})
+
 	useEffect( () => {
 		const url = window.location.href;
 		

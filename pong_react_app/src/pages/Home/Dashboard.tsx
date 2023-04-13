@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import NavBar from '../Components/NavBar'
 import ball from '../../media/Ball.svg';
 import paddle from '../../media/Paddle.svg';
@@ -11,6 +11,11 @@ import CreateGame from './CreateGame';
 function Dashboard()
 {
     const { state,  dispatch } = useContext(AuthContext);
+
+	useEffect(() => {
+		document.title = 'Home'
+	}, [])
+
     return (
         <div className="dashboard">
             <div className='body '>

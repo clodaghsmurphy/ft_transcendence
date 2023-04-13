@@ -93,10 +93,10 @@ function AddFriends(props: Props){
 				<span className="game-username">{usr.name}</span>
 				
 					<div className="friends-options">
-						<div style={style_buttons} className="friend-profile" onClick={() => add(usr.id)}> 
+						<div className="friends-toggle-button" onClick={() => add(usr.id)}> 
 							<AiOutlineUserAdd style={{ height: '4vh', cursor: 'pointer' }} />
 						</div>
-						<div style={style_buttons} className="friend-profile" onClick={() => block(usr.id)}> 
+						<div className="friends-toggle-button"  onClick={() => block(usr.id)}> 
 							<BiBlock style={{ height: '4vh', cursor: 'pointer' }} />
 						</div>
 					</div>
