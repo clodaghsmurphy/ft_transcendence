@@ -17,6 +17,14 @@ const PADDLE_SPEED = 20;
 
 const { v4: uuidv4 } = require('uuid');
 
+enum GameMap {
+	Classic = "classic",
+	Pendulum = "pendulum",
+	DoubleTrouble = "double trouble",
+	ParallelPeril = "parallel peril",
+	MazeMadness = "maze madness",
+};
+
 type GamePost = {
 	user_id: number,
 	target_id: number,
@@ -28,6 +36,7 @@ type GamePost = {
 	mode_speedup: boolean,
 	mode_shrink: boolean,
 	mode_chaos: boolean,
+	game_map: GameMap,
 }
 
 export let socket_game: Socket
@@ -61,7 +70,8 @@ function Game() {
 			winning_goals: 5,
 			mode_speedup: true,
 			mode_shrink: false,
-			mode_chaos: false
+			mode_chaos: false,
+			game_map: GameMap.ParallelPeril,
 		}
 
 		axios.post('/api/game/create', body)

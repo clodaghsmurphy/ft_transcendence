@@ -1,4 +1,4 @@
-import { maze_madness_map, classic_map, pendulum_map, double_trouble_map, parallel_peril_map } from "./games.maps";
+import { GameMap, game_maps } from "./games.maps";
 
 export class GameObstacle {
 	// middle
@@ -13,7 +13,7 @@ export class GameObstacle {
 
 	dir_x: number;
 	dir_y: number;
-}
+};
 
 export class GameState {
 	ongoing: boolean;
@@ -59,7 +59,7 @@ export class GameState {
 	mode_speedup: boolean;
 	mode_shrink: boolean;
 	mode_chaos: boolean;
-}
+};
 
 export const min_racket_length = 30;
 export const max_racket_length = 400;
@@ -111,7 +111,7 @@ export const defaultState: GameState = {
 	ball_speed: 10,
 	ball_initial_speed: 10,
 
-	obstacles: [...parallel_peril_map],
+	obstacles: [...game_maps.get(GameMap.Classic)],
 
 	pause_frames: 15,
 	current_pause: 0,
@@ -128,7 +128,7 @@ export class GameRoom {
 	player2_id: number;
 
 	state: GameState;
-}
+};
 
 export enum KeyType {
 	Up = "Up",
@@ -143,4 +143,4 @@ export enum KeyAction {
 export class GameKeyEvent {
 	key: KeyType;
 	action: KeyAction;
-}
+};
