@@ -1,4 +1,4 @@
-import { maze_madness_map, classic_map, pendulum_map, double_trouble_map } from "./games.maps";
+import { maze_madness_map, classic_map, pendulum_map, double_trouble_map, parallel_peril_map } from "./games.maps";
 
 export class GameObstacle {
 	// middle
@@ -111,7 +111,7 @@ export const defaultState: GameState = {
 	ball_speed: 10,
 	ball_initial_speed: 10,
 
-	obstacles: [...maze_madness_map],
+	obstacles: [...parallel_peril_map],
 
 	pause_frames: 15,
 	current_pause: 0,
