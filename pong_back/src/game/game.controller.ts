@@ -3,6 +3,7 @@ import { GameService } from "./game.service";
 import { GameCreateDto, GameParams, GameRemoveDto } from "./dto";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { GameState, defaultState } from "./types/game.types";
+import { game_maps } from "./types/games.maps";
 
 @Controller('game')
 export class GameController {
@@ -29,7 +30,9 @@ export class GameController {
 		let state: GameState = {...defaultState};
 
 		for (const property in dto) {
-			if (property !== 'target_id') {
+			if (property === 'game_map') {
+				state.obstacles = [...game_maps.get(dto[property])];
+			} else if (property !== 'target_id') {
 				state[property] = dto[property];
 			}
 		}

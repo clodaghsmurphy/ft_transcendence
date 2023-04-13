@@ -1,5 +1,14 @@
 import { GameObstacle } from "./game.types";
 
+export enum GameMap {
+	Classic = "classic",
+	Pendulum = "pendulum",
+	DoubleTrouble = "double trouble",
+	ParallelPeril = "parallel peril",
+	MazeMadness = "maze madness",
+};
+
+
 export const classic_map: GameObstacle[] = [];
 
 export const pendulum_map: GameObstacle[] = [{
@@ -108,3 +117,12 @@ export const maze_madness_map: GameObstacle[] = [{
 	dir_x: 0,
 	dir_y: 0,
 }];
+
+
+export const game_maps: Map<GameMap, GameObstacle[]> = new Map([
+	[GameMap.Classic, classic_map],
+	[GameMap.DoubleTrouble, double_trouble_map],
+	[GameMap.MazeMadness, maze_madness_map],
+	[GameMap.ParallelPeril, parallel_peril_map],
+	[GameMap.Pendulum, pendulum_map],
+]);
