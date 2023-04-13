@@ -57,9 +57,9 @@ function Game() {
 			racket_length: 80,
 			racket_speed: 10,
 			ball_initial_radius: 20,
-			ball_initial_speed: 20,
-			winning_goals: 10,
-			mode_speedup: true,
+			ball_initial_speed: 10,
+			winning_goals: 5,
+			mode_speedup: false,
 			mode_shrink: false,
 			mode_chaos: false
 		}
