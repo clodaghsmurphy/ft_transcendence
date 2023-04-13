@@ -31,6 +31,7 @@ function StatsFriends(props:Props): JSX.Element {
 	}, [])
 
 	const getFriends = async () => {
+
 		axios.get(`http://${window.location.hostname}:8080/api/user/friends/${props.id}`,
 			)
 			.then(function (res: AxiosResponse) {

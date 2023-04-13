@@ -1,8 +1,9 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator"
+import { IsArray, MinLength, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator"
 
 export class UserCreateDto {
 	@IsString()
 	@IsNotEmpty()
+	@MinLength(2)
 	name: string;
 
 	@IsString()
