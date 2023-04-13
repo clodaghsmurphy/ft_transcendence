@@ -90,6 +90,10 @@ model Game {
 
   player1 Int
   player2 Int
+
+  player1_goals Int?
+  player2_goals Int?
+  winner Int?
 }
 
 model Stats {
@@ -106,7 +110,7 @@ model Stats {
 model Achievements {
   id Int @id  @default(autoincrement())
   achievement_id Int
-  userId  Int 
+  userId  Int
   User User @relation(fields: [userId], references: [id])
   icon String
   title String
