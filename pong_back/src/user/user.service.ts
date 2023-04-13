@@ -6,6 +6,7 @@ import { UserCreateDto, UserUpdateDto } from "./dto";
 import * as path from 'path';
 import * as fs from 'fs';
 import { HttpService} from '@nestjs/axios'
+import { GameRoom, GameState } from "src/game/types/game.types";
 
 @Injectable()
 export class UserService {
@@ -207,6 +208,26 @@ export class UserService {
 		})
 		console.log(result)
 		return result;
+	}
+
+	async updateStats(userId: number, room: GameRoom) {
+		await this.checkUser(userId);
+
+		const winnerId: number = (room.state.player1_goals === room.state.winning_goals ? room.player1_id : room.player2_id);
+		const points: number = (userId === room.player1_id ? room.state.player1_goals : room.state.player2_goals);
+		const win: number = (winnerId === userId ? 1 : 0);
+
+		const pastStats = await this.prisma.stats.findUnique({where: {userId: userId}});
+
+		await this.prisma.stats.update({
+			where: {id: pastStats.id},
+			data: {
+				wins: pastStats.wins + win,
+				total_games: pastStats.total_games + 1,
+				points: pastStats.points + points,
+				lvl: pastStats.lvl + win,
+			}
+		});
 	}
 
 	returnInfo(user: User) {

@@ -71,7 +71,7 @@ function Game() {
 			mode_speedup: true,
 			mode_shrink: false,
 			mode_chaos: false,
-			game_map: GameMap.ParallelPeril,
+			game_map: GameMap.MazeMadness,
 		}
 
 		axios.post('/api/game/create', body)

@@ -105,7 +105,6 @@ export default function sketch(p5) {
             return;
         }
 
-
         // Check if resize needed
         if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight ||
             header_hauteur != header[0].offsetHeight) {
