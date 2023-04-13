@@ -59,7 +59,7 @@ function Game() {
 			ball_initial_radius: 20,
 			ball_initial_speed: 10,
 			winning_goals: 5,
-			mode_speedup: false,
+			mode_speedup: true,
 			mode_shrink: false,
 			mode_chaos: false
 		}
