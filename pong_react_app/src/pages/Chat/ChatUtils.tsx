@@ -42,7 +42,8 @@ export function chat_button(name: string, img: string,
 
 export function users_message(message_data: DirectMessage[], all_users: User[],
 		current_user: User, click_handler: (param: Channel | DirectMessage) => void,
-		dm: DirectMessage[], set_dms: React.Dispatch<React.SetStateAction<DirectMessage[]>>)
+		dm: DirectMessage[], set_dms: React.Dispatch<React.SetStateAction<DirectMessage[]>>,
+		refresh: () => void)
 {
 	let ret: JSX.Element[] = [];
 
@@ -50,6 +51,11 @@ export function users_message(message_data: DirectMessage[], all_users: User[],
 		if (typeof dm === 'undefined')
 			continue
 		let user = id_to_user(all_users, dm.id)
+
+		if (user.id != dm.id || user.id === -1) {
+			refresh()
+			continue
+		}
 
 		ret.push(chat_button(user.name, user.avatar, click_handler, dm));
 	}
@@ -188,13 +194,18 @@ export function refresh_data(vars: ChatVariables, user_id: number) {
 			return
 		}
 	
+	let ret: ChatVariables = {}
+	
 	const is_not_the_first_time_entering_the_function =
 		typeof vars.current_user.friend_users !== 'undefined'
 	
 	axios.get('/api/user/info')
 		.then((response: AxiosResponse) => {
 				vars.set_all_users!(response.data as User[])
-				vars.set_current_user!(id_to_user(response.data as User[], user_id))
+				vars.set_current_user!(id_to_user(response.data as User[], user_id)) //safe puisqu'on existe forcement
+
+				ret.all_users = response.data
+				ret.current_user = id_to_user(response.data as User[], user_id)
 
 				let usr = id_to_user(response.data as User[], user_id)
 				axios.get('/api/channel/info')
@@ -202,6 +213,10 @@ export function refresh_data(vars: ChatVariables, user_id: number) {
 							vars.set_all_channels!(response.data as Channel[])
 							vars.setChanOfUser!(names_to_channel(response.data as Channel[],
 								usr.channels))
+							
+							ret.all_channels = response.data
+							ret.chanOfUser = names_to_channel(response.data as Channel[],
+								usr.channels)
 					})
 					.catch((err: AxiosError) => {
 						toast.error('Error fetching channels');
@@ -214,6 +229,7 @@ export function refresh_data(vars: ChatVariables, user_id: number) {
 	axios.get('/api/dm')
 		.then((response: AxiosResponse) => {
 			vars.set_dms!(response.data)
+			ret.dms = response.data
 		})
 		.catch((err: AxiosError) => {
 			toast.error('Error fetching DMs');
@@ -222,6 +238,8 @@ export function refresh_data(vars: ChatVariables, user_id: number) {
 	
 	if (is_not_the_first_time_entering_the_function) {
 		toast.success('Refreshed data')
+		return {}
 	}
+	return ret;
 }
   

@@ -33,7 +33,7 @@ export function error_user(): User {
 	return (
 		{
 			id: -1,
-			name: "#########ERROR########",
+			name: "Unknown",
 			avatar: "",
 			blocked_users: [],
 			friend_users: [],
