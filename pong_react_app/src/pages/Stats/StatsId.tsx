@@ -25,8 +25,7 @@ function StatsId()
 
 	useEffect(() => {
 		document.title = 'Stats';
-		console.log(process.env.HOSTNAME)
-		axios.get(`http://${window.location.hostname}:8080/api/user/info/${id.id}`)
+		axios.get(`/api/user/info/${id.id}`)
 		.then(function(response:AxiosResponse){
 			 const res = response.data;
 			 const updateValue:user = { name: res.name, id: res.id, avatar: res.avatar, otp_enabled: res.otp_enabled }
