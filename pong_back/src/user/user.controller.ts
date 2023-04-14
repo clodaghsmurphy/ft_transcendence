@@ -30,6 +30,12 @@ export class UserController {
 		return this.userService.get(parseInt(params.id));
 	}
 
+	@Get('info/:id/games')
+	async getUserGames(@Param() params) {
+		this.checkId(params.id);
+		return await this.userService.getGameHistory(parseInt(params.id));
+	}
+
 	@Get('info/:id/:attribute')
 	getUserInfo(@Param() params) {
 		this.checkId(params.id);
