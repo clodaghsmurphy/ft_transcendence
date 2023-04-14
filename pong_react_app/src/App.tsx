@@ -40,7 +40,7 @@ function App() {
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
         <Route path='/stats/:id' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<StatsId />} />} />
-        <Route path='/game' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Game />} />} />
+        <Route path='/game' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={Game(null)} />} />
     </Routes>
     <JWTverify />
     </Router>

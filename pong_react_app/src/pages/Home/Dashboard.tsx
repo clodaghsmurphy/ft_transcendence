@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import NavBar from '../Components/NavBar'
-import ball from '../../media/Ball.svg';
-import paddle from '../../media/Paddle.svg';
 import nathan from '../../media/nguiard.jpg';
 import './Dashboard.css'
 import { useContext } from 'react';
@@ -12,11 +10,9 @@ import axios, { AxiosResponse, AxiosStatic } from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import '../Chat/ToastifyFix.css'
-import Game from '../Game/Game';
+import Game, { GameMap, GamePost } from '../Game/Game';
 
 const params = new URLSearchParams(window.location.search)
-const param_id = params.get("id")
-let socket_game: Socket
 
 export type GameType = {
 	id: number,
@@ -30,81 +26,75 @@ export type GameType = {
 
 function Dashboard()
 {
-    const { state,  dispatch } = useContext(AuthContext);
-	let [in_game, set_in_game] = useState(false)
-	let [is_created, set_is_created] = useState(false)
-	let [game_data, set_game_data] = useState({} as GameType)
+	const {state, dispatch} = useContext(AuthContext);
+	const default_settings: GamePost = {
+		user_id: Number(state.user.id),
+		target_id: 4,
+		racket_length: 80,
+		racket_speed: 10,
+		ball_initial_radius: 20,
+		ball_initial_speed: 10,
+		winning_goals: 5,
+		mode_speedup: false,
+		mode_shrink: false,
+		mode_chaos: false,
+		game_map: GameMap.MazeMadness,
+	}
+	let [game_id, set_game_id] = useState(params.get("id") ? null :
+											Number(params.get("id")))
+	let [settings, setSettings] = useState(default_settings)
+	let [is_create, set_is_create] = useState(false)
 
 	useEffect(() => {
 		document.title = 'Home'
 
-		socket_game = io(`http://${window.location.hostname}:8080/game`,
-		{
-			extraHeaders: {
-				Authorization: "Bearer " + localStorage.getItem('token')
-			}
-		});
-
-		if (param_id) {
-			axios.get('/api/game/' + param_id)
+		if (game_id) {
+			axios.get('/api/game/' + game_id)
 				.then((response: AxiosResponse) => {
-					set_is_created(true)
 					toast.success('Game created')
-					set_game_data(response.data as GameType)
-					set_in_game(true)
 				})
 		}
 
 	}, [])
 
-    return (
-        <div className="dashboard">
-            <div className='body '>
-            <div className="app">
-            <NavBar />
+	console.log('inside dasboard:', game_id)
+
+	return (
+		<div className="dashboard">
+			<div className='body '>
+			<div className="app">
+			<NavBar />
 			<ToastContainer theme='dark'/>
-        <main className="page-wrapper">
-                <div className="game">
-                    {in_game ? <Game /> :
-						<div className="game-screen">
-                        <button className="game-button">PLAY</button>
-                        <div className="paddle" id="paddle1">
-                            <img src={paddle} alt="paddle"/>
-                        </div>
-                        <div className="paddle" id="paddle2">
-                            <img src={paddle} alt="paddle"/>
-                        </div>
-                        <div className="ball">
-                            <img src={ball} alt="ball"/>;
-				        </div>
-                    </div>}
-                    <div className="player-vs">
-                        <div className="player">
-                            <div className="avatar">
-                                <img src={state.user.avatar} />
-                            </div>
-                            <div className="player-info">
-                                <span className="player-name">{state.user.name}</span>
-                                <span className="player-level">LVL 12</span>
-                            </div>
-                        </div>
-                        <div className="score">0 - 0</div>
-                        <div className="player">
-                            <div className="avatar">
-                                <img src={nathan} />
-                            </div>
-                            <div className="player-info">
-                                <span className="player-name">nguiard</span>
-                                <span className="player-level">LVL 12</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <CreateGame />
-            </main>
-            </div>
-        </div>
-        </div>
+		<main className="page-wrapper">
+				<div className="game">
+					{Game(game_id)}
+					<div className="player-vs">
+						<div className="player">
+							<div className="avatar">
+								<img src={state.user.avatar} />
+							</div>
+							<div className="player-info">
+								<span className="player-name">{state.user.name}</span>
+								<span className="player-level">LVL 12</span>
+							</div>
+						</div>
+						<div className="score">0 - 0</div>
+						<div className="player">
+							<div className="avatar">
+								<img src={nathan} />
+							</div>
+							<div className="player-info">
+								<span className="player-name">nguiard</span>
+								<span className="player-level">LVL 12</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				{CreateGame(settings, default_settings, setSettings, set_game_id)}
+			</main>
+			</div>
+		</div>
+		</div>
     );
 }
 
