@@ -1,4 +1,4 @@
-import React, { useState, useMemo} from 'react'
+import React, { useState, useMemo, useEffect} from 'react'
 import axios, { AxiosError, AxiosResponse} from 'axios'
 import loading from '../../media/load-loading.gif'
 
@@ -14,8 +14,24 @@ type Props = {
 
 function Image(props: Props) {
 	const [image, setImage] = useState(loading);
+	const [ online, setOnline ] = useState(false);
 
-	const memoizedImage  = React.useMemo(() => {
+	useEffect(() => {
+		getOnline();
+	}, [])
+
+	const getOnline = async () => {
+		try {
+			const result = await axios.get(`http://${window.location.hostname}:8080/api/user/info/${props.id}/connected`)
+			console.log(result.data.attribute);
+			if (props.status === 1 && result.data.attribute === true)
+				setOnline(true);
+		}
+		catch(e){
+			console.log(e); 
+		}
+	}
+	const memoizedImage  = useMemo(() => {
 		console.log('in memo')
 		return (
 			<img src={`http://${window.location.hostname}:8080/api/user/image/${props.id}`} alt='avatar' />
@@ -27,7 +43,7 @@ function Image(props: Props) {
 		<div className="img-container">
 			{memoizedImage}
 		</div>
-			{ props.status ? <span className='online'></span> : null}
+			{ online ? <span className='online'></span> : null}
 		</>
 	)
 }
