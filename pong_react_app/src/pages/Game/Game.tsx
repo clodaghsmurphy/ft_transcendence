@@ -69,7 +69,6 @@ function Game(game_id: number | null) {
 			console.log("Connected to game");
 			console.log(socket_game);
 		});
-
 	}
 	
 	useEffect(() => {

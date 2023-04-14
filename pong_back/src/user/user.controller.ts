@@ -30,6 +30,12 @@ export class UserController {
 		return this.userService.get(parseInt(params.id));
 	}
 
+	@Get('info/:id/games')
+	async getUserGames(@Param() params) {
+		this.checkId(params.id);
+		return await this.userService.getGameHistory(parseInt(params.id));
+	}
+
 	@Get('info/:id/:attribute')
 	getUserInfo(@Param() params) {
 		this.checkId(params.id);
@@ -255,8 +261,6 @@ export class UserController {
 		res.send(result);
 		return ;
 	}
-
-
 
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {
