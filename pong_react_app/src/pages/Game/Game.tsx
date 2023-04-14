@@ -63,6 +63,7 @@ function Game(game_id: number | null) {
 	const [isJoined, setIsJoined] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
 	const [data, setData] = useState(null);
+	const [is_finished, set_finished] = useState(false)
 	
 	useEffect(() => {
 		if (game_id) {
@@ -90,7 +91,13 @@ function Game(game_id: number | null) {
 	});
 
 	useEffect(() => {
+		socket_game.on('gameover', () => set_finished(true))
+	}, [])
+
+	useEffect(() => {
 		let isKeyPressed = false;
+
+		console.log('CHANGEMENT DE GAME_ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 		
 		const handleKeyEvent = (event: KeyboardEvent, action: string) => {
 			let keyEvent = {
@@ -106,12 +113,14 @@ function Game(game_id: number | null) {
 				return ;
 			}
 
-			const key_data = {
+			let key_data = {
 				"id": game_id,
 				"user_id": Number(state.user.id),
 				"keyEvent": keyEvent,
 			}
-			socket_game.emit("keyEvent", key_data);
+
+			if (game_id && !is_finished)
+				socket_game.emit("keyEvent", key_data);
 		};
 
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -134,7 +143,7 @@ function Game(game_id: number | null) {
 			document.removeEventListener("keydown", handleKeyDown);
 			document.removeEventListener("keyup", handleKeyUp);
 		};
-	}, [game_id]);
+	}, [game_id, is_finished]);
 
 	if (!isJoined) {
 		return (
@@ -144,11 +153,19 @@ function Game(game_id: number | null) {
 				</div>
 			</div>
 		);
-	} else {
+	} else if (!is_finished) {
 		return (
 			<div className="dashboard">
 				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
 					<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
+				</div>
+			</div>
+		);
+	} else {
+		return (
+			<div className="dashboard">
+				<div>
+					<div style={{fontSize: '13rem'}}>FINI</div>
 				</div>
 			</div>
 		);

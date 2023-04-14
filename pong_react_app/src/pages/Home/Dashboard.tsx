@@ -38,7 +38,7 @@ function Dashboard()
 		mode_speedup: false,
 		mode_shrink: false,
 		mode_chaos: false,
-		game_map: GameMap.MazeMadness,
+		game_map: GameMap.Classic,
 	}
 	let [game_id, set_game_id] = useState(params.get("id") ? null :
 											Number(params.get("id")))
