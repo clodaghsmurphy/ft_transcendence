@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import './CreateGame.css'
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export type CreateGameTemplate = {
 	target_id: number;
@@ -50,6 +51,13 @@ export default function GameSettings() {
 	let speed_mode_ref = useRef<HTMLInputElement | null>(null)
 	let shrink_mode_ref = useRef<HTMLInputElement | null>(null)
 	let chaos_mode_ref = useRef<HTMLInputElement | null>(null)
+
+	function post_game() {
+		axios.post('/api/game/create', settings)
+			.then((response: AxiosResponse) => {
+				console.log(response.data)
+			})
+	}
 
 	return (
 	<div className='game-settings'>
@@ -180,7 +188,7 @@ export default function GameSettings() {
 				Reset to default
 			</button>
 
-			<button onClick={() => console.log(settings)}
+			<button onClick={() => post_game()}
 				style={{
 					backgroundColor: '#c0e085',
 				}}>
