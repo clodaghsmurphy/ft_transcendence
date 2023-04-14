@@ -88,6 +88,7 @@ function Game(game_id: number | null) {
 	socket_game.on('join', (res) => {
 		console.log(`join: ${res.id}`);
 		setIsJoined(true);
+		set_finished(false)
 	});
 
 	useEffect(() => {

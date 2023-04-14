@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import '../Chat/ToastifyFix.css'
 import Game, { GameMap, GamePost } from '../Game/Game';
+import Scores from './Scores';
 
 const params = new URLSearchParams(window.location.search)
 
@@ -40,22 +41,33 @@ function Dashboard()
 		mode_chaos: false,
 		game_map: GameMap.Classic,
 	}
-	let [game_id, set_game_id] = useState(params.get("id") ? null :
-											Number(params.get("id")))
+	let [game_id, set_game_id] = useState(params.get("id") ?
+											Number(params.get("id")) :
+											null)
 	let [settings, setSettings] = useState(default_settings)
 	let [is_create, set_is_create] = useState(false)
+	let [game_data, set_game_data] = useState(null as GameType | null)
 
 	useEffect(() => {
 		document.title = 'Home'
 
+		console.log('test!!', params.get("id"))
 		if (game_id) {
-			axios.get('/api/game/' + game_id)
-				.then((response: AxiosResponse) => {
-					toast.success('Game created')
-				})
+		}
+
+		if (!game_id) {
 		}
 
 	}, [])
+
+	useEffect(() => {
+		if (game_id) {
+			axios.get('/api/game/' + game_id)
+				.then((response: AxiosResponse) => {
+					set_game_data(response.data)
+				})
+		}
+	}, [game_id])
 
 	return (
 		<div className="dashboard">
@@ -66,27 +78,7 @@ function Dashboard()
 		<main className="page-wrapper">
 				<div className="game">
 					{Game(game_id)}
-					<div className="player-vs">
-						<div className="player">
-							<div className="avatar">
-								<img src={state.user.avatar} />
-							</div>
-							<div className="player-info">
-								<span className="player-name">{state.user.name}</span>
-								<span className="player-level">LVL 12</span>
-							</div>
-						</div>
-						<div className="score">0 - 0</div>
-						<div className="player">
-							<div className="avatar">
-								<img src={nathan} />
-							</div>
-							<div className="player-info">
-								<span className="player-name">nguiard</span>
-								<span className="player-level">LVL 12</span>
-							</div>
-						</div>
-					</div>
+					{Scores(game_data)}
 				</div>
 				{CreateGame(settings, default_settings, setSettings, set_game_id)}
 			</main>
