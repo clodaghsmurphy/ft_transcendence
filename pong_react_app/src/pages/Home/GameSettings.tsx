@@ -1,18 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import './CreateGame.css'
 import axios, { AxiosError, AxiosResponse } from 'axios';
-
-export type CreateGameTemplate = {
-	target_id: number;
-	racket_length?: number;
-	racket_speed?: number;
-	ball_radius?: number;
-	ball_speed?: number;
-	winning_goals?: number;
-	mode_speedup?: boolean;
-	mode_shrink?: boolean;
-	mode_chaos?: boolean;
-}
+import { GameMap, GamePost } from '../Game/Game';
+import { AuthContext } from '../../App';
 
 export const MIN_RACKET_LENGTH = 30;
 export const MAX_RACKET_LENGTH = 150;
@@ -30,23 +20,14 @@ export const MIN_WINNING_GOALS = 3;
 export const MAX_WINNING_GOALS = 20;
 
 
-export default function GameSettings() {
-	const default_settings: CreateGameTemplate = {
-		target_id: 4,
-		racket_length: 80,
-		racket_speed: 10,
-		ball_radius: 20,
-		ball_speed: 10,
-		winning_goals: 5,
-		mode_speedup: false,
-		mode_shrink: false,
-		mode_chaos: false,
-	}
-	let [settings, setSettings] = useState(default_settings)
+export default function GameSettings(settings: GamePost, default_settings: GamePost,
+	setSettings: React.Dispatch<React.SetStateAction<GamePost>>,
+	set_game_id: React.Dispatch<React.SetStateAction<number | null>>) {
+
 	let racket_length_ref = useRef<HTMLInputElement | null>(null)
 	let racket_speed_ref = useRef<HTMLInputElement | null>(null)
-	let ball_radius_ref = useRef<HTMLInputElement | null>(null)
-	let ball_speed_ref = useRef<HTMLInputElement | null>(null)
+	let ball_initial_radius_ref = useRef<HTMLInputElement | null>(null)
+	let ball_initial_speed_ref = useRef<HTMLInputElement | null>(null)
 	let winning_goals_ref = useRef<HTMLInputElement | null>(null)
 	let speed_mode_ref = useRef<HTMLInputElement | null>(null)
 	let shrink_mode_ref = useRef<HTMLInputElement | null>(null)
@@ -55,7 +36,8 @@ export default function GameSettings() {
 	function post_game() {
 		axios.post('/api/game/create', settings)
 			.then((response: AxiosResponse) => {
-				console.log(response.data)
+				set_game_id(response.data.id)
+				console.log('created game', response.data.id)
 			})
 	}
 
@@ -93,35 +75,35 @@ export default function GameSettings() {
 			{MAX_RACKET_SPEED}
 		</div>
 
-		<h2>Ball radius: {settings.ball_radius}</h2>
+		<h2>Ball radius: {settings.ball_initial_radius}</h2>
 		<div className='range-settings'>
 			{MIN_BALL_RADIUS}
 			<input type='range'
 					className='range'
 					min={MIN_BALL_RADIUS}
 					max={MAX_BALL_RADIUS}
-					ref={ball_radius_ref}
+					ref={ball_initial_radius_ref}
 					onChange={() => setSettings((prev) => ({
 						...prev,
-						ball_radius: Number(ball_radius_ref.current?.value)
+						ball_initial_radius: Number(ball_initial_radius_ref.current?.value)
 					}))}
-					value={settings.ball_radius}/>
+					value={settings.ball_initial_radius}/>
 			{MAX_BALL_RADIUS}
 		</div>
 
-		<h2>Ball speed: {settings.ball_speed}</h2>
+		<h2>Ball speed: {settings.ball_initial_speed}</h2>
 		<div className='range-settings'>
 			{MIN_BALL_SPEED}
 			<input type='range'
 					className='range'
 					min={MIN_BALL_SPEED}
 					max={MAX_BALL_SPEED}
-					ref={ball_speed_ref}
+					ref={ball_initial_speed_ref}
 					onChange={() => setSettings((prev) => ({
 						...prev,
-						ball_speed: Number(ball_speed_ref.current?.value)
+						ball_initial_speed: Number(ball_initial_speed_ref.current?.value)
 					}))}
-					value={settings.ball_speed}/>
+					value={settings.ball_initial_speed}/>
 			{MAX_BALL_SPEED}
 		</div>
 

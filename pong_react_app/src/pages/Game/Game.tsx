@@ -17,7 +17,7 @@ const PADDLE_SPEED = 20;
 
 const { v4: uuidv4 } = require('uuid');
 
-enum GameMap {
+export enum GameMap {
 	Classic = "classic",
 	Pendulum = "pendulum",
 	DoubleTrouble = "double trouble",
@@ -25,7 +25,7 @@ enum GameMap {
 	MazeMadness = "maze madness",
 };
 
-type GamePost = {
+export type GamePost = {
 	user_id: number,
 	target_id: number,
 	racket_length: number,
@@ -39,66 +39,67 @@ type GamePost = {
 	game_map: GameMap,
 }
 
-export let socket_game: Socket
+let socket_game = io(`http://${window.location.hostname}:8080/game`,
+{
+	extraHeaders: {
+		Authorization: "Bearer " + localStorage.getItem('token')
+	}
+})
 
-function Game() {
+socket_game.on('connect', () => {
+	console.log('CONNECTED')
+})
+
+socket_game.on('exception', (data: any) => {
+	console.log('EXCEPTION !!!\n', data)
+})
+
+socket_game.on('disconnect', () => {
+	console.log('DISCONNECTED!!!!!!!!!')
+})
+
+function Game(game_id: number | null) {
 
 	const [isJoined, setIsJoined] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
 	const [data, setData] = useState(null);
-	let game_id: Number;
 
 	const connect = () => {
-		socket_game = io(`http://${window.location.hostname}:8080/game`,
-		{
-			extraHeaders: {
-				Authorization: "Bearer " + localStorage.getItem('token')
-			}
-		});
 		socket_game.on("connect", () => {
 			console.log("Connected to game");
 			console.log(socket_game);
 		});
 
-		const body: GamePost = {
-			user_id: Number(state.user.id),
-			target_id: 4,
-			racket_length: 80,
-			racket_speed: 10,
-			ball_initial_radius: 20,
-			ball_initial_speed: 10,
-			winning_goals: 5,
-			mode_speedup: true,
-			mode_shrink: false,
-			mode_chaos: false,
-			game_map: GameMap.MazeMadness,
-		}
-
-		axios.post('/api/game/create', body)
-			.then((response: AxiosResponse) => {
-				console.log('Received message :', response);
-				game_id = response.data.id;
-
-				const join_dto = {
-					user_id: state.user.id,
-					target_id: 4,
-					id: game_id
-				};
-
-				socket_game.on('update', (dto) => {
-					setData(dto);
-				});
-
-				socket_game.on('join', (res) => {
-					console.log(`join: ${res.id}`);
-				});
-				socket_game.emit('join', join_dto);
-			});
 	}
+	
+	useEffect(() => {
+		if (game_id) {
+			
+			const join_dto = {
+				user_id: state.user.id,
+				target_id: 4,
+				id: game_id,
+			};
+			
+			console.log(join_dto)
+			
+			
+			socket_game.emit('join', join_dto);
+		}
+	}, [game_id])
+	
+	socket_game.on('update', (dto) => {
+		setData(dto);
+	});
+
+	socket_game.on('join', (res) => {
+		console.log(`join: ${res.id}`);
+		setIsJoined(true);
+	});
 
 	useEffect(() => {
 		let isKeyPressed = false;
-
+		
 		const handleKeyEvent = (event: KeyboardEvent, action: string) => {
 			let keyEvent = {
 				action: action,
@@ -143,21 +144,13 @@ function Game() {
 		};
 	}, []);
 
-	const handleJoinGame = async () => {
-		// Appel à la fonction pour rejoindre la partie
-		try {
-			await connect();
-			setIsJoined(true);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	console.log(isJoined)
 
 	if (!isJoined) {
 		return (
 			<div className="dashboard">
 				<div>
-					<button onClick={handleJoinGame}>Rejoindre la partie</button>
+					<div style={{fontSize: '13rem'}}>Waiting...</div>
 				</div>
 			</div>
 		);

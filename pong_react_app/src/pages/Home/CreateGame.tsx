@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import './CreateGame.css'
 import GameSettings from './GameSettings';
+import { GamePost } from '../Game/Game';
 
 const CREATE = 1;
 const BROWSE = 2;
 
-export default function CreateGame() {
+export default function CreateGame(settings: GamePost, default_settings: GamePost,
+	setSettings: React.Dispatch<React.SetStateAction<GamePost>>,
+	set_game_id: React.Dispatch<React.SetStateAction<number | null>>) {
 	let [window, setWindow] = useState(CREATE)
 	const is_create = window === CREATE
 
@@ -36,7 +39,9 @@ export default function CreateGame() {
 			<h1>{is_create ? 'Create a game' :
 				'Browse games'}</h1>
 
-			{is_create ? <GameSettings /> : <div/> /*<GameBrowsing /> */}
+			{is_create ?
+				GameSettings(settings, default_settings, setSettings, set_game_id) :
+				<div/> /*<GameBrowsing /> */}
 		</div>
 	)
 }
