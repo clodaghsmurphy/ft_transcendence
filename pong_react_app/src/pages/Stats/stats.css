@@ -273,6 +273,7 @@
 {
 	display: flex;
 	position: relative;
+	overflow: visible;
 	flex-direction: column;
 	padding: 1.2vh;
 	border-radius: 1em;
@@ -281,6 +282,11 @@
 	width: 95%;
 	overflow-y: scroll;
 	gap: 10px
+}
+
+.ach-description {
+	height: 30px;
+	font-size: .8em
 }
 
 .info-item
@@ -322,16 +328,24 @@
 .game-score
 {
 	display: flex;
+	overflow: visible;
 	letter-spacing: .5em;
+	font-size: 1em;
 	flex-wrap: nowrap;
-	font-size: 1vw;
+	white-space: nowrap;
 	margin-right: 3%;
 	margin-left: auto;
 	font-weight:800;
 	text-align: center;
-	flex-basis: 35%;
-	text-align: right;
-	justify-content: right;
+	flex-basis: 25%;
+}
+
+.win {
+	box-shadow: #31A776 0px 30px 60px -12px inset;
+}
+
+.lose {
+	box-shadow: #b93030 0px 30px 60px -12px inset;
 }
 
 .ranking

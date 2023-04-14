@@ -59,7 +59,7 @@ export const DefaultAchievements: AchievementsList[] =[
         score: 0
     },
     {
-        icon: 'OldFashioned',
+        icon: 'Old_Fashioned',
         title: 'Old-Fashioned',
         description: 'Play 5 normal games',
         id: 7,

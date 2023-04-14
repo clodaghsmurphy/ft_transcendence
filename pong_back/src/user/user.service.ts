@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import { HttpService} from '@nestjs/axios'
 import { GameRoom, GameState } from "src/game/types/game.types";
 
+
 @Injectable()
 export class UserService {
 	constructor(private prisma: PrismaService,
@@ -48,6 +49,7 @@ export class UserService {
 		if (user === null)
 			return ;
 		const updatedUser = this.returnInfo(user);
+
 		return { attribute: updatedUser[attribute] };
 	}
 
@@ -108,14 +110,28 @@ export class UserService {
 		}
 	}
 
+	verifyName  (name: string) {
+    var regex = new RegExp("^[a-zA-Z0-9.]*$");
+	console.log(name);
+    if (!regex.test(name)) {
+        throw new HttpException({
+            status: HttpStatus.BAD_REQUEST,
+            error: `user name must not contain special characters`,
+        }, HttpStatus.BAD_REQUEST);
+   	 }
+	}
+
 	async update(dto: UserUpdateDto) {
 		await this.checkUser(dto.id);
+		this.verifyName(dto.name)
 		const user = await this.prisma.user.update({
 			where: { id: dto.id },
 			data: dto,
 		});
 		return this.returnInfo(user);
 	}
+
+	
 
 	// This should only be called by channel service
 	// Therefore it assumes user and channel both exists
@@ -223,7 +239,7 @@ export class UserService {
 		return {
 			win: (game.winner === user.id),
 			score: (is_player1 ? game.player1_goals : game.player2_goals),
-			opponent: opponent,
+			opponent: this.returnInfo(opponent),
 			opponent_score: (is_player1 ? game.player2_goals : game.player1_goals),
 			rating_change: (is_player1 ? game.player1_rating_change : game.player2_rating_change)
 		};
@@ -247,8 +263,8 @@ export class UserService {
 	returnInfo(user: User) {
 		let updatedUser: any = user;
 
-		updatedUser.otp_auth_url = (user.otp_auth_url === null ? false : true);
-		updatedUser.otp_base32 = (user.otp_base32 === null ? false : true);
+		updatedUser.otp_auth_url = (user.otp_auth_url === null ? 'false' : 'true');
+		updatedUser.otp_base32 = (user.otp_base32 === null ? 'false' : 'true');
 		return updatedUser;
 	}
 }

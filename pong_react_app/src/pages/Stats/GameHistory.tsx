@@ -1,53 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import gameAvatar from './media/nguiard.jpg';
 import { TbUserSearch } from "react-icons/tb";
 import User, { User_last_game, id_to_user } from "../utils/User";
+import Image from "../Components/Image";
+import { AuthContext } from "../../App";
+import { user } from "../../store/reducer";
 const { v4: uuidv4 } = require('uuid');
 
-
-function OneGame(game: User_last_game, current_user: User, every_user: User[]): JSX.Element {
-
-	/* /!\ ATTENTION CLODAGH id_to_user peut renvoyer un utilisateur qui
-			existe pas, il fautdrait que tu checks si user.id === -1
-			si c'est le cas le user est pas bon
-	*/
-	let opp = typeof game.opponnent === "number" ?
-			id_to_user(every_user, game.opponnent) : game.opponnent;
-	let score = game.score;
-	let len = score.length.toString();
-	let color = game.has_won ? "#00c000" : "#d00000"
-
-	return (
-		<div className="info-item" key={uuidv4()}>
-				<div className="stats-avatar">
-					<img src={opp.avatar}/>
-				</div>
-				<span className="game-username">{opp.name}</span>
-				<div className="game-score" style={{
-					width: "calc(" + len + " * 1.3rem)",
-					color: color,
-				}}>{score}</div>
-			</div>
-	)
+type GameHistory = {
+	opp: user, // game oppenent
+	opp_score: number,
+	my_score: number,
+	win: boolean
 }
 
-function GameHistory(every_user: User[], current_user: User)
+const GameHistoryDefault : GameHistory[] = 
+	[{
+	opp :  { name:'nguiard', id: '94596', avatar: 'test', otp_enabled:false},
+	opp_score : 3,
+	my_score : 4,
+	win : true,
+	},
+	{
+		opp :  { name:'nguiard', id: '94596', avatar: 'test', otp_enabled:false},
+		opp_score : 3,
+		my_score : 2,
+		win : false,
+		},
+	]
+
+
+type Props = {
+	id: number
+}
+
+function GameHistory(props: Props)
 {
-	let [Games, setGames] = useState([] as JSX.Element[]);
+    const { state,  dispatch } = useContext(AuthContext);
 
-	if (typeof every_user[0] === 'undefined' || typeof current_user.name === 'undefined')
-		return <div key={uuidv4()} className='info-body'/>
-
-	for (const game of current_user.last_games) {
-		let tmp = Games;
-		tmp.push(OneGame(game, current_user, every_user));
-		setGames(tmp);
-	}
+	
+	const [ gameHistory, setGameHistory] = useState<GameHistory[]>(GameHistoryDefault);
 
 	return (
+	
 		<div className="info-body">
-			{Games}
+				{ gameHistory.map(game => 
+			<div className={game.win ? "info-item win" : "info-item lose"} key={uuidv4()}>
+				<div className="stats-avatar">
+					<Image id={parseInt(game.opp.id)} status={0}/>
+				</div>
+				<span className="game-username">{game.opp.name}</span>
+				<div className="game-score" >{`${game.my_score} - ${game.opp_score}`}</div>
+			</div>
+			)}
 		</div>
+		
 	);
 }
 

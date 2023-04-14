@@ -40,7 +40,7 @@ export class AuthController {
         await this.userService.checkUser(user.id);
         const updateUser = await this.prisma.user.update({
             where: {id: user.id},
-            data: { otp_verified: false }
+            data: { otp_verified: false, connected: false }
         });
         return updateUser;
     }
@@ -56,6 +56,7 @@ export class AuthController {
             });
             return ;
         }
+        
         token.then(token => {
             res.redirect(`http://${process.env.HOSTNAME}:8080/login?access_token=${token.access_token}`)
         });
@@ -135,7 +136,7 @@ export class AuthController {
             {
             const updateUser = await this.prisma.user.update({
                 where: {id: request.user.id},
-                data: { otp_verified: true }
+                data: { otp_verified: true, connected: true }
             });
             return this.authService.login(request, updateUser);
         }

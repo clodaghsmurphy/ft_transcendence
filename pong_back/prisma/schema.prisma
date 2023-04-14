@@ -23,7 +23,7 @@ model User {
   friend_users Int[] @default([])
   channels String[] @default([])
 
-  connected Boolean @default(true)
+  connected Boolean @default(false)
   in_game Boolean @default(false)
 
   game_id Int?

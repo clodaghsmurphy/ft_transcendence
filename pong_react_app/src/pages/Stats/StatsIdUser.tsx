@@ -6,6 +6,7 @@ import StatsAchievements from './Achievements';
 import { user } from '../../store/reducer';
 import FTlogo from '../../media/42_Logo.png'
 import { Link } from 'react-router-dom'
+import GameHistory from './GameHistory';
 
 type Props = {
     usr: user
@@ -43,6 +44,7 @@ function StatsIdUser(props: Props) {
 							<header>
 								<h1>Game History</h1>
 							</header>
+							<GameHistory id={parseInt(usr.id)} />
 						</div>
 						<div className="info-card friends">
 							<header>

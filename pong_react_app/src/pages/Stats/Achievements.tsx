@@ -31,7 +31,7 @@ const { v4: uuidv4 } = require('uuid');
 export type Achievement = {
 	icon: string,		// Icon of the achievement
 	title: string,		// Title of the achievement
-	descripton: string,	// Description of the achievement
+	description: string,	// Description of the achievement
 	id: number,			// Id of the achievement
 	cap: number,		// Number of things to chieve the achievement
 	score: number					// exemple: Win 10 games -> cap = 10
