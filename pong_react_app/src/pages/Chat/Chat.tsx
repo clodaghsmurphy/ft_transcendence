@@ -4,14 +4,14 @@ import Messages from './Messages'
 import '../Home/Dashboard.css'
 import './Chat.css'
 import { User_in_group } from './UserGroup'
-import User, { id_to_user } from '../utils/User'
+import User from '../utils/User'
 import { Channel, MUTE, MessageData, names_to_channel } from './Channels'
 import io, { Socket } from 'socket.io-client'
 import { DirectMessage } from './DirectMessage'
 import { AuthContext } from '../../App'
 import { group_message, Password, refresh_button, refresh_data, sanitizeString, users_message } from './ChatUtils'
 import PopupJoinChannel from './PopupJoinChannel'
-import axios, { AxiosResponse, AxiosError } from 'axios'
+import axios, { AxiosResponse, AxiosError, AxiosStatic } from 'axios'
 import { handleBan, handleCreate, handleJoin, handleKick, handleMakeop, handleMessage } from './SocketEvents'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -81,7 +81,7 @@ function Chat()
 		})
 
 		socket_chan.on('exception', (data: any) => {
-			console.log(data)
+			console.log('chan execption:', data)
 			toast.warn('chan: ' + data.error)
 		})
 		socket_dm.on('exception', (data: any) => {
@@ -234,6 +234,38 @@ function Chat()
 		set_current_user(new_curr_user)
 	}
 
+	function local_refresh() {
+		const ret = refresh_data({set_all_channels, set_all_users,
+			set_dms, set_current_user,
+			current_user, setChanOfUser,
+			all_channels}, user_id)
+		
+		if (current_chan.type === CHANNEL) {
+			axios.get('/api/channel/info/' + current_chan.chan!.name)
+				.then((response: AxiosResponse) => {
+					const new_chan = response.data
+
+					axios.get('/api/channel/messages/' + new_chan.name)
+						.then((response: AxiosResponse) => {
+							set_current_chan((prev: CurrentChan) => ({
+								type: CHANNEL,
+								msg: response.data,
+								chan: new_chan,
+							}))
+						})
+				})
+		} else if (current_chan.type === DM) {
+			axios.get('/api/dm/' + current_chan.user!)
+				.then((response: AxiosResponse) => {
+					set_current_chan({
+						msg: response.data,
+						type: DM,
+						user: current_chan.user!
+					})
+				})
+		}
+	}
+
 	return (
 		<div className="dashboard">
         <NavBar /> 
@@ -279,7 +311,7 @@ function Chat()
 						<div className='lists-holder'>
 							{users_message(dms, all_users,
 									current_user, changeChannelOrDm,
-									dms, set_dms)}
+									dms, set_dms, local_refresh)}
 						</div>
 						<div className='channels-holder'></div>
 					</div>
@@ -289,14 +321,14 @@ function Chat()
             <div className="chatbox">
 				{Messages(current_chan,
 					all_users, current_user, set_current_chan,
-					setChanOfUser, leaveChannel)}
+					setChanOfUser, leaveChannel, local_refresh)}
 			</div>
 
             <div className="group-members">
 				<h1>Users</h1>
 				
 				<div className='user-holder'>
-					{User_in_group(all_users, current_user, current_chan)}
+					{User_in_group(all_users, current_user, current_chan, local_refresh)}
 				</div>
 
 				{Password(current_user, current_chan)}

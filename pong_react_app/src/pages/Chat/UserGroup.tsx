@@ -7,7 +7,8 @@ import { CurrentChan, DM, socket_chan } from './Chat';
 
 const { v4: uuidv4 } = require('uuid');
 
-export function User_in_group(every_user: User[], current_user: User, current_chan: CurrentChan): JSX.Element[] {
+export function User_in_group(every_user: User[], current_user: User,
+				current_chan: CurrentChan, refresh: () => void): JSX.Element[] {
 	let ret: JSX.Element[] = []
 	let muteRef = useRef<HTMLInputElement | null>(null)
 
@@ -20,7 +21,7 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 		return [user_in_dm(every_user, current_user, {
 			id: current_chan.user!,
 			msg: current_chan.msg,
-		})];
+		}, refresh)];
 	}
 
 	current_chan.chan = current_chan.chan!
@@ -85,6 +86,11 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 
 		if (user !== current_user.id) {
 			const real_user = id_to_user(every_user, user)
+
+			if (real_user.id === -1) {
+				refresh()
+				continue
+			}
 			
 			if (curr_is_op && !target_is_owner)
 				ret.push(Button_op(real_user, target_is_op, current_user,
@@ -100,8 +106,14 @@ export function User_in_group(every_user: User[], current_user: User, current_ch
 	return ret
 }
 
-function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage) {
-	
+function user_in_dm(every_user: User[], current_user: User, dm: DirectMessage,
+		refresh: () => void) {
+	let usr = id_to_user(every_user, dm.id)
+
+	if (usr.id === -1) {
+		refresh()
+		return <div key={dm.id}/>
+	}
 	return button_not_op(id_to_user(every_user, dm.id), false)
 }
 
