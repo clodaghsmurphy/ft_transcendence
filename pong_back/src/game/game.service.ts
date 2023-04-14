@@ -74,12 +74,21 @@ export class GameService {
 			}
 		});
 
-		this.activeGames.delete(game.id);
+		if (this.activeGames.has(game.id)) {
+			this.activeGames.delete(game.id);
+		}
 		return game;
 	}
 
 	async updateStats(id: number) {
 		const gameRoom: GameRoom = this.activeGames.get(id);
+		if (!gameRoom || (gameRoom.state.player1_goals !== gameRoom.state.winning_goals && gameRoom.state.player2_goals !== gameRoom.state.winning_goals)) {
+			const game = await this.prisma.game.delete({
+				where: {id: id}
+			});
+
+			return game;
+		}
 
 		const player1_win: number = gameRoom.state.player1_goals === gameRoom.state.winning_goals ? 1 : 0;
 		const player2_win: number = 1 - player1_win;
