@@ -57,8 +57,6 @@ function Dashboard()
 
 	}, [])
 
-	console.log('inside dasboard:', game_id)
-
 	return (
 		<div className="dashboard">
 			<div className='body '>

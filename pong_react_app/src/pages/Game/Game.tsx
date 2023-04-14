@@ -63,13 +63,6 @@ function Game(game_id: number | null) {
 	const [isJoined, setIsJoined] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
 	const [data, setData] = useState(null);
-
-	const connect = () => {
-		socket_game.on("connect", () => {
-			console.log("Connected to game");
-			console.log(socket_game);
-		});
-	}
 	
 	useEffect(() => {
 		if (game_id) {
@@ -141,9 +134,7 @@ function Game(game_id: number | null) {
 			document.removeEventListener("keydown", handleKeyDown);
 			document.removeEventListener("keyup", handleKeyUp);
 		};
-	}, []);
-
-	console.log(isJoined)
+	}, [game_id]);
 
 	if (!isJoined) {
 		return (
