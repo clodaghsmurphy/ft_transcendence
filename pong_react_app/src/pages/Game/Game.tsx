@@ -156,7 +156,6 @@ function Game() {
 	if (!isJoined) {
 		return (
 			<div className="dashboard">
-			<NavBar />
 				<div>
 					<button onClick={handleJoinGame}>Rejoindre la partie</button>
 				</div>
@@ -165,7 +164,6 @@ function Game() {
 	} else {
 		return (
 			<div className="dashboard">
-			<NavBar />
 				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
 					<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
 				</div>
