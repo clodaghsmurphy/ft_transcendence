@@ -63,6 +63,24 @@ export class GameService {
 	async remove(id: number) {
 		await this.checkGame(id);
 
+		const gameRoom: GameRoom = this.activeGames.get(id);
+
+		if (!gameRoom || (gameRoom.state.player1_goals !== gameRoom.state.winning_goals && gameRoom.state.player2_goals !== gameRoom.state.winning_goals)) {
+			const game = await this.prisma.game.delete({
+				where: {id: id}
+			});
+
+			await this.prisma.user.updateMany({
+				where: {id: {in: [game.player1, game.player2]}},
+				data: {
+					game_id: null,
+					in_game: false,
+				}
+			});
+
+			return game;
+		}
+
 		const game = await this.updateStats(id);
 
 		await this.prisma.user.updateMany({
@@ -82,13 +100,6 @@ export class GameService {
 
 	async updateStats(id: number) {
 		const gameRoom: GameRoom = this.activeGames.get(id);
-		if (!gameRoom || (gameRoom.state.player1_goals !== gameRoom.state.winning_goals && gameRoom.state.player2_goals !== gameRoom.state.winning_goals)) {
-			const game = await this.prisma.game.delete({
-				where: {id: id}
-			});
-
-			return game;
-		}
 
 		const player1_win: number = gameRoom.state.player1_goals === gameRoom.state.winning_goals ? 1 : 0;
 		const player2_win: number = 1 - player1_win;
