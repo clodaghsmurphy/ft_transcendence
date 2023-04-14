@@ -64,7 +64,7 @@ function LoginTfa()
 
      if (state.isLoggedIn)
      {
-         return <Navigate to="/dashboard" />;
+         return <Navigate to="/game" />;
      }
 
      const onChange = (input:string) => setValue(input)

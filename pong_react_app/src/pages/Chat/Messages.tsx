@@ -19,7 +19,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 				current_user: User,
 				set_current_chan: (arg: any) => void,
 				setChanOfUser: (arg: any) => void,
-				leaveChannel: (arg: any) => void)
+				leaveChannel: (arg: any) => void,
+				refresh: () => void)
 {
 	let is_undefined: boolean = false;
 	let chan = current_chan.chan!;
@@ -32,10 +33,16 @@ function Messages(current_chan: CurrentChan, users: User[],
 	let messageRef = useRef<HTMLInputElement | null>(null)
 	
 	let [messagesBlocks, setMessagesBlocks] = useState(
-		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user))
+		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user, refresh))
 		);
+
 	let chan_name = current_chan.type === CHANNEL ? current_chan.chan!.name
 								: id_to_user(users, current_chan.user!).name
+	
+	if (current_chan.type === DM && id_to_user(users, current_chan.user!).id === -1) {
+		refresh()
+		return <div key='user-not-found'/>
+	}
 
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
@@ -103,7 +110,7 @@ function Messages(current_chan: CurrentChan, users: User[],
 				
 	if (wasnt_defined || (same_type && !same_name) || msg_number_diff || !same_type) // si c'est vide il faut l'update
 	{
-		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user)));
+		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user, refresh)));
 		setLastChan({
 			name: chan_name,
 			type: current_chan.type

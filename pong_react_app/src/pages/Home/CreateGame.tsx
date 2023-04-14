@@ -11,6 +11,8 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 	set_game_id: React.Dispatch<React.SetStateAction<number | null>>) {
 	let [window, setWindow] = useState(CREATE)
 	const is_create = window === CREATE
+	const SettingsBlock = GameSettings(settings, default_settings, setSettings, set_game_id)
+	const BrowsingBlock = <div />
 
 	function changeWindow(win: number) {
 		if (window != win) {
@@ -39,9 +41,7 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 			<h1>{is_create ? 'Create a game' :
 				'Browse games'}</h1>
 
-			{is_create ?
-				GameSettings(settings, default_settings, setSettings, set_game_id) :
-				<div/> /*<GameBrowsing /> */}
+			{is_create ? SettingsBlock : BrowsingBlock}
 		</div>
 	)
 }

@@ -6,8 +6,13 @@ import './Chat.css'
 
 const { v4: uuidv4 } = require('uuid');
 
-function ChatMessage(every_user: User[], msg: MessageData, curr_user: User): JSX.Element
+function ChatMessage(every_user: User[], msg: MessageData, curr_user: User, refresh: () => void): JSX.Element
 {
+	let sender = id_to_user(every_user, msg.sender_id)
+	if (sender.id === -1) {
+		refresh();
+		return <div key={msg.id}></div>
+	}
 	let sender_name = id_to_user(every_user, msg.sender_id).name
 
 	if (typeof curr_user === 'undefined')

@@ -7,6 +7,10 @@ const { v4: uuidv4 } = require('uuid');
 
 function OneGame(game: User_last_game, current_user: User, every_user: User[]): JSX.Element {
 
+	/* /!\ ATTENTION CLODAGH id_to_user peut renvoyer un utilisateur qui
+			existe pas, il fautdrait que tu checks si user.id === -1
+			si c'est le cas le user est pas bon
+	*/
 	let opp = typeof game.opponnent === "number" ?
 			id_to_user(every_user, game.opponnent) : game.opponnent;
 	let score = game.score;

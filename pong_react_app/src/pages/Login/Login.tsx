@@ -73,7 +73,7 @@ function Login ()
 
 	if (state.isLoggedIn)
 	{
-		return <Navigate to="/dashboard" />;
+		return <Navigate to="/game" />;
 	}
 
 	return (
