@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Res } from "@nestjs/common";
-import { User, Stats, Achievements } from "@prisma/client";
+import { User, Game, Stats, Achievements } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -210,7 +210,7 @@ export class UserService {
 		return result;
 	}
 
-	async getStats(user:User)  {
+	async getStats(user: User)  {
 		console.log('in stats')
 		const result = await this.prisma.stats.findUnique({
 			where: {
@@ -220,30 +220,44 @@ export class UserService {
 				lvl: true,
 				total_games: true,
 				wins: true,
+				rating: true,
 			}
 		})
 		console.log(result)
 		return result;
 	}
 
-	async updateStats(userId: number, room: GameRoom) {
-		await this.checkUser(userId);
+	async getGameInfo(user: User, game: Game) {
+		const is_player1: boolean = (user.id === game.player1);
 
-		const winnerId: number = (room.state.player1_goals === room.state.winning_goals ? room.player1_id : room.player2_id);
-		const points: number = (userId === room.player1_id ? room.state.player1_goals : room.state.player2_goals);
-		const win: number = (winnerId === userId ? 1 : 0);
-
-		const pastStats = await this.prisma.stats.findUnique({where: {userId: userId}});
-
-		await this.prisma.stats.update({
-			where: {id: pastStats.id},
-			data: {
-				wins: pastStats.wins + win,
-				total_games: pastStats.total_games + 1,
-				points: pastStats.points + points,
-				lvl: pastStats.lvl + win,
+		const opponent = await this.prisma.user.findUnique({
+			where: {
+				id: (is_player1 ? game.player2 : game.player1)
 			}
 		});
+
+		return {
+			win: (game.winner === user.id),
+			score: (is_player1 ? game.player1_goals : game.player2_goals),
+			opponent: opponent,
+			opponent_score: (is_player1 ? game.player2_goals : game.player1_goals),
+			rating_change: (is_player1 ? game.player1_rating_change : game.player2_rating_change)
+		};
+	}
+
+	async getGameHistory(userId: number) {
+		await this.checkUser(userId);
+
+		const user = await this.prisma.user.findUnique({where: {id: userId}});
+		const games = await this.prisma.game.findMany({where: {id: {in: user.past_games}}});
+
+		const gamePromises = games.map(async (game) => {
+			const info = await this.getGameInfo(user, game);
+			console.log(JSON.stringify(info));
+			return info;
+		});
+
+		return await Promise.all(gamePromises);
 	}
 
 	returnInfo(user: User) {
