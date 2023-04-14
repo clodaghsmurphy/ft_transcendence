@@ -36,11 +36,10 @@ function App() {
         <Route path="/" element={<Home />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/2fa" element={<LoginTfa />}/>
-        <Route path="/dashboard" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
+        <Route path="/game" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
         <Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
         <Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
         <Route path='/stats/:id' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<StatsId />} />} />
-        <Route path='/game' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={Game(null)} />} />
     </Routes>
     <JWTverify />
     </Router>
