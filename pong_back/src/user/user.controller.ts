@@ -256,8 +256,6 @@ export class UserController {
 		return ;
 	}
 
-
-
 	checkId(id: string) {
 		if (Number.isNaN(parseInt(id))) {
 			throw new HttpException({

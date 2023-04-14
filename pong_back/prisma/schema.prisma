@@ -93,6 +93,10 @@ model Game {
 
   player1_goals Int?
   player2_goals Int?
+
+  player1_rating_change Int?
+  player2_rating_change Int?
+
   winner Int?
 }
 
@@ -104,6 +108,7 @@ model Stats {
   total_games Int @default(0)
   total_spe_games Int @default(0)
   lvl Int @default(1)
+  rating Int @default(1000)
   points  Int @default(0)
 }
 

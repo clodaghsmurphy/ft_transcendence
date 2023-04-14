@@ -7,6 +7,7 @@ import { GameKeyEvent, GameObstacle, GameRoom, KeyAction, KeyType, defaultState,
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { use } from "passport";
+import { getNextRatings } from "./rating";
 
 @Injectable()
 export class GameService {
@@ -62,18 +63,7 @@ export class GameService {
 	async remove(id: number) {
 		await this.checkGame(id);
 
-		const gameRoom: GameRoom = this.activeGames.get(id);
-		const winner: number = gameRoom.state.player1_goals === gameRoom.state.winning_goals ? gameRoom.player1_id : gameRoom.player2_id;
-
-		const game = await this.prisma.game.update({
-			where: {id: id},
-			data: {
-				ongoing: false,
-				player1_goals: gameRoom.state.player1_goals,
-				player2_goals: gameRoom.state.player2_goals,
-				winner: winner
-			},
-		});
+		const game = await this.updateStats(id);
 
 		await this.prisma.user.updateMany({
 			where: {id: {in: [game.player1, game.player2]}},
@@ -84,10 +74,64 @@ export class GameService {
 			}
 		});
 
-		await this.userService.updateStats(game.player1, gameRoom);
-		await this.userService.updateStats(game.player2, gameRoom);
-
 		this.activeGames.delete(game.id);
+		return game;
+	}
+
+	async updateStats(id: number) {
+		const gameRoom: GameRoom = this.activeGames.get(id);
+
+		const player1_win: number = gameRoom.state.player1_goals === gameRoom.state.winning_goals ? 1 : 0;
+		const player2_win: number = 1 - player1_win;
+
+		const player1 = await this.prisma.user.findUnique({where: {id: gameRoom.player1_id}});
+		const player2 = await this.prisma.user.findUnique({where: {id: gameRoom.player2_id}});
+
+		const player1_past_stats = await this.prisma.stats.findUnique({where: {userId: player1.id}});
+		const player2_past_stats = await this.prisma.stats.findUnique({where: {userId: player2.id}});
+
+		const [
+			next_player1_rating,
+			player1_rating_change,
+			next_player2_rating,
+			player2_rating_change
+		] = getNextRatings(player1_past_stats.rating, player2_past_stats.rating, player1_win);
+
+
+		await this.prisma.stats.update({
+			where: {id: player1_past_stats.id},
+			data: {
+				wins: player1_past_stats.wins + player1_win,
+				total_games: player1_past_stats.total_games + 1,
+				points: player1_past_stats.points + gameRoom.state.player1_goals,
+				lvl: player1_past_stats.lvl + player1_win,
+				rating: next_player1_rating
+			}
+		});
+
+		await this.prisma.stats.update({
+			where: {id: player2_past_stats.id},
+			data: {
+				wins: player2_past_stats.wins + player2_win,
+				total_games: player2_past_stats.total_games,
+				points: player2_past_stats.points + gameRoom.state.player2_goals,
+				lvl: player2_past_stats.lvl + player2_win,
+				rating: next_player2_rating
+			}
+		});
+
+		const game = await this.prisma.game.update({
+			where: {id: id},
+			data: {
+				ongoing: false,
+				player1_goals: gameRoom.state.player1_goals,
+				player2_goals: gameRoom.state.player2_goals,
+				winner: (player1_win === 1 ? player1.id : player2.id),
+				player1_rating_change: player1_rating_change,
+				player2_rating_change: player2_rating_change,
+			},
+		});
+
 		return game;
 	}
 
@@ -214,7 +258,7 @@ export class GameService {
 			{
 				x : next_ball_x - half_radius,
 				y : next_ball_y - half_radius,
-			}, 
+			},
 			{
 				x : next_ball_x + half_radius,
 				y : next_ball_y - half_radius,
@@ -308,15 +352,13 @@ export class GameService {
 
 		// Increments speed on gamemode
 		if (state.mode_speedup) {
-			state.ball_speed += state.ball_initial_speed * 0.2;
+			state.ball_speed += Math.floor(state.ball_initial_speed / 10);
 		}
 
 		// Shrink ball size on gamemode
 		if (state.mode_shrink && state.ball_radius > min_ball_radius) {
 			state.ball_radius -= state.ball_initial_radius / 10;
 		}
-
-		
 
 		// Calcule la position relative de la balle par rapport à l'objet intersecte
 		const relativePos = (state.ball_pos_y - intersect_pos) / intersect_length;

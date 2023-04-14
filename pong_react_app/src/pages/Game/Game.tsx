@@ -70,27 +70,34 @@ function Game(game_id: number | null) {
 			console.log(socket_game);
 		});
 
-	}
-	
-	useEffect(() => {
-		if (game_id) {
-			
-			const join_dto = {
-				user_id: state.user.id,
-				target_id: 4,
-				id: game_id,
-			};
-			
-			console.log(join_dto)
-			
-			
-			socket_game.emit('join', join_dto);
+		const body: GamePost = {
+			user_id: Number(state.user.id),
+			target_id: 4,
+			racket_length: 80,
+			racket_speed: 10,
+			ball_initial_radius: 20,
+			ball_initial_speed: 10,
+			winning_goals: 5,
+			mode_speedup: true,
+			mode_shrink: false,
+			mode_chaos: false,
+			game_map: GameMap.Pendulum,
 		}
-	}, [game_id])
-	
-	socket_game.on('update', (dto) => {
-		setData(dto);
-	});
+
+		axios.post('/api/game/create', body)
+			.then((response: AxiosResponse) => {
+				console.log('Received message :', response);
+				game_id = response.data.id;
+
+				const join_dto = {
+					user_id: state.user.id,
+					target_id: 4,
+					id: game_id
+				};
+
+				socket_game.on('update', (dto) => {
+					setData(dto);
+				});
 
 	socket_game.on('join', (res) => {
 		console.log(`join: ${res.id}`);
