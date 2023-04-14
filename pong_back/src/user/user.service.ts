@@ -223,7 +223,7 @@ export class UserService {
 		return {
 			win: (game.winner === user.id),
 			score: (is_player1 ? game.player1_goals : game.player2_goals),
-			opponent: opponent,
+			opponent: this.returnInfo(opponent),
 			opponent_score: (is_player1 ? game.player2_goals : game.player1_goals),
 			rating_change: (is_player1 ? game.player1_rating_change : game.player2_rating_change)
 		};
