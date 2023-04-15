@@ -4,6 +4,11 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { GameMap, GamePost } from '../Game/Game';
 import { AuthContext } from '../../App';
 import { toast } from 'react-toastify'
+import Classic from '../../media/Classic.png'
+import MazeMadness from '../../media/MazeMadness.png'
+import Pendulum from '../../media/Pendulum.png'
+import DoubleTrouble from '../../media/DoubleTrouble.png'
+import ParallelPeril from '../../media/ParallelPeril.png'
 
 export const MIN_RACKET_LENGTH = 30;
 export const MAX_RACKET_LENGTH = 150;
@@ -33,6 +38,11 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 	let speed_mode_ref = useRef<HTMLInputElement | null>(null)
 	let shrink_mode_ref = useRef<HTMLInputElement | null>(null)
 	let chaos_mode_ref = useRef<HTMLInputElement | null>(null)
+	let classic_ref = useRef<HTMLInputElement | null>(null)
+	let double_trouble_ref = useRef<HTMLInputElement | null>(null)
+	let pendulum_ref = useRef<HTMLInputElement | null>(null)
+	let parallel_ref = useRef<HTMLInputElement | null>(null)
+	let maze_ref = useRef<HTMLInputElement | null>(null)
 
 	function post_game() {
 		axios.post('/api/game/create', settings)
@@ -47,6 +57,7 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 
 	return (
 	<div className='game-settings'>
+		<div className='container-settings'>
 		<h2>Racket length: {settings.racket_length}</h2>
 		<div className='range-settings'>
 			{MIN_RACKET_LENGTH}
@@ -133,8 +144,8 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 			<h2>speedup mode:</h2>
 			<input type='checkbox'
 					ref={speed_mode_ref}
-					value={String(settings.mode_speedup)}
-					onClick={() => setSettings((prev) => ({
+					checked={settings.mode_speedup}
+					onChange={() => setSettings((prev) => ({
 						...prev,
 						mode_speedup: !settings.mode_speedup,
 					}))}/>
@@ -144,8 +155,8 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 			<h2>shrink mode:</h2>
 			<input type='checkbox'
 					ref={shrink_mode_ref}
-					value={String(settings.mode_shrink)}
-					onClick={() => setSettings((prev) => ({
+					checked={settings.mode_shrink}
+					onChange={() => setSettings((prev) => ({
 						...prev,
 						mode_shrink: !settings.mode_shrink,
 					}))}/>
@@ -157,14 +168,73 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 			}}>chaos mode:</h2>
 			<input type='checkbox'
 					ref={chaos_mode_ref}
-					value={String(settings.mode_chaos)}
-					onClick={() => setSettings((prev) => ({
+					checked={settings.mode_chaos}
+					onChange={() => setSettings((prev) => ({
 						...prev,
 						mode_chaos: !settings.mode_chaos,
 					}))}/>
 		</div>
 
 		<div className='bar-create' />
+		
+		<div className='choose-map'>
+			<img src={Classic} />
+			<input type='checkbox'
+					ref={classic_ref}
+					checked={settings.game_map === GameMap.Classic}
+					onChange={() => setSettings((prev) => ({
+						...prev,
+						game_map: GameMap.Classic,
+					}))}/>
+		</div>
+
+		<div className='choose-map'>
+			<img src={DoubleTrouble} />
+			<input type='checkbox'
+					ref={double_trouble_ref}
+					checked={settings.game_map === GameMap.DoubleTrouble}
+					onChange={() => setSettings((prev) => ({
+						...prev,
+						game_map: GameMap.DoubleTrouble,
+					}))}/>
+		</div>
+
+		<div className='choose-map'>
+			<img src={ParallelPeril} />
+			<input type='checkbox'
+					ref={parallel_ref}
+					checked={settings.game_map === GameMap.ParallelPeril}
+					onChange={() => setSettings((prev) => ({
+						...prev,
+						game_map: GameMap.ParallelPeril,
+					}))}/>
+		</div>
+
+		<div className='choose-map'>
+			<img src={Pendulum} />
+			<input type='checkbox'
+					ref={pendulum_ref}
+					checked={settings.game_map === GameMap.Pendulum}
+					onChange={() => setSettings((prev) => ({
+						...prev,
+						game_map: GameMap.Pendulum,
+					}))}/>
+		</div>
+
+		<div className='choose-map'>
+			<img src={MazeMadness} />
+			<input type='checkbox'
+					ref={maze_ref}
+					checked={settings.game_map === GameMap.MazeMadness}
+					onChange={() => setSettings((prev) => ({
+						...prev,
+						game_map: GameMap.MazeMadness,
+					}))}/>
+		</div>
+
+		<div className='bar-create' />
+
+		</div>
 
 		<div className='buttons-create-and-reset'>
 			<button onClick={() => setSettings(default_settings)}
