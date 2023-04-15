@@ -32,7 +32,7 @@ export default function App() {
 
 	useEffect(() => {
 		const handleDisconnect = (event: BeforeUnloadEvent) => {
-			axios.post('/api/auth/disconnect', {})
+		//	axios.post('/api/auth/disconnect', {})
 		}
 
 		window.addEventListener('beforeunload', handleDisconnect)

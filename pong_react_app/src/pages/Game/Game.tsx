@@ -63,6 +63,7 @@ function Game(game_id: number | null) {
 	const { state, dispatch } = useContext(AuthContext);
 	const [data, setData] = useState(null);
 	const [is_finished, set_finished] = useState(false)
+	const [end_frame, set_end_frame] = useState(<div />)
 
 	useEffect(() => {
 		if (game_id) {
@@ -90,7 +91,37 @@ function Game(game_id: number | null) {
 	});
 
 	useEffect(() => {
-		socket_game.on('gameover', () => set_finished(true))
+		socket_game.on('gameover', (data: any) => {
+			set_finished(true)
+			console.log(data)
+
+			// a changer par data de gameover
+			data = {
+				winner: 11,
+				player1: 11,
+				player2: 3,
+				player1_goals: 5,
+				player2_goals: 5,
+			}
+			axios.get('/api/user/info/' + data.player1)
+				.then((response: AxiosResponse) => {
+					let p1 = response.data
+
+					axios.get('/api/user/info/' + data.player2)
+						.then((response: AxiosResponse) => {
+							let p2 = response.data
+							let winner = p2.id === data.winner ? p2 : p1
+							let loser = winner === p2 ? p1 : p2
+
+							set_end_frame(<div className='end-frame'>
+								<h1 className='game-over'>Game over</h1>
+								<div className='winner'>{winner.name} has won!</div>
+								<div>{p1.name} {data.player1_goals} - {data.player2_goals} {p2.name}</div>
+							</div>)
+						})
+				})
+				
+		})
 	}, [])
 
 	useEffect(() => {
@@ -143,26 +174,39 @@ function Game(game_id: number | null) {
 
 	if (!isJoined) {
 		return (
-			<div className="dashboard">
-				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
+			<div className="dashboard"
+					style={{
+						backgroundColor: 'darkblue'
+					}}>
+				<div id="game" style={{
+					position: 'relative',
+					overflow: 'hidden',
+				}}>
 					<ReactP5Wrapper sketch={waiting_sketch} ></ReactP5Wrapper>
 				</div>
 			</div>
 		);
 	} else if (!is_finished) {
 		return (
-			<div className="dashboard">
-				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
+			<div className="dashboard"
+					style={{
+						backgroundColor: 'darkblue'
+					}}>
+				<div id="game" style={{
+					position: 'relative',
+					overflow: 'hidden',
+				}}>
 					<ReactP5Wrapper sketch={sketch} data={data}></ReactP5Wrapper>
 				</div>
 			</div>
 		);
 	} else {
 		return (
-			<div className="dashboard">
-				<div>
-					<div style={{fontSize: '13rem'}}>FINI</div>
-				</div>
+			<div className="dashboard"
+					style={{
+						backgroundColor: 'black'
+					}}>
+				{end_frame}
 			</div>
 		);
 	}

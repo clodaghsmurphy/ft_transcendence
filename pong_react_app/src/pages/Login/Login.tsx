@@ -95,9 +95,6 @@ function Login ()
 					Login via 42
 				</button >
 			</div>
-			<button  className="login-button" id="guest-login" >
-				Login as guest
-			</button>
 		</div>
 			</div>
 			<div className="horizon-divide"></div>

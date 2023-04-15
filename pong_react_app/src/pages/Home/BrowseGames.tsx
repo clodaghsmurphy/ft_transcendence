@@ -49,8 +49,49 @@ export default function BrowseGames() {
 		
 	}, [])
 
+	function refresh_games() {
+		let tmp = [] as JSX.Element[]
+		let data: GameType[] = []
+
+		axios.get('/api/game')
+		.then((response: AxiosResponse) => {
+			data = response.data as GameType[]
+
+			console.log(data)
+			setGamesBlocks([])
+			for (const game of data) {
+				let u1: User = {} as User
+				let u2: User = {} as User
+			
+				axios.get('/api/user/info/' +  game.player1)
+					.then((response: AxiosResponse) => {
+						u1 = response.data
+						if (game.player2) {
+							axios.get('/api/user/info/' +  game.player2)
+							.then((response: AxiosResponse) => {
+								u2 = response.data
+								setGamesBlocks((prev: JSX.Element[]) =>
+									[...prev, browse_button(game, u1, u2)]
+								)
+							})
+						}
+						else {
+							setGamesBlocks((prev: JSX.Element[]) =>
+								[...prev, browse_button(game, u1, undefined)]
+							)
+						}
+					})
+
+			}
+		})
+		.catch((err: AxiosError) => {
+			toast.error('Could not fetch games')
+		})
+	}
+
 	return (
 		<div>
+			<button className='refresh_browse' onClick={() => refresh_games()}>Refresh</button>
 			{GamesBlocks.length !== 0 ? GamesBlocks : <div className='no-game-browse'>No games</div>}
 		</div>
 )
