@@ -4,6 +4,7 @@ import { GameType } from './Dashboard'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import User from '../utils/User'
 import { toast } from 'react-toastify'
+import unknown_icon from '../../media/unkonwn.jpg'
 
 
 export default function Scores(data: GameType | null) {
@@ -19,13 +20,21 @@ export default function Scores(data: GameType | null) {
 				.catch((err: AxiosError) => {
 					toast.error((err.response!.data as any).error)
 				})
-			axios.get('/api/user/info/' + data.player2)
-				.then((response: AxiosResponse) => {
-					set_p2(response.data)
-				})
-				.catch((err: AxiosError) => {
-					toast.error((err.response!.data as any).error)
-				})
+			if (data.player2) {
+				axios.get('/api/user/info/' + data.player2)
+					.then((response: AxiosResponse) => {
+						set_p2(response.data)
+					})
+					.catch((err: AxiosError) => {
+						toast.error((err.response!.data as any).error)
+					})
+				}
+			else {
+				set_p2({
+					name: 'unknown',
+					avatar: unknown_icon
+				} as User)
+			}
 		}
 	}, [data?.player1, data?.player2])
 
