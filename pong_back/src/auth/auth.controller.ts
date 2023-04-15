@@ -4,7 +4,6 @@ import { Response } from 'express';
 import { FT_AuthGuard } from './utils/Guards';
 import { JwtAuthGuard } from './utils/JwtGuard';
 import { Jwt2faAuthGuard } from './utils/Jwt2faGuard';
-import { jwtConstants } from './constants';
 import { UserService } from 'src/user/user.service';
 import { authenticator, totp } from 'otplib';
 import *  as qrcode from 'qrcode';
@@ -46,7 +45,7 @@ export class AuthController {
     }
 
 	@Post('disconnect')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(Jwt2faAuthGuard)
     async handleDisconnect(@Req () req, @UserEntity() user) {
         await this.userService.checkUser(user.id);
         const updateUser = await this.prisma.user.update({
@@ -110,8 +109,10 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post('validate')
     async validate(@Body() body:any, @Req() req ){
+        console.log('in validate and user is')
         const token = body.totp;
         const user = await this.userService.userExists(parseInt(req.user.id));
+        console.log('user');
         if (!user)
             throw new UnauthorizedException();
         const secret = user.otp_base32;
@@ -133,9 +134,10 @@ export class AuthController {
     }
 
     @Post('auth2fa')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(Jwt2faAuthGuard)
     async authenticate2fa(@Request() request, @Body() body){
-
+        console.log('in auth2fa and request.user is');
+        console.log(request.user);
         const token = body.value;
         const secret = request.user.otp_base32;
         const isValid = authenticator.verify({ token, secret});
