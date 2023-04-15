@@ -33,9 +33,9 @@ export default function sketch(p5) {
     }
 
     p5.setup = () => {
-        p5.textSize(32);
+        p5.textSize(42);
         text_width = p5.textWidth("WAITING");
-        text_height = 32;
+        text_height = 42;
 
         canvas = p5.createCanvas(div_width, div_height);
         canvas.parent('game');
