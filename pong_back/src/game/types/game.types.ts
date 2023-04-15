@@ -15,6 +15,16 @@ export class GameObstacle {
 	dir_y: number;
 };
 
+export class GameBall {
+	x: number;
+	y: number;
+
+	dir_x: number;
+	dir_y: number;
+
+	radius: number;
+};
+
 export class GameState {
 	ongoing: boolean;
 
@@ -38,7 +48,7 @@ export class GameState {
 
 	ball_pos_x: number;
 	ball_pos_y: number;
-
+	
 	ball_dir_x: number;
 	ball_dir_y: number;
 
@@ -119,6 +129,14 @@ export const defaultState: GameState = {
 	mode_speedup: false,
 	mode_shrink: false,
 	mode_chaos: false,
+};
+
+export const defaultBall: GameBall = {
+	x: 0,
+	y: 0,
+	dir_x: 0,
+	dir_y: 0,
+	radius: 0,
 };
 
 export class GameRoom {

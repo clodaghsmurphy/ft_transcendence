@@ -3,8 +3,8 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { GameCreateDto, GameKeyDto } from "./dto";
-import { GameKeyEvent, GameObstacle, GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed } from "./types/game.types";
-import { GameState } from "./types/game.types";
+import { GameKeyEvent, GameObstacle, GameRoom, KeyAction, KeyType, defaultBall, defaultState, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed } from "./types/game.types";
+import { GameState , GameBall} from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { use } from "passport";
 import { getNextRatings } from "./rating";
@@ -160,11 +160,18 @@ export class GameService {
 
 		this.movePaddles(state);
 		this.moveObstacles(state);
-		this.checkBallCollision(state);
-		this.checkGoal(state);
 
-		state.ball_pos_x += state.ball_dir_x;
-		state.ball_pos_y += state.ball_dir_y;
+		let ball: GameBall = {...defaultBall};
+
+		ball.x = state.ball_pos_x;
+		ball.y = state.ball_pos_y;
+		ball.dir_x = state.ball_dir_x;
+		ball.dir_y = state.ball_dir_y;
+		ball.radius = state.ball_radius / 2;
+		this.checkBallCollision(state, ball);
+
+		
+		this.checkGoal(state);
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
 		if (state.player1_goals >= state.winning_goals || state.player2_goals >= state.winning_goals) {
@@ -222,133 +229,217 @@ export class GameService {
 			var intersectionX = a1x + r * (a2x - a1x);
 			var intersectionY = a1y + r * (a2y - a1y);
 			return { x: intersectionX, y: intersectionY };
-		} else {
-			return { x: null, y: null };
 		}
+		return null;
 	}
 
-	intersectionRectangleBall(state: GameState, rectangle_x : number, player_pos: number, length: number, width: number)
+	getCollisionPoint(x1: number, y1: number, width1: number, height1: number, x2: number, y2: number, width2: number, height2: number, droite: boolean, haut: boolean): any | null {
+		const right1 = x1 + width1;
+		const bottom1 = y1 - height1;
+		const right2 = x2 + width2;
+		const bottom2 = y2 - height2;
+	  
+		console.log(x1, y1, width1, height1, x2, y2, width2, height2);
+
+		// Check for collision
+		if (x1 < right2 && right1 > x2 && y1 < bottom2 && bottom1 > y2) {
+			// Rectangles collide
+			if (haut && droite) // envoie bas gauche
+				return ({ x: x2, y: y2 });
+			else if (!haut && droite) // envoie haut gauche
+				return ({ x: x2, y: y2 + height2});
+			else if (haut && !droite) // envoie bas droit
+				return ({ x: x2 + width2, y: y2 });
+			else // envoie haut droit
+				return ({ x: x2 + width2, y: y2 + width2});
+		}
+		return null;
+	}
+
+	intersectionRectangleBall(ball: GameBall, rectangle_x : number, player_pos: number, length: number, width: number)
 	{
 		const half_length = length / 2;
-		const half_radius = state.ball_radius / 2;
+		const gauche = ball.dir_x < 0;
+		const haut = ball.dir_y < 0;
 
 		const rectangle = {
 			haut_gauche : {
 				x : rectangle_x,
-				y : player_pos - half_length,
+				y : player_pos + half_length,
 			},
 			haut_droit : {
 				x : rectangle_x + width,
-				y : player_pos - half_length,
+				y : player_pos + half_length,
 			},
 			bas_gauche : {
 				x : rectangle_x,
-				y : player_pos + half_length,
+				y : player_pos - half_length,
 			},
 			bas_droit : {
 				x : rectangle_x + width,
-				y : player_pos + half_length,
+				y : player_pos - half_length,
 			},
 		};
 
-		const next_ball_x = state.ball_pos_x + state.ball_dir_x;
-		const next_ball_y = state.ball_pos_y + state.ball_dir_y;
+		const next_ball_x = ball.x + ball.dir_x;
+		const next_ball_y = ball.y + ball.dir_y;
 
 		const ball_rectangle = [
 			{
-				x : next_ball_x - half_radius,
-				y : next_ball_y - half_radius,
+				x : next_ball_x - ball.radius,
+				y : next_ball_y - ball.radius,
+				x_current : ball.x - ball.radius,
+				y_current : ball.y - ball.radius,
 			},
 			{
-				x : next_ball_x + half_radius,
-				y : next_ball_y - half_radius,
+				x : next_ball_x + ball.radius,
+				y : next_ball_y - ball.radius,
+				x_current : ball.x + ball.radius,
+				y_current : ball.y - ball.radius,
 			},
 			{
-				x : next_ball_x - half_radius,
-				y : next_ball_y + half_radius,
+				x : next_ball_x + ball.radius,
+				y : next_ball_y + ball.radius,
+				x_current : ball.x + ball.radius,
+				y_current : ball.y + ball.radius,
 			},
 			{
-				x : next_ball_x + half_radius,
-				y : next_ball_y + half_radius,
+				x : next_ball_x - ball.radius,
+				y : next_ball_y + ball.radius,
+				x_current : ball.x - ball.radius,
+				y_current : ball.y + ball.radius,
 			},
 		]
 
+		
+		// var a = this.getCollisionPoint(next_ball_x - ball.radius, next_ball_y + ball.radius, ball.radius * 2, ball.radius * 2, rectangle.haut_gauche.x, rectangle.haut_gauche.y, width, length, !gauche, haut);
+		// if (a)
+		// {
+		// 	console.log("a = :", a);
+		// 	return (a);
+		// }
+		
 		var intersection;
-
-		for (const ball of ball_rectangle)
+		for (const ball_test of ball_rectangle)
 		{
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
-			if (intersection.x !== null && intersection.y !== null) {
+			intersection = this.intersectionSegment(ball_test.x_current, ball_test.y_current, ball_test.x, ball_test.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
+			if (intersection) {
 				return intersection;
 			}
 
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
-			if (intersection.x !== null && intersection.y !== null) {
+			intersection = this.intersectionSegment(ball_test.x_current, ball_test.y_current, ball_test.x, ball_test.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
+			if (intersection && !gauche) {
 				return intersection;
 			}
 
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
-			if (intersection.x !== null && intersection.y !== null) {
+			intersection = this.intersectionSegment(ball_test.x_current, ball_test.y_current, ball_test.x, ball_test.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
+			if (intersection && gauche) {
 				return intersection;
 			}
 
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
-			if (intersection.x !== null && intersection.y !== null) {
+			intersection = this.intersectionSegment(ball_test.x_current, ball_test.y_current, ball_test.x, ball_test.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
+			if (intersection) {
 				return intersection;
 			}
 		}
-
-		return null;
+		return (null);
 	}
 
-	checkBallCollision(state: GameState) {
-		const half_radius = state.ball_radius / 2;
+	getDistance(x1: number, y1: number, x2: number, y2: number): { deltaX: number, deltaY: number } {
+		const deltaX = Math.abs(x2 - x1);
+		const deltaY = Math.abs(y2 - y1);
+		return { deltaX, deltaY };
+	}
 
+	callibrage_ball_after_impact(ball: GameBall, state: GameState, vertical_hit: boolean, hit: any) {
+		const dist = this.getDistance(ball.x, ball.y, hit.x, hit.y);
+		ball.dir_x = dist.deltaX;
+		if (vertical_hit)
+		{
+			const distance_x = Math.abs(hit.x - state.ball_pos_x);
+			const droite = state.ball_dir_x > 0;
+			if (droite)
+			{
+				state.ball_dir_x = -state.ball_speed;
+				state.ball_pos_x += 2 * distance_x;
+				ball.x = hit.x - 1;
+				ball.y = hit.y;
+			}
+			else
+			{
+				state.ball_dir_x = state.ball_speed;
+				state.ball_pos_x -= 2 * distance_x;
+				ball.x = hit.x + 1;
+				ball.y = hit.y;
+			}
+			state.ball_dir_x *= -1;
+		}
+		else // pas encore utilise
+		{
+			const distance_y = Math.abs(hit.y - state.ball_pos_y);
+			const haut = state.ball_dir_y > 0;
+			if (haut)
+				state.ball_pos_y += 2 * distance_y;
+			else
+				state.ball_pos_y -= 2 * distance_y;
+			state.ball_dir_y *= -1;
+		}
+	}
+
+	checkBallCollision(state: GameState, ball: GameBall) {
+		const next_ball_y = ball.y + ball.dir_y;
+		const next_ball_x = ball.x + ball.dir_x;
+		
 		// Vérifie si la balle a atteint un bord de l'ecran et la fait rebondir si c'est le cas
-		const next_ball_y = state.ball_pos_y + state.ball_dir_y;
-
-		if (next_ball_y - half_radius <= 0 && state.ball_dir_y < 0) {
-			state.ball_pos_y = half_radius;
-			state.ball_dir_y *= -1;
-			return ;
+		if (next_ball_y - ball.radius <= 0 && ball.dir_y < 0) {
+			ball.y = ball.radius;
+			ball.dir_y *= -1;
+			return (this.checkBallCollision(state, ball));
 		}
-		if (next_ball_y + half_radius >= state.height && state.ball_dir_y > 0) {
-			state.ball_pos_y = state.height - half_radius;
-			state.ball_dir_y *= -1;
-			return ;
+		if (next_ball_y + ball.radius >= state.height && ball.dir_y > 0) {
+			ball.y = state.height - ball.radius;
+			ball.dir_y *= -1;
+			return (this.checkBallCollision(state, ball));
 		}
-
 
 		// Position and length of object that interesect
 		let intersect_pos = state.player1_pos;
 		let intersect_length = state.racket_length;
+		// let intersect_width = state.racket_width;
 
 		// Get intersection coord with player1 or player2
-		let intersection = this.intersectionRectangleBall(state, state.racket_shift, state.player1_pos,
+		console.log("check player1");
+		let intersection = this.intersectionRectangleBall(ball, state.racket_shift, state.player1_pos,
 								state.racket_length, state.racket_width);
 		if (intersection === null) {
 			intersect_pos = state.player2_pos;
-
-			intersection = this.intersectionRectangleBall(state, state.width - state.racket_shift - state.racket_width,
+			console.log("check player2");
+			intersection = this.intersectionRectangleBall(ball, state.width - state.racket_shift - state.racket_width,
 								state.player2_pos, state.racket_length, state.racket_width);
 			if (intersection === null) {
-
 				for (const obstacle of state.obstacles) {
-					intersection = this.intersectionRectangleBall(state, obstacle.pos_x - obstacle.width / 2,
+						console.log("check obstacle");
+						intersection = this.intersectionRectangleBall(ball, obstacle.pos_x - obstacle.width / 2,
 										obstacle.pos_y, obstacle.length, obstacle.width);
 
 					if (intersection !== null) {
 						intersect_pos = obstacle.pos_y;
 						intersect_length = obstacle.length;
+						// intersect_width = obstacle.width;
 						break ;
 					}
 				}
 
-				if (intersection === null) {
+				if (intersection === null) { // no hit
+					// avancer ball 
+					state.ball_pos_x = ball.x + ball.dir_x;
+					state.ball_pos_y = ball.y + ball.dir_y;
 					return ;
 				}
 			}
 		}
+
+		console.log("hit : ", intersection);
 
 		// Increments speed on gamemode
 		if (state.mode_speedup) {
@@ -361,7 +452,7 @@ export class GameService {
 		}
 
 		// Calcule la position relative de la balle par rapport à l'objet intersecte
-		const relativePos = (state.ball_pos_y - intersect_pos) / intersect_length;
+		const relativePos = (ball.y - intersect_pos) / intersect_length;
 
 
 		// Calcule le ratio en fonction de la position relative
@@ -371,43 +462,43 @@ export class GameService {
 
 		// Modifie la direction de la balle en fonction du ratio
 		state.ball_dir_y = state.ball_speed * (clampedRatio / 100);
-
+		
 		// Facteur de vitesse entre 1 et 2 en fonction du ratio
 		const speedFactor = 1 + (Math.abs(clampedRatio) / 100);
 		state.ball_dir_y *= speedFactor;
-
+		ball.dir_y = state.ball_dir_y;
 		// Repositionner la balle pour bon renvoi.
-		const distance_x = Math.abs(intersection.x - state.ball_pos_x);
 
-		if (state.ball_dir_x < 0) { // vers la gauche
-			state.ball_dir_x = state.ball_speed;
-			state.ball_pos_x -= distance_x;
-		} else { // vers la droite
-			state.ball_dir_x = -state.ball_speed;
-			state.ball_pos_x += distance_x;
-		}
+
+		this.callibrage_ball_after_impact(ball, state, true, intersection)
+
+		console.log(state);
+		return (this.checkBallCollision(state, ball));
 
 	}
 
 	checkGoal(state: GameState) {
 		let goal: boolean = false;
-		const half_radius: number = state.ball_radius / 2;
 
 		// Vérifie si la balle est passée la raquette de joueur1 et incrémente les points de joueur2 si c'est le cas
-		if (state.ball_pos_x - half_radius < 0) {
+		if (state.ball_pos_x - state.ball_radius < 0) {
 			state.player2_goals++;
 			goal = true;
 		}
 
 		// Vérifie si la balle est passée la raquette de joueur2 et incrémente les points de joueur1 si c'est le cas
-		if (state.ball_pos_x + half_radius > state.width) {
+		if (state.ball_pos_x + state.ball_radius > state.width) {
 			state.player1_goals++;
 			goal = true;
 		}
 
 		// Reset the game state
 		if (goal) {
+			const player1 = state.player1_pos;
+			const player2 = state.player2_pos;
 			this.initState(state);
+			state.player1_pos = player1;
+			state.player2_pos = player2;
 		}
 	}
 
