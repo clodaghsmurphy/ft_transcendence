@@ -36,10 +36,7 @@ export default function BrowseGames() {
 								})
 							}
 							else {
-								u2 = {
-									name: 'Unknown',
-									avatar: unknown_icon,
-								} as User
+								tmp.push(browse_button(game, u1, undefined))
 							}
 						})
 
@@ -54,7 +51,7 @@ export default function BrowseGames() {
 
 	return (
 		<div>
-			{GamesBlocks.length ? GamesBlocks : <div className='no-game-browse'>No games</div>}
+			{GamesBlocks.length !== 0 ? GamesBlocks : <div className='no-game-browse'>No games</div>}
 		</div>
 )
 }

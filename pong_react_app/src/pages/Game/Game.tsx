@@ -54,6 +54,8 @@ socket_game.on('disconnect', () => {
 	console.log('DISCONNECTED!!!!!!!!!')
 })
 
+socket_game.on('start', (a: any) => console.log(a))
+
 function Game(game_id: number | null) {
 
 	const [isJoined, setIsJoined] = useState(false);
