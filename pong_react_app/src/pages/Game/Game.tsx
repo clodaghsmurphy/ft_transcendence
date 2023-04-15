@@ -27,7 +27,7 @@ export enum GameMap {
 
 export type GamePost = {
 	user_id: number,
-	target_id: number,
+	target_id?: number,
 	racket_length: number,
 	racket_speed: number,
 	ball_initial_radius: number,
@@ -60,20 +60,22 @@ function Game(game_id: number | null) {
 	const { state, dispatch } = useContext(AuthContext);
 	const [data, setData] = useState(null);
 	const [is_finished, set_finished] = useState(false)
-	
+
 	useEffect(() => {
 		if (game_id) {
-			
+
 			const join_dto = {
 				user_id: state.user.id,
-				target_id: 4,
+				// target_id: 4,
 				id: game_id,
 			};
+
+			console.log(join_dto)
 
 			socket_game.emit('join', join_dto);
 		}
 	}, [game_id])
-	
+
 	socket_game.on('update', (dto) => {
 		setData(dto);
 	});
@@ -90,7 +92,6 @@ function Game(game_id: number | null) {
 
 	useEffect(() => {
 		let isKeyPressed = false;
-		
 		const handleKeyEvent = (event: KeyboardEvent, action: string) => {
 			let keyEvent = {
 				action: action,

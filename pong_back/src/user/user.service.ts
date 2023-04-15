@@ -110,15 +110,15 @@ export class UserService {
 		}
 	}
 
-	verifyName  (name: string) {
-    var regex = new RegExp("^[a-zA-Z0-9.]*$");
+	verifyName(name: string) {
+    var regex = new RegExp("^[a-zA-Z0-9._-]*$");
 	console.log(name);
     if (!regex.test(name)) {
-        // throw new HttpException({
-        //     status: HttpStatus.BAD_REQUEST,
-        //     error: `user name must not contain special characters`,
-        // }, HttpStatus.BAD_REQUEST);
-   	 }
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: `user name must not contain special characters`,
+			}, HttpStatus.BAD_REQUEST);
+   	 	}
 	}
 
 	async update(dto: UserUpdateDto) {
@@ -130,8 +130,6 @@ export class UserService {
 		});
 		return this.returnInfo(user);
 	}
-
-	
 
 	// This should only be called by channel service
 	// Therefore it assumes user and channel both exists
@@ -186,8 +184,8 @@ export class UserService {
 		return user_array;
 	}
 
-	async getUsers( usr: User) {
-		const exclude:number[] = usr.friend_users.concat(usr.blocked_users) ;
+	async getUsers(user: User) {
+		const exclude:number[] = user.friend_users.concat(user.blocked_users) ;
 
 		const result = await this.prisma.user.findMany({
 			select: {
@@ -201,7 +199,7 @@ export class UserService {
 				},
 				NOT: {
 					id: {
-						equals:usr.id,
+						equals:user.id,
 					}
 				},
 

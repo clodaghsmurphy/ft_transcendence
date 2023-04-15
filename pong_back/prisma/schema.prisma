@@ -89,7 +89,7 @@ model Game {
   ongoing Boolean @default(true)
 
   player1 Int
-  player2 Int
+  player2 Int?
 
   player1_goals Int?
   player2_goals Int?

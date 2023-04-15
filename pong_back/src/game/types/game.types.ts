@@ -62,13 +62,13 @@ export class GameState {
 };
 
 export const min_racket_length = 30;
-export const max_racket_length = 400;
+export const max_racket_length = 150;
 
 export const min_racket_speed = 10;
 export const max_racket_speed = 50;
 
 export const min_ball_radius = 5;
-export const max_ball_radius = 100;
+export const max_ball_radius = 50;
 
 export const min_ball_speed = 10;
 export const max_ball_speed = 30;

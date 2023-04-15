@@ -31,16 +31,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: GameJoinDto, @ConnectedSocket() client: Socket) {
-		await this.gameService.checkUserInGame(dto.user_id, dto.id);
-
 		client.join('' + dto.id);
 		this.io.in('' + dto.id).emit('join', dto);
 
-		// Starting as soon as one player joined for testing purposes
-		// if (this.io.adapter.rooms.get('' + dto.id).size === 2) {
-		this.io.in('' + dto.id).emit('gamestart');
-		this.gameService.startGame(dto.id, this.io);
-		// }
+		if (this.gameService.readyToStart(dto.id)) {
+			this.io.in('' + dto.id).emit('gamestart');
+			this.gameService.startGame(dto.id, this.io);
+		}
 	}
 
 	@SubscribeMessage('keyEvent')
