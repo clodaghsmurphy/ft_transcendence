@@ -68,7 +68,8 @@ export class GameService {
 
 	async createSoloGame(dto) {
 		for (const [gameId, gameRoom] of this.activeGames.entries()) {
-			if (deepEqual(gameRoom.state, dto.state) && gameRoom.player2_id === -1) {
+			if (gameRoom.player2_id === -1 &&
+				((gameRoom.state.mode_chaos && dto.state.mode_chaos) || deepEqual(gameRoom.state, dto.state))) {
 				return await this.joinAsPlayer2(gameRoom, dto.user_id);
 			}
 		}
