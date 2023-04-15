@@ -33,6 +33,15 @@ function NavBar()
         localStorage.clear();
     }
 
+	const params = new URLSearchParams(window.location.search)
+	let home_with_id = false
+
+	console.log(params.get('id'), window.location.pathname)
+
+	if (window.location.pathname === '/game' && params.get('id') !== null)
+		home_with_id = true
+	
+	console.log(home_with_id)
     return (
         <header >
     <nav className="nav-bar" ref={navRef}>
@@ -40,7 +49,15 @@ function NavBar()
             <img src={logo} />
         </div>
         <ul className="nav-list" ref={navLink}>
-            <Link to="/game" className='navlink'>Home</Link>
+            {	home_with_id ?
+					<div className='navlink'
+						onClick={
+							() => window.location.replace(`http://${window.location.host}/game`)
+						}>
+							Home
+						</div> :
+						<Link to="/game" className='navlink'>Home</Link>
+			}
             <Link to="/stats" className='navlink' >Stats</Link>
             <Link to="/chat" className='navlink'>Chat</Link>
             <li className='navlink-logout' onClick={ handleLogout}>Logout</li>
