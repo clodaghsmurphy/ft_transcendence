@@ -23,7 +23,7 @@ export class AuthService {
                 sub: user.id
             };
             if (!user.otp_enabled ) {
-                this.userService.update({...user, connected:true})
+                await this.userService.update({...user, connected:true})
             }
             return {
                 access_token: this.jwtService.sign(payload, {secret: process.env.JWT_TOKEN}),

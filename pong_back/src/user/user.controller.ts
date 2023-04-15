@@ -50,8 +50,9 @@ export class UserController {
 
 	@Post('update')
 	@UseGuards(JwtAuthGuard)
-	updateUser(@Body() dto: UserUpdateDto) {
-		return this.userService.update(dto);
+	async updateUser(@Body() dto: UserUpdateDto) {
+		const user = await this.userService.update(dto);
+		return user;
 	}
 
 	@Post('upload')

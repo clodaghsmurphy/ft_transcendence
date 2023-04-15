@@ -47,25 +47,21 @@ export class AuthController {
 
     @Get('42/redirect')
     @UseGuards(FT_AuthGuard)
-    handleRedirect(@Req() req, @Res() res, @UserEntity() user){
-        const token =  this.authService.login(res, user);
-        if (user.otp_enabled && !user.otp_verified)
-        {
-            token.then(token => {
-                res.redirect(`http://${process.env.HOSTNAME}:8080/2fa?access_token=${token.access_token}`)
-            });
+    async handleRedirect(@Req() req, @Res() res, @UserEntity() user){
+        const token = await this.authService.login(res, user);
+        if (user.otp_enabled && !user.otp_verified) {
+            res.redirect(`http://${process.env.HOSTNAME}:8080/2fa?access_token=${token.access_token}`)
             return ;
         }
-        
-        token.then(token => {
-            res.redirect(`http://${process.env.HOSTNAME}:8080/login?access_token=${token.access_token}`)
-        });
-        return ;    }
+
+        res.redirect(`http://${process.env.HOSTNAME}:8080/login?access_token=${token.access_token}`)
+        return ;
+    }
 
     @Get('status')
     user(@Req() request: Request) {
         console.log(request);
-    
+
     }
 
     @UseGuards(JwtAuthGuard)
@@ -127,7 +123,7 @@ export class AuthController {
     @Post('auth2fa')
     @UseGuards(JwtAuthGuard)
     async authenticate2fa(@Request() request, @Body() body){
-      
+
         const token = body.value;
         const secret = request.user.otp_base32;
         console.log('token is ', token, ' and secret is ', secret);
@@ -138,7 +134,7 @@ export class AuthController {
                 where: {id: request.user.id},
                 data: { otp_verified: true, connected: true }
             });
-            return this.authService.login(request, updateUser);
+            return await this.authService.login(request, updateUser);
         }
             else
         {
@@ -159,6 +155,6 @@ export class AuthController {
         });
         return updateUser;
     }
- 
+
 }
 
