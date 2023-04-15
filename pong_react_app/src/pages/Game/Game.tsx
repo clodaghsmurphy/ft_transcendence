@@ -39,7 +39,7 @@ export type GamePost = {
 	game_map: GameMap,
 }
 
-let socket_game = io(`http://${window.location.hostname}:8080/game`,
+export let socket_game = io(`http://${window.location.hostname}:8080/game`,
 {
 	extraHeaders: {
 		Authorization: "Bearer " + localStorage.getItem('token')
