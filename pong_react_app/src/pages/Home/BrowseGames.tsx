@@ -21,7 +21,6 @@ export default function BrowseGames() {
 			.then((response: AxiosResponse) => {
 				data = response.data as GameType[]
 
-				console.log(data)
 				for (const game of data) {
 					let u1: User = {} as User
 					let u2: User = {} as User
