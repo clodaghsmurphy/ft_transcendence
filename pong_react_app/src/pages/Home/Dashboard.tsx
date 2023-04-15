@@ -53,7 +53,6 @@ function Dashboard()
 	useEffect(() => {
 		document.title = 'Home'
 
-		console.log('test!!', params.get("id"))
 		if (game_id) {
 		}
 

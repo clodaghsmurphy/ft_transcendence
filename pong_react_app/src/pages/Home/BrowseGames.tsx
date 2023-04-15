@@ -21,8 +21,6 @@ export default function BrowseGames() {
 			.then((response: AxiosResponse) => {
 				data = response.data as GameType[]
 
-				console.log(data)
-
 				for (const game of data) {
 					let u1: User = {} as User
 					let u2: User = {} as User
@@ -48,7 +46,7 @@ export default function BrowseGames() {
 
 	return (
 		<div>
-			{GamesBlocks.length ? GamesBlocks : <div>No games</div>}
+			{GamesBlocks.length ? GamesBlocks : <div className='no-game-browse'>No games</div>}
 		</div>
 )
 }

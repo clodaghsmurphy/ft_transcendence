@@ -242,3 +242,12 @@
 	border-radius: 50%;
 	aspect-ratio: 1 / 1;
 }
+
+.no-game-browse {
+	margin-top: 20px;
+	margin-bottom: auto;
+
+	color: #7377dd;
+	font-size: 1.5rem;
+	text-align: center;
+}
