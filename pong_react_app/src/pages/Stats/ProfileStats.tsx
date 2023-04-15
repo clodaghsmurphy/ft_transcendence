@@ -28,8 +28,8 @@ function ProfileStats(props: Props) {
 		try {
 			const result: AxiosResponse = await axios.post('/api/achievements/stats', {id: props.id})
 			setStats(result.data);
-			setWins((result.data.wins / 100) * result.data.total_games);
-			setLoss(((result.data.wins - result.data.total_games) / 100) * result.data.total_games);
+			setWins((result.data.wins / result.data.total_games) * 100);
+			setLoss(((result.data.total_games - result.data.wins) / result.data.total_games) * 100);
 		}
 		catch(error) {
 			console.log(error);
