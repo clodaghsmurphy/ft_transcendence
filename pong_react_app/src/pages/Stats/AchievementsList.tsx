@@ -29,7 +29,7 @@ function AchievementList(props: Props) {
                                 <div className="achievement-title">{ach.title}</div>
                                 <div className="achievement-info">
                                     <div className='ach-description'>{ach.description}</div>
-                                    <div >{`${ach.score} / ${ach.cap}`}</div>
+                                <div >{`${ach.score} / ${ach.cap}`}</div>
                                 </div>
                             </div>
                         </div>

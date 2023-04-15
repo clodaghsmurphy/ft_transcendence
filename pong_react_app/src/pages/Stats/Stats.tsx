@@ -14,7 +14,7 @@ import ProfileStats from "./ProfileStats";
 import Image from "../Components/Image";
 import { ActionKind } from "../../store/reducer"
 import axios from 'axios'
-
+import { ToastContainer, toast } from 'react-toastify';
 import Friends from "./Friends";
 import GameHistory from "./GameHistory";
 
@@ -64,6 +64,7 @@ function Stats(props:Props)
 			<>
 			<Suspense>
 				<NavBar />
+				< ToastContainer theme="colored" />
 				{error && <div className='error-bar'>{error}</div> }
 			<div className="stats-page">
 				<div className="stats">

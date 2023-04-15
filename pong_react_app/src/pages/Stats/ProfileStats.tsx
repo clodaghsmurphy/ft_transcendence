@@ -6,6 +6,7 @@ type Stats = {
 	wins : number,
   	total_games: number,
   	lvl: number,
+	rating: number,
 }
 
 type Props = {
@@ -16,6 +17,7 @@ const StatsDefault: Stats = {
 	wins: 0,
 	total_games: 0,
 	lvl: 0,
+	rating: 0
 }
 
 function ProfileStats(props: Props) {
@@ -26,10 +28,12 @@ function ProfileStats(props: Props) {
 
 	const getStats = async () => {
 		try {
-			const result: AxiosResponse = await axios.post('/api/achievemeplug invite from friend listnts/stats', {id: props.id})
+			const result: AxiosResponse = await axios.post('/api/achievements/stats', {id: props.id})
 			setStats(result.data);
-			setWins((result.data.wins / result.data.total_games) * 100);
-			setLoss(((result.data.total_games - result.data.wins) / result.data.total_games) * 100);
+			console.log(result.data)
+			const zeroProtect: boolean = result.data.total_games === 0 && result.data.wins === 0;
+			setWins(result.data.total_games === 0 ? 0 : Math.floor((result.data.wins / result.data.total_games) * 100));
+			setLoss(zeroProtect ? 0 : Math.floor(((result.data.total_games - result.data.wins) / result.data.total_games) * 100));
 		}
 		catch(error) {
 			console.log(error);
@@ -41,32 +45,24 @@ function ProfileStats(props: Props) {
 	return (
 		<ul className="profile-game-stats">
 			<li>
-				<span style={{
-					color: "#7070a5",
-					fontSize: '.8em'
-				}} >Total games</span>
+				<span  className="span-title">Total games</span>
 				<span>{stats.total_games}</span>
 			</li>
 			<li>
-				<span style={{
-					color: "#7070a5",
-					fontSize: '.8em'
-				}}>Wins</span>
+				<span className="span-title">Wins</span>
 				<span>{`${wins}%`}</span>
 			</li>
 			<li>
-				<span style={{
-					color: "#7070a5",
-					fontSize: '.8em'
-				}}>Loss</span>
+				<span className="span-title">Loss</span>
 				<span>{`${loss}%`}</span>
 			</li>
 			<li>
-				<span style={{
-					color: "#7070a5",
-					fontSize: '.8em'
-				}}>Lvl</span>
+				<span className="span-title" >Lvl</span>
 				<span>{stats.lvl}</span>
+			</li>
+			<li>
+				<span className="span-title">Rating</span>
+				<span>{stats.rating}</span>
 			</li>
 		</ul>
 	)

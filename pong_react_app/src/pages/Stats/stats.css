@@ -128,8 +128,14 @@
 	
 }
 
-.profile-game-stats span{
-	font-size: .7em;
+.profile-game-stats span {
+	font-size: .75em;
+	color: white;
+	overflow: visible;
+}
+
+.span-title {
+	color: #7070a5!important;
 }
 
 .sub-stats
