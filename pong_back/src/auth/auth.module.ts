@@ -6,6 +6,7 @@ import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { Ft_Strategy } from './utils/42.strategy';
 import { JwtStrategy } from './utils/jwt.strategy';
+import { Jwt2faStrategy } from './utils/jwt2fa.strategy';
 import { SessionSerializer } from './session.serializer';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
@@ -13,7 +14,7 @@ import { jwtConstants } from './constants';
 
 @Module({
     controllers: [AuthController],
-    providers: [AuthService, Ft_Strategy, SessionSerializer, JwtStrategy, JwtService],
+    providers: [AuthService, Ft_Strategy, SessionSerializer, JwtStrategy, Jwt2faStrategy, JwtService],
     imports: [UserModule,
     PassportModule, JwtModule.register(
         {

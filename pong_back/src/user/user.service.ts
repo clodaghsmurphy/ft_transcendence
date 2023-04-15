@@ -259,7 +259,7 @@ export class UserService {
 	}
 
 	returnInfo(user: User) {
-		let updatedUser: any = user;
+		let updatedUser: User = { ...user };
 
 		updatedUser.otp_auth_url = (user.otp_auth_url === null ? 'false' : 'true');
 		updatedUser.otp_base32 = (user.otp_base32 === null ? 'false' : 'true');
