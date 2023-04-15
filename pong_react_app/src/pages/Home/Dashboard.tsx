@@ -20,8 +20,10 @@ export type GameType = {
 	ongoing: boolean,
 	player1: number,
 	player1_goals: number | null,
+	player1_rating_change: number | null,
 	player2: number,
 	player2_goals: number | null,
+	player2_rating_change: number | null,
 	winner: number | null
 }
 

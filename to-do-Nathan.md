@@ -1,48 +1,15 @@
-# Chat
-
 - [ ] Invite
-  - [x] CSS
+  - [ ] CSS (a mettre dans DM (et peut etre Chan))
   - [ ] emit
+- [ ] Spectate
+- [ ] Game duo
+- [ ] Ecran de debut
+- [ ] Ecrand de fin
+- [ ] Bouton pour revenir sur game a la fin de la game
+- [ ] Virer les trucs de game quand on joue
+- [ ] Faire le all time record en bas de game
+- [ ] Forbidden ressource dans le chat (surement JWT)
+- [ ] Faire en sorte qu'aucune page ne puisse se load si on est
+		a moitie connecte (IsLoggedIn = true && user.id = -1)
 
-- [x] quand kicked -> enlever le truc a gauche
-- [x] Leave un chan ne leave pas la room (socket)
-- [x] creavtion d'un channel '<div />' marche pas
-- [x] GERER LES ERREURS lol
-- [x] Channel avec un nom avec que des whitespaces
-- [x] Ne pas creer de dm avec qqun avec qui on a deja un dm
-- [x] changer le header si c'est un DM
-- [x] trop de users a droite -> pas de mute (?)
-- [x] create -> pas de users a droite
-- [x] on('message') pour les DMs
-- [x] 72% popup user au lieu de 80%
-- [x] JWT token refresh socket quand il change
-- [x] CSS -> is_public popupcreate channel
-- [x] join -> Mauvais mot de passe donne une case vide qui cree des 404
-- [x] Leave tous les groupes -> remet des groupes (wtf?)
-- [x] Create -> password pas pris en compte
-- [x] Browse channels
-  - [x] emit
-  - [x] CSS
-  - [x] add to chanOfUser
-- [x] Choose the mute duration
-- [x] Is-public channel creation working
-- [x] Change the password if we are channel owner
-  - [x] CSS
-  - [x] emit
-- [x] Leave a channel
-  - [x] CSS -> Remove the "group message" button of the left channel
-  - [x] POST
-- [x] Leave a room (socket)
-- [x] Messages rendered even if there was no messages on the channel
-- [x] Kick
-- [x] Ban
-- [x] Mute
-  - [x] CSS
-  - [x] emit
-
-#Bugs
-
-- [ ] faire render un message clear mon mesasge (vais-je vraiment le fix?)
-- [ ] messages 'vides' avec que des whites spaces ? (dans le back)
-- [x] setChanOfUser dans refresh
-- [x] messages trop grands -> CSS buggued
+- [x] Browse
