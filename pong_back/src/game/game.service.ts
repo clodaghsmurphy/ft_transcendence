@@ -56,6 +56,8 @@ export class GameService {
 		room.id = game.id;
 		room.player1_id = dto.user_id;
 		room.player2_id = dto.target_id;
+		room.player1_ready = false;
+		room.player2_ready = false;
 		room.state = {...dto.state};
 
 		this.activeGames.set(game.id, room);
@@ -75,8 +77,6 @@ export class GameService {
 				});
 
 				return game;
-			} else {
-				console.log(`Not equal:\n${JSON.stringify(dto.state)}\n${JSON.stringify(gameRoom.state)}`);
 			}
 		}
 
@@ -96,10 +96,23 @@ export class GameService {
 		room.id = game.id;
 		room.player1_id = dto.user_id;
 		room.player2_id = -1;
+		room.player1_ready = false;
+		room.player2_ready = false;
 		room.state = {...dto.state};
 
 		this.activeGames.set(game.id, room);
 		return game;
+	}
+
+	async join(dto, userId: number) {
+		await this.checkActiveGame(dto.id);
+
+		const room: GameRoom = this.activeGames.get(dto.id);
+		if (room.player1_id === userId) {
+			room.player1_ready = true;
+		} else if (room.player2_id === userId) {
+			room.player2_ready = true;
+		}
 	}
 
 	async remove(id: number) {
@@ -209,13 +222,14 @@ export class GameService {
 		this.checkActiveGame(gameId);
 
 		const room: GameRoom = this.activeGames.get(gameId);
-		return (room.player2_id !== -1);
+		return (room.player2_id !== -1 && room.player1_ready && room.player2_ready);
 	}
 
 	startGame(gameId: number, io: Namespace) {
 		this.checkActiveGame(gameId);
 
 		const room: GameRoom = this.activeGames.get(gameId);
+		io.in('' + gameId).emit('gamestart', room);
 		this.initState(room.state);
 
 		const intervalId = setInterval(async () => {
