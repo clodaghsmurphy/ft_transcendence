@@ -39,9 +39,12 @@ export class GameController {
 
 		const data = {
 			user_id: request.user.id,
-			target_id: dto.target_id,
 			state: state
 		};
+
+		if (dto.hasOwnProperty('target_id')) {
+			data['target_id'] = dto.target_id;
+		}
 		return await this.gameService.create(data);
 	}
 

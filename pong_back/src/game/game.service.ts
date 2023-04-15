@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { GameCreateDto, GameKeyDto } from "./dto";
 import { GameKeyEvent, GameObstacle, GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed } from "./types/game.types";
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
-import { use } from "passport";
 import { getNextRatings } from "./rating";
+import * as deepEqual from 'deep-equal';
 
 @Injectable()
 export class GameService {
@@ -32,6 +31,10 @@ export class GameService {
 
 	async create(dto) {
 		await this.checkUserNotInGame(dto.user_id);
+
+		if (!dto.hasOwnProperty('target_id')) {
+			return await this.createSoloGame(dto);
+		}
 		await this.checkUserNotInGame(dto.target_id);
 
 		const game = await this.prisma.game.create({
@@ -60,6 +63,46 @@ export class GameService {
 		return game;
 	}
 
+	async createSoloGame(dto) {
+		console.log(`In solo game\ndto: ${JSON.stringify(dto)}`);
+		for (const [gameId, gameRoom] of this.activeGames.entries()) {
+			if (deepEqual(gameRoom.state, dto.state) && gameRoom.player2_id === -1) {
+				gameRoom.player2_id = dto.user_id;
+
+				const game = await this.prisma.game.update({
+					where: {id: gameId},
+					data: {
+						player2: dto.user_id,
+					}
+				});
+
+				return game;
+			}
+		}
+
+		const game = await this.prisma.game.create({
+			data: {player1: dto.user_id}
+		});
+
+		await this.prisma.user.update({
+			where: {id: dto.user_id},
+			data: {
+				in_game: true,
+				game_id: game.id
+			}
+		});
+
+		const room = new GameRoom();
+		room.id = game.id;
+		room.player1_id = dto.user_id;
+		room.player2_id = -1;
+		room.state = {...dto.state};
+		this.initState(room.state);
+
+		this.activeGames.set(game.id, room);
+		return game;
+	}
+
 	async remove(id: number) {
 		await this.checkGame(id);
 
@@ -70,8 +113,16 @@ export class GameService {
 				where: {id: id}
 			});
 
+			let users;
+
+			if (game.player2 !== null) {
+				users = [game.player1, game.player2];
+			} else {
+				users = [game.player1];
+			}
+
 			await this.prisma.user.updateMany({
-				where: {id: {in: [game.player1, game.player2]}},
+				where: {id: {in: users}},
 				data: {
 					game_id: null,
 					in_game: false,
@@ -153,6 +204,13 @@ export class GameService {
 		});
 
 		return game;
+	}
+
+	readyToStart(gameId: number) {
+		this.checkActiveGame(gameId);
+
+		const room: GameRoom = this.activeGames.get(gameId);
+		return (room.player2_id !== -1);
 	}
 
 	startGame(gameId: number, io: Namespace) {

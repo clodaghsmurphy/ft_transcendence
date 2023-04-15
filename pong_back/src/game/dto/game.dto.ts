@@ -4,7 +4,7 @@ import { GameKeyEvent, max_ball_radius, max_ball_speed, max_racket_length, max_r
 import { GameMap } from "../types/games.maps";
 
 export class GameCreateDto {
-	// Temporary measure before matchmaking/invites are implemented
+	@IsOptional()
 	@IsNotEmpty()
 	@IsNumber()
 	target_id: number;
