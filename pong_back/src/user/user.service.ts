@@ -114,10 +114,10 @@ export class UserService {
     var regex = new RegExp("^[a-zA-Z0-9.]*$");
 	console.log(name);
     if (!regex.test(name)) {
-        throw new HttpException({
-            status: HttpStatus.BAD_REQUEST,
-            error: `user name must not contain special characters`,
-        }, HttpStatus.BAD_REQUEST);
+        // throw new HttpException({
+        //     status: HttpStatus.BAD_REQUEST,
+        //     error: `user name must not contain special characters`,
+        // }, HttpStatus.BAD_REQUEST);
    	 }
 	}
 
