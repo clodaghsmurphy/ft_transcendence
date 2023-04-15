@@ -55,8 +55,6 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 			})
 	}
 
-	console.log(settings.game_map)
-
 	return (
 	<div className='game-settings'>
 		<div className='container-settings'>
