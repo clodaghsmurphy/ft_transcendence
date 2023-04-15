@@ -16,6 +16,7 @@ import { handleBan, handleCreate, handleJoin, handleKick, handleMakeop, handleMe
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './ToastifyFix.css'
+import { ActionKind } from "../../store/reducer"
 
 export const CHANNEL	= false
 export const DM 		= true
@@ -50,44 +51,76 @@ function Chat()
 	useEffect(() => {
 		document.title = 'Chat';
 		
-		refresh_data({
-			all_channels,
-			setChanOfUser,
-			current_user,
-			set_all_channels,
-			set_all_users,
-			set_current_user,
-			set_dms,
-		}, user_id)
-		
-		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
-		{
-			extraHeaders: {
-				Authorization: "Bearer " + localStorage.getItem('token')
-			}
-		})
+		console.log(window.localStorage.getItem('isLoggedIn'), state.user.id)
 
-		socket_dm = io(`http://${window.location.hostname}:8080/dm`,
-		{
-			extraHeaders: {
-				Authorization: "Bearer " + localStorage.getItem('token')
-			}
-		})
 
-		socket_chan.emit('ping')
+		axios.get('/api/user/info/' + state.user.id)
+			.then(() => {
+				refresh_data({
+					all_channels,
+					setChanOfUser,
+					current_user,
+					set_all_channels,
+					set_all_users,
+					set_current_user,
+					set_dms,
+				}, user_id)
 
-		socket_chan.on('pong', () => {
-			console.log('pong received')
-		})
+			})
+			.catch(() => {
+				console.log('test')
+				axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
+					.then(() => {})
+					.catch((e:AxiosError) => {})
+				dispatch ({
+					type: ActionKind.Logout
+				});
+				localStorage.clear();
+			})
+			socket_chan = io(`http://${window.location.hostname}:8080/channel`,
+			{
+				extraHeaders: {
+					Authorization: "Bearer " + localStorage.getItem('token')
+				}
+			})
+	
+			socket_dm = io(`http://${window.location.hostname}:8080/dm`,
+			{
+				extraHeaders: {
+					Authorization: "Bearer " + localStorage.getItem('token')
+				}
+			})
+			
+	}, [state, dispatch])
 
-		socket_chan.on('exception', (data: any) => {
-			console.log('chan execption:', data)
-			toast.warn('chan: ' + data.error)
-		})
-		socket_dm.on('exception', (data: any) => {
-			toast.warn('dm: ' + data.error)
-		})
-	}, [])
+	useEffect(() => {
+		if (socket_chan !== undefined) {
+			socket_chan.removeListener('exception')
+			socket_chan.removeListener('pong')
+
+			socket_chan.emit('ping')
+
+			socket_chan.on('pong', () => {
+				console.log('pong received')
+			})
+			
+			socket_chan.on('exception', (data: any) => {
+				console.log('chan execption:', data)
+				toast.warn('chan: ' + data.error)
+			})
+		}
+	}, [socket_chan])
+
+	useEffect(() => {
+		if (socket_dm !== undefined) {
+			socket_dm.removeListener('exception')
+			
+			socket_dm.on('exception', (data: any) => {
+				console.log('dm execption:', data)
+				toast.warn('dm: ' + data.error)
+			})
+		}
+	}, [socket_dm])
 
 	useEffect(() => {
 		handleBan({all_channels, set_current_chan, 

@@ -24,7 +24,7 @@ function NavBar()
         navLink.current?.classList.toggle("nav-list-visible")
     }
 
-    const handleLogout = async() => {
+    const handleLogout = () => {
         axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
         .catch((e:AxiosError) => console.log(e))
         dispatch ({
@@ -36,12 +36,9 @@ function NavBar()
 	const params = new URLSearchParams(window.location.search)
 	let home_with_id = false
 
-	console.log(params.get('id'), window.location.pathname)
-
 	if (window.location.pathname === '/game' && params.get('id') !== null)
 		home_with_id = true
 	
-	console.log(home_with_id)
     return (
         <header >
     <nav className="nav-bar" ref={navRef}>

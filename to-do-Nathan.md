@@ -1,15 +1,20 @@
+- [ ] Bouton pour revenir sur game a la fin de la game
+- [ ] Virer les trucs de game quand on joue
+- [ ] Forbidden ressource dans le chat (surement JWT)
+- [ ] Ecran de debut
+
 - [ ] Invite
+  - dependence: Invite back
   - [ ] CSS (a mettre dans DM (et peut etre Chan))
   - [ ] emit
 - [ ] Game duo
-- [ ] Ecran de debut
+  - dependence: back
 - [ ] Ecran de fin
-- [ ] Bouton pour revenir sur game a la fin de la game
-- [ ] Virer les trucs de game quand on joue
+  - dependence: back event gameover renvoier des valeurs
 - [ ] Faire le all time record en bas de game
-- [ ] Forbidden ressource dans le chat (surement JWT)
-- [ ] Faire en sorte qu'aucune page ne puisse se load si on est
-		a moitie connecte (IsLoggedIn = true && user.id = -1)
+  - dependence: game history valide
 
+- [x] Faire en sorte qu'aucune page ne puisse se load si on est
+		a moitie connecte (IsLoggedIn = true && user.id = -1)
 - [x] Spectate
 - [x] Browse

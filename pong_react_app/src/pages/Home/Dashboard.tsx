@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import '../Chat/ToastifyFix.css'
 import Game, { GameMap, GamePost } from '../Game/Game';
 import Scores from './Scores';
+import { ActionKind } from "../../store/reducer"
 
 const params = new URLSearchParams(window.location.search)
 
@@ -52,6 +53,19 @@ function Dashboard()
 
 	useEffect(() => {
 		document.title = 'Home'
+
+		axios.get('/api/user/info/' + state.user.id)
+			.then(() => {})
+			.catch(() => {
+				console.log('test')
+				axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
+					.then(() => {})
+					.catch(() => {})
+				dispatch ({
+					type: ActionKind.Logout
+				});
+				localStorage.clear();
+			})
 
 		if (game_id) {
 		}
