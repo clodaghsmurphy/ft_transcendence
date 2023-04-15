@@ -70,7 +70,7 @@ export const max_racket_speed = 50;
 export const min_ball_radius = 5;
 export const max_ball_radius = 50;
 
-export const min_ball_speed = 10;
+export const min_ball_speed = 15;
 export const max_ball_speed = 30;
 
 export const min_winning_goals = 3;
