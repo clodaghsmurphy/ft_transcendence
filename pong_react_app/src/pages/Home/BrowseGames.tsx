@@ -49,8 +49,6 @@ export default function BrowseGames() {
 		
 	}, [])
 
-	console.log(GamesBlocks)
-
 	return (
 		<div>
 			{GamesBlocks.length !== 0 ? GamesBlocks : <div className='no-game-browse'>No games</div>}
