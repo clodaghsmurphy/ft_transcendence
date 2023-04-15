@@ -96,11 +96,11 @@ export class GameService {
 		return game;
 	}
 
-	async join(dto, userId: number) {
-		this.checkActiveGame(dto.id);
+	async join(gameId: number, userId: number) {
+		this.checkActiveGame(gameId);
 
-		const room: GameRoom = this.activeGames.get(dto.id);
-		if (room.player2_id === -1) {
+		const room: GameRoom = this.activeGames.get(gameId);
+		if (userId != room.player1_id && room.player2_id === -1) {
 			await this.joinAsPlayer2(room, userId);
 		}
 
