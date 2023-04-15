@@ -5,6 +5,7 @@ import NavBar from '../Components/NavBar'
 import '../Home/Dashboard.css'
 import { ReactP5Wrapper } from 'react-p5-wrapper'
 import sketch from './sketches/sketch'
+import waiting_sketch from './sketches/waiting'
 import { io, Socket } from 'socket.io-client';
 import './Game.css'
 import { AuthContext } from '../../App'
@@ -143,8 +144,8 @@ function Game(game_id: number | null) {
 	if (!isJoined) {
 		return (
 			<div className="dashboard">
-				<div>
-					<div style={{fontSize: '13rem'}}>Waiting...</div>
+				<div id="game" style={{position: 'relative', overflow: 'hidden'}}>
+					<ReactP5Wrapper sketch={waiting_sketch} ></ReactP5Wrapper>
 				</div>
 			</div>
 		);
