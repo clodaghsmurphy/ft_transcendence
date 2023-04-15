@@ -86,6 +86,7 @@ export class AuthController {
     async generate(@Req() req, @Res() res: Response)
     {
         const user = await this.userService.userExists(parseInt(req.user.id));
+        console.log(user);
         if (!user)
             throw new UnauthorizedException();
         const secret = await user.otp_base32 || authenticator.generateSecret();
@@ -137,7 +138,6 @@ export class AuthController {
 
         const token = body.value;
         const secret = request.user.otp_base32;
-        console.log('token is ', token, ' and secret is ', secret);
         const isValid = authenticator.verify({ token, secret});
             if (isValid == true)
             {

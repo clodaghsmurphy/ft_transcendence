@@ -26,7 +26,7 @@ function ProfileStats(props: Props) {
 
 	const getStats = async () => {
 		try {
-			const result: AxiosResponse = await axios.post('/api/achievements/stats', {id: props.id})
+			const result: AxiosResponse = await axios.post('/api/achievemeplug invite from friend listnts/stats', {id: props.id})
 			setStats(result.data);
 			setWins((result.data.wins / result.data.total_games) * 100);
 			setLoss(((result.data.total_games - result.data.wins) / result.data.total_games) * 100);

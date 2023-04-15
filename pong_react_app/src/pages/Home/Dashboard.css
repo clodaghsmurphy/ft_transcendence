@@ -207,14 +207,12 @@ header{
 		display: flex;
 		cursor: pointer;
 		justify-self: center;
-		margin: 0 2em;
 		letter-spacing: 0.2em;
 		width: 100%;
 		cursor: pointer;
 		list-style: none;
 		text-decoration: none;
 		color: white;
-		margin-top: 1.5rem;
 		font-size: calc(.3em + .8vw);
 		overflow: visible;
 		font-weight: 800;

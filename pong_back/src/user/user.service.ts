@@ -98,7 +98,7 @@ export class UserService {
 					userId: dto.id
 				}
 			})
-			return this.returnInfo(user);
+			return user;
 		} catch (e) {
 			if (e.code === 'P2002') {
 				throw new HttpException({
