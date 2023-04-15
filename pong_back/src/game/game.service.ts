@@ -532,8 +532,11 @@ export class GameService {
 			}
 		}
 
-		room.state.player1_dir = newDir;
-		room.state.player2_dir = newDir;
+		if (dto.user_id === room.player1_id) {
+			room.state.player1_dir = newDir;
+		} else {
+			room.state.player2_dir = newDir;
+		}
 	}
 
 	getRandomDirection(ballSpeed: number): [number, number] {
