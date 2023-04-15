@@ -3,7 +3,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Socket, Namespace, Server } from 'socket.io';
 import { BadRequestFilter } from "./game.filters";
 import { GameService } from "./game.service";
-import { JwtWsGuard } from "src/auth/utils/JwtWsGuard";
+import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 import { GameJoinDto, GameKeyDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())
@@ -32,10 +32,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: GameJoinDto, @ConnectedSocket() client: Socket) {
 		client.join('' + dto.id);
-		this.io.in('' + dto.id).emit('join', dto);
+		const room = await this.gameService.join(dto.id, dto.user_id);
 
+		this.io.in('' + dto.id).emit('join', room);
 		if (this.gameService.readyToStart(dto.id)) {
-			this.io.in('' + dto.id).emit('gamestart');
 			this.gameService.startGame(dto.id, this.io);
 		}
 	}

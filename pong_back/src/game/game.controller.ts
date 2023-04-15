@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { GameService } from "./game.service";
-import { GameCreateDto, GameParams, GameRemoveDto } from "./dto";
+import { GameCreateDto, GameJoinDto, GameParams, GameRemoveDto } from "./dto";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { GameState, defaultState } from "./types/game.types";
 import { game_maps } from "./types/games.maps";

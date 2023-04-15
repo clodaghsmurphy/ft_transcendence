@@ -127,6 +127,9 @@ export class GameRoom {
 	player1_id: number;
 	player2_id: number;
 
+	player1_ready: boolean;
+	player2_ready: boolean;
+
 	state: GameState;
 };
 
