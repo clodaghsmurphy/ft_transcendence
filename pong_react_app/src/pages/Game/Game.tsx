@@ -46,10 +46,6 @@ let socket_game = io(`http://${window.location.hostname}:8080/game`,
 	}
 })
 
-socket_game.on('connect', () => {
-	console.log('CONNECTED')
-})
-
 socket_game.on('exception', (data: any) => {
 	console.log('EXCEPTION !!!\n', data)
 })
@@ -76,7 +72,6 @@ function Game(game_id: number | null) {
 
 			console.log(join_dto)
 
-
 			socket_game.emit('join', join_dto);
 		}
 	}, [game_id])
@@ -97,9 +92,6 @@ function Game(game_id: number | null) {
 
 	useEffect(() => {
 		let isKeyPressed = false;
-
-		console.log('CHANGEMENT DE GAME_ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-
 		const handleKeyEvent = (event: KeyboardEvent, action: string) => {
 			let keyEvent = {
 				action: action,

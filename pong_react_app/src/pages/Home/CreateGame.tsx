@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './CreateGame.css'
 import GameSettings from './GameSettings';
 import { GamePost } from '../Game/Game';
+import BrowseGames from './BrowseGames';
 
 const CREATE = 1;
 const BROWSE = 2;
@@ -12,7 +13,7 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 	let [window, setWindow] = useState(CREATE)
 	const is_create = window === CREATE
 	const SettingsBlock = GameSettings(settings, default_settings, setSettings, set_game_id)
-	const BrowsingBlock = <div />
+	const BrowsingBlock = BrowseGames()
 
 	function changeWindow(win: number) {
 		if (window != win) {

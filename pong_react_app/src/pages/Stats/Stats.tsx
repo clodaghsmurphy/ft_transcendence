@@ -13,6 +13,7 @@ import ChangePhoto from "./ChangePhoto";
 import ProfileStats from "./ProfileStats";
 import Image from "../Components/Image";
 import { ActionKind } from "../../store/reducer"
+import axios from 'axios'
 
 import Friends from "./Friends";
 import GameHistory from "./GameHistory";
@@ -36,8 +37,20 @@ function Stats(props:Props)
 				type:ActionKind.errorUpdate,
 				payload: null
 			})
-		
 		}
+		
+		axios.get('/api/user/info/' + state.user.id)
+		.then(() => {})
+		.catch(() => {
+			console.log('test')
+			axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
+				.then(() => {})
+				.catch(() => {})
+			dispatch ({
+				type: ActionKind.Logout
+			});
+			localStorage.clear();
+		})
 	}, []);
 
 	

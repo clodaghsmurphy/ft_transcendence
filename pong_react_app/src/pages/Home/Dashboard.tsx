@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import '../Chat/ToastifyFix.css'
 import Game, { GameMap, GamePost } from '../Game/Game';
 import Scores from './Scores';
+import { ActionKind } from "../../store/reducer"
 
 const params = new URLSearchParams(window.location.search)
 
@@ -20,8 +21,10 @@ export type GameType = {
 	ongoing: boolean,
 	player1: number,
 	player1_goals: number | null,
+	player1_rating_change: number | null,
 	player2: number,
 	player2_goals: number | null,
+	player2_rating_change: number | null,
 	winner: number | null
 }
 
@@ -51,7 +54,19 @@ function Dashboard()
 	useEffect(() => {
 		document.title = 'Home'
 
-		console.log('test!!', params.get("id"))
+		axios.get('/api/user/info/' + state.user.id)
+			.then(() => {})
+			.catch(() => {
+				console.log('test')
+				axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
+					.then(() => {})
+					.catch(() => {})
+				dispatch ({
+					type: ActionKind.Logout
+				});
+				localStorage.clear();
+			})
+
 		if (game_id) {
 		}
 
