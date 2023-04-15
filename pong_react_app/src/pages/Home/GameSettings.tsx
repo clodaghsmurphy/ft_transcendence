@@ -14,7 +14,7 @@ export const MAX_RACKET_SPEED = 50;
 export const MIN_BALL_RADIUS = 5;
 export const MAX_BALL_RADIUS = 50;
 
-export const MIN_BALL_SPEED = 10;
+export const MIN_BALL_SPEED = 15;
 export const MAX_BALL_SPEED = 30;
 
 export const MIN_WINNING_GOALS = 3;

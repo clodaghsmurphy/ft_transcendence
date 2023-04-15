@@ -37,7 +37,7 @@ function Dashboard()
 		racket_length: 80,
 		racket_speed: 10,
 		ball_initial_radius: 20,
-		ball_initial_speed: 10,
+		ball_initial_speed: 15,
 		winning_goals: 5,
 		mode_speedup: false,
 		mode_shrink: false,
