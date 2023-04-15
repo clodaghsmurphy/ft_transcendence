@@ -59,6 +59,7 @@ export class GameService {
 		room.player2_id = dto.target_id;
 		room.player1_ready = false;
 		room.player2_ready = false;
+		room.has_started = false;
 		room.state = {...dto.state};
 
 		this.activeGames.set(game.id, room);
@@ -90,6 +91,7 @@ export class GameService {
 		room.player2_id = -1;
 		room.player1_ready = false;
 		room.player2_ready = false;
+		room.has_started = false;
 		room.state = {...dto.state};
 
 		this.activeGames.set(game.id, room);
@@ -244,13 +246,15 @@ export class GameService {
 		this.checkActiveGame(gameId);
 
 		const room: GameRoom = this.activeGames.get(gameId);
-		return (room.player2_id !== -1 && room.player1_ready && room.player2_ready);
+		return (!room.has_started && room.player2_id !== -1 && room.player1_ready && room.player2_ready);
 	}
 
 	startGame(gameId: number, io: Namespace) {
 		this.checkActiveGame(gameId);
 
 		const room: GameRoom = this.activeGames.get(gameId);
+
+		room.has_started = true;
 		io.in('' + gameId).emit('gamestart', room);
 		this.initState(room.state);
 

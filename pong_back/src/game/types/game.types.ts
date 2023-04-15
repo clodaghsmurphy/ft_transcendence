@@ -130,6 +130,8 @@ export class GameRoom {
 	player1_ready: boolean;
 	player2_ready: boolean;
 
+	has_started: boolean;
+
 	state: GameState;
 };
 
