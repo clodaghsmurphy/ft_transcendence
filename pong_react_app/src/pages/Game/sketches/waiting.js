@@ -67,11 +67,11 @@ export default function sketch(p5) {
         text_x0 += dir_x;
         text_y0 += dir_y;
 
-        if (text_x0 + text_width >= p5.width || text_x0 <= 0) {
+        if (text_x0 + text_width >= div_width || text_x0 <= 0) {
             dir_x *= -1;
         }
 
-        if (text_y0 + text_height >= p5.height || text_y0 <= 0) {
+        if (text_y0 + text_height >= div_height || text_y0 <= 0) {
             dir_y *= -1;
         }
     };
