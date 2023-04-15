@@ -26,11 +26,10 @@ function ProfileStats(props: Props) {
 
 	const getStats = async () => {
 		try {
-			const result: AxiosResponse = await axios.post(`http://${process.env.REACT_APP_HOSTNAME}:8080/api/achievements/stats`, {id: props.id})
+			const result: AxiosResponse = await axios.post('/api/achievements/stats', {id: props.id})
 			setStats(result.data);
 			setWins((result.data.wins / 100) * result.data.total_games);
 			setLoss(((result.data.wins - result.data.total_games) / 100) * result.data.total_games);
-	
 		}
 		catch(error) {
 			console.log(error);

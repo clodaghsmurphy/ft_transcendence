@@ -28,11 +28,19 @@ export default function BrowseGames() {
 					axios.get('/api/user/info/' +  game.player1)
 						.then((response: AxiosResponse) => {
 							u1 = response.data
-							axios.get('/api/user/info/' +  game.player2)
-							.then((response: AxiosResponse) => {
-								u2 = response.data
-								tmp.push(browse_button(game, u1, u2))
-							})
+							if (game.player2) {
+								axios.get('/api/user/info/' +  game.player2)
+								.then((response: AxiosResponse) => {
+									u2 = response.data
+									tmp.push(browse_button(game, u1, u2))
+								})
+							}
+							else {
+								u2 = {
+									name: 'Unknown',
+									avatar: unknown_icon,
+								} as User
+							}
 						})
 
 				}

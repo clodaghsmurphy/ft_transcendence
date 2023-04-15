@@ -2,6 +2,7 @@
 - [ ] Virer les trucs de game quand on joue
 - [ ] Forbidden ressource dans le chat (surement JWT)
 - [ ] Ecran de debut
+- [ ] caroussel pour les maps
 
 - [ ] Invite
   - dependence: Invite back

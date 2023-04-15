@@ -3,6 +3,7 @@ import './CreateGame.css'
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { GameMap, GamePost } from '../Game/Game';
 import { AuthContext } from '../../App';
+import { toast } from 'react-toastify'
 
 export const MIN_RACKET_LENGTH = 30;
 export const MAX_RACKET_LENGTH = 150;
@@ -38,6 +39,9 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 			.then((response: AxiosResponse) => {
 				set_game_id(response.data.id)
 				console.log('created game', response.data.id)
+			})
+			.catch((e: AxiosError) => {
+				toast.error((e.response?.data as any).error)
 			})
 	}
 
