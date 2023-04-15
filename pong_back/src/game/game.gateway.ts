@@ -32,9 +32,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('join')
 	async handleJoin(@MessageBody() dto: GameJoinDto, @ConnectedSocket() client: Socket) {
 		client.join('' + dto.id);
-		this.io.in('' + dto.id).emit('join', dto);
-		this.gameService.join(dto.id, dto.user_id);
+		const room = await this.gameService.join(dto.id, dto.user_id);
 
+		this.io.in('' + dto.id).emit('join', room);
 		if (this.gameService.readyToStart(dto.id)) {
 			this.gameService.startGame(dto.id, this.io);
 		}

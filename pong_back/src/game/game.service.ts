@@ -7,6 +7,7 @@ import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { getNextRatings } from "./rating";
 import * as deepEqual from 'deep-equal';
+import { use } from "passport";
 
 @Injectable()
 export class GameService {
@@ -67,16 +68,7 @@ export class GameService {
 	async createSoloGame(dto) {
 		for (const [gameId, gameRoom] of this.activeGames.entries()) {
 			if (deepEqual(gameRoom.state, dto.state) && gameRoom.player2_id === -1) {
-				gameRoom.player2_id = dto.user_id;
-
-				const game = await this.prisma.game.update({
-					where: {id: gameId},
-					data: {
-						player2: dto.user_id,
-					}
-				});
-
-				return game;
+				return await this.joinAsPlayer2(gameRoom, dto.user_id);
 			}
 		}
 
@@ -105,14 +97,41 @@ export class GameService {
 	}
 
 	async join(dto, userId: number) {
-		await this.checkActiveGame(dto.id);
+		this.checkActiveGame(dto.id);
 
 		const room: GameRoom = this.activeGames.get(dto.id);
+		if (room.player2_id === -1) {
+			await this.joinAsPlayer2(room, userId);
+		}
+
 		if (room.player1_id === userId) {
 			room.player1_ready = true;
 		} else if (room.player2_id === userId) {
 			room.player2_ready = true;
 		}
+
+		return room;
+	}
+
+	async joinAsPlayer2(room: GameRoom, userId: number) {
+		room.player2_id = userId;
+
+		const game = await this.prisma.game.update({
+			where: {id: room.id},
+			data: {
+				player2: userId,
+			}
+		});
+
+		await this.prisma.user.update({
+			where: {id: userId},
+			data: {
+				in_game: true,
+				game_id: game.id
+			}
+		})
+
+		return game;
 	}
 
 	async remove(id: number) {
@@ -141,6 +160,9 @@ export class GameService {
 				}
 			});
 
+			if (this.activeGames.has(game.id)) {
+				this.activeGames.delete(game.id);
+			}
 			return game;
 		}
 
@@ -196,7 +218,7 @@ export class GameService {
 			where: {id: player2_past_stats.id},
 			data: {
 				wins: player2_past_stats.wins + player2_win,
-				total_games: player2_past_stats.total_games,
+				total_games: player2_past_stats.total_games + 1,
 				points: player2_past_stats.points + gameRoom.state.player2_goals,
 				lvl: player2_past_stats.lvl + player2_win,
 				rating: next_player2_rating
