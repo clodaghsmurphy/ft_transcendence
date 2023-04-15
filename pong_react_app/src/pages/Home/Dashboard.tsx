@@ -30,7 +30,7 @@ function Dashboard()
 	const {state, dispatch} = useContext(AuthContext);
 	const default_settings: GamePost = {
 		user_id: Number(state.user.id),
-		target_id: 4,
+		// target_id: 4,
 		racket_length: 80,
 		racket_speed: 10,
 		ball_initial_radius: 20,

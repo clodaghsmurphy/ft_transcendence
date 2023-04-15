@@ -57,14 +57,12 @@ export class GameService {
 		room.player1_id = dto.user_id;
 		room.player2_id = dto.target_id;
 		room.state = {...dto.state};
-		this.initState(room.state);
 
 		this.activeGames.set(game.id, room);
 		return game;
 	}
 
 	async createSoloGame(dto) {
-		console.log(`In solo game\ndto: ${JSON.stringify(dto)}`);
 		for (const [gameId, gameRoom] of this.activeGames.entries()) {
 			if (deepEqual(gameRoom.state, dto.state) && gameRoom.player2_id === -1) {
 				gameRoom.player2_id = dto.user_id;
@@ -77,6 +75,8 @@ export class GameService {
 				});
 
 				return game;
+			} else {
+				console.log(`Not equal:\n${JSON.stringify(dto.state)}\n${JSON.stringify(gameRoom.state)}`);
 			}
 		}
 
@@ -97,7 +97,6 @@ export class GameService {
 		room.player1_id = dto.user_id;
 		room.player2_id = -1;
 		room.state = {...dto.state};
-		this.initState(room.state);
 
 		this.activeGames.set(game.id, room);
 		return game;
@@ -217,6 +216,7 @@ export class GameService {
 		this.checkActiveGame(gameId);
 
 		const room: GameRoom = this.activeGames.get(gameId);
+		this.initState(room.state);
 
 		const intervalId = setInterval(async () => {
 			if (room.state.ongoing === true) {
