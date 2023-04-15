@@ -45,6 +45,17 @@ export class AuthController {
         return updateUser;
     }
 
+	@Post('disconnect')
+    @UseGuards(JwtAuthGuard)
+    async handleDisconnect(@Req () req, @UserEntity() user) {
+        await this.userService.checkUser(user.id);
+        const updateUser = await this.prisma.user.update({
+            where: {id: user.id},
+            data: { connected: false }
+        });
+        return updateUser;
+    }
+
     @Get('42/redirect')
     @UseGuards(FT_AuthGuard)
     async handleRedirect(@Req() req, @Res() res, @UserEntity() user){

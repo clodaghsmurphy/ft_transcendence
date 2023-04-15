@@ -6,6 +6,7 @@ import User from '../utils/User'
 import { toast } from 'react-toastify'
 import unknown_icon from '../../media/unkonwn.jpg'
 
+import socket_game from '../Game/Game'
 
 export default function Scores(data: GameType | null) {
 	let [p1, set_p1] = useState({} as User)
@@ -37,6 +38,10 @@ export default function Scores(data: GameType | null) {
 			}
 		}
 	}, [data?.player1, data?.player2])
+
+	useEffect(() => {
+		
+	})
 
 	if (!data) {
 		return (<div className='player-vs' key='hip-hop-bank'>
