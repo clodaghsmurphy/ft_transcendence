@@ -613,7 +613,11 @@ export class GameService {
 
 		// Reset the game state
 		if (goal) {
+			const old1 = state.player1_pos;
+			const old2 = state.player2_pos;
 			this.initState(state);
+			state.player1_pos = old1;
+			state.player2_pos = old2;
 		}
 	}
 
