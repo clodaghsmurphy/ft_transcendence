@@ -671,10 +671,10 @@ export class GameService {
 		let angle: number;
 		if (Math.random() < 0.5) {
 			// Si c'est le joueur de gauche qui effectue le service
-			angle = (Math.random() * 90 - 45) * Math.PI / 180; // angle entre -45 et 45 degrés converti en radians
+			angle = (Math.random() * 50 - 25) * Math.PI / 180; // angle entre -25 et 25 degrés converti en radians
 		} else {
 			// Sinon, c'est le joueur de droite qui effectue le service
-			angle = (Math.random() * 90 + 135) * Math.PI / 180; // angle entre 135 et 225 degrés converti en radians
+			angle = (Math.random() * 50 + 155) * Math.PI / 180; // angle entre 155 et 205 degrés converti en radians
 		}
 
 		// Calcule les composantes x et y de la direction en fonction de l'angle
