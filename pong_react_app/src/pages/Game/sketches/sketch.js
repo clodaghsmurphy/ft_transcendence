@@ -23,12 +23,10 @@ export default function sketch(p5) {
 
     const dimension_width = 600,
         dimension_height = 400;
-    const header = document.getElementsByTagName("header");
-    let header_hauteur = header[0].offsetHeight;
     const gameDiv = document.getElementById("game");
     let div_largeur = gameDiv.offsetWidth,
         div_hauteur = gameDiv.offsetHeight;
-    let game_height = div_hauteur - header_hauteur,
+    let game_height = div_hauteur,
         game_width = div_largeur;
 
     let terrain_height,
@@ -64,6 +62,18 @@ export default function sketch(p5) {
     };
 
     p5.draw = () => {
+        if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight) {
+            div_largeur = gameDiv.offsetWidth;
+            div_hauteur = gameDiv.offsetHeight;
+            game_height = div_hauteur;
+            game_width = div_largeur;
+            tailleterrain();
+            p5.resizeCanvas(terrain_width, terrain_height);
+            centerCanvas();
+            ratio_hauteur = (1 / dimension_height) * terrain_height;
+            ratio_largeur = (1 / dimension_width) * terrain_width;
+        }
+
         p5.background(0);
         p5.fill(p5.color(255, 255, 255));
         p5.strokeWeight(0);
@@ -106,12 +116,10 @@ export default function sketch(p5) {
         }
 
         // Check if resize needed
-        if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight ||
-            header_hauteur != header[0].offsetHeight) {
+        if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight) {
             div_largeur = gameDiv.offsetWidth;
             div_hauteur = gameDiv.offsetHeight;
-            header_hauteur = header[0].offsetHeight;
-            game_height = div_hauteur - header_hauteur;
+            game_height = div_hauteur;
             game_width = div_largeur;
             tailleterrain();
             p5.resizeCanvas(terrain_width, terrain_height);
@@ -119,15 +127,6 @@ export default function sketch(p5) {
             ratio_hauteur = (1 / dimension_height) * terrain_height;
             ratio_largeur = (1 / dimension_width) * terrain_width;
         }
-
-        // let bob = {
-        //     header_hight: header_hauteur,
-        //     div_largeur: div_largeur,
-        //     div_hauteur: div_hauteur,
-        //     header_hauteur: header_hauteur,
-        //     game_height: game_height,
-        //     game_width: game_width,
-        // }
 
         let data = props.data;
         paddle1 = data.player1_pos;
