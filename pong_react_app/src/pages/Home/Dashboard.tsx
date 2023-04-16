@@ -145,18 +145,18 @@ function Dashboard()
 	return (
 		<div className="dashboard">
 			<div className='body '>
-			<div className="app">
-			<NavBar />
-			<ToastContainer theme='dark'/>
-		<main className="page-wrapper">
-				<div className="game">
-					{Game(game_id)}
-					{Scores(game_data)}
+				<div className="app">
+					<NavBar />
+					<ToastContainer theme='dark'/>
+					<main className="page-wrapper">
+						<div className="game">
+							{Game(game_id)}
+							{Scores(game_data)}
+						</div>
+						{CreateGame(settings, default_settings, setSettings, set_game_id, game_id)}
+					</main>
 				</div>
-				{CreateGame(settings, default_settings, setSettings, set_game_id)}
-			</main>
 			</div>
-		</div>
 		</div>
     );
 }

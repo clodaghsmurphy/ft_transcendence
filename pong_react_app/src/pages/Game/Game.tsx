@@ -91,38 +91,42 @@ function Game(game_id: number | null) {
 	});
 
 	useEffect(() => {
-		socket_game.on('gameover', (data: any) => {
-			set_finished(true)
-			console.log(data)
+		if (socket_game) {
+			socket_game.removeListener('gameover')
 
-			// a changer par data de gameover
-			data = {
-				winner: 11,
-				player1: 11,
-				player2: 3,
-				player1_goals: 5,
-				player2_goals: 5,
+			let handleGameover = (data: any) => {
+				set_finished(true)
+	
+				// a changer par data de gameover
+				data = {
+					winner: 11,
+					player1: 11,
+					player2: 3,
+					player1_goals: 5,
+					player2_goals: 5,
+				}
+				axios.get('/api/user/info/' + data.player1)
+					.then((response: AxiosResponse) => {
+						let p1 = response.data
+	
+						axios.get('/api/user/info/' + data.player2)
+							.then((response: AxiosResponse) => {
+								let p2 = response.data
+								let winner = p2.id === data.winner ? p2 : p1
+								let loser = winner === p2 ? p1 : p2
+	
+								set_end_frame(<div className='end-frame'>
+									<h1 className='game-over'>Game over</h1>
+									<div className='winner'>{winner.name} has won!</div>
+									<div>{p1.name} {data.player1_goals} - {data.player2_goals} {p2.name}</div>
+								</div>)
+							})
+					})	
 			}
-			axios.get('/api/user/info/' + data.player1)
-				.then((response: AxiosResponse) => {
-					let p1 = response.data
 
-					axios.get('/api/user/info/' + data.player2)
-						.then((response: AxiosResponse) => {
-							let p2 = response.data
-							let winner = p2.id === data.winner ? p2 : p1
-							let loser = winner === p2 ? p1 : p2
-
-							set_end_frame(<div className='end-frame'>
-								<h1 className='game-over'>Game over</h1>
-								<div className='winner'>{winner.name} has won!</div>
-								<div>{p1.name} {data.player1_goals} - {data.player2_goals} {p2.name}</div>
-							</div>)
-						})
-				})
-				
-		})
-	}, [])
+			socket_game.on('gameover', handleGameover)
+		}
+	}, [socket_game, set_finished, set_end_frame])
 
 	useEffect(() => {
 		let isKeyPressed = false;

@@ -350,3 +350,53 @@
 	margin-left: auto;
 	margin-right: auto;
 }
+
+.infos {
+	width: 90%;
+	margin-left: 10%;
+	margin-right: 10%;
+	overflow: hidden;
+	border: 1px solid grey;
+	display: flex;
+	flex-direction: row;
+	margin-top: 75px;
+	height: auto;
+	padding: 10px 15px;
+}
+
+.choas-mode {
+	width: 110%;
+	background-color: black;
+	font-size: 2rem;
+	color: red;
+	font-family: 'arcade_normalregular';
+}
+
+.division {
+	color: lightgrey;
+}
+
+.bar-vertical {
+	border: 1px solid rgb(73, 73, 73);
+	height: 70%;
+	width: 0;
+	margin-right: 10px;
+	margin-left: 10px;
+	margin-top: calc(118px * 0.15);
+	margin-bottom: calc(118px * 0.15);
+}
+
+.button-leave-game {
+	width: 50%;
+	margin-left: 25%;
+	margin-right: 25%;
+	margin-top: auto;
+	margin-bottom: auto;
+
+	border: none;
+	border-radius: 10px;
+	height: 65px;
+	font-size: 50px;
+
+	background-color: #e08a85;
+}
