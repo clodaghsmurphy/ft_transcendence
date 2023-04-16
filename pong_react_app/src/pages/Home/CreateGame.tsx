@@ -50,8 +50,20 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 				setWindow(FINISH)
 			})
 
-			socket_game.on('join', () => {
+			socket_game.on('join', (data: any) => {
 				setWindow(WAIT)
+				setSettings({
+					user_id: 0,
+					racket_length: data.state.racket_length,
+					racket_speed: data.state.racket_speed,
+					ball_initial_radius: data.state.ball_initial_radius,
+					ball_initial_speed: data.state.ball_initial_speed,
+					winning_goals: data.state.winning_goals,
+					mode_speedup: data.state.mode_speedup,
+					mode_shrink: data.state.mode_shrink,
+					mode_chaos: data.state.mode_chaos,
+					game_map: GameMap.Classic,
+				})
 			})
 
 			setSetup(true)
@@ -62,7 +74,7 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 	useEffect(() => {
 		if (socket_game && game_id) {
 			const handleLeave = () => {
-				socket_game.emit('leave', { game_id })
+				socket_game.emit('leave', { id: game_id })
 			}
 			set_leave_function(() => {return handleLeave}) // xd
 		}
