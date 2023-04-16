@@ -5,6 +5,7 @@ import { BadRequestFilter } from "./dm.filters";
 import { DmService } from "./dm.service";
 import { DmCreateDto, DmJoinDto, DmLeaveDto } from "./dto";
 import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
+import { DmType } from "./types/dm.type";
 
 @UseFilters(new BadRequestFilter())
 @UsePipes(new ValidationPipe({whitelist: true}))
@@ -81,6 +82,7 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 	async handleMessage(@MessageBody() dto: DmCreateDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		const data: any = dto;
 		data.sender_id = payload.sub;
+		data.type = DmType.Normal;
 
 		const roomName: string = this.getRoomName(data.sender_id, data.receiver_id);
 		this.checkUser(client, roomName);
@@ -93,6 +95,27 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 			this.io.in(roomName).emit('message', message);
 		} catch (e) {
 			this.logger.log(e);
+			throw new WsException(e);
+		}
+	}
+
+	async handleGameInvite(game_id: number, target_id: number, user_id: number) {
+		const data = {
+			receiver_id: target_id,
+			sender_id: user_id,
+			text: `http://${process.env.HOSTNAME}:8080/game?id=${game_id}`,
+			type: DmType.Invite,
+		};
+
+		const roomName: string = this.getRoomName(user_id, target_id);
+
+		try {
+			await this.dmService.checkUser(data.sender_id);
+			await this.dmService.checkUser(data.receiver_id);
+
+			const message = await this.dmService.post(data);
+			this.io.in(roomName).emit('message', message);
+		} catch (e) {
 			throw new WsException(e);
 		}
 	}

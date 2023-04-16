@@ -36,9 +36,10 @@ export class AchievementsController {
         return result;
     }
 
-    @Get('achievements-list')
+    @Post('achievements-list')
     @UseGuards(JwtAuthGuard)
-    async getAllAchievements(@UserEntity() user) {
+    async getAllAchievements(@Body() body) {
+        const user = await this.userService.userExists(body.id);
         if (!user)
             throw new NotFoundException('user id not found, unable to get achievements')
         return await this.achievementsService.getAllAchievements(user);

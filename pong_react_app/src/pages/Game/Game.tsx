@@ -113,7 +113,9 @@ function Game(game_id: number | null) {
 									<div>{p1.name} {data.player1_goals} - {data.player2_goals} {p2.name}</div>
 								</div>)
 							})
-					})
+							.catch((e) => { console.log(e)})
+					})	
+					.catch((e) => { console.log(e)})
 			}
 
 			socket_game.on('gameover', handleGameover)

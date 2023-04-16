@@ -37,15 +37,18 @@ export type Achievement = {
 	score: number					// exemple: Win 10 games -> cap = 10
 }
 
+type Props = {
+	id: string
+}
+
 let style_buttons = {
 	"display": "flex",
 	"alignItems": "center",
 	"cursor": 'pointer',
 }
 
-function StatsAchievements(id: string ) {
+function StatsAchievements(props: Props ) {
 	const [achievement, setAchievements ] = useState< Achievement[] >([]);
-	const [Allachievement, setAllAchievements ] = useState< Achievement[] >([]);
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ listToggle, setListToggle ] = useState(1);
 	// lsit toggle to toggle between my acheivememnts (1) and all acheivements 2
@@ -56,7 +59,7 @@ function StatsAchievements(id: string ) {
 
 	const getAchievements = async () => {
 		try {
-			const result: AxiosResponse = await axios.post(`http://${window.location.hostname}:8080/api/achievements`, {id: id})
+			const result: AxiosResponse = await axios.post(`http://${window.location.hostname}:8080/api/achievements`, {id: parseInt(props.id)})
 			setAchievements(result.data);
 			setIsLoading(false)
 		}
@@ -80,7 +83,7 @@ function StatsAchievements(id: string ) {
 				{
 					listToggle === 1 ?
 					< AchievementList ach={achievement} />
-					: <AllAchievements ach={achievement} />
+					: <AllAchievements ach={achievement} id={parseInt(props.id)}/>
 				}
 
 			</div>

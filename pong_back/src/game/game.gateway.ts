@@ -1,9 +1,11 @@
-import { Logger, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./game.filters";
 import { GameService } from "./game.service";
-import { GameJoinDto, GameKeyDto } from "./dto";
+import { GameInviteDmDto, GameJoinDto, GameKeyDto } from "./dto";
+import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
+import { DmGateway } from "src/dm/dm.gateway";
 
 @UseFilters(new BadRequestFilter())
 @UsePipes(new ValidationPipe({whitelist: true}))
@@ -13,7 +15,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@WebSocketServer() io: Namespace;
 
-	constructor (private gameService: GameService) {}
+	constructor (private gameService: GameService, private dmGateway: DmGateway) {}
 
 	afterInit() {
 	}
@@ -37,6 +39,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		if (this.gameService.readyToStart(dto.id)) {
 			this.gameService.startGame(dto.id, this.io);
 		}
+	}
+
+	@UseGuards(JwtWsGuard)
+	@SubscribeMessage('invite_dm')
+	async handleInviteDm(@MessageBody() dto: GameInviteDmDto, @UserPayload() payload: any, @ConnectedSocket() client: Socket) {
+		await this.dmGateway.handleGameInvite(dto.id, dto.target_id, payload.sub);
 	}
 
 	@SubscribeMessage('keyEvent')

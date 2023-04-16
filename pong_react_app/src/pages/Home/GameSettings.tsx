@@ -51,7 +51,6 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 				console.log('created game', response.data.id)
 			})
 			.catch((e: AxiosError) => {
-				// toast.error((e.response?.data as any).error)
 			})
 	}
 

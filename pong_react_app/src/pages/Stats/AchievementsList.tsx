@@ -23,7 +23,7 @@ function AchievementList(props: Props) {
                             minHeight: '75px',
                         }}>
                             <div className="stats-avatar">
-                                <img src={ach.icon} alt={`${ach.title} icon`}/>
+                                <img src={`http://${window.location.hostname}:8080/api/achievements/achievement-icon/${ach.icon}`} alt={`${ach.title} icon`}/>
                             </div>
                             <div className='achievement-container'>
                                 <div className="achievement-title">{ach.title}</div>

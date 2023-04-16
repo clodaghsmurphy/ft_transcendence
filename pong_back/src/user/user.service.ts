@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable} from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, BadRequestException} from "@nestjs/common";
 import { User, Game } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -30,6 +30,8 @@ export class UserService {
 	}
 
 	async userExists(id: number): Promise<User> {
+		if (!id)
+			throw new BadRequestException('invalid user id');
 		const user = await this.prisma.user.findUnique({
 			where: { id: id },
 		});

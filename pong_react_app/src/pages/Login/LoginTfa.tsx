@@ -21,14 +21,18 @@ function LoginTfa()
 
     async function getPayload () 
 	{
-		const { data } = await axios.get(`http://${window.location.hostname}:3042/auth/profile`);
-			dispatch(
-				{
-					type: ActionKind.Login,
-					payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true}
-				}
-			)
-			localStorage.setItem("isLoggedIn", 'true');
+        try {
+            const { data } = await axios.get(`http://${window.location.hostname}:3042/auth/profile`);
+                dispatch(
+                    {
+                        type: ActionKind.Login,
+                        payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true}
+                    }
+                )
+                localStorage.setItem("isLoggedIn", 'true');
+        } catch(e) {
+            console.log(e);
+        }
 	}
 
     useEffect(() => {
@@ -56,7 +60,7 @@ function LoginTfa()
             })
             .catch(function (error:AxiosError) {
                 
-                if( error.request.status  == 401)
+                if( error.request.status  === 401)
                     setError('Incorrect authentication code');
                        
             });   

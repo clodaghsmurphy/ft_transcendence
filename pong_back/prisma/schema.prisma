@@ -54,6 +54,7 @@ model PrivateMessage {
   text String
   sender_id Int
   receiver_id Int
+  type Int
   sender User @relation("SentMessages", fields: [sender_id], references: [id])
   receiver User @relation("ReceivedMessages", fields: [receiver_id], references: [id])
 }

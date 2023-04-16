@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react'
 import axios from 'axios';
 import { AxiosResponse, AxiosError} from 'axios';
+import { toast } from 'react-toastify'
+
 
 
 function ChangePhoto() {
@@ -24,7 +26,6 @@ function ChangePhoto() {
         }}
         )
         .then(async function (res:AxiosResponse) {
-            console.dir('in then');
             setShowPhoto(!showPhoto);
             window.location.reload();
             setError('');
@@ -32,8 +33,13 @@ function ChangePhoto() {
         })
         .catch(function (error:AxiosError) 
         {
-            if(error.response && error.response.status == 413)
-                setError('File too large, image must be under 2MB');
+            console.log(error);
+            if(error.response && error.response.status === 413)
+                toast.error('File too large, file must be under 1MB');
+            else {
+                toast.error('File upload errror');
+            }
+            setShowPhoto(!showPhoto);
         })
         
     }
