@@ -13,7 +13,7 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
         super({
             clientID: process.env.REACT_APP_CLIENT_ID,
             clientSecret: process.env.REACT_APP_CLIENT_SECRET,
-            callbackURL: 'http://' + process.env.HOSTNAME + ':3042/auth/42/redirect',
+            callbackURL: 'http://' + process.env.HOSTNAME + ':8080/api/auth/42/redirect',
         });
     }
 
