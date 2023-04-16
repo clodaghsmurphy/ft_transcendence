@@ -153,7 +153,7 @@ function Dashboard()
 					{Game(game_id)}
 					{Scores(game_data)}
 				</div>
-				{CreateGame(settings, default_settings, setSettings, set_game_id)}
+				{CreateGame(settings, default_settings, setSettings, set_game_id, game_id)}
 			</main>
 			</div>
 		</div>
