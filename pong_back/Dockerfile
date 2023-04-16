@@ -8,21 +8,6 @@ RUN mkdir -p uploads && chmod 777 uploads
 
 RUN npm ci
 
-# RUN npm install --save @nestjs/passport passport passport-local
-# RUN npm install passport-42
-# RUN  npm i express-session
-# RUN npm install --save @nestjs/jwt passport-jwt
-# RUN npm install --save-dev @types/passport-jwt
-# RUN npm install passport-jwt
-# RUN npm i -D @types/express-session
-# RUN npm install  --save-dev @types/otplib
-# RUN npm install qrcode --save
-# RUN npm install --save @types/multer
-# RUN npm install npm install sharp
-# RUN  npm install passport-2fa-totp
-# RUN npm i axios
-# RUN npm i --save @nestjs/axios
-
 COPY . .
 
 RUN mkdir -p prisma/migrations prisma/migrations/init
