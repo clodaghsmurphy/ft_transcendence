@@ -53,17 +53,14 @@ export default function Scores(data: GameType | null) {
 				</div>
 				<div className="player-info">
 					<span className="player-name">{p1.name}</span>
-					<span className="player-level">{0}</span>
 				</div>
 			</div>
-			<div className="score">0 - 0</div>
 			<div className="player">
+				<div className="player-info">
+					<span className="player-name-right">{p2.name}</span>
+				</div>
 				<div className="avatar">
 					<img src={p2.avatar} alt={p2.name} />
-				</div>
-				<div className="player-info">
-					<span className="player-name">{p2.name}</span>
-					<span className="player-level">{0}</span>
 				</div>
 			</div>
 		</div>

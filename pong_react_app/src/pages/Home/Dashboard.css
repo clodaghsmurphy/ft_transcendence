@@ -465,6 +465,13 @@ header{
 	text-transform: uppercase;
 }
 
+.player-name-right
+{
+	font-size: 1rem;
+	text-transform: uppercase;
+	text-align: right;
+}
+
 
 
 .live-chat
