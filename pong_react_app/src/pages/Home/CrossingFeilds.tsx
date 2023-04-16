@@ -95,6 +95,20 @@ export function GameInfo(settings: GamePost,
 						{id_to_user(all_user, dm.id).name}
 					</div>
 				)}
+				<h2>Channels:</h2>
+				{chans.map((chan: string) =>
+					<div className="invite-button-game" key={chan}
+						onClick={() => {
+							const data = {
+								name: chan,
+								id: game_id,
+							};
+							console.log(JSON.stringify(data));
+							socket_game.emit('invite_chan', data);
+					}}>
+						{chan}
+					</div>
+				)}
 			</div>
 		</div>
 	)
