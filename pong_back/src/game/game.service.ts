@@ -218,7 +218,7 @@ export class GameService {
 				lvl: player1_past_stats.lvl + player1_win,
 				rating: next_player1_rating,
 				current_streak: player1_streak,
-				max_streak: (player1_streak > player1_past_stats.max_streak ? player1_streak : player1_past_stats.max_streak)
+				max_streak: Math.max(player1_streak, player1_past_stats.max_streak),
 			}
 		});
 
@@ -231,7 +231,7 @@ export class GameService {
 				lvl: player2_past_stats.lvl + player2_win,
 				rating: next_player2_rating,
 				current_streak: player2_streak,
-				max_streak: (player2_streak > player2_past_stats.max_streak ? player2_streak : player2_past_stats.max_streak)
+				max_streak: Math.max(player2_streak, player2_past_stats.max_streak),
 			}
 		});
 
