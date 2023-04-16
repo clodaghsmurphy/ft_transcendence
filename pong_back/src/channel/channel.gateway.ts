@@ -152,6 +152,22 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 		}
 	}
 
+	async handleGameInvite(name: string, id: number, user_id: number) {
+		try {
+			const messageData = {
+				name: name,
+				sender_id: user_id,
+				uid: 0,
+				text: `http://${process.env.HOSTNAME}:8080/game?id=${id}`,
+				type: MessageType.Invite,
+			};
+			const message = await this.channelService.postMessage(messageData);
+			this.io.in(name).emit('message', message);
+		} catch (e) {
+			throw new WsException(e);
+		}
+	}
+
 	@UseGuards(JwtWsGuard)
 	@UsePipes(new ValidationPipe({whitelist: true}))
 	@SubscribeMessage('mute')
@@ -247,6 +263,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 			throw new WsException(e);
 		}
 	}
+
 
 	checkUser(client: Socket, channel: string) {
 		if (!client.rooms.has(channel))
