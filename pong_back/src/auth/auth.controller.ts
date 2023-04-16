@@ -58,7 +58,6 @@ export class AuthController {
     @Get('42/redirect')
     // @UseGuards(FT_AuthGuard)
     async handleRedirect(@Req() req, @Res() res, @UserEntity() user, @Query('error') error, @Query('code') code){
-        console.log(error);
         if(error) {
             res.redirect(`http://${process.env.HOSTNAME}:8080`)
             return ;
