@@ -41,7 +41,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		}
 	}
 
-	@UseGuards(JwtWsGuard)
 	@SubscribeMessage('invite_dm')
 	async handleInviteDm(@MessageBody() dto: GameInviteDmDto, @UserPayload() payload: any, @ConnectedSocket() client: Socket) {
 		await this.dmGateway.handleGameInvite(dto.id, dto.target_id, payload.sub);
