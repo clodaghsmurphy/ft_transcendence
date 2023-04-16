@@ -3,7 +3,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./game.filters";
 import { GameService } from "./game.service";
-import { GameInviteChanDto, GameInviteDmDto, GameJoinDto, GameKeyDto } from "./dto";
+import { GameInviteChanDto, GameInviteDmDto, GameJoinDto, GameKeyDto, GameRemoveDto } from "./dto";
 import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 import { DmGateway } from "src/dm/dm.gateway";
 import { ChannelGateway } from "src/channel/channel.gateway";
@@ -60,5 +60,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	async handleKeyEvent(@MessageBody() dto: GameKeyDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		this.gameService.checkUserIsPlayer(payload.sub, dto.id);
 		this.gameService.keyEvent(dto);
+	}
+
+	@UseGuards(JwtWsGuard)
+	@SubscribeMessage('leave')
+	async handleLeave(@MessageBody() dto: GameRemoveDto, @UserPayload() payload: any) {
+		this.gameService.leave(dto.id, payload.sub);
 	}
 }
