@@ -17,7 +17,6 @@ model User {
   avatar_path String
 
   stats Stats?
-  achievements Achievements[]
 
   blocked_users Int[] @default([])
   friend_users Int[] @default([])
@@ -110,15 +109,4 @@ model Stats {
   lvl Int @default(1)
   rating Int @default(1000)
   points  Int @default(0)
-}
-
-model Achievements {
-  id Int @id  @default(autoincrement())
-  achievement_id Int
-  userId  Int
-  User User @relation(fields: [userId], references: [id])
-  icon String
-  title String
-  cap Int
-  score Int
 }

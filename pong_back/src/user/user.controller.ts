@@ -1,19 +1,16 @@
 import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
 import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express'
 import { UserCreateDto, UserUpdateDto } from "./dto";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from "./user.service";
-import { Multer } from 'multer'
 import { SharpPipe } from "./utils/sharp.pipe";
 import * as path from 'path';
 import * as fs from 'fs';
 import { UserEntity } from "./utils/user.decorator";
 import { PrismaService } from "src/prisma/prisma.service";
-import { User, Stats, Achievements} from '@prisma/client';
-import { DefaultAchievements } from "./utils/user.types";
+import { User} from '@prisma/client';
 
 @Controller('user')
 export class UserController {

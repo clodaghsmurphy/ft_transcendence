@@ -37,7 +37,6 @@ export type Achievement = {
 	score: number					// exemple: Win 10 games -> cap = 10
 }
 
-
 let style_buttons = {
 	"display": "flex",
 	"alignItems": "center",
@@ -79,17 +78,17 @@ function StatsAchievements(id: string ) {
 			<>
 			<div className="info-body">
 				{
-					listToggle === 1 ? 
+					listToggle === 1 ?
 					< AchievementList ach={achievement} />
 					: <AllAchievements ach={achievement} />
 				}
-				
+
 			</div>
 				<div className="friends-option-bar">
-					<div className='friends-toggle-button'  onClick={() => setListToggle(1)}> 
+					<div className='friends-toggle-button'  onClick={() => setListToggle(1)}>
 						<CgUserList style={{ height: '4vh', cursor: 'pointer' }}/>
 					</div>
-					<div className='friends-toggle-button' onClick={() => setListToggle(2)}> 
+					<div className='friends-toggle-button' onClick={() => setListToggle(2)}>
 						<HiViewList style={{ height: '4vh', cursor: 'pointer' }} />
 					</div>
 				</div>
