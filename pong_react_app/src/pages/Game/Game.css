@@ -12,4 +12,5 @@
 #game {
     position: 'relative';
     overflow: 'hidden';
+    background-color: #1c2435;
 }
