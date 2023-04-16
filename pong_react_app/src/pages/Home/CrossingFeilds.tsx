@@ -26,17 +26,17 @@ export function GameInfo(settings: GamePost,
 				setUser(response.data)
 				setChans(response.data.channels)
 			})
-		
+
 		axios.get('/api/user/info/')
 			.then((response: AxiosResponse) => {
 				set_all_users(response.data)
 			})
-		
+
 		axios.get('/api/dm')
 			.then((response: AxiosResponse) => {
 				setDm(response.data)
 			})
-				
+
 	}, [])
 
 	let infos: JSX.Element
@@ -85,11 +85,12 @@ export function GameInfo(settings: GamePost,
 				{dm.map((dm: DirectMessage) =>
 					<div className="invite-button-game" key={dm.id}
 						onClick={() => {
-						console.log('test')
-						socket_game.emit('invite_dm', {
-							target_id: dm.id,
-							id: game_id
-						})
+							const data = {
+								target_id: dm.id,
+								id: game_id,
+							};
+							console.log(JSON.stringify(data));
+							socket_game.emit('invite_dm', data);
 					}}>
 						{id_to_user(all_user, dm.id).name}
 					</div>
