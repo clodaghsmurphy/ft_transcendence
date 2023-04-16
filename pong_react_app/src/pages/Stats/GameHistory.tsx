@@ -56,7 +56,6 @@ function GameHistory(props: Props)
 	const getGameHistory = async () => {
 		try {
 			const result = await axios.get(`/api/user/info/${props.id}/games`)
-			console.log(result);
 			setGameHistory(result.data);
 			setRatingClass(result.data.rating_change > 0  ? 'rating_up' : 'rating_down' )
 		} catch (error) {

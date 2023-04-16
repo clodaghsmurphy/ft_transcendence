@@ -98,10 +98,6 @@ export const initialState:State = {
         };
       }
       case "NAME_UPDATE": {
-        console.log(action.payload);
-       
-        
-        console.log(state);
         return {
           ...state,
           login:action.payload.login,
