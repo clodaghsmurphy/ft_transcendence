@@ -104,6 +104,8 @@ model Stats {
   userId  Int @unique
   User User @relation(fields: [userId], references: [id])
   wins  Int @default(0)
+  max_streak Int @default(0)
+  current_streak Int @default(0)
   total_games Int @default(0)
   total_spe_games Int @default(0)
   lvl Int @default(1)
