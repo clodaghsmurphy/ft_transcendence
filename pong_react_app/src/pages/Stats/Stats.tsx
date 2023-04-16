@@ -19,7 +19,6 @@ import Friends from "./Friends";
 import GameHistory from "./GameHistory";
 
 
-const params = new URLSearchParams(window.location.search)
 
 type Props ={
 	error?:string,
@@ -53,9 +52,7 @@ function Stats(props:Props)
 			});
 			localStorage.clear();
 		})
-		console.log(params);
-		if (params.get("new")) {
-			toast.success('hi')}
+
 	}, []);
 
 	
@@ -66,10 +63,12 @@ function Stats(props:Props)
 	};
 
 	return(
+		
 			<>
 			<Suspense>
 				<NavBar />
 				< ToastContainer theme="colored" />
+				
 				{error && <div className='error-bar'>{error}</div> }
 			<div className="stats-page">
 				<div className="stats">

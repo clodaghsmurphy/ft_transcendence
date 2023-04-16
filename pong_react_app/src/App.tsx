@@ -13,7 +13,8 @@ import { initialState, reducer, State, Action } from "./store/reducer"
 import ProtectedRoute from './pages/Components/ProtectedRoute'
 import { ProtectedRouteProps } from './pages/Components/ProtectedRoute';
 import JWTverify from './pages/Components/JWTverify';
-import axios  from 'axios'
+import axios  from 'axios';
+import Welcome from './pages/Stats/Welcome';
 
 type StateContext = {
   state: State;
@@ -51,6 +52,7 @@ export default function App() {
 				<Route path="/2fa" element={<LoginTfa />}/>
 				<Route path="/game" element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Dashboard /> } /> } />
 				<Route path='/chat' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Chat />} />} />
+				<Route path='/welcome' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Welcome />} />} />
 				<Route path='/stats' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<Stats />} />} />
 				<Route path='/stats/:id' element={<ProtectedRoute {...defaultProtectedRouteProps} outlet={<StatsId />} />} />
 		</Routes>

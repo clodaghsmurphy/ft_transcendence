@@ -30,7 +30,7 @@ function Login ()
 	const [ data, setData ] = useState<Data>( {errorMessage: "", isLoading: false});
 
 
-	async function getPayload (flag: boolean) 
+	async function getPayload () 
 	{
 		try {
 			const { data } = await axios.get(`http://${window.location.hostname}:8080/api/auth/profile`);
@@ -41,9 +41,7 @@ function Login ()
 					}
 				)
 				localStorage.setItem("isLoggedIn", 'true');
-				if (flag === true ) {
-					window.location.replace(`http://${window.location.hostname}:8080/stats?new=true`)
-				}
+				window.location.replace(`http://${window.location.hostname}:8080/welcome`)
 		}
 		catch(e) {}
 			
@@ -58,18 +56,10 @@ function Login ()
 		
 		if (url.includes("?access_token"))
 		{
-			if (url.includes("?new")) {
 				const token = new URLSearchParams(location.search).get('access_token')!;
 				localStorage.setItem("token", token);
 				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-				getPayload(true);
-			}
-			else {
-				const token = new URLSearchParams(location.search).get('access_token')!;
-				localStorage.setItem("token", token);
-				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-				getPayload(false);
-			}
+				getPayload();	
 		}
 		
 	}, [state, dispatch, data] ); 

@@ -561,6 +561,7 @@
   .pop-up-title
   {
 	color: white;
+	overflow: visible;
 	text-align: center;
 	font-weight: 800;
 	color: #9b59b6;

@@ -27,9 +27,7 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
         }
         const user = await this.userService.userExists(userData.id);
         if (!user) {
-            let newUser : any = await this.userService.create(userData);
-            newUser.new = true;
-            return newUser;
+            return await this.userService.create(userData); 
         }
         return user;
     }
