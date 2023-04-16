@@ -5,7 +5,8 @@ import { useEffect, useState, useContext } from 'react';
 import './stats.css';
 import { AuthContext } from '../../App';
 import { ActionKind } from "../../store/reducer";
-import OtpInput from '../Components/OtpInput'
+import OtpInput from '../Components/OtpInput';
+import { toast } from 'react-toastify'
 
 
 interface PopUpProps
@@ -46,8 +47,10 @@ function PopUp2FA(props: PopUpProps)
     })
     .catch(function (error:AxiosError) {
                 
-        if( error.request.status  == 401)
-            setError('Incorrect authentication code');
+        if( error.request.status  === 401) {
+            setError('Incorrect authentication code')
+            toast.error('Incorrect authentication code');
+        }
                
     });  
     }

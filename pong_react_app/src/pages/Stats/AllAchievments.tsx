@@ -5,7 +5,8 @@ import axios from 'axios'
 
 
 type Props = {
-    ach: Achievement[]
+    ach: Achievement[],
+    id: number
 }
 const { v4: uuidv4 } = require('uuid');
 
@@ -13,13 +14,12 @@ function AllAchievements(props: Props){
     const [ achievements, setAchievements] = useState<Achievement[]>([])
 
     useEffect(() => {
-        console.log('in al l achievements')
         getAchievements();
     }, [])
 
     const getAchievements = async () => {
         try {
-            const result = await axios.get(`http://${window.location.hostname}:8080/api/achievements/achievements-list`);
+            const result = await axios.post(`http://${window.location.hostname}:8080/api/achievements/achievements-list`, { id : props.id });
             console.log(result);
 
             setAchievements(result.data);

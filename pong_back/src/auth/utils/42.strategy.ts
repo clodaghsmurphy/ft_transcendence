@@ -26,8 +26,6 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
             avatar_path: profile._json.image.link,
         }
         const user = await this.userService.userExists(userData.id);
-        console.log('in 42 valiate and user is ');
-        console.log(userData);
         if (!user)
             return await this.userService.create(userData);
         return user;

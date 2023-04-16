@@ -104,7 +104,7 @@ function Stats(props:Props)
 							<header>
 								<h1>Achievements</h1>
 							</header>
-								{StatsAchievements(state.user.id)}
+								<StatsAchievements id={state.user.id} />
 							
 						</div>
 						<Friends id={state.user.id}/>

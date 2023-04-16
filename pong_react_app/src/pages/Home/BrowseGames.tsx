@@ -34,11 +34,13 @@ export default function BrowseGames() {
 									u2 = response.data
 									tmp.push(browse_button(game, u1, u2))
 								})
+								.catch((e) => console.log(e))
 							}
 							else {
 								tmp.push(browse_button(game, u1, undefined))
 							}
 						})
+						.catch((e) => console.log(e))
 
 				}
 				setGamesBlocks(tmp)
@@ -74,6 +76,7 @@ export default function BrowseGames() {
 									[...prev, browse_button(game, u1, u2)]
 								)
 							})
+							.catch((e) => console.log(e))
 						}
 						else {
 							setGamesBlocks((prev: JSX.Element[]) =>
@@ -81,6 +84,7 @@ export default function BrowseGames() {
 							)
 						}
 					})
+					.catch((e) => console.log(e))
 
 			}
 		})

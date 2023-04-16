@@ -2,7 +2,8 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useContext } from 'react'
 import { AuthContext } from '../../App'
-import { ActionKind } from "../../store/reducer"
+import { ActionKind } from "../../store/reducer";
+import { toast } from 'react-toastify'
 
 const ChangeName = () =>
 {
@@ -18,17 +19,29 @@ const ChangeName = () =>
 				type: ActionKind.nameUpdate,
 				payload: { login:value },
 			})
-		const { data } = await axios.post(`http://${window.location.hostname}:8080/api/user/update`, { 
-				id: state.user.id,
-			name: value,
-			});
-			dispatch(
-				{
-					type: ActionKind.userUpdate,
-					payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true},
+			try{
+				const { data } = await axios.post(`http://${window.location.hostname}:8080/api/user/update`, { 
+						id: state.user.id,
+					name: value,
+					});
+					dispatch(
+						{
+							type: ActionKind.userUpdate,
+							payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true},
+						}
+					)
+					
+			} catch (e) {
+				if (axios.isAxiosError(e)) {
+					if (e.response?.status === 400)
+						toast.error(`Name Error: invalid name, name must only contain numbers or characters`);
+					else {
+						toast.error('Name error, cannot change name');
+					}
 				}
-			)
+			}
 		setShowName(!showName);
+			
 	}
 
 	return(

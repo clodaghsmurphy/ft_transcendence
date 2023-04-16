@@ -50,7 +50,7 @@ function StatsIdUser(props: Props) {
 							<header>
 								<h1>Achievements</h1>
 							</header>
-							{StatsAchievements(usr.id)}
+							<StatsAchievements id={usr.id} />
 						</div>
 						 <Friends id={usr.id}/>
 					</div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from 'react'
-import axios, { AxiosResponse, AxiosError} from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 type Stats = {
 	wins : number,
@@ -30,18 +30,19 @@ function ProfileStats(props: Props) {
 		try {
 			const result: AxiosResponse = await axios.post('/api/achievements/stats', {id: props.id})
 			setStats(result.data);
-			console.log(result.data)
 			const zeroProtect: boolean = result.data.total_games === 0 && result.data.wins === 0;
-			setWins(result.data.total_games === 0 ? 0 : Math.floor((result.data.wins / result.data.total_games) * 100));
-			setLoss(zeroProtect ? 0 : Math.floor(((result.data.total_games - result.data.wins) / result.data.total_games) * 100));
+			setWins(result.data.total_games === 0 ? 0 : Math.round((result.data.wins / result.data.total_games) * 100));
+			setLoss(zeroProtect ? 0 : Math.round(((result.data.total_games - result.data.wins) / result.data.total_games) * 100));
 		}
 		catch(error) {
 			console.log(error);
 		}
 	}
+
 	useEffect(() => {
 		getStats();
 	}, [])
+
 	return (
 		<ul className="profile-game-stats">
 			<li>
