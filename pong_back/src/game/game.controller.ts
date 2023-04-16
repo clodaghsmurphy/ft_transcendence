@@ -47,10 +47,4 @@ export class GameController {
 		}
 		return await this.gameService.create(data);
 	}
-
-	@Post('remove')
-	async removeGame(@Body() dto: GameRemoveDto) {
-		return await this.gameService.remove(dto.id);
-	}
-
 }

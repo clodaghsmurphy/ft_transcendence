@@ -26,7 +26,7 @@ function AddFriends(props: Props){
 			.then(function (response:AxiosResponse) {
 				 setUsers(response.data);
 			})
-			.catch((error: AxiosError) => console.log(error))
+			.catch((error: AxiosError) => {})
 	}, [])
 
 
@@ -41,7 +41,7 @@ function AddFriends(props: Props){
 			.then(function (response:AxiosResponse) {
 				setUsers(response.data);
 			}) 
-			.catch((error:AxiosError) => console.log(error))
+			.catch((error:AxiosError) => {})
 		}
 		else
 		{
@@ -54,7 +54,7 @@ function AddFriends(props: Props){
 			.then(function (response:AxiosResponse) {
 				setUsers(response.data);	 
 			})
-			.catch((error: AxiosError) => console.log(error))
+			.catch((error: AxiosError) => {})
 	}
 
 	async function add(id: number) {
@@ -64,7 +64,7 @@ function AddFriends(props: Props){
 		.then((response:AxiosResponse) => {
 			getUsers();
 		})
-		.catch((error:AxiosError) => console.log(error))
+		.catch((error:AxiosError) => {})
 	}
 
 	async function block(id: number) {
@@ -74,7 +74,7 @@ function AddFriends(props: Props){
 		.then((response:AxiosResponse) => {
 			getUsers();
 		})
-		.catch((error:AxiosError) => console.log(error))
+		.catch((error:AxiosError) => {})
 	}
 
 

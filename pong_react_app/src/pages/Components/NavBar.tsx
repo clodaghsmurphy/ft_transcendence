@@ -26,7 +26,7 @@ function NavBar()
 
     const handleLogout = () => {
         axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
-        .catch((e:AxiosError) => console.log(e))
+        .catch((e:AxiosError) => {})
         dispatch ({
             type: ActionKind.Logout
         });

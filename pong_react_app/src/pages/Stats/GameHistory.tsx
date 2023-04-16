@@ -59,7 +59,6 @@ function GameHistory(props: Props)
 			setGameHistory(result.data);
 			setRatingClass(result.data.rating_change > 0  ? 'rating_up' : 'rating_down' )
 		} catch (error) {
-			console.log(error);
 			toast.error(`Game History error : ${error}`)
 		}
 	}

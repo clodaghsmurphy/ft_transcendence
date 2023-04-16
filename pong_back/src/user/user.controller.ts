@@ -38,12 +38,6 @@ export class UserController {
 		return this.userService.getInfo(parseInt(params.id), params.attribute);
 	}
 
-	@Post('create')
-	//delete this
-	createUser(@Body() dto: UserCreateDto) {
-		return this.userService.create(dto);
-	}
-
 	@Post('update')
 	@UseGuards(JwtAuthGuard)
 	async updateUser(@Body() dto: UserUpdateDto) {
