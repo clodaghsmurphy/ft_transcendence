@@ -28,7 +28,6 @@ export class AuthController {
     @Get('42/login')
     @UseGuards(FT_AuthGuard)
     handleLogin(){
-        console.log('handlelogin')
         //42 AuthGuard redirects here and redirects to 42/redirect
     }
 
