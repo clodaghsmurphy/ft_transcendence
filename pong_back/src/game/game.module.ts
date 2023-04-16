@@ -11,7 +11,7 @@ import { JwtService } from "@nestjs/jwt";
 
 @Module({
   controllers: [GameController],
-  providers: [GameService, GameGateway, DmService, DmGateway, JwtService],
+  providers: [GameService, GameGateway, JwtService],
   imports: [UserModule, DmModule]
 })
 export class GameModule {}
