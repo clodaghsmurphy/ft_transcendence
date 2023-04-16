@@ -150,7 +150,7 @@ export class GameService {
 				io.in('' + room.id).emit('gameover');
 				await this.remove(room.id);
 			}
-		}, 34);
+		}, 100);
 	}
 
 	gameLoop(state: GameState) {
@@ -169,9 +169,13 @@ export class GameService {
 		ball.dir_x = state.ball_dir_x;
 		ball.dir_y = state.ball_dir_y;
 		ball.radius = state.ball_radius / 2;
-		this.checkBallCollision(state, ball);
+
+		// console.log("Nouvelle appelle");
+
+		this.checkBallCollision(state, ball, 0);
 
 		
+
 		this.checkGoal(state);
 
 		// Vérifie si le jeu est terminé et met à jour la variable ongoing de la GameState en conséquence
@@ -243,7 +247,6 @@ export class GameService {
 		const right2 = x2 + width2;
 		const bottom2 = y2 - height2;
 	  
-		console.log(x1, y1, width1, height1, x2, y2, width2, height2);
 
 		// Check for collision
 		if (x1 < right2 && right1 > x2 && y1 < bottom2 && bottom1 > y2) {
@@ -260,45 +263,7 @@ export class GameService {
 		return null;
 	}
 
-	getShortestIntersection(hexagonPoints, rectX, rectY, rectWidth, rectHeight) {
-		var rectPoints = [
-			{ x: rectX, y: rectY },
-			{ x: rectX + rectWidth, y: rectY },
-			{ x: rectX + rectWidth, y: rectY + rectHeight },
-			{ x: rectX, y: rectY + rectHeight }
-		];
-	
-		var shortestDistance = Infinity; // Variable pour stocker la distance la plus courte
-		var shortestIntersection = null; // Variable pour stocker l'intersection ayant la distance la plus courte
-	
-		for (var i = 0; i < hexagonPoints.length; i++) {
-			var currentHexagonPoint = hexagonPoints[i];
-			var nextHexagonPoint = hexagonPoints[(i + 1) % hexagonPoints.length];
-	
-			for (var j = 0; j < rectPoints.length; j++) {
-				var currentRectPoint = rectPoints[j];
-				var nextRectPoint = rectPoints[(j + 1) % rectPoints.length];
-	
-				var intersection = this.intersectionSegment(currentHexagonPoint.x, currentHexagonPoint.y, nextHexagonPoint.x, nextHexagonPoint.y, currentRectPoint.x, currentRectPoint.y, nextRectPoint.x, nextRectPoint.y);
-	
-				if (intersection !== null) {
-					// Hexagon and rectangle intersect
-					// Calculating distance between intersection and hexagon center
-	
-					if (intersection.dist < shortestDistance) {
-						// If this intersection has a shorter distance than previous intersections, update shortestDistance and shortestIntersection
-						shortestDistance = intersection.dist;
-						shortestIntersection = intersection;
-					}
-				}
-			}
-		}
-	
-		// Return the intersection having the shortest distance, or null if no intersection found
-		return shortestIntersection;
-	}
-
-	intersectionRectangleBall(ball: GameBall, rectangle_x : number, player_pos: number, length: number, width: number)
+	intersectionRectangleBall(ball: GameBall, rectangle_x : number, player_pos: number, length: number, width: number) : {dist_x:number, dist_y:number, dist:number} | null
 	{
 		const half_length = length / 2;
 		const gauche = ball.dir_x < 0;
@@ -353,64 +318,69 @@ export class GameService {
 			},
 		}
 
-		let hexagone = []
+		let largeur_ball: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de gauche a droite
+		let hauteur_ball: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de bas en haut
+		let largeur_rect: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de gauche a droite
+		let hauteur_rect: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de bas en haut
 
 		if (haut)
 		{
-			hexagone.push({x: ball_rectangle.bas_gauche.x_current, y: ball_rectangle.bas_gauche.y_current});
-			hexagone.push({x: ball_rectangle.bas_droit.x_current, y: ball_rectangle.bas_droit.y_current});
-			hexagone.push({x: ball_rectangle.haut_gauche.x, y: ball_rectangle.haut_gauche.y});
-			hexagone.push({x: ball_rectangle.haut_droit.x, y: ball_rectangle.haut_droit.y});
-			if (gauche)
-			{
-				hexagone.push({x: ball_rectangle.bas_gauche.x, y: ball_rectangle.bas_gauche.y});
-				hexagone.push({x: ball_rectangle.haut_droit.x_current, y: ball_rectangle.haut_droit.y_current});
-			}
-			else
-			{
-				hexagone.push({x: ball_rectangle.haut_gauche.x_current, y: ball_rectangle.haut_gauche.y_current});
-				hexagone.push({x: ball_rectangle.bas_droit.x, y: ball_rectangle.bas_droit.y});
-			}
+			largeur_ball = {x1: ball_rectangle.haut_gauche.x_current, y1: ball_rectangle.haut_gauche.y_current, x2: ball_rectangle.haut_droit.x_current, y2: ball_rectangle.haut_droit.y_current, largeur: true};
+			largeur_rect = {x1: rectangle.bas_gauche.x, y1: rectangle.bas_gauche.y, x2: rectangle.bas_droit.x, y2: rectangle.bas_droit.y, largeur: true};
 		}
 		else
 		{
-			hexagone.push({x: ball_rectangle.bas_gauche.x, y: ball_rectangle.bas_gauche.y});
-			hexagone.push({x: ball_rectangle.bas_droit.x, y: ball_rectangle.bas_droit.y});
-			hexagone.push({x: ball_rectangle.haut_gauche.x_current, y: ball_rectangle.haut_gauche.y_current});
-			hexagone.push({x: ball_rectangle.haut_droit.x_current, y: ball_rectangle.haut_droit.y_current});
-			if (gauche)
+			largeur_ball = {x1: ball_rectangle.bas_gauche.x_current, y1: ball_rectangle.bas_gauche.y_current, x2: ball_rectangle.bas_droit.x_current, y2: ball_rectangle.bas_droit.y_current, largeur: true};
+			largeur_rect = {x1: rectangle.haut_gauche.x, y1: rectangle.haut_gauche.y, x2: rectangle.haut_droit.x, y2: rectangle.haut_droit.y, largeur: true};
+		}
+		if (gauche)
+		{
+			hauteur_ball = {x1: ball_rectangle.bas_gauche.x_current, y1: ball_rectangle.bas_gauche.y_current, x2: ball_rectangle.haut_gauche.x_current, y2: ball_rectangle.haut_gauche.y_current, largeur: false};
+			hauteur_rect = {x1: rectangle.haut_droit.x, y1: rectangle.haut_droit.y, x2: rectangle.bas_droit.x, y2: rectangle.bas_droit.y, largeur: false};
+		}
+		else
+		{
+			hauteur_ball = {x1: ball_rectangle.bas_droit.x_current, y1: ball_rectangle.bas_droit.y_current, x2: ball_rectangle.haut_droit.x_current, y2: ball_rectangle.haut_droit.y_current, largeur: false};
+			hauteur_rect = {x1: rectangle.bas_gauche.x, y1: rectangle.bas_gauche.y, x2: rectangle.haut_gauche.x, y2: rectangle.haut_gauche.y, largeur: false};
+		} 
+
+		// Je suis cense avoir 4 coordonnes dans chaque liste. 
+		// Les coordonnes des extremites sur les cotes droite ou gauche a tester donc 2
+		// Et pareillement avec le haut ou le bas donc 2
+
+		var intersection : {dist_x:number, dist_y:number, dist:number} | null = null;
+		var intersection_test : {dist_x:number, dist_y:number, dist:number} | null ;
+
+		for (let i = largeur_ball.x1; i <= largeur_ball.x2; i++) {
+			intersection_test = this.intersectionSegment(i, largeur_ball.y1, i + ball.dir_x, largeur_ball.y1 + ball.dir_y, largeur_rect.x1, largeur_rect.y1, largeur_rect.x2, largeur_rect.y2);
+			if (intersection_test)
 			{
-				hexagone.push({x: ball_rectangle.haut_gauche.x, y: ball_rectangle.haut_gauche.y});
-				hexagone.push({x: ball_rectangle.bas_droit.x_current, y: ball_rectangle.bas_droit.y_current});
-			}
-			else
-			{
-				hexagone.push({x: ball_rectangle.bas_gauche.x_current, y: ball_rectangle.bas_gauche.y_current});
-				hexagone.push({x: ball_rectangle.haut_droit.x, y: ball_rectangle.haut_droit.y});
+				if (intersection === null || intersection.dist > intersection_test.dist)
+					intersection = intersection_test;
 			}
 		}
 		
+		if (intersection)
+			console.log("Find intersection ")
 
-		return (this.getShortestIntersection(hexagone, rectangle.bas_gauche.x, rectangle.bas_gauche.y, width, length));
+		for (let i = hauteur_ball.y1; i <= hauteur_ball.y2; i++) {
+			intersection_test = this.intersectionSegment(hauteur_ball.x1, i, hauteur_ball.x1 + ball.dir_x, i + ball.dir_y, hauteur_ball.x1, hauteur_ball.y1, hauteur_ball.x2, hauteur_ball.y2);
+			if (intersection_test)
+			{
+				if (intersection === null || intersection.dist > intersection_test.dist)
+					intersection = intersection_test;
+			}
+		}
+		console.log(rectangle);
+		console.log(ball_rectangle);
+		console.log("Intersection : ", intersection, largeur_ball, largeur_rect, hauteur_ball, hauteur_rect);
 
-		// // 	var intersection;
-		// // intersection = this.intersectionSegment(ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
-		// // if (intersection) {
-		// // 	return intersection;
-		// // }
-		// // intersection = this.intersectionSegment(ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
-		// // if (intersection && !gauche) {
-		// // 	return intersection;
-		// // }
-		// // intersection = this.intersectionSegment(ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
-		// // if (intersection && gauche) {
-		// // 	return intersection;
-		// // }
-		// // intersection = this.intersectionSegment(ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, ball_rectangle.haut_gauche.x, ball_rectangle.haut_gauche.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
-		// // if (intersection) {
-		// // 	return intersection;
-		// // }
-		// return (null);
+		if (intersection)
+			if (intersection.dist === 0)
+				return null;
+
+		return intersection;
+
 	}
 
 	getDistance(x1: number, y1: number, x2: number, y2: number): { deltaX: number, deltaY: number } {
@@ -419,43 +389,39 @@ export class GameService {
 		return { deltaX, deltaY };
 	}
 
-	callibrage_ball_after_impact(ball: GameBall, state: GameState, vertical_hit: boolean, hit: any) {
-		const dist = this.getDistance(ball.x, ball.y, hit.x, hit.y);
-		ball.dir_x -= dist.deltaX;
-		ball.dir_y -= dist.deltaY;
+	callibrage_ball_after_impact(ball: GameBall, state: GameState, vertical_hit: boolean, hit: {dist_x:number, dist_y:number, dist:number}) {
+		 // mettre a jour la position de la balle par rapport a hit
+		const dist_du_hit_x = hit.dist_x * Math.sign(state.ball_dir_x) * -1;
+		const dist_du_hit_y = hit.dist_y * Math.sign(state.ball_dir_y) * -1;
+		const droite = state.ball_dir_x > 0;
+		const haut = state.ball_dir_y > 0;
+		ball.dir_x -= dist_du_hit_x;
+		ball.dir_y -= dist_du_hit_y;
 		if (vertical_hit)
 		{
-			const distance_x = Math.abs(hit.x - state.ball_pos_x);
-			const droite = state.ball_dir_x > 0;
-			if (droite)
-			{
-				state.ball_dir_x = -state.ball_speed;
-				state.ball_pos_x += 2 * distance_x;
-				ball.x = hit.x - 1;
-				ball.y = hit.y;
-			}
-			else
-			{
-				state.ball_dir_x = state.ball_speed;
-				state.ball_pos_x -= 2 * distance_x;
-				ball.x = hit.x + 1;
-				ball.y = hit.y;
-			}
-			state.ball_dir_x *= -1;
+			ball.x += dist_du_hit_x + (ball.radius + 1) * Math.sign(state.ball_dir_x) * -1;
+			ball.y += dist_du_hit_y;
+			state.ball_pos_x += 2 * dist_du_hit_x;
+			state.ball_dir_x = state.ball_speed * Math.sign(state.ball_dir_x) * -1;
 		}
-		else // pas encore utilise
-		{
-			const distance_y = Math.abs(hit.y - state.ball_pos_y);
-			const haut = state.ball_dir_y > 0;
-			if (haut)
-				state.ball_pos_y += 2 * distance_y;
-			else
-				state.ball_pos_y -= 2 * distance_y;
-			state.ball_dir_y *= -1;
-		}
+		// else // pas encore utilise
+		// {
+		// 	const distance_y = Math.abs(hit.y - state.ball_pos_y);
+		// 	if (haut)
+		// 		state.ball_pos_y += 2 * distance_y;
+		// 	else
+		// 		state.ball_pos_y -= 2 * distance_y;
+		// 	state.ball_dir_y *= -1;
+		// }
 	}
 
-	checkBallCollision(state: GameState, ball: GameBall) {
+	checkBallCollision(state: GameState, ball: GameBall, recursivite: number) {
+		if (recursivite > 50) {
+			state.ball_pos_x += state.ball_dir_x;
+			state.ball_pos_y += state.ball_dir_y;
+			return ;
+		}
+
 		const next_ball_y = ball.y + ball.dir_y;
 		const next_ball_x = ball.x + ball.dir_x;
 		
@@ -463,12 +429,12 @@ export class GameService {
 		if (next_ball_y - ball.radius <= 0 && ball.dir_y < 0) {
 			ball.y = ball.radius + 1;
 			ball.dir_y *= -1;
-			return (this.checkBallCollision(state, ball));
+			return (this.checkBallCollision(state, ball, recursivite + 1));
 		}
 		if (next_ball_y + ball.radius >= state.height && ball.dir_y > 0) {
 			ball.y = state.height - ball.radius -1;
 			ball.dir_y *= -1;
-			return (this.checkBallCollision(state, ball));
+			return (this.checkBallCollision(state, ball, recursivite + 1));
 		}
 
 		let intersect_pos = state.player1_pos;
@@ -491,14 +457,14 @@ export class GameService {
 									obstacle.pos_y, obstacle.length, obstacle.width);
 			}	
 		}
-		if (intersection === null) { // no hit
+		if (intersection === null) { // no hit || (intersection && intersection.dist == 0)
 			// avancer ball 
-			state.ball_pos_x = ball.x + ball.dir_x;
-			state.ball_pos_y = ball.y + ball.dir_y;
+			state.ball_pos_x += state.ball_dir_x;
+			state.ball_pos_y += state.ball_dir_y;
 			return ;
 		}
 
-		console.log("hit : ", intersection);
+		// console.log("hit : ", intersection , state);
 
 		// Increments speed on gamemode
 		if (state.mode_speedup) {
@@ -533,8 +499,7 @@ export class GameService {
 
 		this.callibrage_ball_after_impact(ball, state, true, intersection)
 
-		console.log(state);
-		return (this.checkBallCollision(state, ball));
+		return (this.checkBallCollision(state, ball, recursivite + 1));
 
 	}
 
