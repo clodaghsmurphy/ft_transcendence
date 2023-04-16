@@ -100,10 +100,14 @@ function MuteMessage(msg: MessageData, sender_name: string): JSX.Element {
 }
 
 function InviteMessage(every_user: User[], msg: MessageData, curr_user: User, sender_name: string) {
-	const messageClass = msg.sender_id === curr_user.id ? "sender message-wrapper" : "message-wrapper"
+	const messageClass = msg.sender_id === curr_user.id ? "message-wrapper2 sender" : "message-wrapper2"
 
 	return (
-		<div className={messageClass} key={msg.id}>
+		<div className={messageClass}
+			style={msg.sender_id === curr_user.id ? {
+				flexDirection: 'row-reverse'
+			} : {}}
+			key={msg.id}>
 			<div className="message-avatar">
 				<img src={avatarOf(every_user, msg.sender_id)} alt={sender_name}
 					style={{
@@ -118,14 +122,15 @@ function InviteMessage(every_user: User[], msg: MessageData, curr_user: User, se
 					}}>
 				</img>
 				<div className="message-header">
-					<span>{msg.sender_id}</span>
+					<span>{sender_name}</span>
 				</div>
 			</div>
-				<Link to={msg.text} className="message-body-link"
+				<button className="message-body-link"
+					onClick={() => window.location.replace(msg.text)}
 				style={{
 				}}>
 					<div>{sender_name + " has invited you to join a game! Click on this message to join."}</div>
-				</Link>
+				</button>
 		</div>	
 	)
 }
