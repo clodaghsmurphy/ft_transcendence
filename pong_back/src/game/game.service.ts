@@ -7,6 +7,7 @@ import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { getNextRatings } from "./rating";
 import * as deepEqual from 'deep-equal';
+import { use } from "passport";
 
 @Injectable()
 export class GameService {
@@ -290,6 +291,24 @@ export class GameService {
 		}, 34);
 	}
 
+	leave(gameId: number, userId: number) {
+		this.checkUserIsPlayer(userId, gameId);
+
+		const room: GameRoom = this.activeGames.get(gameId);
+
+		if (room.player2_id === -1) {
+			this.remove(gameId);
+			return ;
+		}
+
+		if (userId === room.player1_id) {
+			room.state.player2_goals = room.state.winning_goals;
+		} else {
+			room.state.player1_goals = room.state.winning_goals;
+		}
+		room.state.ongoing = false;
+	}
+
 	gameLoop(state: GameState) {
 		if (state.current_pause > 0) {
 			--state.current_pause;
@@ -355,7 +374,7 @@ export class GameService {
 		var r = num1 / den;
 		var s = num2 / den;
 
-		if (r >= 0 && r <= 1 && s >= 0 && s <= 1) 
+		if (r >= 0 && r <= 1 && s >= 0 && s <= 1)
 		{
 			// Les segments se croisent
 			var intersectionX = a1x + r * (a2x - a1x);
@@ -369,10 +388,10 @@ export class GameService {
 	distanceEuclidienne(x1: number, y1: number, x2: number, y2: number): number {
 		const deltaX = x2 - x1;
 		const deltaY = y2 - y1;
-	
+
 		// Utilisation du théorème de Pythagore pour calculer la distance euclidienne
 		const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-	
+
 		return distance;
 	}
 
@@ -456,9 +475,9 @@ export class GameService {
 		{
 			hauteur_ball = {x1: ball_rectangle.bas_droit.x_current, y1: ball_rectangle.bas_droit.y_current, x2: ball_rectangle.haut_droit.x_current, y2: ball_rectangle.haut_droit.y_current, largeur: false};
 			hauteur_rect = {x1: rectangle.bas_gauche.x, y1: rectangle.bas_gauche.y, x2: rectangle.haut_gauche.x, y2: rectangle.haut_gauche.y, largeur: false};
-		} 
+		}
 
-		// Je suis cense avoir 4 coordonnes dans chaque liste. 
+		// Je suis cense avoir 4 coordonnes dans chaque liste.
 		// Les coordonnes des extremites sur les cotes droite ou gauche a tester donc 2
 		// Et pareillement avec le haut ou le bas donc 2
 
@@ -482,7 +501,7 @@ export class GameService {
 				}
 			}
 		}
-		
+
 		for (let i = hauteur_ball.y1; i <= hauteur_ball.y2; i++) {
 			intersection_test = this.intersectionSegment(hauteur_ball.x1, i, hauteur_ball.x1 + state.ball_dir_x, i + state.ball_dir_y, hauteur_rect.x1, hauteur_rect.y1, hauteur_rect.x2, hauteur_rect.y2);
 			if (intersection_test)
