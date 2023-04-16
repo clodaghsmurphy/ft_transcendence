@@ -21,8 +21,8 @@ export function GameInfo(settings: GamePost) {
 				</div>
 				<div className="bar-vertical" />
 				<div className="division">
-					mode speedup: {settings.mode_speedup} <br />
-					mode shrink: {settings.mode_shrink} <br />
+					mode speedup: {String(settings.mode_speedup)} <br />
+					mode shrink: {String(settings.mode_shrink)} <br />
 					gaols to win: {settings.winning_goals} <br />
 					map: {settings.game_map}
 				</div>
@@ -36,17 +36,15 @@ export function GameInfo(settings: GamePost) {
 export function GameFinished(fnc: (() => void) | null) {
 
 	if (!fnc) {
-		return <div />
+		return <div>rien?</div>
 	}
 	return (
-		<div>
-			<button className="button-leave-game"
-				onClick={() => {
-					fnc()
-					window.location.replace(`http://${window.location.host}/game`)
-				}}>
-				Leave game
-			</button>
-		</div>
+		<button className="button-leave-game"
+			onClick={() => {
+				fnc()
+				window.location.replace(`http://${window.location.host}/game`)
+			}}>
+			Leave game
+		</button>
 	)
 }

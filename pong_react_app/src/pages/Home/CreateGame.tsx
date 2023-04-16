@@ -53,12 +53,11 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 	}, [socket_game])
 
 	useEffect(() => {
-		if (socket_game) {
+		if (socket_game && game_id) {
 			const handleLeave = () => {
 				socket_game.emit('leave', { game_id })
-				console.log('procking')
 			}
-			set_leave_function(handleLeave)
+			set_leave_function(() => {return handleLeave}) // xd
 		}
 	}, [socket_game, game_id])
 
@@ -73,9 +72,17 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 	}
 
 	if (window_type === INGAME) {
-		return Game_Info
+		return (
+			<div className='create-game'>
+				{Game_Info}
+			</div>
+		)
 	} else if (window_type === FINISH) {
-		return Game_Finished
+		return (
+			<div className='create-game'>
+				{Game_Finished}
+			</div>
+		)
 	}
 	return (
 		<div className='create-game'>
