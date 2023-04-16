@@ -42,7 +42,6 @@ function Stats(props:Props)
 		axios.get('/api/user/info/' + state.user.id)
 		.then(() => {})
 		.catch(() => {
-			console.log('test')
 			axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
 				.then(() => {})
 				.catch(() => {})

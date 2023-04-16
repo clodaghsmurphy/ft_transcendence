@@ -112,7 +112,6 @@ export class UserService {
 
 	verifyName(name: string) {
     var regex = new RegExp("^[a-zA-Z0-9._-]*$");
-	console.log(name);
     if (!regex.test(name)) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
@@ -209,7 +208,6 @@ export class UserService {
 	}
 
 	async getStats(user: User)  {
-		console.log('in stats')
 		const result = await this.prisma.stats.findUnique({
 			where: {
 				userId: user.id
@@ -221,7 +219,6 @@ export class UserService {
 				rating: true,
 			}
 		})
-		console.log(result)
 		return result;
 	}
 
@@ -251,7 +248,6 @@ export class UserService {
 
 		const gamePromises = games.map(async (game) => {
 			const info = await this.getGameInfo(user, game);
-			console.log(JSON.stringify(info));
 			return info;
 		});
 

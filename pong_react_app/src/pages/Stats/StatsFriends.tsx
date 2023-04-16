@@ -37,7 +37,6 @@ function StatsFriends(props:Props): JSX.Element {
 			)
 			.then(function (res: AxiosResponse) {
 				setFriends(res.data);
-				console.log(res.data)
 			})
 			.catch((error: AxiosError) => console.log(error));
 	}

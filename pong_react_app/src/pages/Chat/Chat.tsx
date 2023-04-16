@@ -64,7 +64,6 @@ function Chat()
 				}, user_id)
 			})
 			.catch(() => {
-				console.log('test')
 				axios.post(`http://${window.location.hostname}:8080/api/auth/logout`)
 					.then(() => {})
 					.catch((e:AxiosError) => {})
@@ -74,7 +73,6 @@ function Chat()
 				localStorage.clear();
 			})
 
-		console.log(localStorage.getItem('token'))
 		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
 		{
 			extraHeaders: {
@@ -99,11 +97,9 @@ function Chat()
 			socket_chan.emit('ping')
 
 			socket_chan.on('pong', () => {
-				console.log('pong received')
 			})
 			
 			socket_chan.on('exception', (data: any) => {
-				console.log('chan execption:', data)
 				toast.warn('chan: ' + data.error)
 			})
 
@@ -118,7 +114,6 @@ function Chat()
 			socket_dm.removeListener('exception')
 			
 			socket_dm.on('exception', (data: any) => {
-				console.log('dm execption:', data)
 				toast.warn('dm: ' + data.error)
 			})
 		}

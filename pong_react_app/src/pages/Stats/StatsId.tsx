@@ -21,7 +21,6 @@ function StatsId()
 	const [usr, setUser] = useState<user>(emptyUser);
 	const id = useParams();
 	const navigate = useNavigate();
-	console.log(id);
 
 	useEffect(() => {
 		document.title = 'Stats';

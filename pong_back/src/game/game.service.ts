@@ -657,7 +657,6 @@ export class GameService {
 
 	checkActiveGame(gameId: number) {
 		if (!this.activeGames.has(gameId)) {
-			console.log(`${JSON.stringify(this.activeGames)}`);
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `Game ${gameId} is not ongoing.`

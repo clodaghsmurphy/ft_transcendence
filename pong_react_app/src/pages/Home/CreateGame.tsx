@@ -28,7 +28,6 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 		if (socket_game) {
 
 			socket_game.on('gamestart', (data: GameStart) => {
-				console.log(data)
 				setWindow(INGAME)
 				setSettings({
 					user_id: 0,
