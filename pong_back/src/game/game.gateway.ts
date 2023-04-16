@@ -1,9 +1,8 @@
-import { HttpException, Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Logger, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
-import { Socket, Namespace, Server } from 'socket.io';
+import { Socket, Namespace } from 'socket.io';
 import { BadRequestFilter } from "./game.filters";
 import { GameService } from "./game.service";
-import { JwtWsGuard, UserPayload } from "src/auth/utils/JwtWsGuard";
 import { GameJoinDto, GameKeyDto } from "./dto";
 
 @UseFilters(new BadRequestFilter())

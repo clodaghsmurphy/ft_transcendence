@@ -16,8 +16,8 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
             callbackURL: 'http://' + process.env.HOSTNAME + ':3042/auth/42/redirect',
         });
     }
-    
-    async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any) 
+
+    async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any)
     {
         const userData = {
             name: profile.username,
@@ -26,8 +26,6 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
             avatar_path: profile._json.image.link,
         }
         const user = await this.userService.userExists(userData.id);
-        console.log('in 42 valiate and user is ');
-        console.log(userData);
         if (!user)
             return await this.userService.create(userData);
         return user;

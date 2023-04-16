@@ -1,9 +1,8 @@
 import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
-import { UploadedFile, UseInterceptors, ParseFilePipe, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { UploadedFile, UseInterceptors, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserCreateDto, UserUpdateDto } from "./dto";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
-import { AuthGuard } from '@nestjs/passport';
 import { UserService } from "./user.service";
 import { SharpPipe } from "./utils/sharp.pipe";
 import * as path from 'path';
