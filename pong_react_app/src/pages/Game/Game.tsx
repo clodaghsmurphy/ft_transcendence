@@ -10,6 +10,7 @@ import { io, Socket } from 'socket.io-client';
 import './Game.css'
 import { AuthContext } from '../../App'
 import axios, { AxiosResponse, AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -57,11 +58,12 @@ function Game(game_id: number | null) {
 			})
 	
 			socket_game.on('exception', (data: any) => {
-				console.log('EXCEPTION !!!\n', data)
-			})
-			
-			socket_game.on('disconnect', () => {
-				console.log('DISCONNECTED!!!!!!!!!')
+				if (/^Game \d+ is not ongoing.$/.test(data.response.error)) {
+					toast.warn('This game is finished, You will be redirected in 3 seconds')
+					setTimeout(() => {
+						window.location.replace(`http://${window.location.hostname}:8080/game`)
+					}, 3000)
+				}
 			})
 			
 			socket_game.on('start', (a: any) => console.log(a))
