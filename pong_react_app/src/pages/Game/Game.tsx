@@ -11,11 +11,6 @@ import './Game.css'
 import { AuthContext } from '../../App'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 
-const BALL_SIZE = 10;
-const BALL_SPEED = 10;
-const PADDLE_HEIGHT = 80;
-const PADDLE_SPEED = 20;
-
 const { v4: uuidv4 } = require('uuid');
 
 export enum GameMap {
