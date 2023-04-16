@@ -19,10 +19,6 @@ services:
   front:
     container_name: front_react
     image: docker-react_i
-    volumes:
-      - './pong_react_app:/app'
-      - '/app/node_modules'
-      - uploads:/app/src/uploads
     build:
       context: ${PWD}/pong_react_app
       dockerfile: Dockerfile
@@ -70,18 +66,8 @@ services:
       retries: 5
 
 volumes:
-  front-volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}/pong_react_app
   uploads:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}/uploads
+
   pg-data:
 
 networks:
