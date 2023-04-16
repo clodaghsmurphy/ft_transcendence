@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Req, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post,  Request, UseGuards } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
-import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, ChannelParams, MessageCreateDto } from "./dto";
+import { ChannelCreateDto, ChannelJoinDto, ChannelLeaveDto, ChannelParams } from "./dto";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 
 @Controller('channel')

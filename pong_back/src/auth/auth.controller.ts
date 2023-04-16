@@ -1,4 +1,4 @@
-import { Controller,  Body, Get, UnauthorizedException, Res, Req, Request, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller,  Body, Get, UnauthorizedException, Res, Req, Request, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { FT_AuthGuard } from './utils/Guards';
@@ -7,9 +7,7 @@ import { Jwt2faAuthGuard } from './utils/Jwt2faGuard';
 import { UserService } from 'src/user/user.service';
 import { authenticator, totp } from 'otplib';
 import *  as qrcode from 'qrcode';
-import { AuthGuard } from '@nestjs/passport';
 import { PrismaService } from "src/prisma/prisma.service";
-import { User } from "@prisma/client";
 import { UserEntity } from 'src/user/utils/user.decorator';
 
 
@@ -70,8 +68,6 @@ export class AuthController {
 
     @Get('status')
     user(@Req() request: Request) {
-        console.log(request);
-
     }
 
     @UseGuards(JwtAuthGuard)
@@ -85,7 +81,6 @@ export class AuthController {
     async generate(@Req() req, @Res() res: Response)
     {
         const user = await this.userService.userExists(parseInt(req.user.id));
-        console.log(user);
         if (!user)
             throw new UnauthorizedException();
         const secret = await user.otp_base32 || authenticator.generateSecret();
@@ -109,10 +104,8 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post('validate')
     async validate(@Body() body:any, @Req() req ){
-        console.log('in validate and user is')
         const token = body.totp;
         const user = await this.userService.userExists(parseInt(req.user.id));
-        console.log('user');
         if (!user)
             throw new UnauthorizedException();
         const secret = user.otp_base32;
@@ -136,8 +129,6 @@ export class AuthController {
     @Post('auth2fa')
     @UseGuards(Jwt2faAuthGuard)
     async authenticate2fa(@Request() request, @Body() body){
-        console.log('in auth2fa and request.user is');
-        console.log(request.user);
         const token = body.value;
         const secret = request.user.otp_base32;
         const isValid = authenticator.verify({ token, secret});

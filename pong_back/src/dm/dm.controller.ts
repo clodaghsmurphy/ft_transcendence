@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Req, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
 import { DmService } from "./dm.service";
 import { DmParams } from "./dto";
