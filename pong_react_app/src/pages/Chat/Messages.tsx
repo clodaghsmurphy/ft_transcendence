@@ -49,12 +49,10 @@ function Messages(current_chan: CurrentChan, users: User[],
 	
 	let header = current_chan.type === CHANNEL ?
 		<div className='channel-header'>
-	<button className='invite-button'>
-			invite
-		</button>
 		<div style={{
 			flex: '8',
-			textAlign: 'center',
+			textAlign: 'left',
+			marginLeft: '15px',
 		}}>
 			{chan_name}
 		</div>
@@ -66,7 +64,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 	<div className='channel-header'>
 		<div style={{
 			flex: '8',
-			textAlign: 'center',
+			textAlign: 'left',
+			marginLeft: '15px',
 		}}>
 			{chan_name}
 		</div>
@@ -182,12 +181,10 @@ function Messages(current_chan: CurrentChan, users: User[],
 
 			{current_chan.type === CHANNEL ?
 				<div className='channel-header'>
-			<button className='invite-button'>
-					invite
-				</button>
 				<div style={{
 					flex: '8',
-					textAlign: 'center',
+					textAlign: 'left',
+					marginLeft: '15px',
 				}}>
 					{chan_name}
 				</div>
@@ -199,7 +196,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 			<div className='channel-header'>
 				<div style={{
 					flex: '8',
-					textAlign: 'center',
+					textAlign: 'left',
+					marginLeft: '15px',
 				}}>
 					{chan_name}
 				</div>
