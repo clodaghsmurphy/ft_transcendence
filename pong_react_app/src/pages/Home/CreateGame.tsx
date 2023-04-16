@@ -6,11 +6,13 @@ import BrowseGames from './BrowseGames';
 import { socket_game } from '../Game/Game';
 import { GameStart } from './Dashboard';
 import { GameInfo, GameFinished } from './CrossingFeilds'
+import { socket_chan } from '../Chat/Chat';
 
 const CREATE = 1;
 const BROWSE = 2;
 const INGAME = 3;
 const FINISH = 4;
+const WAIT = 5;
 
 export default function CreateGame(settings: GamePost, default_settings: GamePost,
 	setSettings: React.Dispatch<React.SetStateAction<GamePost>>,
@@ -21,11 +23,12 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 	const is_create = window_type === CREATE
 	const SettingsBlock = GameSettings(settings, default_settings, setSettings, set_game_id)
 	const BrowsingBlock = BrowseGames()
-	const Game_Info = GameInfo(settings)
+	let Game_Info = GameInfo(settings, leave_function, game_id)
 	const Game_Finished = GameFinished(leave_function)
+	let [setup, setSetup] = useState(false)
 
 	useEffect(() => {
-		if (socket_game) {
+		if (socket_game && !setup) {
 
 			socket_game.on('gamestart', (data: GameStart) => {
 				setWindow(INGAME)
@@ -39,15 +42,22 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 					mode_speedup: data.state.mode_speedup,
 					mode_shrink: data.state.mode_shrink,
 					mode_chaos: data.state.mode_chaos,
-					game_map: GameMap.Classic, // A CHANGER !!!
+					game_map: GameMap.Classic,
 				})
 			})
 
 			socket_game.on('gameover', () => {
 				setWindow(FINISH)
 			})
+
+			socket_game.on('join', () => {
+				setWindow(WAIT)
+			})
+
+			setSetup(true)
 		}
 	}, [socket_game])
+
 
 	useEffect(() => {
 		if (socket_game && game_id) {
@@ -68,6 +78,13 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 		}
 	}
 
+	if (window_type === WAIT) {
+		return (
+			<div className='create-game'>
+				{Game_Info}
+			</div>
+		)
+	}
 	if (window_type === INGAME) {
 		return (
 			<div className='create-game'>
