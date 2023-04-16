@@ -26,8 +26,11 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
             avatar_path: profile._json.image.link,
         }
         const user = await this.userService.userExists(userData.id);
-        if (!user)
-            return await this.userService.create(userData);
+        if (!user) {
+            let newUser : any = await this.userService.create(userData);
+            newUser.new = true;
+            return newUser;
+        }
         return user;
     }
 }

@@ -1,13 +1,14 @@
 import React from 'react';
 import axios from "axios";
 import { useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {  Navigate } from 'react-router-dom'
 import {  useState } from 'react';
 import ball from '../../media/Ball.svg';
 import paddle from '../../media/Paddle.svg'
 import { AuthContext } from '../../App';
 import {  ActionKind } from "../../store/reducer"
+import { toast } from 'react-toastify'
 
 export interface loginData
 	{
@@ -29,7 +30,7 @@ function Login ()
 	const [ data, setData ] = useState<Data>( {errorMessage: "", isLoading: false});
 
 
-	async function getPayload () 
+	async function getPayload (flag: boolean) 
 	{
 		try {
 			const { data } = await axios.get(`http://${window.location.hostname}:8080/api/auth/profile`);
@@ -40,6 +41,9 @@ function Login ()
 					}
 				)
 				localStorage.setItem("isLoggedIn", 'true');
+				if (flag === true ) {
+					window.location.replace(`http://${window.location.hostname}:8080/stats?new=true`)
+				}
 		}
 		catch(e) {}
 			
@@ -54,10 +58,18 @@ function Login ()
 		
 		if (url.includes("?access_token"))
 		{
-			const token = new URLSearchParams(location.search).get('access_token')!;
-			localStorage.setItem("token", token);
-			axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-			getPayload();
+			if (url.includes("?new")) {
+				const token = new URLSearchParams(location.search).get('access_token')!;
+				localStorage.setItem("token", token);
+				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+				getPayload(true);
+			}
+			else {
+				const token = new URLSearchParams(location.search).get('access_token')!;
+				localStorage.setItem("token", token);
+				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+				getPayload(false);
+			}
 		}
 		
 	}, [state, dispatch, data] ); 

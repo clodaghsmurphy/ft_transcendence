@@ -57,6 +57,11 @@ export class AuthController {
     @UseGuards(FT_AuthGuard)
     async handleRedirect(@Req() req, @Res() res, @UserEntity() user){
         const token = await this.authService.login(res, user);
+        if (user.hasOwnProperty('new')) {
+            res.redirect(`http://${process.env.HOSTNAME}:8080/login?access_token=${token.access_token}?new=true`);
+            return ;
+        }
+
         if (user.otp_enabled && !user.otp_verified) {
             res.redirect(`http://${process.env.HOSTNAME}:8080/2fa?access_token=${token.access_token}`)
             return ;
