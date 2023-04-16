@@ -22,7 +22,7 @@ function LoginTfa()
     async function getPayload () 
 	{
         try {
-            const { data } = await axios.get(`http://${window.location.hostname}:3042/auth/profile`);
+            const { data } = await axios.get(`http://${window.location.hostname}:8080/api/auth/profile`);
                 dispatch(
                     {
                         type: ActionKind.Login,
