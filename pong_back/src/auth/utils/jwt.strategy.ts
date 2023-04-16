@@ -17,11 +17,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	async validate(payload: any)
 	{
 		const user = await this.userService.userExists(payload.sub);
-		if (user.otp_enabled && !user.otp_verified) {
-			throw new UnauthorizedException('User has not verified two factor authentication');
-		}
 		if (!user){
 			throw new UnauthorizedException('User not found');
+		}
+		if (user.otp_enabled && !user.otp_verified) {
+			throw new UnauthorizedException('User has not verified two factor authentication');
 		}
 		return user;
 	}
