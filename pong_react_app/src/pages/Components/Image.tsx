@@ -17,6 +17,9 @@ function Image(props: Props) {
 	const [image, setImage] = useState(loading);
 	const [ online, setOnline ] = useState(false);
 
+	useEffect(() => {
+		getOnline()
+	}, [props.id])
 	const getOnline = async () => {
 		try {
 			const result = await axios.get(`http://${window.location.hostname}:8080/api/user/info/${props.id}/connected`)
@@ -29,7 +32,6 @@ function Image(props: Props) {
 	}
 
 	const memoizedImage  = useMemo(() => {
-		getOnline();
 		return (
 			<img src={`http://${window.location.hostname}:8080/api/user/image/${props.id}`} alt='avatar' />
 		)
@@ -40,7 +42,7 @@ function Image(props: Props) {
 		<div className="img-container">
 			{memoizedImage}
 		</div>
-			{ online ? <span className='online'></span> : <span className='offline'></span> }
+			{ online ? <span className='online'></span> : <span className='offline' ></span>}
 		</>
 	)
 }
