@@ -88,7 +88,7 @@ export function GameInfo(settings: GamePost,
 						onClick={() => {
 						socket_variable.emit('invite_dm', {
 							target_id: dm.id,
-							game_id
+							id: game_id
 						})
 					}}>
 						{id_to_user(all_user, dm.id).name}
