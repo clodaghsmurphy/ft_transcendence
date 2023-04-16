@@ -90,3 +90,9 @@ export class GameKeyDto extends GameJoinDto {
 	@Type(() => GameKeyEvent)
 	keyEvent: GameKeyEvent;
 }
+
+export class GameInviteDmDto extends GameRemoveDto {
+	@IsNotEmpty()
+	@IsNumber()
+	target_id: number;
+}

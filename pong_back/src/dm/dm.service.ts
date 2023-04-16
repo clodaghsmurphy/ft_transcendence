@@ -58,6 +58,7 @@ export class DmService {
 				text: dto.text,
 				sender: {connect: {id: dto.sender_id}},
 				receiver: {connect: {id: dto.receiver_id}},
+				type: dto.type,
 			}
 		});
 		return message;
