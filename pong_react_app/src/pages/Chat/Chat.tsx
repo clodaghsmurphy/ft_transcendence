@@ -94,8 +94,9 @@ function Chat()
 		if (socket_chan) {
 			socket_chan.removeListener('exception')
 			socket_chan.removeListener('pong')
+			socket_chan.removeListener('password')
 
-			// socket_chan.emit('ping')
+			socket_chan.emit('ping')
 
 			socket_chan.on('pong', () => {
 				console.log('pong received')
@@ -104,6 +105,10 @@ function Chat()
 			socket_chan.on('exception', (data: any) => {
 				console.log('chan execption:', data)
 				toast.warn('chan: ' + data.error)
+			})
+
+			socket_chan.on('password', (data) => {
+				toast.success('Password modified')
 			})
 		}
 	}, [socket_chan])

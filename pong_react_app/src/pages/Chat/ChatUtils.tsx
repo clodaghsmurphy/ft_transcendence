@@ -119,6 +119,9 @@ export function Password(current_user: User, current_chan: CurrentChan): JSX.Ele
 		return <div key='nothing'/>
 
 	function changePassword(name: string) {
+		if (pass_ref.current!.value.length === 0)
+			return
+		console.log('emit password')
 		socket_chan.emit('password', {
 			name: name,
 			user_id: current_user.id,
