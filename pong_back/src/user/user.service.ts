@@ -110,19 +110,30 @@ export class UserService {
 		}
 	}
 
-	verifyName(name: string) {
-    var regex = new RegExp("^[a-zA-Z0-9._-]*$");
-    if (!regex.test(name)) {
+	async verifyName(name: string, id: number) {
+		var regex = new RegExp("^[a-zA-Z0-9._-]*$");
+		if (!regex.test(name)) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: `user name must not contain special characters`,
 			}, HttpStatus.BAD_REQUEST);
    	 	}
+
+		const users = await this.prisma.user.findMany({where: {name: name}});
+
+		for (const user of users) {
+			if (user.id !== id) {
+				throw new HttpException({
+					status: HttpStatus.BAD_REQUEST,
+					error: `user name ${name} is already taken`,
+				}, HttpStatus.BAD_REQUEST);
+			}
+		}
 	}
 
 	async update(dto: UserUpdateDto) {
 		await this.checkUser(dto.id);
-		this.verifyName(dto.name)
+		await this.verifyName(dto.name, dto.id)
 		const user = await this.prisma.user.update({
 			where: { id: dto.id },
 			data: dto,

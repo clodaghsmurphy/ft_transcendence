@@ -20,7 +20,7 @@ const ChangeName = () =>
 				payload: { login:value },
 			})
 			try{
-				const { data } = await axios.post(`http://${window.location.hostname}:8080/api/user/update`, { 
+				const { data } = await axios.post(`http://${window.location.hostname}:8080/api/user/update`, {
 						id: state.user.id,
 					name: value,
 					});
@@ -30,24 +30,24 @@ const ChangeName = () =>
 							payload: { user:{ name:data.name, id:data.id, avatar:`http://${window.location.hostname}:8080/api/user/image/${data.id}`, otp_enabled:data.otp_enabled}, isLoggedIn: true},
 						}
 					)
-					
+
 			} catch (e) {
 				if (axios.isAxiosError(e)) {
 					if (e.response?.status === 400)
-						toast.error(`Name Error: invalid name, name must only contain numbers or characters`);
+						toast.error(`Name Error: ${e.response?.data.error}`);
 					else {
 						toast.error('Name error, cannot change name');
 					}
 				}
 			}
 		setShowName(!showName);
-			
+
 	}
 
 	return(
 		<>
 		<li className="options-list-item" onClick={() => {setShowName(!showName)}}>Change Name</li >
-		{ showName ? 
+		{ showName ?
 		<div className='SmallPopUp'>
 			<div className='popup-header'>Please input name</div>
 			<div className='popup-input'>
@@ -57,7 +57,7 @@ const ChangeName = () =>
 				<button type='submit' className='submit-popup' onClick={submitName}>Submit</button>
 				<button className='cancel-popup' onClick={() => setShowName(!showName)}>Cancel</button>
 			</div>
-		</div> 
+		</div>
 		: null
 		}
 		</>
