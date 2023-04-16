@@ -62,6 +62,18 @@ export default function sketch(p5) {
     };
 
     p5.draw = () => {
+        if (div_largeur != gameDiv.offsetWidth || div_hauteur != gameDiv.offsetHeight) {
+            div_largeur = gameDiv.offsetWidth;
+            div_hauteur = gameDiv.offsetHeight;
+            game_height = div_hauteur;
+            game_width = div_largeur;
+            tailleterrain();
+            p5.resizeCanvas(terrain_width, terrain_height);
+            centerCanvas();
+            ratio_hauteur = (1 / dimension_height) * terrain_height;
+            ratio_largeur = (1 / dimension_width) * terrain_width;
+        }
+
         p5.background(0);
         p5.fill(p5.color(255, 255, 255));
         p5.strokeWeight(0);

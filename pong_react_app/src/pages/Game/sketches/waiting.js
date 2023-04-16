@@ -1,13 +1,12 @@
 export default function sketch(p5) {
     let canvas;
 
-    const header = document.getElementsByTagName('header');
-    let header_height = header[0].offsetHeight;
-
     const game_div = document.getElementById('game');
 
-    let div_height = game_div.offsetHeight - header_height,
+    let div_height = game_div.offsetHeight,
         div_width = game_div.offsetWidth;
+
+    console.log(div_height, div_width);
 
     let text_x0 = (div_width - p5.width) / 2,
         text_y0 = (div_height - p5.height) / 2;
@@ -43,6 +42,12 @@ export default function sketch(p5) {
     };
 
     p5.draw = () => {
+        if (div_width != game_div.offsetWidth || div_height != game_div.offsetHeight) {
+            div_width = game_div.offsetWidth;
+            div_height = game_div.offsetHeight;
+            p5.resizeCanvas(div_width, div_height);
+            centerCanvas();
+        }
         p5.background(0);
         p5.textSize(32);
         p5.textFont('arcade_normalregular');
@@ -70,8 +75,7 @@ export default function sketch(p5) {
         if (text_x0 + text_width >= div_width || text_x0 <= 0) {
             dir_x *= -1;
         }
-
-        if (text_y0 + text_height >= div_height || text_y0 <= 0) {
+        if (text_y0 + text_height / 2>= div_height || text_y0 <= text_height / 2) {
             dir_y *= -1;
         }
     };
