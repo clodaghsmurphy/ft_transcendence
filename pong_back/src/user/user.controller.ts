@@ -1,4 +1,4 @@
-import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
+import { Body, UseGuards, Controller, BadRequestException, Get, Res, HttpException, HttpStatus, Param, Post, Req } from "@nestjs/common";
 import { UploadedFile, UseInterceptors, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserCreateDto, UserUpdateDto } from "./dto";
@@ -50,6 +50,8 @@ export class UserController {
 	@UseInterceptors(FileInterceptor('file'))
 	async uploadFile(@UploadedFile(SharpPipe) file: string, @Res() res, @UserEntity() user)
 	{
+		console.log('in upload');
+
 		try
 		{
 			const Filepath = path.join('/app', '/uploads', file)
