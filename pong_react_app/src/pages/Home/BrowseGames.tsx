@@ -34,13 +34,13 @@ export default function BrowseGames() {
 									u2 = response.data
 									tmp.push(browse_button(game, u1, u2))
 								})
-								.catch((e) => console.log(e))
+								.catch((e) => {})
 							}
 							else {
 								tmp.push(browse_button(game, u1, undefined))
 							}
 						})
-						.catch((e) => console.log(e))
+						.catch((e) => {})
 
 				}
 				setGamesBlocks(tmp)
@@ -59,7 +59,6 @@ export default function BrowseGames() {
 		.then((response: AxiosResponse) => {
 			data = response.data as GameType[]
 
-			console.log(data)
 			setGamesBlocks([])
 			for (const game of data) {
 				let u1: User = {} as User
@@ -76,7 +75,7 @@ export default function BrowseGames() {
 									[...prev, browse_button(game, u1, u2)]
 								)
 							})
-							.catch((e) => console.log(e))
+							.catch((e) => {})
 						}
 						else {
 							setGamesBlocks((prev: JSX.Element[]) =>
@@ -84,7 +83,7 @@ export default function BrowseGames() {
 							)
 						}
 					})
-					.catch((e) => console.log(e))
+					.catch((e) => {})
 
 			}
 		})

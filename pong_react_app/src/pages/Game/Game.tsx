@@ -49,7 +49,6 @@ function Game(game_id: number | null) {
 	
 	useEffect(() => {
 		if (localStorage.getItem('token')?.length! > 0) {
-			console.log(localStorage.getItem('token'))
 			socket_game = io(`http://${window.location.hostname}:8080/game`,
 			{
 				extraHeaders: {
@@ -66,14 +65,13 @@ function Game(game_id: number | null) {
 				}
 			})
 			
-			socket_game.on('start', (a: any) => console.log(a))
+			socket_game.on('start', (a: any) => {})
 			
 			socket_game.on('update', (dto) => {
 				setData(dto);
 			});
 		
 			socket_game.on('join', (res) => {
-				console.log(`join: ${res.id}`);
 				setIsJoined(true);
 				set_finished(false)
 			});
@@ -88,8 +86,6 @@ function Game(game_id: number | null) {
 				// target_id: 4,
 				id: game_id,
 			};
-
-			console.log(join_dto)
 
 			socket_game.emit('join', join_dto);
 		}
@@ -118,9 +114,9 @@ function Game(game_id: number | null) {
 									<div>{p1.name} {data.player1_goals} - {data.player2_goals} {p2.name}</div>
 								</div>)
 							})
-							.catch((e) => { console.log(e)})
+							.catch((e) => {})
 					})	
-					.catch((e) => { console.log(e)})
+					.catch((e) => {})
 			}
 
 			socket_game.on('gameover', handleGameover)

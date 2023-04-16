@@ -38,7 +38,7 @@ function StatsFriends(props:Props): JSX.Element {
 			.then(function (res: AxiosResponse) {
 				setFriends(res.data);
 			})
-			.catch((error: AxiosError) => console.log(error));
+			.catch((error: AxiosError) => {});
 	}
 
 	async function deleteFriend(id: number) {
@@ -46,7 +46,7 @@ function StatsFriends(props:Props): JSX.Element {
 		.then(function(response:AxiosResponse){
 			setFriends(response.data);
 		})
-		.catch((e:AxiosError) => console.log(e));
+		.catch((e:AxiosError) => {});
 	}
 
 	const getStatus = (usr: friendUser) => {
