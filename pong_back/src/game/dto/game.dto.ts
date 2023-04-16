@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsNotEmpty, IsNumber, IsNumberString, IsOptional, Min, Max, IsBoolean } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsNumberString, IsOptional, Min, Max, IsBoolean, IsString } from "class-validator";
 import { GameKeyEvent, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, max_winning_goals, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed, min_winning_goals } from "../types/game.types";
 import { GameMap } from "../types/games.maps";
 
@@ -95,4 +95,10 @@ export class GameInviteDmDto extends GameRemoveDto {
 	@IsNotEmpty()
 	@IsNumber()
 	target_id: number;
+}
+
+export class GameInviteChanDto extends GameRemoveDto {
+	@IsNotEmpty()
+	@IsString()
+	name: string;
 }
