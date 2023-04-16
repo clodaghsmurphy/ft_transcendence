@@ -706,3 +706,14 @@
 	position: relative;
 	border-radius: 50%;
 }
+
+.rating_up {
+	flex-basis: 10%;
+	color: #5CFF5C;
+
+}
+
+.rating_down {
+	flex-basis: 10%;
+	color: rgb(255, 98, 98);
+}
