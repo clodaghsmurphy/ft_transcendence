@@ -11,11 +11,6 @@ import './Game.css'
 import { AuthContext } from '../../App'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 
-const BALL_SIZE = 10;
-const BALL_SPEED = 10;
-const PADDLE_HEIGHT = 80;
-const PADDLE_SPEED = 20;
-
 const { v4: uuidv4 } = require('uuid');
 
 export enum GameMap {
@@ -40,30 +35,45 @@ export type GamePost = {
 	game_map: GameMap,
 }
 
-export let socket_game = io(`http://${window.location.hostname}:8080/game`,
-{
-	extraHeaders: {
-		Authorization: "Bearer " + localStorage.getItem('token')
-	}
-})
+export let socket_game: Socket
 
-socket_game.on('exception', (data: any) => {
-	console.log('EXCEPTION !!!\n', data)
-})
-
-socket_game.on('disconnect', () => {
-	console.log('DISCONNECTED!!!!!!!!!')
-})
-
-socket_game.on('start', (a: any) => console.log(a))
 
 function Game(game_id: number | null) {
-
+	
 	const [isJoined, setIsJoined] = useState(false);
 	const { state, dispatch } = useContext(AuthContext);
 	const [data, setData] = useState(null);
 	const [is_finished, set_finished] = useState(false)
 	const [end_frame, set_end_frame] = useState(<div />)
+	
+	useEffect(() => {
+		socket_game = io(`http://${window.location.hostname}:8080/game`,
+		{
+			extraHeaders: {
+				Authorization: "Bearer " + localStorage.getItem('token')
+			}
+		})
+
+		socket_game.on('exception', (data: any) => {
+			console.log('EXCEPTION !!!\n', data)
+		})
+		
+		socket_game.on('disconnect', () => {
+			console.log('DISCONNECTED!!!!!!!!!')
+		})
+		
+		socket_game.on('start', (a: any) => console.log(a))
+		
+		socket_game.on('update', (dto) => {
+			setData(dto);
+		});
+	
+		socket_game.on('join', (res) => {
+			console.log(`join: ${res.id}`);
+			setIsJoined(true);
+			set_finished(false)
+		});
+	}, [])
 
 	useEffect(() => {
 		if (game_id) {
@@ -80,15 +90,6 @@ function Game(game_id: number | null) {
 		}
 	}, [game_id])
 
-	socket_game.on('update', (dto) => {
-		setData(dto);
-	});
-
-	socket_game.on('join', (res) => {
-		console.log(`join: ${res.id}`);
-		setIsJoined(true);
-		set_finished(false)
-	});
 
 	useEffect(() => {
 		if (socket_game) {
@@ -96,25 +97,16 @@ function Game(game_id: number | null) {
 
 			let handleGameover = (data: any) => {
 				set_finished(true)
-	
-				// a changer par data de gameover
-				data = {
-					winner: 11,
-					player1: 11,
-					player2: 3,
-					player1_goals: 5,
-					player2_goals: 5,
-				}
+
 				axios.get('/api/user/info/' + data.player1)
 					.then((response: AxiosResponse) => {
 						let p1 = response.data
-	
+
 						axios.get('/api/user/info/' + data.player2)
 							.then((response: AxiosResponse) => {
 								let p2 = response.data
 								let winner = p2.id === data.winner ? p2 : p1
-								let loser = winner === p2 ? p1 : p2
-	
+
 								set_end_frame(<div className='end-frame'>
 									<h1 className='game-over'>Game over</h1>
 									<div className='winner'>{winner.name} has won!</div>

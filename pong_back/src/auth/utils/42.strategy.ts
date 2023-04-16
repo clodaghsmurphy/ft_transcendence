@@ -16,8 +16,8 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
             callbackURL: 'http://' + process.env.HOSTNAME + ':3042/auth/42/redirect',
         });
     }
-    
-    async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any) 
+
+    async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any)
     {
         const userData = {
             name: profile.username,

@@ -10,7 +10,7 @@ export type Achievement = {
 	id: number,
 	cap: number,
 	score: number,
-	checker: AchievementChecker
+	    checker: AchievementChecker
 };
 
 const checkPoint: AchievementChecker =
@@ -29,6 +29,14 @@ const checkWin: AchievementChecker =
 		return [false, stat.wins];
 };
 
+const checkWinstreak: AchievementChecker =
+	(cap: number, stat: Stats) => {
+		if (stat.max_streak >= cap) {
+			return [true, cap];
+		}
+		return [false, stat.max_streak];
+};
+
 const checkPlayed: AchievementChecker =
 	(cap: number, stat: Stats) => {
 		if (stat.total_games >= cap) {
@@ -36,6 +44,7 @@ const checkPlayed: AchievementChecker =
 		}
 		return [false, stat.total_games];
 };
+
 
 export const DefaultAchievements: Achievement[] = [
 	   {
@@ -93,31 +102,13 @@ export const DefaultAchievements: Achievement[] = [
 		checker: checkWin
     },
     {
-        icon: 'Old_Fashioned',
-        title: 'Old-Fashioned',
-        description: 'Play 5 normal games',
-        id: 7,
-        cap: 5,
-        score: 0,
-		checker: checkPlayed
-    },
-    {
-        icon: 'Zoomer',
-        title: 'Zoomer',
-        description: 'Play 5 custom games',
-        id: 8,
-        cap: 5,
-        score: 0,
-		checker: checkPlayed
-    },
-    {
         icon: 'On_Fire',
         title: 'On Fire',
         description: 'Win 3 games in a row',
         id: 9,
         cap: 3,
         score: 0,
-		checker: checkWin
+		checker: checkWinstreak
     },
     {
         icon: 'Serial_Streaker',
@@ -126,7 +117,7 @@ export const DefaultAchievements: Achievement[] = [
         id: 10,
         cap: 5,
         score: 0,
-		checker: checkWin
+		checker: checkWinstreak
     },
     {
         icon: 'Who_can_stop_you',
@@ -135,7 +126,7 @@ export const DefaultAchievements: Achievement[] = [
         id: 11,
         cap: 10,
         score: 0,
-		checker: checkWin
+		checker: checkWinstreak
     },
     {
         icon:'First_Steps',

@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
-import { GameCreateDto, GameKeyDto } from "./dto";
-import { GameKeyEvent, GameObstacle, GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed } from "./types/game.types";
+import { GameKeyDto } from "./dto";
+import { GameRoom, KeyAction, KeyType, defaultState, max_ball_radius, max_ball_speed, max_racket_length, max_racket_speed, min_ball_radius, min_ball_speed, min_racket_length, min_racket_speed } from "./types/game.types";
 import { GameState } from "./types/game.types";
 import { Namespace } from 'socket.io';
 import { getNextRatings } from "./rating";
 import * as deepEqual from 'deep-equal';
-import { use } from "passport";
 
 @Injectable()
 export class GameService {
@@ -198,6 +197,9 @@ export class GameService {
 		const player1_past_stats = await this.prisma.stats.findUnique({where: {userId: player1.id}});
 		const player2_past_stats = await this.prisma.stats.findUnique({where: {userId: player2.id}});
 
+		const player1_streak = player1_win ? player1_past_stats.current_streak + 1 : 0;
+		const player2_streak = player2_win ? player2_past_stats.current_streak + 1 : 0;
+
 		const [
 			next_player1_rating,
 			player1_rating_change,
@@ -213,7 +215,9 @@ export class GameService {
 				total_games: player1_past_stats.total_games + 1,
 				points: player1_past_stats.points + gameRoom.state.player1_goals,
 				lvl: player1_past_stats.lvl + player1_win,
-				rating: next_player1_rating
+				rating: next_player1_rating,
+				current_streak: player1_streak,
+				max_streak: Math.max(player1_streak, player1_past_stats.max_streak),
 			}
 		});
 
@@ -224,7 +228,9 @@ export class GameService {
 				total_games: player2_past_stats.total_games + 1,
 				points: player2_past_stats.points + gameRoom.state.player2_goals,
 				lvl: player2_past_stats.lvl + player2_win,
-				rating: next_player2_rating
+				rating: next_player2_rating,
+				current_streak: player2_streak,
+				max_streak: Math.max(player2_streak, player2_past_stats.max_streak),
 			}
 		});
 
@@ -265,7 +271,15 @@ export class GameService {
 				io.in('' + room.id).emit('update', room.state);
 			} else {
 				clearInterval(intervalId);
-				io.in('' + room.id).emit('gameover');
+				const winner = room.state.player1_goals === room.state.winning_goals ? room.player1_id : room.player2_id;
+
+				io.in('' + room.id).emit('gameover', {
+					winner: winner,
+					player1: room.player1_id,
+					player2: room.player2_id,
+					player1_goals: room.state.player1_goals,
+					player2_goals: room.state.player2_goals,
+				});
 				await this.remove(room.id);
 			}
 		}, 34);

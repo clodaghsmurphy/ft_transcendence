@@ -62,7 +62,6 @@ function Chat()
 					set_current_user,
 					set_dms,
 				}, user_id)
-
 			})
 			.catch(() => {
 				console.log('test')
@@ -74,26 +73,28 @@ function Chat()
 				});
 				localStorage.clear();
 			})
-			socket_chan = io(`http://${window.location.hostname}:8080/channel`,
-			{
-				extraHeaders: {
-					Authorization: "Bearer " + localStorage.getItem('token')
-				}
-			})
-	
-			socket_dm = io(`http://${window.location.hostname}:8080/dm`,
-			{
-				extraHeaders: {
-					Authorization: "Bearer " + localStorage.getItem('token')
-				}
-			})
-			
-	}, [state, dispatch])
+
+		console.log(localStorage.getItem('token'))
+		socket_chan = io(`http://${window.location.hostname}:8080/channel`,
+		{
+			extraHeaders: {
+				Authorization: "Bearer " + localStorage.getItem('token')
+			}
+		})
+
+		socket_dm = io(`http://${window.location.hostname}:8080/dm`,
+		{
+			extraHeaders: {
+				Authorization: "Bearer " + localStorage.getItem('token')
+			}
+		})
+	}, [state, dispatch, localStorage.getItem('token')])
 
 	useEffect(() => {
-		if (socket_chan !== undefined) {
+		if (socket_chan) {
 			socket_chan.removeListener('exception')
 			socket_chan.removeListener('pong')
+			socket_chan.removeListener('password')
 
 			socket_chan.emit('ping')
 
@@ -104,6 +105,10 @@ function Chat()
 			socket_chan.on('exception', (data: any) => {
 				console.log('chan execption:', data)
 				toast.warn('chan: ' + data.error)
+			})
+
+			socket_chan.on('password', (data) => {
+				toast.success('Password modified')
 			})
 		}
 	}, [socket_chan])
