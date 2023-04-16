@@ -8,6 +8,7 @@ import { JwtService } from "@nestjs/jwt";
 @Module({
 	controllers: [ChannelController],
 	providers: [ChannelService, ChannelGateway, JwtService],
-	imports: [UserModule]
+	imports: [UserModule],
+	exports: [ChannelService, ChannelGateway]
 })
 export class ChannelModule {}

@@ -352,14 +352,14 @@
 }
 
 .infos {
-	width: 90%;
+	width: 80%;
 	margin-left: 10%;
 	margin-right: 10%;
 	overflow: hidden;
 	border: 1px solid grey;
 	display: flex;
 	flex-direction: row;
-	margin-top: 75px;
+	margin-top: 10px;
 	height: auto;
 	padding: 10px 15px;
 }
@@ -374,6 +374,8 @@
 
 .division {
 	color: lightgrey;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .bar-vertical {
@@ -399,4 +401,47 @@
 	font-size: 50px;
 
 	background-color: #e08a85;
+	margin-top: 10px;
+}
+
+.invite-container {
+	overflow: scroll;
+	max-height: 55%;
+}
+
+.container-wait h1 {
+	margin-bottom: 10px;
+	margin-top: 0px;
+}
+
+.invite-container h2 {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.invite-button-game {
+	width: 80%;
+	height: 60px;
+	min-height: 60px;
+	max-height: 60px;
+	color: #cda5d8;
+	border: #cda5d8 2px solid;
+	border-radius: 5px;
+	margin-right: 10%;
+	margin-left: 10%;
+	padding: auto;
+	text-align: center;
+	font-size: 38px;
+	margin-bottom: 15px;
+}
+
+.invite-button-game:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+.container-wait {
+	height: 100%;
+	display: flex;
 }

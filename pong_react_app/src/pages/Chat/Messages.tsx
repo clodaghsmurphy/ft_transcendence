@@ -31,14 +31,14 @@ function Messages(current_chan: CurrentChan, users: User[],
 	}
 	let [last_chan, setLastChan] = useState({} as LastChan)
 	let messageRef = useRef<HTMLInputElement | null>(null)
-	
+
 	let [messagesBlocks, setMessagesBlocks] = useState(
 		[...messages].reverse().map(msg => ChatMessage(users, msg, current_user, refresh))
 		);
 
 	let chan_name = current_chan.type === CHANNEL ? current_chan.chan!.name
 								: id_to_user(users, current_chan.user!).name
-	
+
 	if (current_chan.type === DM && id_to_user(users, current_chan.user!).id === -1) {
 		refresh()
 		return <div key='user-not-found'/>
@@ -46,15 +46,13 @@ function Messages(current_chan: CurrentChan, users: User[],
 
 	if (is_undefined)
 		return <div className='no-messages'>Please select a channel</div>
-	
+
 	let header = current_chan.type === CHANNEL ?
 		<div className='channel-header'>
-	<button className='invite-button'>
-			invite
-		</button>
 		<div style={{
 			flex: '8',
-			textAlign: 'center',
+			textAlign: 'left',
+			marginLeft: '15px',
 		}}>
 			{chan_name}
 		</div>
@@ -66,13 +64,14 @@ function Messages(current_chan: CurrentChan, users: User[],
 	<div className='channel-header'>
 		<div style={{
 			flex: '8',
-			textAlign: 'center',
+			textAlign: 'left',
+			marginLeft: '15px',
 		}}>
 			{chan_name}
 		</div>
 	</div>
 
-		
+
 	if (messages.length === 0)
 		return (<div style={{
 			'display': 'flex',
@@ -106,8 +105,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 	const msg_number_diff = messages.length > messagesBlocks.length
 	const same_type = last_chan.type === current_chan.type
 	const same_name = last_chan.name === chan_name;
-	
-				
+
+
 	if (wasnt_defined || (same_type && !same_name) || msg_number_diff || !same_type) // si c'est vide il faut l'update
 	{
 		setMessagesBlocks([...messages].reverse().map(msg => ChatMessage(users, msg, current_user, refresh)));
@@ -153,7 +152,7 @@ function Messages(current_chan: CurrentChan, users: User[],
 		}
 
 		socket_chan.emit('leave', { name })
-		
+
 		axios.post('/api/channel/leave', {
 			name: name,
 			user_id: current_user.id,
@@ -182,12 +181,10 @@ function Messages(current_chan: CurrentChan, users: User[],
 
 			{current_chan.type === CHANNEL ?
 				<div className='channel-header'>
-			<button className='invite-button'>
-					invite
-				</button>
 				<div style={{
 					flex: '8',
-					textAlign: 'center',
+					textAlign: 'left',
+					marginLeft: '15px',
 				}}>
 					{chan_name}
 				</div>
@@ -199,7 +196,8 @@ function Messages(current_chan: CurrentChan, users: User[],
 			<div className='channel-header'>
 				<div style={{
 					flex: '8',
-					textAlign: 'center',
+					textAlign: 'left',
+					marginLeft: '15px',
 				}}>
 					{chan_name}
 				</div>

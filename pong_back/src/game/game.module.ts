@@ -6,11 +6,13 @@ import { GameService } from "./game.service";
 import { DmModule } from "src/dm/dm.module";
 import { DmGateway } from "src/dm/dm.gateway";
 import { DmService } from "src/dm/dm.service";
+import { JwtService } from "@nestjs/jwt";
+import { ChannelModule } from "src/channel/channel.module";
 
 
 @Module({
   controllers: [GameController],
-  providers: [GameService, GameGateway, DmService, DmGateway],
-  imports: [UserModule, DmModule]
+  providers: [GameService, GameGateway, JwtService],
+  imports: [UserModule, DmModule, ChannelModule]
 })
 export class GameModule {}

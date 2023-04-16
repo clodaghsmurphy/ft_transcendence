@@ -47,7 +47,7 @@ function LoginTfa()
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) =>
     {
         e.preventDefault();
-            axios.post(`http://${window.location.hostname}:3042/auth/auth2fa`,
+            axios.post(`http://${window.location.hostname}:8080/api/auth/auth2fa`,
                  { value },
                 { headers: {"Authorization" : `Bearer ${token}`} }, 
             )
