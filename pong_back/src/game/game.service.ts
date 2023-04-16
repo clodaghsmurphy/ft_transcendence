@@ -342,7 +342,7 @@ export class GameService {
 		});
 	}
 
-	intersectionSegment(a1x: number, a1y: number, a2x: number, a2y: number, b1x: number, b1y: number, b2x: number, b2y: number) {
+	intersectionSegment(a1x: number, a1y: number, a2x: number, a2y: number, b1x: number, b1y: number, b2x: number, b2y: number) : { x: number, y: number } | null {
 		var den = (b2y - b1y) * (a2x - a1x) - (b2x - b1x) * (a2y - a1y);
 		var num1 = (b2x - b1x) * (a1y - b1y) - (b2y - b1y) * (a1x - b1x);
 		var num2 = (a2x - a1x) * (a1y - b1y) - (a2y - a1y) * (a1x - b1x);
@@ -355,20 +355,33 @@ export class GameService {
 		var r = num1 / den;
 		var s = num2 / den;
 
-		if (r >= 0 && r <= 1 && s >= 0 && s <= 1) {
+		if (r >= 0 && r <= 1 && s >= 0 && s <= 1) 
+		{
 			// Les segments se croisent
 			var intersectionX = a1x + r * (a2x - a1x);
 			var intersectionY = a1y + r * (a2y - a1y);
 			return { x: intersectionX, y: intersectionY };
-		} else {
-			return { x: null, y: null };
 		}
+		return null;
+	}
+
+	// Fonction pour calculer la distance euclidienne entre deux coordonnées (x, y)
+	distanceEuclidienne(x1: number, y1: number, x2: number, y2: number): number {
+		const deltaX = x2 - x1;
+		const deltaY = y2 - y1;
+	
+		// Utilisation du théorème de Pythagore pour calculer la distance euclidienne
+		const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+	
+		return distance;
 	}
 
 	intersectionRectangleBall(state: GameState, rectangle_x : number, player_pos: number, length: number, width: number)
 	{
 		const half_length = length / 2;
 		const half_radius = state.ball_radius / 2;
+		const gauche = state.ball_dir_x < 0;
+		const haut = state.ball_dir_y < 0;
 
 		const rectangle = {
 			haut_gauche : {
@@ -392,51 +405,106 @@ export class GameService {
 		const next_ball_x = state.ball_pos_x + state.ball_dir_x;
 		const next_ball_y = state.ball_pos_y + state.ball_dir_y;
 
-		const ball_rectangle = [
-			{
+		const ball_rectangle = {
+			bas_gauche : {
 				x : next_ball_x - half_radius,
 				y : next_ball_y - half_radius,
+				x_current : state.ball_pos_x - half_radius,
+				y_current : state.ball_pos_y - half_radius,
 			},
-			{
+			bas_droit : {
 				x : next_ball_x + half_radius,
 				y : next_ball_y - half_radius,
+				x_current : state.ball_pos_x + half_radius,
+				y_current : state.ball_pos_y - half_radius,
 			},
-			{
-				x : next_ball_x - half_radius,
-				y : next_ball_y + half_radius,
-			},
-			{
+			haut_droit: {
 				x : next_ball_x + half_radius,
 				y : next_ball_y + half_radius,
+				x_current : state.ball_pos_x + half_radius,
+				y_current : state.ball_pos_y + half_radius,
 			},
-		]
-
-		var intersection;
-
-		for (const ball of ball_rectangle)
-		{
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
-			if (intersection.x !== null && intersection.y !== null) {
-				return intersection;
-			}
-
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.haut_gauche.x, rectangle.haut_gauche.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
-			if (intersection.x !== null && intersection.y !== null) {
-				return intersection;
-			}
-
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.haut_droit.x, rectangle.haut_droit.y);
-			if (intersection.x !== null && intersection.y !== null) {
-				return intersection;
-			}
-
-			intersection = this.intersectionSegment(state.ball_pos_x, state.ball_pos_y, ball.x, ball.y, rectangle.bas_droit.x, rectangle.bas_droit.y, rectangle.bas_gauche.x, rectangle.bas_gauche.y);
-			if (intersection.x !== null && intersection.y !== null) {
-				return intersection;
-			}
+			haut_gauche: {
+				x : next_ball_x - half_radius,
+				y : next_ball_y + half_radius,
+				x_current : state.ball_pos_x - half_radius,
+				y_current : state.ball_pos_y + half_radius,
+			},
 		}
 
-		return null;
+		let largeur_ball: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de gauche a droite
+		let hauteur_ball: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de bas en haut
+		let largeur_rect: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de gauche a droite
+		let hauteur_rect: {x1:number, y1: number, x2: number, y2: number, largeur:boolean}; // commence de bas en haut
+
+		if (haut)
+		{
+			largeur_ball = {x1: ball_rectangle.haut_gauche.x_current, y1: ball_rectangle.haut_gauche.y_current, x2: ball_rectangle.haut_droit.x_current, y2: ball_rectangle.haut_droit.y_current, largeur: true};
+			largeur_rect = {x1: rectangle.bas_gauche.x, y1: rectangle.bas_gauche.y, x2: rectangle.bas_droit.x, y2: rectangle.bas_droit.y, largeur: true};
+		}
+		else
+		{
+			largeur_ball = {x1: ball_rectangle.bas_gauche.x_current, y1: ball_rectangle.bas_gauche.y_current, x2: ball_rectangle.bas_droit.x_current, y2: ball_rectangle.bas_droit.y_current, largeur: true};
+			largeur_rect = {x1: rectangle.haut_gauche.x, y1: rectangle.haut_gauche.y, x2: rectangle.haut_droit.x, y2: rectangle.haut_droit.y, largeur: true};
+		}
+		if (gauche)
+		{
+			hauteur_ball = {x1: ball_rectangle.bas_gauche.x_current, y1: ball_rectangle.bas_gauche.y_current, x2: ball_rectangle.haut_gauche.x_current, y2: ball_rectangle.haut_gauche.y_current, largeur: false};
+			hauteur_rect = {x1: rectangle.bas_droit.x, y1: rectangle.bas_droit.y, x2: rectangle.haut_droit.x, y2: rectangle.haut_droit.y, largeur: false};
+		}
+		else
+		{
+			hauteur_ball = {x1: ball_rectangle.bas_droit.x_current, y1: ball_rectangle.bas_droit.y_current, x2: ball_rectangle.haut_droit.x_current, y2: ball_rectangle.haut_droit.y_current, largeur: false};
+			hauteur_rect = {x1: rectangle.bas_gauche.x, y1: rectangle.bas_gauche.y, x2: rectangle.haut_gauche.x, y2: rectangle.haut_gauche.y, largeur: false};
+		} 
+
+		// Je suis cense avoir 4 coordonnes dans chaque liste. 
+		// Les coordonnes des extremites sur les cotes droite ou gauche a tester donc 2
+		// Et pareillement avec le haut ou le bas donc 2
+
+		var intersection : {x: number; y: number;} | null  = null;
+		var intersection_test : {x: number; y: number;} | null ;
+		var distance: number = Infinity;
+		for (let i = largeur_ball.x1; i <= largeur_ball.x2; i++) {
+			intersection_test = this.intersectionSegment(i, largeur_ball.y1, i + state.ball_dir_x, largeur_ball.y1 + state.ball_dir_y, largeur_rect.x1, largeur_rect.y1, largeur_rect.x2, largeur_rect.y2);
+			if (intersection_test)
+			{
+				const distance_test = this.distanceEuclidienne(intersection_test.x, intersection_test.y, i, largeur_ball.y1)
+				if (intersection === null)
+				{
+					intersection = intersection_test;
+					distance = distance_test;
+				}
+				else if (distance > distance_test)
+				{
+					intersection = intersection_test;
+					distance = distance_test;
+				}
+			}
+		}
+		
+		for (let i = hauteur_ball.y1; i <= hauteur_ball.y2; i++) {
+			intersection_test = this.intersectionSegment(hauteur_ball.x1, i, hauteur_ball.x1 + state.ball_dir_x, i + state.ball_dir_y, hauteur_rect.x1, hauteur_rect.y1, hauteur_rect.x2, hauteur_rect.y2);
+			if (intersection_test)
+			{
+				const distance_test = this.distanceEuclidienne(intersection_test.x, intersection_test.y, i, hauteur_ball.y1)
+				if (intersection === null)
+				{
+					intersection = intersection_test;
+					distance = distance_test;
+				}
+				else if (distance > distance_test)
+				{
+					intersection = intersection_test;
+					distance = distance_test;
+				}
+			}
+			// intersection_test = this.intersectionSegment(hauteur_ball.x1, i, hauteur_ball.x1 + ball.dir_x, i + ball.dir_y, largeur_rect.x1, largeur_rect.y1, largeur_rect.x2, largeur_rect.y2);
+			// if (intersection_test)
+			// 	if (intersection === null || (intersection && intersection.dist > intersection_test.dist))
+			// 		intersection = intersection_test;
+		}
+		return intersection;
 	}
 
 	checkBallCollision(state: GameState) {

@@ -6,8 +6,6 @@ export default function sketch(p5) {
     let div_height = game_div.offsetHeight,
         div_width = game_div.offsetWidth;
 
-    console.log(div_height, div_width);
-
     let text_x0 = (div_width - p5.width) / 2,
         text_y0 = (div_height - p5.height) / 2;
 
