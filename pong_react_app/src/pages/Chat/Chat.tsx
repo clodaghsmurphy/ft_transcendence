@@ -99,10 +99,6 @@ function Chat()
 			socket_chan.on('pong', () => {
 			})
 
-			socket_chan.on('exception', (data: any) => {
-				toast.warn('chan: ' + data.error)
-			})
-
 			socket_chan.on('password', (data) => {
 				toast.success('Password modified')
 			})
@@ -112,10 +108,6 @@ function Chat()
 	useEffect(() => {
 		if (socket_dm !== undefined) {
 			socket_dm.removeListener('exception')
-
-			socket_dm.on('exception', (data: any) => {
-				toast.warn('dm: ' + data.error)
-			})
 		}
 	}, [socket_dm])
 
