@@ -47,6 +47,7 @@ function GameHistory(props: Props)
 {
     const { state,  dispatch } = useContext(AuthContext);
 	const [ gameHistory, setGameHistory] = useState<GameHistory[]>([]);
+	const [ ratingClass, setRatingClass] = useState("");
 
 	useEffect(() => {
 		getGameHistory();
@@ -57,6 +58,7 @@ function GameHistory(props: Props)
 			const result = await axios.get(`/api/user/info/${props.id}/games`)
 			console.log(result);
 			setGameHistory(result.data);
+			setRatingClass(result.data.rating_change > 0  ? 'rating_up' : 'rating_down' )
 		} catch (error) {
 			console.log(error);
 			toast.error(`Game History error : ${error}`)
@@ -73,6 +75,8 @@ function GameHistory(props: Props)
 				</div>
 				<span className="game-username">{game.opponent.name}</span>
 				<div className="game-score" >{`${game.score} - ${game.opponent_score}`}</div>
+				{ game.rating_change > 0 ? <div className='rating_up'>{`+ ${game.rating_change}`}</div> :
+				 <div className='rating_down'>{` ${game.rating_change}`}</div>}
 			</div>
 			)}
 		</div>

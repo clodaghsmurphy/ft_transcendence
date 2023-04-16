@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect} from 'react'
 import axios, { AxiosError, AxiosResponse} from 'axios'
+import { toast } from 'react-toastify';
 import loading from '../../media/load-loading.gif'
 
 const status ={
@@ -17,21 +18,20 @@ function Image(props: Props) {
 	const [ online, setOnline ] = useState(false);
 
 	useEffect(() => {
-		getOnline();
-	}, [])
-
+		getOnline()
+	}, [props.id])
 	const getOnline = async () => {
 		try {
 			const result = await axios.get(`http://${window.location.hostname}:8080/api/user/info/${props.id}/connected`)
-			console.log(result.data.attribute);
 			if (props.status === 1 && result.data.attribute === true)
 				setOnline(true);
 		}
 		catch(e){
+			console.log(e);
 		}
 	}
+
 	const memoizedImage  = useMemo(() => {
-		console.log('in memo')
 		return (
 			<img src={`http://${window.location.hostname}:8080/api/user/image/${props.id}`} alt='avatar' />
 		)
@@ -42,7 +42,8 @@ function Image(props: Props) {
 		<div className="img-container">
 			{memoizedImage}
 		</div>
-			{ online ? <span className='online'></span> : null}
+			{ online && props.status === 1? <span className='online'></span> :  props.status === 1 ? <span className='offline'  ></span>
+			: null }
 		</>
 	)
 }

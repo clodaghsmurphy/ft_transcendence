@@ -702,7 +702,51 @@
 	
 }
 
+.offline {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #848884;
+	border: 1px solid white;
+	right: 0;
+	
+}
+
+
 .img-container {
 	position: relative;
 	border-radius: 50%;
+}
+
+.rating_up {
+	flex-basis: 10%;
+	color: #5CFF5C;
+
+}
+
+.rating_down {
+	flex-basis: 10%;
+	color: rgb(255, 98, 98);
+}
+
+.friend-game-status {
+	display: flex;
+	flex-direction: column;
+	overflow: visible;
+}
+
+.game-status {
+	font-size: .7em;
+	color: #5CFF5C;
+}
+
+.online-status {
+	font-size: .7em;
+	color: #5CFF5C;
+}
+
+.offline-status {
+	font-size: .7em;
+	color: #7070a5;
 }

@@ -12,8 +12,10 @@ type Props = {
 export type friendUser = {
 	name:string,
 	id: number,
-	avatar:string
-	game_id?:number
+	avatar:string,
+	game_id?:number,
+	in_game?: number,
+	connected: boolean
 }
 
 function AddFriends(props: Props){

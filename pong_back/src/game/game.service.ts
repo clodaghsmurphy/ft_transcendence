@@ -198,6 +198,9 @@ export class GameService {
 		const player1_past_stats = await this.prisma.stats.findUnique({where: {userId: player1.id}});
 		const player2_past_stats = await this.prisma.stats.findUnique({where: {userId: player2.id}});
 
+		const player1_streak = player1_win ? player1_past_stats.current_streak + 1 : 0;
+		const player2_streak = player2_win ? player2_past_stats.current_streak + 1 : 0;
+
 		const [
 			next_player1_rating,
 			player1_rating_change,
@@ -213,7 +216,9 @@ export class GameService {
 				total_games: player1_past_stats.total_games + 1,
 				points: player1_past_stats.points + gameRoom.state.player1_goals,
 				lvl: player1_past_stats.lvl + player1_win,
-				rating: next_player1_rating
+				rating: next_player1_rating,
+				current_streak: player1_streak,
+				max_streak: (player1_streak > player1_past_stats.max_streak ? player1_streak : player1_past_stats.max_streak)
 			}
 		});
 
@@ -224,7 +229,9 @@ export class GameService {
 				total_games: player2_past_stats.total_games + 1,
 				points: player2_past_stats.points + gameRoom.state.player2_goals,
 				lvl: player2_past_stats.lvl + player2_win,
-				rating: next_player2_rating
+				rating: next_player2_rating,
+				current_streak: player2_streak,
+				max_streak: (player2_streak > player2_past_stats.max_streak ? player2_streak : player2_past_stats.max_streak)
 			}
 		});
 

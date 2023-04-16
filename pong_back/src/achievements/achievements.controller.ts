@@ -1,20 +1,14 @@
 import { Body, UseGuards, Controller, Get, Res, HttpException, HttpStatus,NotFoundException, Param, Post, Req } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/utils/JwtGuard";
-import * as fs from 'fs';
-import { PrismaService } from "src/prisma/prisma.service";
 import { UserEntity } from "src/user/utils/user.decorator";
 import { AchievementsService } from "./achievements.service";
 import { UserService } from "src/user/user.service";
-import { User, Stats, Achievements} from '@prisma/client';
-import { DefaultAchievements } from "src/user/utils/user.types";
-import { AchievementsList } from "src/user/utils/user.types";
 
 
 @Controller('achievements')
 export class AchievementsController {
     constructor(private achievementsService: AchievementsService,
-        private userService: UserService,
-        private prisma: PrismaService) {}
+        private userService: UserService) {}
 
     @Get('health-check')
     health() {
@@ -37,7 +31,7 @@ export class AchievementsController {
 
     @Post('/')
     @UseGuards(JwtAuthGuard)
-    async getAchievemnts(@Body() body, @UserEntity() usr) {
+    async getAchievements(@Body() body, @UserEntity() usr) {
         console.log('in acheivements');
         console.log(body);
         const user = await this.userService.userExists(parseInt(body.id));
@@ -45,12 +39,15 @@ export class AchievementsController {
             throw new NotFoundException('user id not found, unable to get achievements')
         const result = await this.achievementsService.getAchievements(user)
         console.log(result)
-        return result;	
+        return result;
     }
 
     @Get('achievements-list')
-    getAchievements() : AchievementsList[] {
-        return DefaultAchievements;
+    @UseGuards(JwtAuthGuard)
+    async getAllAchievements(@UserEntity() user) {
+        if (!user)
+            throw new NotFoundException('user id not found, unable to get achievements')
+        return await this.achievementsService.getAllAchievements(user);
     }
 
     @Get('achievement-icon/:title')

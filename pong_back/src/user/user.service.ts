@@ -1,12 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Res } from "@nestjs/common";
-import { User, Game, Stats, Achievements } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { HttpException, HttpStatus, Injectable} from "@nestjs/common";
+import { User, Game } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserCreateDto, UserUpdateDto } from "./dto";
 import * as path from 'path';
 import * as fs from 'fs';
 import { HttpService} from '@nestjs/axios'
-import { GameRoom, GameState } from "src/game/types/game.types";
 
 
 @Injectable()

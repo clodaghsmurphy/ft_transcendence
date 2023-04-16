@@ -21,7 +21,7 @@ function AllAchievements(props: Props){
         try {
             const result = await axios.get(`http://${window.location.hostname}:8080/api/achievements/achievements-list`);
             console.log(result);
-            
+
             setAchievements(result.data);
         } catch (e) {
             console.log(e);

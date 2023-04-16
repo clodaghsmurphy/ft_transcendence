@@ -34,10 +34,10 @@ function AchievementList(props: Props) {
                             </div>
                         </div>
                     )}
-                
+
                 </>
-   
-        ) 
+
+        )
                     }
 }
 
