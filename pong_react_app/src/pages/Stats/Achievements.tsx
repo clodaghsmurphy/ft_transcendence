@@ -42,9 +42,7 @@ function StatsAchievements(props: Props ) {
 			setAchievements(result.data);
 			setIsLoading(false)
 		}
-		catch(error) {
-			console.log(error);
-		}
+		catch(error) {}
 	}
 
 	if (isLoading)

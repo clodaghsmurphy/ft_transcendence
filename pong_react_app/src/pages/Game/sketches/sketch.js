@@ -113,7 +113,6 @@ export default function sketch(p5) {
             header_hauteur = header[0].offsetHeight;
             game_height = div_hauteur - header_hauteur;
             game_width = div_largeur;
-            console.log("Resive");
             tailleterrain();
             p5.resizeCanvas(terrain_width, terrain_height);
             centerCanvas();
@@ -129,7 +128,6 @@ export default function sketch(p5) {
         //     game_height: game_height,
         //     game_width: game_width,
         // }
-        // console.log(bob);
 
         let data = props.data;
         paddle1 = data.player1_pos;

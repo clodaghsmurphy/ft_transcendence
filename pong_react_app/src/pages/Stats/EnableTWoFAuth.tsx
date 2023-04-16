@@ -31,7 +31,7 @@ const EnableTwoFAuth = () =>
                 })
             alert('2FA disabled ')
             })
-        .catch((e:AxiosError) => console.log(e))
+        .catch((e:AxiosError) => {})
  
      }
    

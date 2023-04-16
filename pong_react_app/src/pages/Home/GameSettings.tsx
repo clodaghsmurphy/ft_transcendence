@@ -48,7 +48,6 @@ export default function GameSettings(settings: GamePost, default_settings: GameP
 		axios.post('/api/game/create', settings)
 			.then((response: AxiosResponse) => {
 				set_game_id(response.data.id)
-				console.log('created game', response.data.id)
 			})
 			.catch((e: AxiosError) => {
 			})

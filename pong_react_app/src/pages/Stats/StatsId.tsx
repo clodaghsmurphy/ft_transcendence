@@ -31,7 +31,7 @@ function StatsId()
 			setUser(updateValue);
 		})
 		.catch(function(e:AxiosError) {
-			console.log(e);
+			{};
 			const errorObj:ErrorObject = {
 				type: 'StatsId',
 				message: e.message,

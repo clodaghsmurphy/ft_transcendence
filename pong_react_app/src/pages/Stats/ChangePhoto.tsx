@@ -33,7 +33,6 @@ function ChangePhoto() {
         })
         .catch(function (error:AxiosError) 
         {
-            console.log(error);
             if(error.response && error.response.status === 413)
                 toast.error('File too large, file must be under 1MB');
             else {

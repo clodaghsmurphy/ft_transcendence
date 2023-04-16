@@ -27,7 +27,6 @@ function Image(props: Props) {
 				setOnline(true);
 		}
 		catch(e){
-			console.log(e);
 		}
 	}
 

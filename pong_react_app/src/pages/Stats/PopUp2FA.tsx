@@ -27,7 +27,7 @@ function PopUp2FA(props: PopUpProps)
         {
             axios.get(`http://${window.location.hostname}:8080/api/auth/generate`)
             .then((response:AxiosResponse) => setImageSrc(response.data.code))
-            .catch((e:AxiosError) => console.log(e))  
+            .catch((e:AxiosError) => {})  
             
         }
         fetchQR();

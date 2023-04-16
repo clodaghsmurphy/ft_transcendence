@@ -30,9 +30,7 @@ function LoginTfa()
                     }
                 )
                 localStorage.setItem("isLoggedIn", 'true');
-        } catch(e) {
-            console.log(e);
-        }
+        } catch(e) { }
 	}
 
     useEffect(() => {

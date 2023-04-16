@@ -65,7 +65,6 @@ export function GameInfo(settings: GamePost,
 	}
 
 	if (!fnc || typeof user.channels === undefined || !game_id) {
-		console.log(!fnc, typeof user.channels === undefined, !game_id)
 		return <div>rien?</div>
 	}
 	return (
@@ -89,7 +88,6 @@ export function GameInfo(settings: GamePost,
 								target_id: dm.id,
 								id: game_id,
 							};
-							console.log(JSON.stringify(data));
 							socket_game.emit('invite_dm', data);
 					}}>
 						{id_to_user(all_user, dm.id).name}
@@ -103,7 +101,6 @@ export function GameInfo(settings: GamePost,
 								name: chan,
 								id: game_id,
 							};
-							console.log(JSON.stringify(data));
 							socket_game.emit('invite_chan', data);
 					}}>
 						{chan}

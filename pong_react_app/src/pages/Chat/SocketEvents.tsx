@@ -134,7 +134,6 @@ export function handleJoin(vars: ChatVariables) {
 				chan.name === chan_name
 			) === 'undefined') // Si le chan existe pas
 		{
-			console.log('didnt found channel', data.name)
 			axios.get('/api/channel/info/' + sanitizeString(chan_name))
 				.then((response: AxiosResponse) => {
 					vars.set_all_channels!((prev: Channel[]) => [...prev, response.data])

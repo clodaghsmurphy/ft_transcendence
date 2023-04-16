@@ -34,9 +34,7 @@ function ProfileStats(props: Props) {
 			setWins(result.data.total_games === 0 ? 0 : Math.round((result.data.wins / result.data.total_games) * 100));
 			setLoss(zeroProtect ? 0 : Math.round(((result.data.total_games - result.data.wins) / result.data.total_games) * 100));
 		}
-		catch(error) {
-			console.log(error);
-		}
+		catch(error) {}
 	}
 
 	useEffect(() => {

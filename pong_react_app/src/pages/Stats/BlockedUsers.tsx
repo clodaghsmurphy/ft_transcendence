@@ -21,7 +21,7 @@ function BlockedUsers() {
 			.then(function (res: AxiosResponse) {
 				setBlockedUsers(res.data)
 			})
-			.catch((error: AxiosError) => console.log(error));
+			.catch((error: AxiosError) => {});
 	}
 
 
@@ -30,7 +30,7 @@ function BlockedUsers() {
 		.then(function(response:AxiosResponse){
 			setBlockedUsers(response.data);
 		})
-		.catch((e:AxiosError) => console.log(e));
+		.catch((e:AxiosError) => {});
 	}
 	let style_buttons = {
 		"display": "flex",
