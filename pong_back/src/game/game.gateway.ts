@@ -30,10 +30,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		this.logger.log(`Number of connection: ${this.io.sockets.size}.`);
 	}
 
+	@UseGuards(JwtWsGuard)
 	@SubscribeMessage('join')
-	async handleJoin(@MessageBody() dto: GameJoinDto, @ConnectedSocket() client: Socket) {
+	async handleJoin(@MessageBody() dto: GameJoinDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
 		client.join('' + dto.id);
-		const room = await this.gameService.join(dto.id, dto.user_id);
+		const room = await this.gameService.join(dto.id, payload.sub);
 
 		this.io.in('' + dto.id).emit('join', room);
 		if (this.gameService.readyToStart(dto.id)) {
@@ -47,9 +48,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		await this.dmGateway.handleGameInvite(dto.id, dto.target_id, payload.sub);
 	}
 
+	@UseGuards(JwtWsGuard)
 	@SubscribeMessage('keyEvent')
-	async handleKeyEvent(@MessageBody() dto: GameKeyDto, @ConnectedSocket() client: Socket) {
-		this.gameService.checkUserIsPlayer(dto.user_id, dto.id);
+	async handleKeyEvent(@MessageBody() dto: GameKeyDto, @ConnectedSocket() client: Socket, @UserPayload() payload: any) {
+		this.gameService.checkUserIsPlayer(payload.sub, dto.id);
 		this.gameService.keyEvent(dto);
 	}
 }

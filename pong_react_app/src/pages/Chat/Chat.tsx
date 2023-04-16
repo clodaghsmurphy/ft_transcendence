@@ -47,7 +47,7 @@ function Chat()
 	let [current_chan, set_current_chan] = useState({} as CurrentChan)
 	let [chanOfUser, setChanOfUser] = useState([] as Channel[])
 	let [dms, set_dms] = useState([] as DirectMessage[])
-	
+
 	useEffect(() => {
 		document.title = 'Chat';
 
@@ -98,7 +98,7 @@ function Chat()
 
 			socket_chan.on('pong', () => {
 			})
-			
+
 			socket_chan.on('exception', (data: any) => {
 				toast.warn('chan: ' + data.error)
 			})
@@ -112,7 +112,7 @@ function Chat()
 	useEffect(() => {
 		if (socket_dm !== undefined) {
 			socket_dm.removeListener('exception')
-			
+
 			socket_dm.on('exception', (data: any) => {
 				toast.warn('dm: ' + data.error)
 			})
@@ -120,7 +120,7 @@ function Chat()
 	}, [socket_dm])
 
 	useEffect(() => {
-		handleBan({all_channels, set_current_chan, 
+		handleBan({all_channels, set_current_chan,
 				set_all_channels, current_chan,
 				current_user, setChanOfUser});
 	}, [all_channels, set_current_chan,
@@ -143,7 +143,7 @@ function Chat()
 	}, [set_current_user, all_channels,
 		set_all_channels, set_current_chan,
 		current_user, setChanOfUser])
-	
+
 	useEffect(() => {
 		handleCreate({all_channels, set_all_channels, setChanOfUser})
 	}, [all_channels, set_all_channels, setChanOfUser])
@@ -207,7 +207,7 @@ function Chat()
 
 			if (current_chan.chan?.name === (param as Channel).name)
 				return
-			
+
 				socket_chan.emit('join', {
 				name: param.name,
 				user_id: current_user.id,
@@ -269,7 +269,7 @@ function Chat()
 			set_dms, set_current_user,
 			current_user, setChanOfUser,
 			all_channels}, user_id)
-		
+
 		if (current_chan.type === CHANNEL) {
 			axios.get('/api/channel/info/' + current_chan.chan!.name)
 				.then((response: AxiosResponse) => {
@@ -298,9 +298,9 @@ function Chat()
 
 	return (
 		<div className="dashboard">
-        <NavBar /> 
+        <NavBar />
         <main className="page-wrapper">
-				<ToastContainer 
+				<ToastContainer
 					theme='colored'
 				/>
             <div className="channels">
@@ -317,7 +317,7 @@ function Chat()
 							<h1>Channels</h1>
 							{PopupJoinChannel(chanOfUser, current_user,
 											changeChannelOrDm, setChanOfUser)}
-							{refresh_button('channels', () => 
+							{refresh_button('channels', () =>
 								refresh_data({
 											all_channels,
 											setChanOfUser,
@@ -356,7 +356,7 @@ function Chat()
 
             <div className="group-members">
 				<h1>Users</h1>
-				
+
 				<div className='user-holder'>
 					{User_in_group(all_users, current_user, current_chan, local_refresh)}
 				</div>

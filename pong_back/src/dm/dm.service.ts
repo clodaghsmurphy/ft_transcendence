@@ -53,6 +53,7 @@ export class DmService {
 	}
 
 	async post(dto: any) {
+		console.log(`Dm post called with ${JSON.stringify(dto)}`);
 		const message = await this.prisma.privateMessage.create({
 			data: {
 				text: dto.text,

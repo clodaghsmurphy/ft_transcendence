@@ -84,6 +84,8 @@ export class DmGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
 		data.sender_id = payload.sub;
 		data.type = DmType.Normal;
 
+		console.log(`Dm message called with ${JSON.stringify(dto)}`);
+
 		const roomName: string = this.getRoomName(data.sender_id, data.receiver_id);
 		this.checkUser(client, roomName);
 
