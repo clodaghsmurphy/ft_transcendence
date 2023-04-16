@@ -95,7 +95,7 @@ function Chat()
 			socket_chan.removeListener('exception')
 			socket_chan.removeListener('pong')
 
-			socket_chan.emit('ping')
+			// socket_chan.emit('ping')
 
 			socket_chan.on('pong', () => {
 				console.log('pong received')
