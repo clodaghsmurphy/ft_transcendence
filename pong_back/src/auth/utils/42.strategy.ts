@@ -19,6 +19,7 @@ export class Ft_Strategy extends PassportStrategy(Strategy) {
 
     async validate(accessToken: string, refreshToken: string, profile: Profile, cb:any)
     {
+        console.log('in 42 strat');
         const userData = {
             name: profile.username,
             id: parseInt(profile.id),

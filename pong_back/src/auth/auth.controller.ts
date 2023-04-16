@@ -1,4 +1,4 @@
-import { Controller,  Body, Get, UnauthorizedException, Res, Req, Request, Post, UseGuards } from '@nestjs/common';
+import { Controller, Query, Body, Get, UnauthorizedException, Res, Req, Request, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { FT_AuthGuard } from './utils/Guards';
@@ -28,6 +28,7 @@ export class AuthController {
     @Get('42/login')
     @UseGuards(FT_AuthGuard)
     handleLogin(){
+        console.log('handlelogin')
         //42 AuthGuard redirects here and redirects to 42/redirect
     }
 
@@ -53,9 +54,21 @@ export class AuthController {
         return updateUser;
     }
 
+
     @Get('42/redirect')
+    // @UseGuards(FT_AuthGuard)
+    async handleRedirect(@Req() req, @Res() res, @UserEntity() user, @Query('error') error, @Query('code') code){
+        console.log(error);
+        if(error) {
+            res.redirect(`http://${process.env.HOSTNAME}:8080`)
+            return ;
+        }
+        res.redirect(`http://${process.env.HOSTNAME}:8080/api/auth/42/loggedin?code=${code}`);
+    }
+    
+    @Get('42/loggedin')
     @UseGuards(FT_AuthGuard)
-    async handleRedirect(@Req() req, @Res() res, @UserEntity() user){
+    async handleRedirectBis(@Req() req, @Res() res, @UserEntity() user) {        
         const token = await this.authService.login(res, user);
         if (user.otp_enabled && !user.otp_verified) {
             res.redirect(`http://${process.env.HOSTNAME}:8080/2fa?access_token=${token.access_token}`)
@@ -64,6 +77,7 @@ export class AuthController {
         res.redirect(`http://${process.env.HOSTNAME}:8080/login?access_token=${token.access_token}`)
         return ;
     }
+
 
     @Get('status')
     user(@Req() request: Request) {
