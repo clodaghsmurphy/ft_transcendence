@@ -34,7 +34,7 @@ function ChatMessage(every_user: User[], msg: MessageData, curr_user: User, refr
 	// Si le sender a ete ban par le curr_user
 	if (msg.type !== BAN && msg.type !== KICK &&
 		curr_user.blocked_users.includes(msg.sender_id))
-		return <div key='blocked'></div>;
+		return <div key={'blocked' + msg.id}></div>;
 	
 	if (msg.type === INVITE) {
 		return InviteMessage(every_user, msg, curr_user, sender_name)
