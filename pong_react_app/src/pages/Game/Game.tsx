@@ -47,33 +47,36 @@ function Game(game_id: number | null) {
 	const [end_frame, set_end_frame] = useState(<div />)
 	
 	useEffect(() => {
-		socket_game = io(`http://${window.location.hostname}:8080/game`,
-		{
-			extraHeaders: {
-				Authorization: "Bearer " + localStorage.getItem('token')
-			}
-		})
-
-		socket_game.on('exception', (data: any) => {
-			console.log('EXCEPTION !!!\n', data)
-		})
-		
-		socket_game.on('disconnect', () => {
-			console.log('DISCONNECTED!!!!!!!!!')
-		})
-		
-		socket_game.on('start', (a: any) => console.log(a))
-		
-		socket_game.on('update', (dto) => {
-			setData(dto);
-		});
+		if (localStorage.getItem('token')?.length! > 0) {
+			console.log(localStorage.getItem('token'))
+			socket_game = io(`http://${window.location.hostname}:8080/game`,
+			{
+				extraHeaders: {
+					Authorization: "Bearer " + localStorage.getItem('token')
+				}
+			})
 	
-		socket_game.on('join', (res) => {
-			console.log(`join: ${res.id}`);
-			setIsJoined(true);
-			set_finished(false)
-		});
-	}, [])
+			socket_game.on('exception', (data: any) => {
+				console.log('EXCEPTION !!!\n', data)
+			})
+			
+			socket_game.on('disconnect', () => {
+				console.log('DISCONNECTED!!!!!!!!!')
+			})
+			
+			socket_game.on('start', (a: any) => console.log(a))
+			
+			socket_game.on('update', (dto) => {
+				setData(dto);
+			});
+		
+			socket_game.on('join', (res) => {
+				console.log(`join: ${res.id}`);
+				setIsJoined(true);
+				set_finished(false)
+			});
+		}
+	}, [localStorage.getItem('token')])
 
 	useEffect(() => {
 		if (game_id) {

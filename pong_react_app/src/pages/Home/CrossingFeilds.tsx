@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { GamePost } from "../Game/Game";
+import { GamePost, socket_game } from "../Game/Game";
 import './CreateGame.css'
 import { AuthContext } from '../../App'
 import { User, id_to_user } from "../utils/User";
@@ -12,8 +12,7 @@ import { Socket } from "socket.io-client";
 
 export function GameInfo(settings: GamePost,
 						fnc: (() => void) | null,
-						game_id: number | null,
-						socket_variable: Socket)
+						game_id: number | null)
 {
 	const { state, dispatch } = useContext(AuthContext);
 	let [user, setUser] = useState({} as User)
@@ -86,24 +85,13 @@ export function GameInfo(settings: GamePost,
 				{dm.map((dm: DirectMessage) =>
 					<div className="invite-button-game" key={dm.id}
 						onClick={() => {
-						socket_variable.emit('invite_dm', {
+						console.log('test')
+						socket_game.emit('invite_dm', {
 							target_id: dm.id,
 							id: game_id
 						})
 					}}>
 						{id_to_user(all_user, dm.id).name}
-					</div>
-				)}
-				<h2>Channels:</h2>
-				{chans.map((chan: string) =>
-					<div className="invite-button-game" key={chan}
-						onClick={() => {
-						socket_variable.emit('invite_chan', {
-							target_id: chan,
-							game_id
-						})
-					}}>
-						{chan}
 					</div>
 				)}
 			</div>

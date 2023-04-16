@@ -23,7 +23,7 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 	const is_create = window_type === CREATE
 	const SettingsBlock = GameSettings(settings, default_settings, setSettings, set_game_id)
 	const BrowsingBlock = BrowseGames()
-	const Game_Info = GameInfo(settings, leave_function, game_id, socket_chan)
+	let Game_Info = GameInfo(settings, leave_function, game_id)
 	const Game_Finished = GameFinished(leave_function)
 	let [setup, setSetup] = useState(false)
 
@@ -43,7 +43,7 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 					mode_speedup: data.state.mode_speedup,
 					mode_shrink: data.state.mode_shrink,
 					mode_chaos: data.state.mode_chaos,
-					game_map: GameMap.Classic, // A CHANGER !!!
+					game_map: GameMap.Classic,
 				})
 			})
 
@@ -58,6 +58,7 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 			setSetup(true)
 		}
 	}, [socket_game])
+
 
 	useEffect(() => {
 		if (socket_game && game_id) {
