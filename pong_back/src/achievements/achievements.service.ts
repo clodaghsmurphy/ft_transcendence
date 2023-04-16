@@ -1,12 +1,10 @@
 import { Injectable, Res, Req, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Response, Request } from 'express';
 import * as fs from 'fs';
-import { Achievements } from '@prisma/client'
 import { JwtService } from '@nestjs/jwt';
 import { User } from "@prisma/client";
 import { UserService } from 'src/user/user.service';
-import { AchievementsList } from 'src/user/utils/user.types';
+import { DefaultAchievements } from './type/achievements.types';
 
 
 @Injectable()
@@ -18,18 +16,44 @@ export class AchievementsService {
 
 
         async getAchievements(user : User) {
-            try {
-                const result = this.prisma.achievements.findMany({
-                    where: {
-                        id: user.id
-                    }
-                })
-                return result
-            }
-            catch(error) {
-                console.log(error);
-                return null;
-            }
+            const stats = await this.prisma.stats.findUnique({
+                where: {userId: user.id}
+            });
+
+            const achievements = DefaultAchievements.map((achievement) => {
+                const result = {...achievement};
+                const checkResult = achievement.checker(achievement.cap, stats);
+
+                result.score = checkResult[1];
+                delete result.checker;
+
+                if (checkResult[0])
+                    return result;
+                else
+                    return null;
+            });
+
+            return achievements.filter((achievement) => {
+                return achievement !== null;
+            });
+        }
+
+        async getAllAchievements(user: User) {
+            const stats = await this.prisma.stats.findUnique({
+                where: {userId: user.id}
+            });
+
+            const achievements = DefaultAchievements.map((achievement) => {
+                const result = {...achievement};
+                const checkResult = achievement.checker(achievement.cap, stats);
+
+                result.score = checkResult[1];
+                delete result.checker;
+
+                return result;
+            });
+
+            return achievements;
         }
 
         async getIcon(title : string) {
@@ -45,4 +69,5 @@ export class AchievementsService {
             }
         }
 
-    }
+
+}
