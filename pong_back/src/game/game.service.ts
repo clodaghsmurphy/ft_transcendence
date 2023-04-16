@@ -30,7 +30,12 @@ export class GameService {
 	}
 
 	async create(dto) {
-		await this.checkUserNotInGame(dto.user_id);
+		await this.userService.checkUser(dto.user_id);
+
+		const user = await this.userService.get(dto.user_id);
+		if (user.game_id !== null) {
+			return {id: user.game_id};
+		}
 
 		if (!dto.hasOwnProperty('target_id')) {
 			return await this.createSoloGame(dto);
