@@ -272,7 +272,15 @@ export class GameService {
 				io.in('' + room.id).emit('update', room.state);
 			} else {
 				clearInterval(intervalId);
-				io.in('' + room.id).emit('gameover');
+				const winner = room.state.player1_goals === room.state.winning_goals ? room.player1_id : room.player2_id;
+
+				io.in('' + room.id).emit('gameover', {
+					winner: winner,
+					player1: room.player1_id,
+					player2: room.player2_id,
+					player1_goals: room.state.player1_goals,
+					player2_goals: room.state.player2_goals,
+				});
 				await this.remove(room.id);
 			}
 		}, 34);

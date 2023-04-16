@@ -17,6 +17,7 @@ export class JwtWsGuard extends AuthGuard('jwt') implements CanActivate {
 			const authToken = req.handshake.headers.authorization.split(' ')[1];
 
 			try {
+				console.error(`canActivate: ${authToken}, secret: ${jwtConstants.secret}`);
 				req.user = this.jwtService.verify(authToken, {secret: jwtConstants.secret});
 			} catch (e) {
 				if (e instanceof Error)
