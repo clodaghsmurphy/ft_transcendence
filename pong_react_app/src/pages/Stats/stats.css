@@ -729,3 +729,24 @@
 	flex-basis: 10%;
 	color: rgb(255, 98, 98);
 }
+
+.friend-game-status {
+	display: flex;
+	flex-direction: column;
+	overflow: visible;
+}
+
+.game-status {
+	font-size: .7em;
+	color: #5CFF5C;
+}
+
+.online-status {
+	font-size: .7em;
+	color: #5CFF5C;
+}
+
+.offline-status {
+	font-size: .7em;
+	color: #7070a5;
+}

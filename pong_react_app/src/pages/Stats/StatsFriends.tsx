@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { RiPingPongLine } from "react-icons/ri";
+import { AiOutlineEye } from "react-icons/ai";
 import { TiDelete } from "react-icons/ti";
 import { CgProfile } from "react-icons/cg";
 import { Link } from 'react-router-dom';
@@ -21,7 +21,8 @@ let style_buttons = {
 }
 
 function StatsFriends(props:Props): JSX.Element {
-	let [ friends, setFriends ] = useState<friendUser[]>([]);
+	const [ friends, setFriends ] = useState<friendUser[]>([]);
+	const [ firendsStatus, setFriendsStatus ] = useState('');
 	const { state, dispatch } = useContext(AuthContext);
 
 	const isCurrent = (props.id === state.user.id);	
@@ -35,7 +36,8 @@ function StatsFriends(props:Props): JSX.Element {
 		axios.get(`http://${window.location.hostname}:8080/api/user/friends/${props.id}`,
 			)
 			.then(function (res: AxiosResponse) {
-				setFriends(res.data)
+				setFriends(res.data);
+				console.log(res.data)
 			})
 			.catch((error: AxiosError) => console.log(error));
 	}
@@ -48,6 +50,20 @@ function StatsFriends(props:Props): JSX.Element {
 		.catch((e:AxiosError) => console.log(e));
 	}
 
+	const getStatus = (usr: friendUser) => {
+		if (usr.in_game) {
+			return <span className='game-status'>in game</span>
+		} else if (usr.connected) {
+			return <span className='online-status'>online</span>
+		} else {
+			return <span className='offline-status'>offline</span>
+		}
+	}
+
+	const gameRedirect = (game_id:number) => {
+		window.location.replace(`http://${window.location.hostname}:8080/game?id=${game_id}`)
+	}
+
 	return (
 			<div className="info-body" key={uuidv4()}>
 				{ friends.map (usr => 
@@ -55,14 +71,20 @@ function StatsFriends(props:Props): JSX.Element {
 					<div className="stats-avatar">
 						<Image id={usr.id} status={1}/>
 					</div>
-					<span className="game-username">{usr.name}</span>
+					<div className="friend-game-status" >
+						<span className="game-username">{usr.name}</span>
+						{ getStatus(usr)}
+					</div>
 					<IconContext.Provider value={{
 						color: "white",
 					}}>
 						<div className="friends-options">
-							<Link to={"/game/" + usr.game_id} style={style_buttons} className="play">
-								<RiPingPongLine style={{ height: '4vh', cursor: 'pointer' }} />
-							</Link>
+						{ usr.in_game ? 
+							<Link to={"/game?id=" + usr.game_id} style={style_buttons} className="play">
+								  <AiOutlineEye style={{ height: '4vh', cursor: 'pointer' }} onClick={() => gameRedirect(usr.game_id!)}/> 
+							</Link> :
+							<AiOutlineEye style={{ height: '4vh', color: "#7070a5" }} />
+						}
 							{ isCurrent && <div style={style_buttons} className="delete" onClick={(e) => deleteFriend(usr.id)}>
 								<TiDelete style={{ height: '4vh', cursor: 'pointer' }} />
 							</div> }

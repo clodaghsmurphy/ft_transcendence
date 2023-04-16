@@ -42,7 +42,8 @@ function Image(props: Props) {
 		<div className="img-container">
 			{memoizedImage}
 		</div>
-			{ online ? <span className='online'></span> : <span className='offline' ></span>}
+			{ online && props.status === 1? <span className='online'></span> :  props.status === 1 ? <span className='offline'  ></span>
+			: null }
 		</>
 	)
 }
