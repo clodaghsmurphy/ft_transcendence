@@ -38,7 +38,7 @@ function NavBar()
 
 	if (window.location.pathname === '/game' && params.get('id') !== null)
 		home_with_id = true
-	
+
     return (
         <header >
     <nav className="nav-bar" ref={navRef}>
@@ -61,12 +61,8 @@ function NavBar()
         </ul>
         <div className="nav-user" id="nav-user">
             <AiOutlineLogout className="logout-btn" onClick={ handleLogout}/>
-            <Link to="/stats" className="user-pfp">
-                <Image id={parseInt(state.user.id)} status={0} />
-                
-            </Link>
             <p className='userName' > Welcome {state.user.name} !</p>
-           
+
         </div>
         <button className="nav-btn nav-close-btn" onClick={() => showNavbar()}>
             <FaTimes />
