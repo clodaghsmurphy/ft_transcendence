@@ -26,8 +26,6 @@ export default function CreateGame(settings: GamePost, default_settings: GamePos
 
 	useEffect(() => {
 		if (socket_game) {
-			socket_game.removeListener('gamestart')
-			socket_game.removeListener('gameover')
 
 			socket_game.on('gamestart', (data: GameStart) => {
 				console.log(data)

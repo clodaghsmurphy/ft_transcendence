@@ -50,9 +50,6 @@ function Chat()
 	
 	useEffect(() => {
 		document.title = 'Chat';
-		
-		console.log(window.localStorage.getItem('isLoggedIn'), state.user.id)
-
 
 		axios.get('/api/user/info/' + state.user.id)
 			.then(() => {
